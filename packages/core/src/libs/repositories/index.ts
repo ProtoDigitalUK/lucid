@@ -8,7 +8,7 @@ import CollectionDocumentFieldsRepo from "./collection-document-fields.js";
 import CollectionDocumentGroupsRepo from "./collection-document-groups.js";
 import CollectionDocumentsRepo from "./collection-documents.js";
 import EmailsRepo from "./emails.js";
-import LanguagesRepo from "./languages.js";
+import LocalesRepo from "./locales.js";
 import MediaRepo from "./media.js";
 import OptionsRepo from "./options.js";
 import ProcessedImagesRepo from "./processed-images.js";
@@ -46,8 +46,8 @@ class Repository {
 				) as RepositoryReturnType<T>;
 			case "emails":
 				return new EmailsRepo(db) as RepositoryReturnType<T>;
-			case "languages":
-				return new LanguagesRepo(db) as RepositoryReturnType<T>;
+			case "locales":
+				return new LocalesRepo(db) as RepositoryReturnType<T>;
 			case "media":
 				return new MediaRepo(db) as RepositoryReturnType<T>;
 			case "options":
@@ -83,7 +83,7 @@ type RepositoryClassMap = {
 	"collection-document-groups": CollectionDocumentGroupsRepo;
 	"collection-documents": CollectionDocumentsRepo;
 	emails: EmailsRepo;
-	languages: LanguagesRepo;
+	locales: LocalesRepo;
 	media: MediaRepo;
 	options: OptionsRepo;
 	"processed-images": ProcessedImagesRepo;

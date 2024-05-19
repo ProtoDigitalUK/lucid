@@ -1,16 +1,15 @@
 import T from "@/translations";
-import { type Component, Match, Switch } from "solid-js";
+import { type Component, Match, Switch, createMemo } from "solid-js";
 import classNames from "classnames";
-// Types
 import type {
 	ErrorResult,
 	FieldErrors,
 	MediaResponse,
 	MediaMeta,
 } from "@lucidcms/core/types";
-// Store
-import mediaSelectStore from "@/store/mediaSelectStore";
-// Components
+import contentLocaleStore from "@/store/contentLocaleStore";
+import mediaSelectStore from "@/store/forms/mediaSelectStore";
+import helpers from "@/utils/helpers";
 import Button from "@/components/Partials/Button";
 import Form from "@/components/Groups/Form";
 import AspectRatio from "@/components/Partials/AspectRatio";
@@ -27,6 +26,7 @@ interface MediaSelectProps {
 		label?: string;
 		describedBy?: string;
 	};
+	disabled?: boolean;
 	noMargin?: boolean;
 	required?: boolean;
 	errors?: ErrorResult | FieldErrors;
@@ -68,6 +68,12 @@ export const MediaSelect: Component<MediaSelectProps> = (props) => {
 	};
 
 	// -------------------------------
+	// Memos
+	const contentLocale = createMemo(
+		() => contentLocaleStore.get.contentLocale,
+	);
+
+	// -------------------------------
 	// Render
 	return (
 		<div
@@ -90,8 +96,9 @@ export const MediaSelect: Component<MediaSelectProps> = (props) => {
 							theme="container-outline"
 							size="x-small"
 							onClick={openMediaSelectModal}
+							disabled={props.disabled}
 						>
-							{T("select_media", {
+							{T()("select_media", {
 								type: props.type || "media",
 							})}
 						</Button>
@@ -105,14 +112,10 @@ export const MediaSelect: Component<MediaSelectProps> = (props) => {
 											url: props.meta?.url || "",
 											type: props.meta?.type || "image",
 										}}
-										alt={
-											// TODO: fix to use some translation helper with current lang
-											props.meta?.altTranslations?.[0]
-												.value ||
-											props.meta?.titleTranslations?.[0]
-												.value ||
-											""
-										}
+										alt={helpers.getTranslation(
+											props.meta?.altTranslations,
+											contentLocale(),
+										)}
 									/>
 								</AspectRatio>
 							</div>
@@ -123,8 +126,9 @@ export const MediaSelect: Component<MediaSelectProps> = (props) => {
 								theme="container-outline"
 								size="x-small"
 								onClick={openMediaSelectModal}
+								disabled={props.disabled}
 							>
-								{T("select_new_media", {
+								{T()("select_new_media", {
 									type: props.type || "media",
 								})}
 							</Button>
@@ -135,8 +139,9 @@ export const MediaSelect: Component<MediaSelectProps> = (props) => {
 								onClick={() => {
 									props.onChange(null, null);
 								}}
+								disabled={props.disabled}
 							>
-								{T("remove_media", {
+								{T()("remove_media", {
 									type: props.type || "media",
 								})}
 							</Button>

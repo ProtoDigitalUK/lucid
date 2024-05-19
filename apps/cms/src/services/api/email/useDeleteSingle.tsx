@@ -1,8 +1,6 @@
 import T from "@/translations";
-// Utils
 import request from "@/utils/request";
 import serviceHelpers from "@/utils/service-helpers";
-// Types
 import type { ResponseBody, EmailResponse } from "@lucidcms/core/types";
 
 interface Params {
@@ -33,8 +31,8 @@ const useDeleteSingle = (props: UseDeleteProps) => {
 	>({
 		mutationFn: deleteSingleReq,
 		successToast: {
-			title: T("email_deleted_toast_title"),
-			message: T("email_deleted_toast_message"),
+			title: T()("email_deleted_toast_title"),
+			message: T()("email_deleted_toast_message"),
 		},
 		invalidates: ["email.getMultiple"],
 		onSuccess: props.onSuccess,

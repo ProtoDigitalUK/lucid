@@ -38,10 +38,10 @@ const DeleteDocument: Component<DeleteDocumentProps> = (props) => {
 				isError: deleteDocument.action.isError,
 			}}
 			content={{
-				title: T("delete_document_modal_title", {
+				title: T()("delete_document_modal_title", {
 					name: props.collection.singular,
 				}),
-				description: T("delete_document_modal_description", {
+				description: T()("delete_document_modal_description", {
 					name: {
 						value: props.collection.singular,
 						toLowerCase: true,

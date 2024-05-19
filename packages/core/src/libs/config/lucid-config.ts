@@ -35,6 +35,9 @@ const lucidConfig = async (config: LucidConfig) => {
 		// validate config
 		configRes = ConfigSchema.parse(configRes) as Config;
 
+		// localisation checks
+		checks.checkLocales(configRes.localisation);
+
 		// collection checks
 		checks.checkDuplicateBuilderKeys(
 			"collections",

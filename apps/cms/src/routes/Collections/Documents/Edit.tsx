@@ -10,13 +10,16 @@ import {
 	createEffect,
 	onCleanup,
 } from "solid-js";
-import type { CollectionResponse } from "@lucidcms/core/types";
+import type { CollectionResponse, FieldErrors } from "@lucidcms/core/types";
 import api from "@/services/api";
 import brickStore from "@/store/brickStore";
+import brickHelpers from "@/utils/brick-helpers";
+import { getBodyError } from "@/utils/error-helpers";
+import contentLocaleStore from "@/store/contentLocaleStore";
 import { FaSolidTrash } from "solid-icons/fa";
 import Layout from "@/components/Groups/Layout";
 import Button from "@/components/Partials/Button";
-import ContentLanguageSelect from "@/components/Partials/ContentLanguageSelect";
+import ContentLocaleSelect from "@/components/Partials/ContentLocaleSelect";
 import DetailsList from "@/components/Partials/DetailsList";
 import DateText from "@/components/Partials/DateText";
 import DeleteDocument from "@/components/Modals/Documents/DeleteDocument";
@@ -24,6 +27,10 @@ import NavigationGuard, {
 	navGuardHook,
 } from "@/components/Modals/NavigationGuard";
 import Document from "@/components/Groups/Document";
+import SelectMediaPanel from "@/components/Panels/Media/SelectMedia";
+import LinkSelect from "@/components/Modals/CustomField/LinkSelect";
+import UserDisplay from "@/components/Partials/UserDisplay";
+import BrickImagePreview from "@/components/Modals/Bricks/ImagePreview";
 
 interface CollectionsDocumentsEditRouteProps {
 	mode: "create" | "edit";
@@ -37,7 +44,6 @@ const CollectionsDocumentsEditRoute: Component<
 	const params = useParams();
 	const navigate = useNavigate();
 	const navGuard = navGuardHook();
-	const [getSetDataLock, setSetDataLock] = createSignal(false);
 	const [getDeleteOpen, setDeleteOpen] = createSignal(false);
 
 	// ----------------------------------
@@ -46,6 +52,12 @@ const CollectionsDocumentsEditRoute: Component<
 	const documentId = createMemo(
 		() => Number.parseInt(params.documentId) || undefined,
 	);
+	const contentLocale = createMemo(
+		() => contentLocaleStore.get.contentLocale,
+	);
+	const canFetchDocument = createMemo(() => {
+		return contentLocale() !== undefined && documentId() !== undefined;
+	});
 
 	// ----------------------------------
 	// Queries
@@ -67,8 +79,26 @@ const CollectionsDocumentsEditRoute: Component<
 				bricks: true,
 			},
 		},
-		enabled: () => !!collectionKey() && !!documentId(),
+		enabled: () => canFetchDocument(),
 		refetchOnWindowFocus: false,
+	});
+
+	// ----------------------------------
+	// Mutations
+	const upsertDocument = api.collections.document.useUpsertSingle({
+		onSuccess: (data) => {
+			brickStore.set("fieldsErrors", []);
+			if (props.mode === "create") {
+				navigate(`/collections/${collectionKey()}/${data.data.id}`);
+			}
+		},
+		onError: (errors) => {
+			brickStore.set(
+				"fieldsErrors",
+				getBodyError<FieldErrors[]>("fields", errors) || [],
+			);
+		},
+		collectionName: collection.data?.data.singular || "",
 	});
 
 	// ----------------------------------
@@ -82,19 +112,39 @@ const CollectionsDocumentsEditRoute: Component<
 		}
 		return collection.isSuccess && document.isSuccess;
 	});
+	const isSaving = createMemo(() => {
+		return upsertDocument.action.isPending;
+	});
+	const mutateErrors = createMemo(() => {
+		return upsertDocument.errors();
+	});
+	const brickTranslationErrors = createMemo(() => {
+		const errors = getBodyError<FieldErrors[]>("fields", mutateErrors());
+		if (errors === undefined) return false;
+		return errors.some((field) => field.localeCode !== contentLocale());
+	});
+	const canSaveDocument = createMemo(() => {
+		return !brickStore.get.documentMutated && !isSaving();
+	});
 
 	// ---------------------------------
 	// Functions
-	const upsertDocument = async () => {
-		console.log(brickStore.get.bricks);
-		// setSetDataLock(false);
+	const upsertDocumentAction = async () => {
+		upsertDocument.action.mutate({
+			collectionKey: collectionKey(),
+			body: {
+				documentId: documentId(),
+				bricks: brickHelpers.getUpsertBricks(),
+				fields: brickHelpers.getCollectionSudoBrickFields(),
+			},
+		});
+		brickStore.set("documentMutated", false);
 	};
 
 	// ---------------------------------
 	// Effects
 	createEffect(() => {
-		if (isSuccess() && !getSetDataLock()) {
-			setSetDataLock(true);
+		if (isSuccess()) {
 			brickStore.get.reset();
 
 			brickStore.get.setBricks(
@@ -113,12 +163,12 @@ const CollectionsDocumentsEditRoute: Component<
 	return (
 		<Switch>
 			<Match when={isLoading()}>
-				<div class="fixed top-[75px] left-[85px] bottom-15 right-15 flex">
-					<span class="w-[500px] skeleton block h-full mr-15" />
+				<div class="fixed top-15 left-[85px] bottom-15 right-15 flex">
 					<span class="flex flex-col w-full h-full">
-						<span class="h-10 w-full skeleton block mb-15" />
+						<span class="h-64 w-full skeleton block mb-15" />
 						<span class="h-full w-full skeleton block" />
 					</span>
+					<span class="w-full lg:max-w-[300px] skeleton block h-full ml-15" />
 				</div>
 			</Match>
 			<Match when={isSuccess()}>
@@ -126,7 +176,7 @@ const CollectionsDocumentsEditRoute: Component<
 					breadcrumbs={[
 						{
 							link: "/collections",
-							label: T("collections"),
+							label: T()("collections"),
 						},
 						{
 							link: `/collections/${collectionKey()}`,
@@ -141,8 +191,8 @@ const CollectionsDocumentsEditRoute: Component<
 							}`,
 							label:
 								props.mode === "create"
-									? T("create")
-									: T("edit"),
+									? T()("create")
+									: T()("edit"),
 						},
 					]}
 				/>
@@ -153,11 +203,11 @@ const CollectionsDocumentsEditRoute: Component<
 						<div class="bg-container-2 border-b border-border">
 							<header class="p-15 md:p-30 flex items-center justify-between flex-wrap-reverse md:flex-nowrap gap-15">
 								<h1 class="w-full">
-									{T("document_route_title", {
-										mode: T("edit"),
+									{T()("document_route_title", {
+										mode: T()("edit"),
 										name:
 											collection.data?.data.singular ??
-											T("document"),
+											T()("document"),
 									})}
 									<Show when={props.mode === "edit"}>
 										<span class="text-unfocused ml-2.5">
@@ -172,9 +222,8 @@ const CollectionsDocumentsEditRoute: Component<
 										}
 									>
 										<div class="w-full md:w-auto md:min-w-[250px]">
-											{/* TODO: update hasError with memo that detects translations errors */}
-											<ContentLanguageSelect
-												hasError={false}
+											<ContentLocaleSelect
+												hasError={brickTranslationErrors()}
 											/>
 										</div>
 									</Show>
@@ -182,9 +231,10 @@ const CollectionsDocumentsEditRoute: Component<
 										type="button"
 										theme="primary"
 										size="small"
-										onClick={upsertDocument}
+										onClick={upsertDocumentAction}
+										disabled={canSaveDocument()}
 									>
-										{T("save", {
+										{T()("save", {
 											singular:
 												collection.data?.data
 													.singular || "",
@@ -198,7 +248,7 @@ const CollectionsDocumentsEditRoute: Component<
 											onClick={() => setDeleteOpen(true)}
 										>
 											<span class="sr-only">
-												{T("delete")}
+												{T()("delete")}
 											</span>
 											<FaSolidTrash />
 										</Button>
@@ -224,21 +274,41 @@ const CollectionsDocumentsEditRoute: Component<
 					{/* Sidebar */}
 					<aside class="w-full lg:max-w-[300px] lg:overflow-scroll bg-container-1 border-b lg:border-b-0 lg:border-l border-border ">
 						<div class="p-15 md:p-30">
-							<h2 class="mb-15">{T("document")}</h2>
+							<h2 class="mb-15">{T()("document")}</h2>
 							<DetailsList
 								type="text"
 								items={[
 									{
-										label: T("collection"),
+										label: T()("collection"),
 										value: collection.data?.data.title,
 									},
 									{
-										label: T("created_by"),
-										value: document.data?.data.createdBy,
+										label: T()("created_by"),
+										value: (
+											<UserDisplay
+												user={{
+													username:
+														document.data?.data
+															.createdBy
+															?.username,
+													firstName:
+														document.data?.data
+															.createdBy
+															?.firstName,
+													lastName:
+														document.data?.data
+															.createdBy
+															?.lastName,
+													thumbnail: undefined,
+												}}
+												mode="long"
+											/>
+										),
+										stacked: true,
 										show: props.mode === "edit",
 									},
 									{
-										label: T("created_at"),
+										label: T()("created_at"),
 										value: (
 											<DateText
 												date={
@@ -250,7 +320,32 @@ const CollectionsDocumentsEditRoute: Component<
 										show: props.mode === "edit",
 									},
 									{
-										label: T("updated_at"),
+										label: T()("updated_by"),
+										value: (
+											<UserDisplay
+												user={{
+													username:
+														document.data?.data
+															.updatedBy
+															?.username,
+													firstName:
+														document.data?.data
+															.updatedBy
+															?.firstName,
+													lastName:
+														document.data?.data
+															.updatedBy
+															?.lastName,
+													thumbnail: undefined,
+												}}
+												mode="long"
+											/>
+										),
+										stacked: true,
+										show: props.mode === "edit",
+									},
+									{
+										label: T()("updated_at"),
 										value: (
 											<DateText
 												date={
@@ -272,8 +367,12 @@ const CollectionsDocumentsEditRoute: Component<
 						open: navGuard.getModalOpen(),
 						setOpen: navGuard.setModalOpen,
 						targetElement: navGuard.getTargetElement(),
+						targetCallback: navGuard.getTargetCallback(),
 					}}
 				/>
+				<SelectMediaPanel />
+				<LinkSelect />
+				<BrickImagePreview />
 				<DeleteDocument
 					id={document.data?.data.id}
 					state={{
@@ -289,6 +388,9 @@ const CollectionsDocumentsEditRoute: Component<
 						},
 					}}
 				/>
+				<Show when={isSaving()}>
+					<div class="fixed inset-0 bg-white bg-opacity-40 animate-pulse z-50" />
+				</Show>
 			</Match>
 		</Switch>
 	);

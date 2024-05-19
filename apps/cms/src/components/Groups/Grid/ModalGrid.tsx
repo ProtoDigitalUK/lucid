@@ -1,14 +1,10 @@
 import T from "@/translations";
 import { type Component, Show, Switch, Match, type JSXElement } from "solid-js";
-// Types
 import type { ResponseBody } from "@lucidcms/core/types";
-// Hooks
 import type useSearchParams from "@/hooks/useSearchParams";
-// Assets
 import notifySvg from "@/assets/illustrations/notify.svg";
 import emptySvg from "@/assets/illustrations/empty.svg";
 import noPermission from "@/assets/illustrations/no-permission.svg";
-// Components
 import Query from "@/components/Groups/Query";
 import ErrorBlock from "@/components/Partials/ErrorBlock";
 import Button from "@/components/Partials/Button";
@@ -39,8 +35,8 @@ export const ModalGrid: Component<ModalGridProps> = (props) => {
 						type="fill"
 						content={{
 							image: noPermission,
-							title: T("no_permission"),
-							description: T("no_permission_description"),
+							title: T()("no_permission"),
+							description: T()("no_permission_description"),
 						}}
 					/>
 				</Match>
@@ -49,8 +45,8 @@ export const ModalGrid: Component<ModalGridProps> = (props) => {
 						type="fill"
 						content={{
 							image: notifySvg,
-							title: T("error_title"),
-							description: T("error_message"),
+							title: T()("error_title"),
+							description: T()("error_message"),
 						}}
 					/>
 				</Match>
@@ -61,8 +57,8 @@ export const ModalGrid: Component<ModalGridProps> = (props) => {
 						type="fill"
 						content={{
 							image: emptySvg,
-							title: T("no_results"),
-							description: T("no_results_message"),
+							title: T()("no_results"),
+							description: T()("no_results_message"),
 						}}
 					>
 						<Show when={props.searchParams?.hasFiltersApplied()}>
@@ -74,13 +70,13 @@ export const ModalGrid: Component<ModalGridProps> = (props) => {
 									props.searchParams?.resetFilters();
 								}}
 							>
-								{T("reset_filters")}
+								{T()("reset_filters")}
 							</Button>
 						</Show>
 					</ErrorBlock>
 				</Match>
 				<Match when={props.state.isSuccess || props.state.isLoading}>
-					<ul class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-15">
+					<ul class="grid grid-cols-2 md:grid-cols-3 gap-15">
 						<Switch>
 							<Match when={props.state.isLoading}>
 								<Switch>

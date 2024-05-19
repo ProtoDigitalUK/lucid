@@ -1,7 +1,6 @@
 import { type Component, Show } from "solid-js";
 import classnames from "classnames";
 import { FaSolidInfo } from "solid-icons/fa";
-// Components
 import { HoverCard } from "@kobalte/core";
 
 interface TooltipProps {

@@ -1,8 +1,6 @@
 import T from "@/translations";
-// Utils
 import request from "@/utils/request";
 import serviceHelpers from "@/utils/service-helpers";
-// Types
 import type { ResponseBody } from "@lucidcms/core/types";
 
 interface Params {
@@ -35,10 +33,10 @@ const useDeleteMultiple = (props: UseDeleteMultipleProps) => {
 	return serviceHelpers.useMutationWrapper<Params, ResponseBody<null>>({
 		mutationFn: deleteMultipleReq,
 		successToast: {
-			title: T("deleted_toast_title", {
+			title: T()("deleted_toast_title", {
 				name: props.collectionName,
 			}),
-			message: T("deleted_toast_message", {
+			message: T()("deleted_toast_message", {
 				name: {
 					value: props.collectionName,
 					toLowerCase: true,

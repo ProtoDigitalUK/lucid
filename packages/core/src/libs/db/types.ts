@@ -36,13 +36,12 @@ export type JSONString = string;
 // ------------------------------------------------------------------------------
 // Tables
 
-export interface HeadlessLanguages {
-	id: Generated<number>;
+export interface HeadlessLocales {
 	code: string;
-	is_default: BooleanInt;
-	is_enabled: BooleanInt;
 	created_at: TimestampImmutable;
 	updated_at: TimestampMutateable;
+	is_deleted: ColumnType<BooleanInt, BooleanInt | undefined, BooleanInt>;
+	is_deleted_at: TimestampMutateable;
 }
 
 export interface HeadlessTranslationKeys {
@@ -53,7 +52,7 @@ export interface HeadlessTranslationKeys {
 export interface HeadlessTranslations {
 	id: Generated<number>;
 	translation_key_id: number;
-	language_id: number;
+	locale_code: string;
 	value: string | null;
 }
 
@@ -173,6 +172,7 @@ export interface HeadlessCollectionDocumentBricks {
 	brick_type: "builder" | "fixed" | "collection-fields";
 	brick_key: string | null;
 	brick_order: number | null;
+	brick_open: BooleanInt | null;
 }
 
 export interface HeadlessCollectionDocumentGroups {
@@ -182,6 +182,7 @@ export interface HeadlessCollectionDocumentGroups {
 	parent_group_id: number | null;
 	repeater_key: string;
 	group_order: number;
+	group_open: BooleanInt | null;
 	ref: string | null;
 }
 
@@ -190,7 +191,7 @@ export interface HeadlessCollectionDocumentFields {
 	collection_document_id: number;
 	collection_brick_id: number;
 	group_id: number | null;
-	language_id: number;
+	locale_code: string;
 	key: string;
 	type: FieldTypes;
 	text_value: string | null;
@@ -205,7 +206,7 @@ export interface HeadlessCollectionDocumentFields {
 // Database
 
 export interface LucidDB {
-	lucid_languages: HeadlessLanguages;
+	lucid_locales: HeadlessLocales;
 	lucid_translation_keys: HeadlessTranslationKeys;
 	lucid_translations: HeadlessTranslations;
 	lucid_options: HeadlessOptions;

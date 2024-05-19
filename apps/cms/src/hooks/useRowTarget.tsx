@@ -1,5 +1,5 @@
 /*
-    To avoid each row containing modals and panels, this is a helper hook to allow the modals to site on the level above and
+    To avoid each row containing modals and panels, this is a helper hook to allow the modals to sit on the level above and
     register the targeted row and update an open state for the specific modal or panel.
 */
 import { createSignal } from "solid-js";

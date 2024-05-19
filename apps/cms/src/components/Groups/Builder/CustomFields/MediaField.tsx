@@ -1,11 +1,16 @@
 import {
 	type Component,
-	type Accessor,
 	createSignal,
-	onMount,
+	createMemo,
 	batch,
+	createEffect,
 } from "solid-js";
-import type { CustomField, MediaMeta } from "@lucidcms/core/types";
+import type {
+	CustomField,
+	MediaMeta,
+	FieldResponse,
+	FieldErrors,
+} from "@lucidcms/core/types";
 import brickStore from "@/store/brickStore";
 import brickHelpers from "@/utils/brick-helpers";
 import Form from "@/components/Groups/Form";
@@ -13,12 +18,12 @@ import Form from "@/components/Groups/Form";
 interface MediaFieldProps {
 	state: {
 		brickIndex: number;
-		field: CustomField;
+		fieldConfig: CustomField;
+		fieldData?: FieldResponse;
 		groupId?: number | string;
-		contentLanguage?: number;
-
-		getFieldPath: Accessor<string[]>;
-		getGroupPath: Accessor<Array<string | number>>;
+		repeaterKey?: string;
+		contentLocale: string;
+		fieldError: FieldErrors | undefined;
 	};
 }
 
@@ -29,18 +34,25 @@ export const MediaField: Component<MediaFieldProps> = (props) => {
 	const [getMeta, setMeta] = createSignal<MediaMeta | undefined>();
 
 	// -------------------------------
+	// Memos
+	const fieldData = createMemo(() => {
+		return props.state.fieldData;
+	});
+
+	// -------------------------------
 	// Effects
-	onMount(() => {
-		const field = brickHelpers.getBrickField({
-			brickIndex: props.state.brickIndex,
-			fieldPath: props.state.getFieldPath(),
-			groupPath: props.state.getGroupPath(),
-			field: props.state.field,
-			contentLanguage: props.state.contentLanguage,
+	createEffect(() => {
+		const value = brickHelpers.getFieldValue<number>({
+			fieldData: fieldData(),
+			fieldConfig: props.state.fieldConfig,
+			contentLocale: props.state.contentLocale,
+		});
+		const meta = brickHelpers.getFieldMeta<MediaMeta>({
+			fieldData: fieldData(),
+			fieldConfig: props.state.fieldConfig,
+			contentLocale: props.state.contentLocale,
 		});
 
-		const value = field?.value as number | undefined;
-		const meta = field?.meta as MediaMeta | undefined;
 		setValue(value);
 		setMeta(meta);
 	});
@@ -50,30 +62,38 @@ export const MediaField: Component<MediaFieldProps> = (props) => {
 	return (
 		<>
 			<Form.MediaSelect
-				id={`field-${props.state.field.key}-${props.state.brickIndex}-${props.state.groupId}`}
+				id={brickHelpers.customFieldId({
+					key: props.state.fieldConfig.key,
+					brickIndex: props.state.brickIndex,
+					groupId: props.state.groupId,
+				})}
 				value={getValue()}
 				meta={getMeta()}
 				onChange={(value, meta) => {
 					batch(() => {
 						brickStore.get.setFieldValue({
 							brickIndex: props.state.brickIndex,
-							fieldPath: props.state.getFieldPath(),
-							groupPath: props.state.getGroupPath(),
+							fieldConfig: props.state.fieldConfig,
+							key: props.state.fieldConfig.key,
+							groupId: props.state.groupId,
+							repeaterKey: props.state.repeaterKey,
 							value: value,
 							meta: meta,
+							contentLocale: props.state.contentLocale,
 						});
 						setValue(value ?? undefined);
 						setMeta(meta ?? undefined);
 					});
 				}}
 				copy={{
-					label: props.state.field.title,
-					describedBy: props.state.field.description,
+					label: props.state.fieldConfig.title,
+					describedBy: props.state.fieldConfig.description,
 				}}
-				extensions={props.state.field.validation?.extensions}
-				type={props.state.field.validation?.type}
-				// errors={props.state.fieldError}
-				required={props.state.field.validation?.required || false}
+				disabled={props.state.fieldConfig.disabled}
+				extensions={props.state.fieldConfig.validation?.extensions}
+				type={props.state.fieldConfig.validation?.type}
+				errors={props.state.fieldError}
+				required={props.state.fieldConfig.validation?.required || false}
 			/>
 		</>
 	);

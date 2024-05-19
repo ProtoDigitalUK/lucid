@@ -1,9 +1,7 @@
 import T from "@/translations";
 import { type Component, For, Switch, createMemo, Match } from "solid-js";
 import { FaSolidSort, FaSolidCaretUp, FaSolidMinus } from "solid-icons/fa";
-// Hooks
 import type useSearchParams from "@/hooks/useSearchParams";
-// Components
 import { DropdownMenu } from "@kobalte/core";
 import DropdownContent from "@/components/Partials/DropdownContent";
 import classNames from "classnames";
@@ -36,7 +34,7 @@ const SortItem: Component<SortItemProps> = (props) => {
 		<li class="mb-2 last-of-type:mb-0">
 			<button
 				tabIndex={0}
-				class="w-full flex items-center justify-between group focus:outline-none focus:ring-2 focus:ring-primary-base"
+				class="w-full flex items-center justify-between group focus:outline-none focus:ring-1 focus:ring-primary-base"
 				onClick={() => {
 					let sortValue: "asc" | "desc" | undefined;
 					if (sort() === undefined) {
@@ -105,7 +103,7 @@ export const Sort: Component<SortProps> = (props) => {
 				<DropdownMenu.Icon>
 					<FaSolidSort />
 				</DropdownMenu.Icon>
-				<span class="ml-2">{T("sort")}</span>
+				<span class="ml-2">{T()("sort")}</span>
 			</DropdownMenu.Trigger>
 			<DropdownContent
 				options={{

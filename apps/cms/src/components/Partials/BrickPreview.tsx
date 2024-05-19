@@ -1,16 +1,15 @@
 import type { Component } from "solid-js";
-// Assets
 import brickPlaceholder from "@/assets/images/brick-placeholder.jpg";
-// Types
-import type { BrickConfigT } from "@headless/types/src/bricks";
-// Components
 import { Image } from "@kobalte/core";
 import AspectRatio from "@/components/Partials/AspectRatio";
 import classNames from "classnames";
 
 interface BrickPreviewProps {
 	data: {
-		brick: BrickConfigT | undefined;
+		brick?: {
+			title: string;
+			image?: string;
+		};
 	};
 	options?: {
 		rounded?: boolean;
@@ -29,7 +28,7 @@ const BrickPreview: Component<BrickPreviewProps> = (props) => {
 				})}
 			>
 				<Image.Img
-					src={props.data.brick?.preview?.image}
+					src={props.data.brick?.image}
 					alt={props.data.brick?.title}
 					loading="lazy"
 					class="w-full h-full object-cover"

@@ -27,9 +27,9 @@ const Button: Component<ButtonProps> = (props) => {
 	// Memos
 	const classes = createMemo(() => {
 		return classnames(
-			"flex items-center justify-center min-w-max text-center focus:outline-none focus:ring-2 duration-200 transition-colors rounded-md font-display relative disabled:cursor-not-allowed disabled:opacity-80 font-medium",
+			"flex items-center justify-center min-w-max text-center focus:outline-none focus:ring-1 duration-200 transition-colors rounded-md font-display relative disabled:cursor-not-allowed disabled:opacity-80 font-medium",
 			{
-				"bg-primary-base hover:bg-primary-hover text-primary-contrast fill-primary-contrast hover:fill-white ring-primary-base":
+				"bg-primary-base hover:bg-primary-hover text-primary-contrast fill-primary-contrast ring-primary-base":
 					props.theme === "primary",
 				"bg-transparent border border-primary-base hover:bg-primary-hover fill-primary-contrast text-title hover:text-primary-contrast ring-primary-base":
 					props.theme === "container-outline",
@@ -60,8 +60,8 @@ const Button: Component<ButtonProps> = (props) => {
 	const buttonOnClick = (e: MouseEvent) => {
 		if (props.permission === false) {
 			spawnToast({
-				title: T("no_permission_toast_title"),
-				message: T("no_permission_toast_message"),
+				title: T()("no_permission_toast_title"),
+				message: T()("no_permission_toast_message"),
 				status: "warning",
 			});
 			e.preventDefault();

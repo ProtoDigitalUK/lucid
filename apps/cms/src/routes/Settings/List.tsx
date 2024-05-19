@@ -1,11 +1,10 @@
 import T from "@/translations";
 import { type Component, Match, Switch, createMemo } from "solid-js";
 import { useLocation } from "@solidjs/router";
-// Services
 import api from "@/services/api";
-// Componetns
 import Layout from "@/components/Groups/Layout";
 import GeneralSettingsRoute from "@/routes/Settings/General";
+import ComingSoon from "@/components/Blocks/ComingSoon";
 
 const SettingsListRoute: Component = () => {
 	// ----------------------------------
@@ -26,27 +25,30 @@ const SettingsListRoute: Component = () => {
 		if (path === "/settings/integrations") return "integrations";
 		return "";
 	});
+	const isLoading = createMemo(() => settingsData.isLoading);
+	const isError = createMemo(() => settingsData.isError);
+	const isSuccess = createMemo(() => settingsData.isSuccess);
 
 	// ----------------------------------
 	// Render
 	return (
 		<Layout.PageLayout
-			title={T("settings_route_title")}
-			description={T("settings_route_description")}
+			title={T()("settings_route_title")}
+			description={T()("settings_route_description")}
 			state={{
-				isLoading: settingsData.isLoading,
-				isError: settingsData.isError,
-				isSuccess: settingsData.isSuccess,
+				isLoading: isLoading(),
+				isError: isError(),
+				isSuccess: isSuccess(),
 			}}
 			headingChildren={
 				<Layout.NavigationTabs
 					tabs={[
 						{
-							label: T("general"),
+							label: T()("general"),
 							href: "/settings",
 						},
 						{
-							label: T("integrations"),
+							label: T()("integrations"),
 							href: "/settings/integrations",
 						},
 					]}
@@ -61,7 +63,7 @@ const SettingsListRoute: Component = () => {
 						/>
 					</Match>
 					<Match when={currentTab() === "integrations"}>
-						integrations settings
+						<ComingSoon />
 					</Match>
 				</Switch>
 			</Layout.PageContent>

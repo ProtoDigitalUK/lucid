@@ -50,12 +50,30 @@ export default class CollectionDocumentsRepo {
 				"lucid_collection_documents.created_by",
 				"lucid_collection_documents.created_at",
 				"lucid_collection_documents.updated_at",
+				"lucid_collection_documents.updated_by",
 			])
-			.innerJoin(
-				"lucid_users",
-				"lucid_users.id",
+			.leftJoin(
+				"lucid_users as cb_user",
+				"cb_user.id",
 				"lucid_collection_documents.created_by",
 			)
+			.leftJoin(
+				"lucid_users as ub_user",
+				"cb_user.id",
+				"lucid_collection_documents.updated_by",
+			)
+			.select([
+				"cb_user.id as cb_user_id",
+				"cb_user.email as cb_user_email",
+				"cb_user.first_name as cb_user_first_name",
+				"cb_user.last_name as cb_user_last_name",
+				"cb_user.username as cb_user_username",
+				"ub_user.id as ub_user_id",
+				"ub_user.email as ub_user_email",
+				"ub_user.first_name as ub_user_first_name",
+				"ub_user.last_name as ub_user_last_name",
+				"ub_user.username as ub_user_username",
+			])
 			.where("lucid_collection_documents.id", "=", props.id)
 			.where("lucid_collection_documents.is_deleted", "=", 0)
 			.executeTakeFirst();
@@ -81,7 +99,6 @@ export default class CollectionDocumentsRepo {
 		collectionKey: string;
 		allowedFieldFilters: FieldFilters;
 		allowedFieldIncludes: Array<string>;
-		languageId: number;
 		config: Config;
 	}) => {
 		let pagesQuery = this.db
@@ -92,6 +109,7 @@ export default class CollectionDocumentsRepo {
 				"lucid_collection_documents.created_by",
 				"lucid_collection_documents.created_at",
 				"lucid_collection_documents.updated_at",
+				"lucid_collection_documents.updated_by",
 			])
 			.leftJoin(
 				"lucid_users",
@@ -152,7 +170,7 @@ export default class CollectionDocumentsRepo {
 									"lucid_collection_document_fields.text_value",
 									"lucid_collection_document_fields.int_value",
 									"lucid_collection_document_fields.bool_value",
-									"lucid_collection_document_fields.language_id",
+									"lucid_collection_document_fields.locale_code",
 									"lucid_collection_document_fields.media_id",
 									"lucid_collection_document_fields.user_id",
 									"lucid_collection_document_fields.type",
@@ -183,7 +201,7 @@ export default class CollectionDocumentsRepo {
 												)
 												.select([
 													"lucid_translations.value",
-													"lucid_translations.language_id",
+													"lucid_translations.locale_code",
 												])
 												.where(
 													"lucid_translations.value",
@@ -205,7 +223,7 @@ export default class CollectionDocumentsRepo {
 												)
 												.select([
 													"lucid_translations.value",
-													"lucid_translations.language_id",
+													"lucid_translations.locale_code",
 												])
 												.where(
 													"lucid_translations.value",
@@ -224,11 +242,6 @@ export default class CollectionDocumentsRepo {
 									"lucid_collection_document_fields.collection_document_id",
 									"=",
 									"lucid_collection_documents.id",
-								)
-								.where(
-									"lucid_collection_document_fields.language_id",
-									"=",
-									props.languageId,
 								)
 								.where(
 									"lucid_collection_document_fields.key",

@@ -34,7 +34,7 @@ const createMultipleFields = async (
 				jsonValue: field.jsonValue,
 				mediaId: field.mediaId,
 				userId: field.userId,
-				languageId: field.languageId,
+				localeCode: field.localeCode,
 			};
 		}),
 	});

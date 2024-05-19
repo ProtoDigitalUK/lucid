@@ -1,9 +1,7 @@
 import { createMemo, type Accessor } from "solid-js";
 import { createQuery } from "@tanstack/solid-query";
-// Utils
 import request from "@/utils/request";
 import serviceHelpers from "@/utils/service-helpers";
-// Types
 import type { ResponseBody, MediaResponse } from "@lucidcms/core/types";
 
 interface QueryParams {
@@ -17,7 +15,7 @@ interface QueryParams {
 	};
 	perPage?: number;
 	headers: {
-		"lucid-content-lang": Accessor<number | undefined> | number;
+		"lucid-content-locale": Accessor<string | undefined> | string;
 	};
 }
 

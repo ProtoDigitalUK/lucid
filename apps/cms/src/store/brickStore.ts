@@ -9,7 +9,7 @@ import type {
 	FieldResponseValue,
 	FieldResponseMeta,
 	CustomField,
-	FieldGroupResponse,
+	CollectionBrickConfig,
 } from "@lucidcms/core/types";
 
 export interface BrickData {
@@ -17,59 +17,90 @@ export interface BrickData {
 	key: string;
 	order: number;
 	type: "builder" | "fixed" | "collection-fields";
+	open: 1 | 0 | null;
 	fields: Array<FieldResponse>;
 }
 
 type BrickStoreT = {
 	bricks: Array<BrickData>;
 	fieldsErrors: Array<FieldErrors>;
+	documentMutated: boolean;
+	imagePreview: {
+		open: boolean;
+		data:
+			| {
+					title: string;
+					description?: string;
+					image?: string;
+			  }
+			| undefined;
+	};
 	// functions
 	reset: () => void;
 	setBricks: (
 		document?: CollectionDocumentResponse,
 		collection?: CollectionResponse,
 	) => void;
+	addBrick: (props: {
+		brickConfig: CollectionBrickConfig;
+	}) => void;
+	removeBrick: (brickIndex: number) => void;
+	toggleBrickOpen: (brickIndex: number) => void;
+	swapBrickOrder: (props: {
+		brickIndex: number;
+		targetBrickIndex: number;
+	}) => void;
 	setFieldValue: (params: {
 		brickIndex: number;
-		fieldPath: string[];
-		groupPath: Array<number | string>;
+		key: string;
+		fieldConfig: CustomField;
+		repeaterKey?: string;
+		groupId?: number | string;
 		value: FieldResponseValue;
 		meta?: FieldResponseMeta;
+		contentLocale: string;
 	}) => void;
 	addField: (params: {
 		brickIndex: number;
-		fieldPath: string[];
-		groupPath?: Array<number | string>;
-		field: CustomField;
-		contentLanguage: number | undefined;
+		fieldConfig: CustomField;
+		groupId?: number | string;
+		repeaterKey?: string;
+		locales: string[];
 	}) => FieldResponse;
 	addRepeaterGroup: (params: {
 		brickIndex: number;
-		fieldPath: string[];
-		groupPath: Array<number | string>;
-		fields: CustomField[];
-		contentLanguage?: number;
+		fieldConfig: CustomField[];
+		key: string;
+		groupId?: number | string;
+		parentRepeaterKey?: string;
+		contentLocale: string;
 	}) => void;
 	removeRepeaterGroup: (params: {
 		brickIndex: number;
-		fieldPath: string[];
-		groupPath: Array<number | string>;
+		repeaterKey: string;
 		groupId: number | string;
 	}) => void;
 	swapGroupOrder: (_props: {
 		brickIndex: number;
-		fieldPath: string[];
-		groupPath: Array<number | string>;
-
+		repeaterKey: string;
 		groupId: number | string;
 		targetGroupId: number | string;
 	}) => void;
+	toggleGroupOpen: (
+		brickIndex: number,
+		repeaterKey: string,
+		groupId: number | string,
+	) => void;
 };
 
 const [get, set] = createStore<BrickStoreT>({
 	bricks: [],
 	fieldsErrors: [],
-
+	documentMutated: false,
+	imagePreview: {
+		open: false,
+		data: undefined,
+	},
 	reset() {
 		set("bricks", []);
 		set("fieldsErrors", []);
@@ -85,6 +116,7 @@ const [get, set] = createStore<BrickStoreT>({
 					key: "collection-sudo-brick",
 					order: -1,
 					type: "collection-fields",
+					open: 0,
 					fields: document?.fields || [],
 				});
 
@@ -104,39 +136,113 @@ const [get, set] = createStore<BrickStoreT>({
 						key: brick.key,
 						fields: [],
 						type: "fixed",
+						open: 0,
 						order: -1,
 					});
 				}
 			}),
 		);
+	},
+	addBrick(props) {
+		set(
+			"bricks",
+			produce((draft) => {
+				const largestOrder = draft?.reduce((prev, current) => {
+					return prev.order > current.order ? prev : current;
+				});
 
-		// set empty brick data if collection fields (sudo brick) is empty
+				draft.push({
+					id: `ref-${shortUUID.generate()}`,
+					key: props.brickConfig.key,
+					order: largestOrder ? largestOrder.order + 1 : 0,
+					type: "builder",
+					open: 0,
+					fields: [],
+				});
+			}),
+		);
+		set("documentMutated", true);
+	},
+	removeBrick(brickIndex) {
+		set(
+			"bricks",
+			produce((draft) => {
+				if (draft[brickIndex].type !== "builder") return;
+				draft.splice(brickIndex, 1);
+			}),
+		);
+		set("documentMutated", true);
+	},
+	toggleBrickOpen(brickIndex) {
+		set(
+			"bricks",
+			produce((draft) => {
+				draft[brickIndex].open = draft[brickIndex].open === 1 ? 0 : 1;
+			}),
+		);
+		set("documentMutated", true);
+	},
+	swapBrickOrder(props) {
+		set(
+			"bricks",
+			produce((draft) => {
+				const brick = draft[props.brickIndex];
+				const targetBrick = draft[props.targetBrickIndex];
+
+				const order = brick.order;
+				brick.order = targetBrick.order;
+				targetBrick.order = order;
+
+				draft.sort((a, b) => a.order - b.order);
+			}),
+		);
+		set("documentMutated", true);
 	},
 	// Fields
 	setFieldValue(params) {
 		set(
 			"bricks",
 			produce((draft) => {
-				const field = brickHelpers.getBrickFieldRecursive({
+				const field = brickHelpers.findFieldRecursive({
 					fields: draft[params.brickIndex].fields,
-					fieldPath: params.fieldPath,
-					groupPath: params.groupPath,
+					targetKey: params.key,
+					groupId: params.groupId,
+					repeaterKey: params.repeaterKey,
 				});
 
 				if (!field) return;
 
-				field.value = params.value;
-				field.meta = params.meta || undefined;
+				if (params.fieldConfig.translations === true) {
+					if (!field.translations) field.translations = {};
+					if (!field.meta) field.meta = {};
+
+					field.translations[params.contentLocale] = params.value;
+					(field.meta as Record<string, FieldResponseMeta>)[
+						params.contentLocale
+					] = params.meta || undefined;
+				} else {
+					field.value = params.value;
+					field.meta = params.meta || undefined;
+				}
 			}),
 		);
+		set("documentMutated", true);
 	},
 	addField(params) {
 		const newField: FieldResponse = {
-			key: params.field.key,
-			type: params.field.type,
-			value: params.field.default,
-			languageId: params.contentLanguage,
+			key: params.fieldConfig.key,
+			type: params.fieldConfig.type,
 		};
+
+		if (params.fieldConfig.translations === true) {
+			for (const locale of params.locales) {
+				newField.translations = {
+					[locale]: params.fieldConfig.default,
+				};
+			}
+		} else {
+			newField.value = params.fieldConfig.default;
+		}
 
 		brickStore.set(
 			"bricks",
@@ -145,22 +251,29 @@ const [get, set] = createStore<BrickStoreT>({
 				if (!brick) return;
 
 				// Field belongs on the brick level
-				if (params.fieldPath.length === 1) {
+				if (params.groupId === undefined) {
 					brick.fields.push(newField);
 					return;
 				}
 
-				// Field belongs to a group
-				const group = brickHelpers.getBrickFieldGroupRecursive({
+				if (params.repeaterKey === undefined) return;
+
+				const repeaterField = brickHelpers.findFieldRecursive({
 					fields: brick.fields,
-					fieldPath: params.fieldPath,
-					groupPath: params.groupPath || [],
+					targetKey: params.repeaterKey,
+					groupId: params.groupId,
 				});
+				if (!repeaterField) return;
+				if (repeaterField.type !== "repeater") return;
+
+				const group = repeaterField.groups?.find(
+					(g) => g.id === params.groupId,
+				);
 				if (!group) return;
+
 				group.fields.push(newField);
 			}),
 		);
-
 		return newField;
 	},
 	// Groups
@@ -168,10 +281,11 @@ const [get, set] = createStore<BrickStoreT>({
 		set(
 			"bricks",
 			produce((draft) => {
-				const field = brickHelpers.getBrickFieldRecursive({
+				const field = brickHelpers.findFieldRecursive({
 					fields: draft[params.brickIndex].fields,
-					fieldPath: params.fieldPath,
-					groupPath: params.groupPath,
+					targetKey: params.key,
+					groupId: params.groupId,
+					repeaterKey: params.parentRepeaterKey,
 				});
 
 				if (!field) return;
@@ -180,12 +294,13 @@ const [get, set] = createStore<BrickStoreT>({
 
 				const groupFields: FieldResponse[] = [];
 
-				for (const field of params.fields) {
+				for (const field of params.fieldConfig) {
 					groupFields.push({
 						key: field.key,
 						type: field.type,
-						value: field.default,
-						languageId: params.contentLanguage,
+						translations: {
+							[params.contentLocale]: field.default,
+						},
 					});
 				}
 
@@ -194,6 +309,7 @@ const [get, set] = createStore<BrickStoreT>({
 						{
 							id: `ref-${shortUUID.generate()}`,
 							order: 0,
+							open: 0,
 							fields: groupFields,
 						},
 					];
@@ -207,19 +323,20 @@ const [get, set] = createStore<BrickStoreT>({
 				field.groups.push({
 					id: `ref-${shortUUID.generate()}`,
 					order: largestOrder.order + 1,
+					open: 0,
 					fields: groupFields,
 				});
 			}),
 		);
+		set("documentMutated", true);
 	},
 	removeRepeaterGroup(params) {
 		set(
 			"bricks",
 			produce((draft) => {
-				const field = brickHelpers.getBrickFieldRecursive({
+				const field = brickHelpers.findFieldRecursive({
 					fields: draft[params.brickIndex].fields,
-					fieldPath: params.fieldPath,
-					groupPath: params.groupPath,
+					targetKey: params.repeaterKey,
 				});
 
 				if (!field) return;
@@ -234,15 +351,15 @@ const [get, set] = createStore<BrickStoreT>({
 				field.groups.splice(groupIndex, 1);
 			}),
 		);
+		set("documentMutated", true);
 	},
 	swapGroupOrder(params) {
 		set(
 			"bricks",
 			produce((draft) => {
-				const field = brickHelpers.getBrickFieldRecursive({
+				const field = brickHelpers.findFieldRecursive({
 					fields: draft[params.brickIndex].fields,
-					fieldPath: params.fieldPath,
-					groupPath: params.groupPath,
+					targetKey: params.repeaterKey,
 				});
 
 				if (!field) return;
@@ -263,8 +380,30 @@ const [get, set] = createStore<BrickStoreT>({
 				field.groups[groupIndex].order =
 					field.groups[targetGroupIndex].order;
 				field.groups[targetGroupIndex].order = groupOrder;
+
+				field.groups.sort((a, b) => a.order - b.order);
 			}),
 		);
+		set("documentMutated", true);
+	},
+	toggleGroupOpen: (brickIndex, repeaterKey, groupId) => {
+		set(
+			"bricks",
+			produce((draft) => {
+				const field = brickHelpers.findFieldRecursive({
+					fields: draft[brickIndex].fields,
+					targetKey: repeaterKey,
+				});
+
+				if (!field || !field.groups) return;
+
+				const group = field.groups.find((g) => g.id === groupId);
+				if (!group) return;
+
+				group.open = group.open === 1 ? 0 : 1;
+			}),
+		);
+		set("documentMutated", true);
 	},
 });
 

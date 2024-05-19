@@ -6,7 +6,7 @@ import type { CollectionResponse, CustomField } from "@lucidcms/core/types";
 import type useSearchParams from "@/hooks/useSearchParams";
 import useRowTarget from "@/hooks/useRowTarget";
 import api from "@/services/api";
-import contentLanguageStore from "@/store/contentLanguageStore";
+import contentLocaleStore from "@/store/contentLocaleStore";
 import Table from "@/components/Groups/Table";
 import DocumentRow from "@/components/Tables/Rows/DocumentRow";
 import DeleteDocument from "@/components/Modals/Documents/DeleteDocument";
@@ -30,8 +30,8 @@ const DocumentsTable: Component<DocumentsTableProps> = (props) => {
 	// ----------------------------------
 	// Memos
 	const collectionKey = createMemo(() => params.collectionKey);
-	const contentLanguage = createMemo(
-		() => contentLanguageStore.get.contentLanguage,
+	const contentLocale = createMemo(
+		() => contentLocaleStore.get.contentLocale,
 	);
 	const tableHeadColumns = createMemo(() => {
 		return props.fieldIncludes().map((field) => {
@@ -61,9 +61,6 @@ const DocumentsTable: Component<DocumentsTableProps> = (props) => {
 			location: {
 				collectionKey: collectionKey,
 			},
-			headers: {
-				"lucid-content-lang": contentLanguage,
-			},
 		},
 		enabled: () => props.searchParams.getSettled(),
 	});
@@ -86,7 +83,7 @@ const DocumentsTable: Component<DocumentsTableProps> = (props) => {
 				head={[
 					...tableHeadColumns(),
 					{
-						label: T("updated_at"),
+						label: T()("updated_at"),
 						key: "updated_at",
 						icon: <FaSolidCalendar />,
 					},
@@ -125,7 +122,7 @@ const DocumentsTable: Component<DocumentsTableProps> = (props) => {
 								fieldInclude={props.fieldIncludes()}
 								collection={props.collection}
 								include={include}
-								contentLanguage={contentLanguage()}
+								contentLocale={contentLocale()}
 								selected={selected[i]}
 								rowTarget={rowTarget}
 								options={{

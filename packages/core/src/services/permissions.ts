@@ -18,10 +18,6 @@ export const permissionGroups: Record<PermissionGroupKey, PermissionGroup> = {
 		key: "settings_permissions",
 		permissions: ["update_settings"],
 	},
-	languages: {
-		key: "languages_permissions",
-		permissions: ["create_language", "update_language", "delete_language"],
-	},
 	emails: {
 		key: "emails_permissions",
 		permissions: ["read_email", "delete_email", "send_email"],

@@ -31,8 +31,8 @@ const DeleteUser: Component<DeleteUserProps> = (props) => {
 				isError: deleteUser.action.isError,
 			}}
 			content={{
-				title: T("delete_user_modal_title"),
-				description: T("delete_user_modal_description"),
+				title: T()("delete_user_modal_title"),
+				description: T()("delete_user_modal_description"),
 				error: deleteUser.errors()?.message,
 			}}
 			onConfirm={() => {

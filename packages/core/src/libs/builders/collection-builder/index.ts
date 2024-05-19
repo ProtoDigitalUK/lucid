@@ -121,21 +121,23 @@ export default class CollectionBuilder extends FieldBuilder {
 			},
 		};
 	}
-	get fixedBricks(): Array<CollectionBrickConfigT> {
+	get fixedBricks(): Array<CollectionBrickConfig> {
 		return (
 			this.config.bricks?.fixed?.map((brick) => ({
 				key: brick.key,
 				title: brick.config.title,
+				description: brick.config.description,
 				preview: brick.config.preview,
 				fields: brick.fieldTree,
 			})) ?? []
 		);
 	}
-	get builderBricks(): Array<CollectionBrickConfigT> {
+	get builderBricks(): Array<CollectionBrickConfig> {
 		return (
 			this.config.bricks?.builder?.map((brick) => ({
 				key: brick.key,
 				title: brick.config.title,
+				description: brick.config.description,
 				preview: brick.config.preview,
 				fields: brick.fieldTree,
 			})) ?? []
@@ -203,9 +205,10 @@ export type FieldFilters = Array<{
 	type: FieldTypes;
 }>;
 
-export interface CollectionBrickConfigT {
+export interface CollectionBrickConfig {
 	key: BrickBuilder["key"];
 	title: BrickBuilder["config"]["title"];
+	description: BrickBuilder["config"]["description"];
 	preview: BrickBuilder["config"]["preview"];
 	fields: CustomField[];
 }

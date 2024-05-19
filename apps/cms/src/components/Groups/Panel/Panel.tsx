@@ -12,19 +12,15 @@ import {
 	type Accessor,
 } from "solid-js";
 import { FaSolidArrowLeft } from "solid-icons/fa";
-// Assets
 import notifyIllustration from "@/assets/illustrations/notify.svg";
-// Types
 import type { ErrorResponse } from "@lucidcms/core/types";
-// Store
-import contentLanguageStore from "@/store/contentLanguageStore";
-// Components
+import contentLocaleStore from "@/store/contentLocaleStore";
 import { Dialog } from "@kobalte/core";
 import Loading from "@/components/Partials/Loading";
 import ErrorBlock from "@/components/Partials/ErrorBlock";
 import Button from "@/components/Partials/Button";
 import ErrorMessage from "@/components/Partials/ErrorMessage";
-import ContentLanguageSelect from "@/components/Partials/ContentLanguageSelect";
+import ContentLocaleSelect from "@/components/Partials/ContentLocaleSelect";
 
 interface PanelProps {
 	open: boolean;
@@ -33,9 +29,9 @@ interface PanelProps {
 	reset: () => void;
 	hideFooter?: boolean;
 	langauge?: {
-		contentLanguage?: boolean;
-		hasContentLanguageError?: boolean;
-		useDefaultContentLanguage?: boolean;
+		contentLocale?: boolean;
+		hascontentLocaleError?: boolean;
+		useDefaultcontentLocale?: boolean;
 	};
 
 	fetchState?: {
@@ -55,8 +51,8 @@ interface PanelProps {
 		submit?: string;
 	};
 	children: (_props?: {
-		contentLanguage: Accessor<number | undefined>;
-		setContentLanguage: (_value: number) => void;
+		contentLocale: Accessor<string | undefined>;
+		setContentLocale: (_value: string) => void;
 	}) => JSXElement;
 }
 
@@ -64,9 +60,9 @@ export const Panel: Component<PanelProps> = (props) => {
 	// ------------------------------
 	// State
 	const [getBodyMinHeight, setBodyMinHeight] = createSignal(0);
-	const [contentLanguage, setContentLanguage] = createSignal<
-		number | undefined
-	>(undefined);
+	const [contentLocale, setContentLocale] = createSignal<string | undefined>(
+		undefined,
+	);
 
 	// ------------------------------
 	// Refs
@@ -85,14 +81,14 @@ export const Panel: Component<PanelProps> = (props) => {
 			}
 		});
 	};
-	const getDefaultContentLanguage = () => {
-		if (!props.langauge?.useDefaultContentLanguage)
-			return contentLanguageStore.get.contentLanguage;
-		const defaultLanguage = contentLanguageStore.get.languages.find(
-			(language) => language.isDefault,
+	const getDefaultContentLocale = () => {
+		if (!props.langauge?.useDefaultcontentLocale)
+			return contentLocaleStore.get.contentLocale;
+		const defaultLocale = contentLocaleStore.get.locales.find(
+			(locale) => locale.isDefault,
 		);
-		if (defaultLanguage) return defaultLanguage.id;
-		return contentLanguageStore.get.contentLanguage;
+		if (defaultLocale) return defaultLocale.code;
+		return contentLocaleStore.get.contentLocale;
 	};
 
 	// ------------------------------
@@ -106,15 +102,15 @@ export const Panel: Component<PanelProps> = (props) => {
 	createEffect(() => {
 		if (props.open) {
 			props.reset();
-			setContentLanguage(getDefaultContentLanguage());
+			setContentLocale(getDefaultContentLocale());
 			setBodyHeightValue();
 		}
 	});
 
 	createEffect(() => {
-		const defaultLang = getDefaultContentLanguage();
-		if (contentLanguage() === undefined && defaultLang !== undefined)
-			setContentLanguage(defaultLang);
+		const defaultLang = getDefaultContentLocale();
+		if (contentLocale() === undefined && defaultLang !== undefined)
+			setContentLocale(defaultLang);
 	});
 
 	// ------------------------------
@@ -173,14 +169,14 @@ export const Panel: Component<PanelProps> = (props) => {
 									</Show>
 								</Match>
 							</Switch>
-							<Show when={props.langauge?.contentLanguage}>
+							<Show when={props.langauge?.contentLocale}>
 								<div class="mt-5">
-									<ContentLanguageSelect
-										value={contentLanguage()}
-										setValue={setContentLanguage}
+									<ContentLocaleSelect
+										value={contentLocale()}
+										setValue={setContentLocale}
 										hasError={
 											props.langauge
-												?.hasContentLanguageError
+												?.hascontentLocaleError
 										}
 									/>
 								</div>
@@ -194,15 +190,15 @@ export const Panel: Component<PanelProps> = (props) => {
 							}}
 						>
 							<div
-								class="p-15 md:p-30 relative"
+								class="p-15 md:p-30 relative flex flex-col"
 								style={{
 									"min-height": `calc(100vh - ${getBodyMinHeight()}px)`,
 								}}
 							>
 								<Switch
 									fallback={props.children({
-										contentLanguage: contentLanguage,
-										setContentLanguage: setContentLanguage,
+										contentLocale: contentLocale,
+										setContentLocale: setContentLocale,
 									})}
 								>
 									<Match when={isLoading()}>
@@ -217,11 +213,11 @@ export const Panel: Component<PanelProps> = (props) => {
 													title:
 														props.content
 															.fetchError ||
-														T("error_title"),
+														T()("error_title"),
 													description: props.content
 														.fetchError
 														? ""
-														: T("error_message"),
+														: T()("error_message"),
 												}}
 											/>
 										</div>
@@ -256,7 +252,7 @@ export const Panel: Component<PanelProps> = (props) => {
 											type="button"
 											onClick={() => props.setOpen(false)}
 										>
-											{T("close")}
+											{T()("close")}
 										</Button>
 										<Show when={props.content.submit}>
 											<Button

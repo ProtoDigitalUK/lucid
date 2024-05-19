@@ -1,12 +1,12 @@
 import { LucidAPIError } from "../../utils/error-handler.js";
 import type { MultipartFile } from "@fastify/multipart";
-import languagesServices from "../languages/index.js";
+import localesServices from "../locales/index.js";
 import serviceWrapper from "../../utils/service-wrapper.js";
 import mediaServices from "./index.js";
 import translationsServices from "../translations/index.js";
 import {
 	mergeTranslationGroups,
-	getUniqueLanguageIDs,
+	getUniquelocaleCodes,
 } from "../../utils/translation-helpers.js";
 import type { BooleanInt } from "../../libs/db/types.js";
 import Repository from "../../libs/repositories/index.js";
@@ -15,11 +15,11 @@ import type { ServiceConfig } from "../../utils/service-wrapper.js";
 export interface ServiceData {
 	fileData: MultipartFile | undefined;
 	titleTranslations?: {
-		languageId: number;
+		localeCode: string;
 		value: string | null;
 	}[];
 	altTranslations?: {
-		languageId: number;
+		localeCode: string;
 		value: string | null;
 	}[];
 	visible?: BooleanInt;
@@ -35,15 +35,15 @@ const uploadSingle = async (
 	try {
 		const MediaRepo = Repository.get("media", serviceConfig.db);
 
-		await serviceWrapper(
-			languagesServices.checks.checkLanguagesExist,
-			false,
-		)(serviceConfig, {
-			languageIds: getUniqueLanguageIDs([
-				data.titleTranslations || [],
-				data.altTranslations || [],
-			]),
-		});
+		await serviceWrapper(localesServices.checks.checkLocalesExist, false)(
+			serviceConfig,
+			{
+				localeCodes: getUniquelocaleCodes([
+					data.titleTranslations || [],
+					data.altTranslations || [],
+				]),
+			},
+		);
 
 		const translationKeyIdPromise = serviceWrapper(
 			translationsServices.createMultiple,

@@ -30,6 +30,7 @@ const createMultiple = async (
 		bricks: data.bricks,
 		fields: data.fields,
 		documentId: data.documentId,
+		localisation: serviceConfig.config.localisation,
 	});
 	if (bricks.length === 0) return;
 
@@ -61,6 +62,7 @@ const createMultiple = async (
 			brickType: b.type,
 			brickKey: b.key,
 			brickOrder: b.order,
+			brickOpen: b.open,
 			collectionDocumentId: data.documentId,
 		})),
 	});

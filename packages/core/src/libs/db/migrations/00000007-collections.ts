@@ -50,6 +50,7 @@ const Migration00000007: MigrationFn = (adapter) => {
 				.addColumn("brick_type", "text", (col) => col.notNull()) // builder, fixed, collection-fields
 				.addColumn("brick_key", "text")
 				.addColumn("brick_order", "integer")
+				.addColumn("brick_open", "integer", (col) => col.defaultTo(0))
 				.execute();
 
 			// Groups
@@ -75,6 +76,7 @@ const Migration00000007: MigrationFn = (adapter) => {
 						.references("lucid_collection_document_groups.group_id")
 						.onDelete("cascade"),
 				)
+				.addColumn("group_open", "integer", (col) => col.defaultTo(0))
 				.addColumn("repeater_key", "text", (col) => col.notNull())
 				.addColumn("group_order", "integer", (col) => col.notNull())
 				.addColumn("ref", "text")
@@ -115,9 +117,9 @@ const Migration00000007: MigrationFn = (adapter) => {
 						.references("lucid_collection_document_groups.group_id")
 						.onDelete("cascade"),
 				)
-				.addColumn("language_id", "integer", (col) =>
+				.addColumn("locale_code", "text", (col) =>
 					col
-						.references("lucid_languages.id")
+						.references("lucid_locales.code")
 						.onDelete("cascade")
 						.notNull(),
 				)
@@ -136,9 +138,9 @@ const Migration00000007: MigrationFn = (adapter) => {
 				.execute();
 
 			await db.schema
-				.createIndex("idx_lucid_fields_language_id")
+				.createIndex("idx_lucid_fields_locale_code")
 				.on("lucid_collection_document_fields")
-				.column("language_id")
+				.column("locale_code")
 				.execute();
 
 			await db.schema

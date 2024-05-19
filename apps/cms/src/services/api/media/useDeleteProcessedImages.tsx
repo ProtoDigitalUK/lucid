@@ -1,8 +1,6 @@
 import T from "@/translations";
-// Utils
 import request from "@/utils/request";
 import serviceHelpers from "@/utils/service-helpers";
-// Types
 import type { ResponseBody } from "@lucidcms/core/types";
 
 interface Params {
@@ -30,8 +28,8 @@ const useDeleteProcessedImages = (props: UseDeleteProcessedImagesProps) => {
 	return serviceHelpers.useMutationWrapper<Params, ResponseBody<null>>({
 		mutationFn: deleteProcessedImagesReq,
 		successToast: {
-			title: T("delete_processed_images_toast_title"),
-			message: T("delete_processed_images_toast_message"),
+			title: T()("delete_processed_images_toast_title"),
+			message: T()("delete_processed_images_toast_message"),
 		},
 		invalidates: ["settings.getSettings"],
 		onSuccess: props.onSuccess,

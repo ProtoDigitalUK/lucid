@@ -14,7 +14,7 @@ import type { MediaResponse } from "@lucidcms/core/types";
 import helpers from "@/utils/helpers";
 import dateHelpers from "@/utils/date-helpers";
 import { getBodyError, getErrorObject } from "@/utils/error-helpers";
-import contentLanguageStore from "@/store/contentLanguageStore";
+import contentLocaleStore from "@/store/contentLocaleStore";
 import Panel from "@/components/Groups/Panel";
 import Form from "@/components/Groups/Form";
 import SectionHeading from "@/components/Blocks/SectionHeading";
@@ -93,7 +93,7 @@ const CreateUpdateMediaPanel: Component<CreateUpdateMediaPanelProps> = (
 			? false
 			: media.data?.data.type === "image";
 	});
-	const languages = createMemo(() => contentLanguageStore.get.languages);
+	const locales = createMemo(() => contentLocaleStore.get.locales);
 	const mutateIsLoading = createMemo(() => {
 		return updateSingle.action.isPending || createSingle.action.isPending;
 	});
@@ -155,15 +155,15 @@ const CreateUpdateMediaPanel: Component<CreateUpdateMediaPanelProps> = (
 	const panelContent = createMemo(() => {
 		if (panelMode() === "create") {
 			return {
-				title: T("create_media_panel_title"),
-				description: T("create_media_panel_description"),
-				submit: T("create"),
+				title: T()("create_media_panel_title"),
+				description: T()("create_media_panel_description"),
+				submit: T()("create"),
 			};
 		}
 		return {
-			title: T("update_media_panel_title"),
-			description: T("update_media_panel_description"),
-			submit: T("update"),
+			title: T()("update_media_panel_title"),
+			description: T()("update_media_panel_description"),
+			submit: T()("update"),
 		};
 	});
 	const panelFetchState = createMemo(() => {
@@ -248,45 +248,43 @@ const CreateUpdateMediaPanel: Component<CreateUpdateMediaPanelProps> = (
 			}}
 			content={panelContent()}
 			langauge={{
-				contentLanguage: true,
-				hasContentLanguageError: hasTranslationErrors(),
-				useDefaultContentLanguage: panelMode() === "create",
+				contentLocale: true,
+				hascontentLocaleError: hasTranslationErrors(),
+				useDefaultcontentLocale: panelMode() === "create",
 			}}
 		>
 			{(lang) => (
 				<>
 					<MediaFile.Render />
-					<For each={languages()}>
-						{(language, index) => (
-							<Show
-								when={language.id === lang?.contentLanguage()}
-							>
+					<For each={locales()}>
+						{(locale, index) => (
+							<Show when={locale.code === lang?.contentLocale()}>
 								<SectionHeading
-									title={T("details_lang", {
-										code: language.code,
+									title={T()("details_lang", {
+										code: locale.code,
 									})}
 								/>
 								<Form.Input
-									id={`name-${language.id}`}
+									id={`name-${locale.code}`}
 									value={
 										getTitleTranslations().find(
 											(item) =>
-												item.languageId === language.id,
+												item.localeCode === locale.code,
 										)?.value || ""
 									}
 									onChange={(val) => {
 										helpers.updateTranslation(
 											setTitleTranslations,
 											{
-												languageId: language.id,
+												localeCode: locale.code,
 												value: val,
 											},
 										);
 									}}
-									name={`name-${language.id}`}
+									name={`name-${locale.code}`}
 									type="text"
 									copy={{
-										label: T("name"),
+										label: T()("name"),
 									}}
 									errors={getErrorObject(
 										inputError(index())?.name,
@@ -294,27 +292,27 @@ const CreateUpdateMediaPanel: Component<CreateUpdateMediaPanelProps> = (
 								/>
 								<Show when={showAltInput()}>
 									<Form.Input
-										id={`alt-${language.id}`}
+										id={`alt-${locale.code}`}
 										value={
 											getAltTranslations().find(
 												(item) =>
-													item.languageId ===
-													language.id,
+													item.localeCode ===
+													locale.code,
 											)?.value || ""
 										}
 										onChange={(val) => {
 											helpers.updateTranslation(
 												setAltTranslations,
 												{
-													languageId: language.id,
+													localeCode: locale.code,
 													value: val,
 												},
 											);
 										}}
-										name={`alt-${language.id}`}
+										name={`alt-${locale.code}`}
 										type="text"
 										copy={{
-											label: T("alt"),
+											label: T()("alt"),
 										}}
 										errors={getErrorObject(
 											inputError(index())?.alt,
@@ -325,37 +323,37 @@ const CreateUpdateMediaPanel: Component<CreateUpdateMediaPanelProps> = (
 						)}
 					</For>
 					<Show when={props.id !== undefined}>
-						<SectionHeading title={T("meta")} />
+						<SectionHeading title={T()("meta")} />
 						<DetailsList
 							type="text"
 							items={[
 								{
-									label: T("file_size"),
+									label: T()("file_size"),
 									value: helpers.bytesToSize(
 										media.data?.data.meta.fileSize ?? 0,
 									),
 								},
 								{
-									label: T("dimensions"),
+									label: T()("dimensions"),
 									value: `${media.data?.data.meta.width} x ${media.data?.data.meta.height}`,
 									show: media.data?.data.type === "image",
 								},
 								{
-									label: T("extension"),
+									label: T()("extension"),
 									value: media.data?.data.meta.fileExtension,
 								},
 								{
-									label: T("mime_type"),
+									label: T()("mime_type"),
 									value: media.data?.data.meta.mimeType,
 								},
 								{
-									label: T("created_at"),
+									label: T()("created_at"),
 									value: dateHelpers.formatDate(
 										media.data?.data.createdAt,
 									),
 								},
 								{
-									label: T("updated_at"),
+									label: T()("updated_at"),
 									value: dateHelpers.formatDate(
 										media.data?.data.updatedAt,
 									),

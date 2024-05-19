@@ -18,11 +18,11 @@ interface MediaPropsT {
 	updated_at: Date | string | null;
 	title_translations?: Array<{
 		value: string | null;
-		language_id: number | null;
+		locale_code: string | null;
 	}>;
 	alt_translations?: Array<{
 		value: string | null;
-		language_id: number | null;
+		locale_code: string | null;
 	}>;
 	title_translation_value?: string | null;
 	alt_translation_value?: string | null;
@@ -51,12 +51,12 @@ export default class MediaFormatter {
 			titleTranslations:
 				props.media.title_translations?.map((t) => ({
 					value: t.value,
-					languageId: t.language_id,
+					localeCode: t.locale_code,
 				})) ?? [],
 			altTranslations:
 				props.media.alt_translations?.map((t) => ({
 					value: t.value,
-					languageId: t.language_id,
+					localeCode: t.locale_code,
 				})) ?? [],
 			type: props.media.type as MediaType,
 			meta: {
@@ -81,7 +81,7 @@ export default class MediaFormatter {
 				items: {
 					type: "object",
 					properties: {
-						languageId: { type: "number", example: 1 },
+						localeCode: { type: "string", example: "en" },
 						value: { type: "string" },
 					},
 				},
@@ -91,7 +91,7 @@ export default class MediaFormatter {
 				items: {
 					type: "object",
 					properties: {
-						languageId: { type: "number", example: 1 },
+						localeCode: { type: "string", example: "en" },
 						value: {
 							type: "string",
 						},

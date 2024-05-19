@@ -1,9 +1,7 @@
 import T from "@/translations";
-// Utils
 import request from "@/utils/request";
 import serviceHelpers from "@/utils/service-helpers";
 import objectToFormData from "@/utils/object-to-formdata";
-// Types
 import type { ResponseBody } from "@lucidcms/core/types";
 
 interface Params {
@@ -11,11 +9,11 @@ interface Params {
 	body: {
 		file: File;
 		titleTranslations: Array<{
-			languageId: number | null;
+			localeCode: string | null;
 			value: string | null;
 		}>;
 		altTranslations: Array<{
-			languageId: number | null;
+			localeCode: string | null;
 			value: string | null;
 		}>;
 	};
@@ -48,8 +46,8 @@ const useUpdateSingle = (props?: UseUpdateSingleProps) => {
 	return serviceHelpers.useMutationWrapper<Params, ResponseBody<null>>({
 		mutationFn: updateSingleReq,
 		successToast: {
-			title: T("media_update_toast_title"),
-			message: T("media_update_toast_message"),
+			title: T()("media_update_toast_title"),
+			message: T()("media_update_toast_message"),
 		},
 		invalidates: ["media.getMultiple", "media.getSingle"],
 		onSuccess: props?.onSuccess,

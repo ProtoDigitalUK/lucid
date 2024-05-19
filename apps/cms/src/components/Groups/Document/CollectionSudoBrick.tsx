@@ -18,6 +18,11 @@ export const CollectionSudoBrick: Component<CollectionSudoBrickProps> = (
 		);
 		return bricks.length > 0 ? bricks[0] : undefined;
 	});
+	const brickIndex = createMemo(() => {
+		return brickStore.get.bricks.findIndex(
+			(brick) => brick.id === collectionSudoBrick()?.id,
+		);
+	});
 
 	// ----------------------------------
 	// Render
@@ -26,9 +31,12 @@ export const CollectionSudoBrick: Component<CollectionSudoBrickProps> = (
 			<div class="px-15 md:px-30 pb-15 md:pb-30">
 				<Builder.BrickBody
 					state={{
+						open: true,
 						brick: collectionSudoBrick() as BrickData,
+						brickIndex: brickIndex(),
 						configFields: props.fields,
 					}}
+					options={{}}
 				/>
 			</div>
 		</Show>

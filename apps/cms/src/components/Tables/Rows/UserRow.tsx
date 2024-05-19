@@ -23,7 +23,7 @@ const UserRow: Component<UserRowProps> = (props) => {
 			selected={props.selected}
 			actions={[
 				{
-					label: T("edit"),
+					label: T()("edit"),
 					type: "button",
 					onClick: () => {
 						props.rowTarget.setTargetId(props.user.id);
@@ -33,7 +33,7 @@ const UserRow: Component<UserRowProps> = (props) => {
 						.all,
 				},
 				{
-					label: T("delete"),
+					label: T()("delete"),
 					type: "button",
 					onClick: () => {
 						props.rowTarget.setTargetId(props.user.id);
@@ -59,7 +59,7 @@ const UserRow: Component<UserRowProps> = (props) => {
 				options={{ include: props?.include[2] }}
 			/>
 			<TextCol
-				text={props.user.superAdmin ? T("yes") : T("no")}
+				text={props.user.superAdmin ? T()("yes") : T()("no")}
 				options={{ include: props?.include[3] }}
 			/>
 			<TextCol

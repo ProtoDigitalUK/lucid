@@ -84,7 +84,7 @@
     @apply text-base font-normal tracking-wide leading-relaxed text-body font-body;
   }
   a {
-    @apply hover:text-primary-hover duration-200 transition-colors ease-in-out focus:outline-none focus:ring-2 focus:ring-primary-base;
+    @apply hover:text-primary-hover duration-200 transition-colors ease-in-out focus:outline-none focus:ring-1 focus:ring-primary-base;
   }
 
   /* Other */

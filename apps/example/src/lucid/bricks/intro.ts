@@ -1,10 +1,6 @@
 import { BrickBuilder } from "@lucidcms/core";
 
-const IntroBrick = new BrickBuilder("intro", {
-	preview: {
-		image: "https://headless-dev.up.railway.app/public/introduction-brick.png",
-	},
-})
+const IntroBrick = new BrickBuilder("intro")
 	.addTab({
 		title: "Content",
 		key: "content_tab",

@@ -1,6 +1,5 @@
 import T from "@/translations";
 import { type Component, Show } from "solid-js";
-// Components
 import { FaSolidXmark } from "solid-icons/fa";
 import { AlertDialog } from "@kobalte/core";
 import Button from "@/components/Partials/Button";
@@ -71,7 +70,7 @@ export const Confirmation: Component<ConfirmationProps> = (props) => {
 									loading={props.state.isLoading}
 									onClick={props.onConfirm}
 								>
-									{T("confirm")}
+									{T()("confirm")}
 								</Button>
 								<Button
 									theme="container-outline"
@@ -81,7 +80,7 @@ export const Confirmation: Component<ConfirmationProps> = (props) => {
 									disabled={props.state.isLoading}
 									onClick={props.onCancel}
 								>
-									{T("cancel")}
+									{T()("cancel")}
 								</Button>
 							</div>
 						</div>

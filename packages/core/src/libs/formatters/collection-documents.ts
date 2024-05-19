@@ -14,8 +14,22 @@ interface DocumentPropT {
 	id: number;
 	collection_key: string | null;
 	created_by: number | null;
+	updated_by: number | null;
 	created_at: Date | string | null;
 	updated_at: Date | string | null;
+	// Created by user join
+	cb_user_id?: number | null;
+	cb_user_email?: string | null;
+	cb_user_first_name?: string | null;
+	cb_user_last_name?: string | null;
+	cb_user_username?: string | null;
+	// Updated by user join
+	ub_user_id?: number | null;
+	ub_user_email?: string | null;
+	ub_user_first_name?: string | null;
+	ub_user_last_name?: string | null;
+	ub_user_username?: string | null;
+
 	fields?: FieldProp[];
 }
 
@@ -24,12 +38,14 @@ export default class CollectionDocumentsFormatter {
 		documents: DocumentPropT[];
 		collection: CollectionBuilder;
 		host: string;
+		defaultLocaleCode?: string;
 	}) => {
 		return props.documents.map((d) =>
 			this.formatSingle({
 				document: d,
 				collection: props.collection,
 				host: props.host,
+				defaultLocaleCode: props.defaultLocaleCode,
 			}),
 		);
 	};
@@ -39,6 +55,7 @@ export default class CollectionDocumentsFormatter {
 		bricks?: BrickResponse[];
 		fields?: FieldResponse[] | null;
 		host: string;
+		defaultLocaleCode?: string;
 	}): CollectionDocumentResponse => {
 		let fields: FieldResponse[] | null = null;
 
@@ -52,6 +69,7 @@ export default class CollectionDocumentsFormatter {
 					fields: props.document.fields,
 					host: props.host,
 					builder: props.collection,
+					defaultLocaleCode: props.defaultLocaleCode,
 				},
 			);
 		}
@@ -61,7 +79,24 @@ export default class CollectionDocumentsFormatter {
 			collectionKey: props.document.collection_key,
 			bricks: props.bricks ?? null,
 			fields: fields,
-			createdBy: props.document.created_by,
+			createdBy: props.document.cb_user_id
+				? {
+						id: props.document.cb_user_id,
+						email: props.document.cb_user_email ?? null,
+						firstName: props.document.cb_user_first_name ?? null,
+						lastName: props.document.cb_user_last_name ?? null,
+						username: props.document.cb_user_username ?? null,
+					}
+				: null,
+			updatedBy: props.document.ub_user_id
+				? {
+						id: props.document.ub_user_id,
+						email: props.document.ub_user_email ?? null,
+						firstName: props.document.ub_user_first_name ?? null,
+						lastName: props.document.ub_user_last_name ?? null,
+						username: props.document.ub_user_username ?? null,
+					}
+				: null,
 			createdAt: Formatter.formatDate(props.document.created_at),
 			updatedAt: Formatter.formatDate(props.document.updated_at),
 		};
@@ -89,8 +124,29 @@ export default class CollectionDocumentsFormatter {
 				items: CollectionDocumentFieldsFormatter.swagger,
 			},
 			createdBy: {
-				type: "number",
+				type: "object",
 				nullable: true,
+				properties: {
+					id: {
+						type: "number",
+					},
+					email: {
+						type: "string",
+						nullable: true,
+					},
+					firstName: {
+						type: "string",
+						nullable: true,
+					},
+					lastName: {
+						type: "string",
+						nullable: true,
+					},
+					username: {
+						type: "string",
+						nullable: true,
+					},
+				},
 			},
 			createdAt: {
 				type: "string",
@@ -99,6 +155,31 @@ export default class CollectionDocumentsFormatter {
 			updatedAt: {
 				type: "string",
 				nullable: true,
+			},
+			updatedBy: {
+				type: "object",
+				nullable: true,
+				properties: {
+					id: {
+						type: "number",
+					},
+					email: {
+						type: "string",
+						nullable: true,
+					},
+					firstName: {
+						type: "string",
+						nullable: true,
+					},
+					lastName: {
+						type: "string",
+						nullable: true,
+					},
+					username: {
+						type: "string",
+						nullable: true,
+					},
+				},
 			},
 		},
 	};

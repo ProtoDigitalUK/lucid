@@ -1,16 +1,14 @@
 import T from "@/translations";
 import { type Component, createMemo } from "solid-js";
 import classNames from "classnames";
-// Types
 import type { MediaResponse } from "@lucidcms/core/types";
-// Components
 import AspectRatio from "@/components/Partials/AspectRatio";
 import MediaPreview from "@/components/Partials/MediaPreview";
 
 interface MediaBasicCardProps {
 	media: MediaResponse;
 	selected: boolean;
-	contentLanguage?: number;
+	contentLocale?: string;
 	onClick?: () => void;
 }
 
@@ -35,12 +33,12 @@ const MediaBasicCard: Component<MediaBasicCardProps> = (props) => {
 	// Memos
 	const titleTranslations = createMemo(() => {
 		return props.media.titleTranslations.find(
-			(translation) => translation.languageId === props.contentLanguage,
+			(translation) => translation.localeCode === props.contentLocale,
 		);
 	});
 	const altTranslations = createMemo(() => {
 		return props.media.altTranslations.find(
-			(translation) => translation.languageId === props.contentLanguage,
+			(translation) => translation.localeCode === props.contentLocale,
 		);
 	});
 
@@ -77,7 +75,7 @@ const MediaBasicCard: Component<MediaBasicCardProps> = (props) => {
 			{/* Content */}
 			<div class="p-2.5 border-t border-border">
 				<h3 class="line-clamp-1 text-sm">
-					{titleTranslations()?.value || T("no_translation")}
+					{titleTranslations()?.value || T()("no_translation")}
 				</h3>
 			</div>
 		</li>

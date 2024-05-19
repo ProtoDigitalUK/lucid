@@ -83,20 +83,20 @@ const UpsertRolePanel: Component<UpsertRolePanelProps> = (props) => {
 	});
 
 	const panelTitle = createMemo(() => {
-		if (props.id === undefined) return T("create_role_panel_title");
-		return T("update_role_panel_title", {
+		if (props.id === undefined) return T()("create_role_panel_title");
+		return T()("update_role_panel_title", {
 			name: role.data?.data.name || "",
 		});
 	});
 	const panelDescription = createMemo(() => {
-		if (props.id === undefined) return T("create_role_panel_description");
-		return T("update_role_panel_description", {
+		if (props.id === undefined) return T()("create_role_panel_description");
+		return T()("update_role_panel_description", {
 			name: role.data?.data.name || "",
 		});
 	});
 	const panelSubmit = createMemo(() => {
-		if (props.id === undefined) return T("create");
-		return T("update");
+		if (props.id === undefined) return T()("create");
+		return T()("update");
 	});
 
 	const updateData = createMemo(() => {
@@ -189,7 +189,7 @@ const UpsertRolePanel: Component<UpsertRolePanelProps> = (props) => {
 			{() => (
 				<>
 					{/* Details */}
-					<SectionHeading title={T("details")} />
+					<SectionHeading title={T()("details")} />
 					<InputGrid columns={2}>
 						<Form.Input
 							id="name"
@@ -198,7 +198,7 @@ const UpsertRolePanel: Component<UpsertRolePanelProps> = (props) => {
 							value={getName()}
 							onChange={setName}
 							copy={{
-								label: T("name"),
+								label: T()("name"),
 							}}
 							required={true}
 							errors={getBodyError("name", errors)}
@@ -208,7 +208,7 @@ const UpsertRolePanel: Component<UpsertRolePanelProps> = (props) => {
 					{/* Global perms */}
 					<div class="w-full mb-30 last:mb-0">
 						<SectionHeading
-							title={T("permissions")}
+							title={T()("permissions")}
 							headingType="h3"
 						>
 							<div>
@@ -268,8 +268,7 @@ const UpsertRolePanel: Component<UpsertRolePanelProps> = (props) => {
 															)
 														}
 														copy={{
-															label: T(
-																// @ts-ignore
+															label: T()(
 																`permissions_${permission}`,
 															),
 														}}

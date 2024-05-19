@@ -39,60 +39,60 @@ const PreviewEmailPanel: Component<PreviewEmailPanelProps> = (props) => {
 				isError: email.isError,
 			}}
 			content={{
-				title: T("preview_email_panel_title"),
+				title: T()("preview_email_panel_title"),
 			}}
 		>
 			{() => (
 				<>
-					<SectionHeading title={T("details")} />
+					<SectionHeading title={T()("details")} />
 					<DetailsList
 						type="text"
 						items={[
 							{
-								label: T("subject"),
+								label: T()("subject"),
 								value:
 									email.data?.data.mailDetails.subject ??
 									undefined,
 							},
 							{
-								label: T("template"),
+								label: T()("template"),
 								value:
 									email.data?.data.mailDetails.template ??
 									undefined,
 							},
 							{
-								label: T("to"),
+								label: T()("to"),
 								value:
 									email.data?.data.mailDetails.to ??
 									undefined,
 							},
 							{
-								label: T("from"),
+								label: T()("from"),
 								value:
 									email.data?.data.mailDetails.from.address ??
 									undefined,
 							},
 							{
-								label: T("status"),
+								label: T()("status"),
 								value:
 									email.data?.data.deliveryStatus ??
 									undefined,
 							},
 							{
-								label: T("sent_count"),
+								label: T()("sent_count"),
 								value: email.data?.data.sentCount ?? 0,
 							},
 							{
-								label: T("failed_count"),
+								label: T()("failed_count"),
 								value: email.data?.data.errorCount ?? 0,
 							},
 							{
-								label: T("type"),
+								label: T()("type"),
 								value: email.data?.data.type ?? undefined,
 							},
 						]}
 					/>
-					<SectionHeading title={T("preview")} />
+					<SectionHeading title={T()("preview")} />
 					<div class="border border-border rounded-md overflow-hidden mb-15">
 						<iframe
 							class="w-full h-96"
@@ -100,9 +100,9 @@ const PreviewEmailPanel: Component<PreviewEmailPanelProps> = (props) => {
 							title="Preview"
 						/>
 					</div>
-					<SectionHeading title={T("data")} />
+					<SectionHeading title={T()("data")} />
 					<JSONPreview
-						title={T("view_data")}
+						title={T()("view_data")}
 						json={email.data?.data.data || {}}
 					/>
 				</>

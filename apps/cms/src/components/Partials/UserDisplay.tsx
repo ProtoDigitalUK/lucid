@@ -3,7 +3,7 @@ import helpers from "@/utils/helpers";
 
 interface UserDisplayProps {
 	user: {
-		username: string;
+		username?: string | null;
 		firstName?: string | null;
 		lastName?: string | null;
 		thumbnail?: string;
@@ -14,6 +14,11 @@ interface UserDisplayProps {
 const UserDisplay: Component<UserDisplayProps> = (props) => {
 	// ----------------------------------
 	// Render
+
+	if (!props.user.username) {
+		return null;
+	}
+
 	return (
 		<div class="flex items-center">
 			<span class="h-8 w-8 min-w-[32px] rounded-full flex bg-primary-base text-primary-contrast justify-center items-center text-xs font-bold mr-2.5">

@@ -7,7 +7,6 @@ import {
 	createMemo,
 } from "solid-js";
 import { FaSolidCaretUp, FaSolidMinus } from "solid-icons/fa";
-// Hooks
 import type useSearchParams from "@/hooks/useSearchParams";
 
 interface ThProps {

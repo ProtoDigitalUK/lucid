@@ -9,8 +9,9 @@ import {
 } from "solid-js";
 import { FaSolidPlus, FaSolidTrash } from "solid-icons/fa";
 import classNames from "classnames";
+import Link from "@/components/Partials/Link";
 import Button from "@/components/Partials/Button";
-import ContentLanguageSelect from "@/components/Partials/ContentLanguageSelect";
+import ContentLocaleSelect from "@/components/Partials/ContentLocaleSelect";
 import Layout from "@/components/Groups/Layout";
 
 export interface PageHeadingProps {
@@ -36,7 +37,12 @@ export interface PageHeadingProps {
 			permission?: boolean;
 			label?: string;
 		};
-		contentLanguage?: boolean;
+		createLink?: {
+			link: string;
+			label: string;
+			permission?: boolean;
+		};
+		contentLocale?: boolean;
 	};
 	options?: {
 		noBorder?: boolean;
@@ -111,12 +117,12 @@ export const PageHeading: Component<PageHeadingProps> = (props) => {
 					<div class="flex items-center justify-end md:ml-5 mb-5 md:mb-0 w-full space-x-2.5">
 						<Show
 							when={
-								props.actions?.contentLanguage !== undefined &&
-								props.actions.contentLanguage !== false
+								props.actions?.contentLocale !== undefined &&
+								props.actions.contentLocale !== false
 							}
 						>
 							<div class="w-full md:max-w-[240px]">
-								<ContentLanguageSelect />
+								<ContentLocaleSelect />
 							</div>
 						</Show>
 						<Show
@@ -136,9 +142,27 @@ export const PageHeading: Component<PageHeadingProps> = (props) => {
 								<FaSolidPlus />
 								<span class="sr-only">
 									{props.actions?.create?.label ??
-										T("create")}
+										T()("create")}
 								</span>
 							</Button>
+						</Show>
+						<Show
+							when={
+								props.actions?.createLink !== undefined &&
+								props.actions.createLink.permission !== false
+							}
+						>
+							<Link
+								theme="primary"
+								size="icon"
+								href={props.actions?.createLink?.link}
+							>
+								<FaSolidPlus />
+								<span class="sr-only">
+									{props.actions?.createLink?.label ??
+										T()("create")}
+								</span>
+							</Link>
 						</Show>
 						<Show
 							when={
@@ -154,7 +178,7 @@ export const PageHeading: Component<PageHeadingProps> = (props) => {
 									props.actions?.delete?.setOpen(true)
 								}
 							>
-								<span class="sr-only">{T("delete")}</span>
+								<span class="sr-only">{T()("delete")}</span>
 								<FaSolidTrash />
 							</Button>
 						</Show>

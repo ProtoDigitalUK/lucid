@@ -3,7 +3,7 @@ import type {
 	CustomField,
 	FieldTypes,
 } from "../libs/builders/field-builder/types.js";
-import type { CollectionBrickConfigT } from "../libs/builders/collection-builder/index.js";
+import type { CollectionBrickConfig } from "../libs/builders/collection-builder/index.js";
 import type { ErrorResult } from "./errors.js";
 
 export interface UserResponse {
@@ -89,11 +89,11 @@ export interface MediaResponse {
 	key: string;
 	url: string;
 	titleTranslations: {
-		languageId: number | null;
+		localeCode: string | null;
 		value: string | null;
 	}[];
 	altTranslations: {
-		languageId: number | null;
+		localeCode: string | null;
 		value: string | null;
 	}[];
 	type: MediaType;
@@ -108,13 +108,10 @@ export interface MediaResponse {
 	updatedAt: string | null;
 }
 
-export interface LanguageResponse {
-	id: number;
+export interface LocalesResponse {
 	code: string;
 	name: string | null;
-	nativeName: string | null;
 	isDefault: BooleanInt;
-	isEnabled: BooleanInt;
 	createdAt: string | null;
 	updatedAt: string | null;
 }
@@ -154,8 +151,8 @@ export interface CollectionResponse {
 	description: string | null;
 	documentId?: number | null;
 	translations: boolean;
-	fixedBricks: Array<CollectionBrickConfigT>;
-	builderBricks: Array<CollectionBrickConfigT>;
+	fixedBricks: Array<CollectionBrickConfig>;
+	builderBricks: Array<CollectionBrickConfig>;
 	fields: Array<CustomField>;
 }
 
@@ -163,6 +160,7 @@ export interface BrickResponse {
 	id: number;
 	key: string;
 	order: number;
+	open: BooleanInt | null;
 	type: "builder" | "fixed";
 	fields: Array<FieldResponse>;
 }
@@ -171,14 +169,15 @@ export interface FieldResponse {
 	key: string;
 	type: FieldTypes;
 	groupId?: number;
+	translations?: Record<string, FieldResponseValue>;
 	value?: FieldResponseValue;
-	meta?: FieldResponseMeta;
-	languageId?: number;
+	meta?: Record<string, FieldResponseMeta> | FieldResponseMeta;
 	groups?: Array<FieldGroupResponse>;
 }
 export interface FieldGroupResponse {
 	id: number | string;
 	order: number;
+	open: BooleanInt | null;
 	fields: Array<FieldResponse>;
 }
 
@@ -213,11 +212,11 @@ export interface MediaMeta {
 	height: number | null;
 	titleTranslations?: Array<{
 		value: string | null;
-		languageId: number | null;
+		localeCode: string | null;
 	}>;
 	altTranslations?: Array<{
 		value: string | null;
-		languageId: number | null;
+		localeCode: string | null;
 	}>;
 	type: MediaType | null;
 }
@@ -233,9 +232,22 @@ export interface CollectionDocumentResponse {
 	id: number;
 	collectionKey: string | null;
 
-	createdBy: number | null;
+	createdBy: {
+		id: number;
+		email: string | null;
+		firstName: string | null;
+		lastName: string | null;
+		username: string | null;
+	} | null;
 	createdAt: string | null;
 	updatedAt: string | null;
+	updatedBy: {
+		id: number;
+		email: string | null;
+		firstName: string | null;
+		lastName: string | null;
+		username: string | null;
+	} | null;
 
 	bricks?: Array<BrickResponse> | null;
 	fields?: Array<FieldResponse> | null;
@@ -286,9 +298,6 @@ export type Permission =
 	| "read_email"
 	| "delete_email"
 	| "send_email"
-	| "create_language"
-	| "update_language"
-	| "delete_language"
 	| "create_content"
 	| "update_content"
 	| "delete_content"
@@ -306,6 +315,5 @@ export type PermissionGroupKey =
 	| "roles"
 	| "media"
 	| "settings"
-	| "languages"
 	| "emails"
 	| "content";

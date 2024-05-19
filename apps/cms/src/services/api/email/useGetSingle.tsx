@@ -1,9 +1,7 @@
 import { createMemo, type Accessor } from "solid-js";
 import { createQuery } from "@tanstack/solid-query";
-// Utils
 import request from "@/utils/request";
 import serviceHelpers from "@/utils/service-helpers";
-// Types
 import type { ResponseBody, EmailResponse } from "@lucidcms/core/types";
 
 interface QueryParams {

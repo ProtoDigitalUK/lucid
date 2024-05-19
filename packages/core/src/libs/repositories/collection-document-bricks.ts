@@ -2,6 +2,7 @@ import type {
 	HeadlessCollectionDocumentBricks,
 	Select,
 	KyselyDB,
+	BooleanInt,
 } from "../db/types.js";
 import {
 	deleteQB,
@@ -34,7 +35,6 @@ export default class CollectionDocumentBricksRepo {
 	};
 	selectMultipleByDocumentId = async (props: {
 		documentId: number;
-		languageId: number;
 		config: Config;
 	}) => {
 		return this.db
@@ -45,6 +45,7 @@ export default class CollectionDocumentBricksRepo {
 				"lucid_collection_document_bricks.brick_key",
 				"lucid_collection_document_bricks.collection_document_id",
 				"lucid_collection_document_bricks.brick_order",
+				"lucid_collection_document_bricks.brick_open",
 				props.config.db
 					.jsonArrayFrom(
 						eb
@@ -56,6 +57,7 @@ export default class CollectionDocumentBricksRepo {
 								"lucid_collection_document_groups.parent_group_id",
 								"lucid_collection_document_groups.repeater_key",
 								"lucid_collection_document_groups.group_order",
+								"lucid_collection_document_groups.group_open",
 								"lucid_collection_document_groups.ref",
 							])
 							.whereRef(
@@ -87,7 +89,7 @@ export default class CollectionDocumentBricksRepo {
 								"lucid_collection_document_fields.fields_id",
 								"lucid_collection_document_fields.collection_brick_id",
 								"lucid_collection_document_fields.group_id",
-								"lucid_collection_document_fields.language_id",
+								"lucid_collection_document_fields.locale_code",
 								"lucid_collection_document_fields.key",
 								"lucid_collection_document_fields.type",
 								"lucid_collection_document_fields.text_value",
@@ -117,7 +119,7 @@ export default class CollectionDocumentBricksRepo {
 											.selectFrom("lucid_translations")
 											.select([
 												"lucid_translations.value",
-												"lucid_translations.language_id",
+												"lucid_translations.locale_code",
 											])
 											.where(
 												"lucid_translations.value",
@@ -137,7 +139,7 @@ export default class CollectionDocumentBricksRepo {
 											.selectFrom("lucid_translations")
 											.select([
 												"lucid_translations.value",
-												"lucid_translations.language_id",
+												"lucid_translations.locale_code",
 											])
 											.where(
 												"lucid_translations.value",
@@ -156,11 +158,6 @@ export default class CollectionDocumentBricksRepo {
 								"lucid_collection_document_fields.collection_brick_id",
 								"=",
 								"lucid_collection_document_bricks.id",
-							)
-							.where(
-								"lucid_collection_document_fields.language_id",
-								"=",
-								props.languageId,
 							),
 					)
 					.as("fields"),
@@ -181,6 +178,7 @@ export default class CollectionDocumentBricksRepo {
 			brickType: BrickSchema["type"];
 			brickKey?: string;
 			brickOrder?: number;
+			brickOpen?: BooleanInt;
 			collectionDocumentId: number;
 		}>;
 	}) => {
@@ -193,6 +191,7 @@ export default class CollectionDocumentBricksRepo {
 						brick_type: b.brickType,
 						brick_key: b.brickKey,
 						brick_order: b.brickOrder,
+						brick_open: b.brickOpen,
 						collection_document_id: b.collectionDocumentId,
 					};
 				}),

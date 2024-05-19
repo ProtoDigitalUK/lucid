@@ -2,28 +2,20 @@ import T from "@/translations";
 import { type Component, Match, Switch } from "solid-js";
 import classNames from "classnames";
 import { FaSolidPen } from "solid-icons/fa";
-// Types
-import type { PageLinkValueT, PageLinkMetaT } from "@headless/types/src/bricks"; // TODO: we've removed this CF
 import type { ErrorResult, FieldErrors, LinkValue } from "@lucidcms/core/types";
-// Store
-import linkFieldStore from "@/store/linkFieldStore";
-// Components
+import linkFieldStore from "@/store/forms/linkFieldStore";
 import Button from "@/components/Partials/Button";
 import Form from "@/components/Groups/Form";
 
 interface LinkSelectProps {
 	id: string;
-	type: "pagelink" | "link";
-	value: PageLinkValueT | LinkValue | undefined | null;
-	onChange: (
-		_value: PageLinkValueT | LinkValue | null,
-		_meta?: PageLinkMetaT | null,
-	) => void;
-	meta: PageLinkMetaT | null;
+	value: LinkValue | undefined | null;
+	onChange: (_value: LinkValue | null) => void;
 	copy?: {
 		label?: string;
 		describedBy?: string;
 	};
+	disabled?: boolean;
 	noMargin?: boolean;
 	required?: boolean;
 	errors?: ErrorResult | FieldErrors;
@@ -34,27 +26,17 @@ export const LinkSelect: Component<LinkSelectProps> = (props) => {
 	// Functions
 	const openLinkModal = () => {
 		linkFieldStore.set({
-			onSelectCallback: (link, meta) => {
-				props.onChange(link, meta);
+			onSelectCallback: (link) => {
+				props.onChange(link);
 			},
-			type: props.type,
 			open: true,
-			selectedPageLink:
-				props.type === "pagelink"
-					? (props.value as PageLinkValueT)
-					: null,
-			selectedLink:
-				props.type === "link" ? (props.value as LinkValue) : null,
-			selectedMeta: props.meta,
+			selectedLink: props.value as LinkValue,
 		});
 	};
 
 	// -------------------------------
 	// Memos
 	const linkLabel = () => {
-		if (props.type === "pagelink") {
-			return props.value?.label;
-		}
 		const value = props.value as LinkValue;
 		return value?.label || value?.url;
 	};
@@ -83,14 +65,15 @@ export const LinkSelect: Component<LinkSelectProps> = (props) => {
 							size="x-small"
 							onClick={openLinkModal}
 						>
-							{T("select_link")}
+							{T()("select_link")}
 						</Button>
 					</Match>
 					<Match when={props.value}>
 						<button
 							type="button"
 							onClick={openLinkModal}
-							class="flex cursor-pointer font-semibold items-center py-2 px-2.5 border-primary-base text-primary-base border text-sm rounded-md hover:bg-primary-hover hover:text-primary-contrast transition-colors duration-200 ease-in-out"
+							class="flex cursor-pointer disabled:cursor-not-allowed disabled:opacity-80 font-semibold items-center py-2 px-2.5 border-primary-base text-primary-base border text-sm rounded-md hover:bg-primary-hover hover:text-primary-contrast transition-colors duration-200 ease-in-out"
+							disabled={props.disabled}
 						>
 							<span class="line-clamp-1">{linkLabel()}</span>
 							<span class="ml-2.5 flex items-center border-l border-current pl-2.5">
@@ -99,12 +82,13 @@ export const LinkSelect: Component<LinkSelectProps> = (props) => {
 						</button>
 						<button
 							type="button"
-							class="hover:text-error-base text-primary-base flex items-center text-sm lowercase"
+							class="hover:text-error-base disabled:cursor-not-allowed disabled:opacity-80 text-body flex items-center text-sm lowercase"
 							onClick={() => {
-								props.onChange(null, null);
+								props.onChange(null);
 							}}
+							disabled={props.disabled}
 						>
-							{T("clear")}
+							{T()("clear")}
 						</button>
 					</Match>
 				</Switch>

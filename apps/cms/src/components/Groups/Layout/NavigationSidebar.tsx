@@ -18,17 +18,17 @@ export const NavigationSidebar: Component = () => {
 					<Navigation.IconLink
 						href="/"
 						icon="dashboard"
-						title={T("home")}
+						title={T()("home")}
 					/>
 					<Navigation.IconLink
 						href="/collections"
 						icon="collection"
-						title={T("collections")}
+						title={T()("collections")}
 					/>
 					<Navigation.IconLink
 						href="/media"
 						icon="media"
-						title={T("media")}
+						title={T()("media")}
 						permission={
 							userStore.get.hasPermission([
 								"create_media",
@@ -40,7 +40,7 @@ export const NavigationSidebar: Component = () => {
 					<Navigation.IconLink
 						href="/users"
 						icon="users"
-						title={T("users")}
+						title={T()("users")}
 						permission={
 							userStore.get.hasPermission([
 								"create_user",
@@ -52,7 +52,7 @@ export const NavigationSidebar: Component = () => {
 					<Navigation.IconLink
 						href="/roles"
 						icon="roles"
-						title={T("roles")}
+						title={T()("roles")}
 						permission={
 							userStore.get.hasPermission([
 								"create_role",
@@ -64,7 +64,7 @@ export const NavigationSidebar: Component = () => {
 					<Navigation.IconLink
 						href="/emails"
 						icon="email"
-						title={T("emails")}
+						title={T()("emails")}
 						permission={
 							userStore.get.hasPermission(["read_email"]).all
 						}
@@ -72,7 +72,7 @@ export const NavigationSidebar: Component = () => {
 					<Navigation.IconLink
 						href="/settings"
 						icon="settings"
-						title={T("settings")}
+						title={T()("settings")}
 					/>
 				</ul>
 			</nav>

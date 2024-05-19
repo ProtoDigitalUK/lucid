@@ -1,8 +1,6 @@
 import T from "@/translations";
-// Utils
 import request from "@/utils/request";
 import serviceHelpers from "@/utils/service-helpers";
-// Types
 import type { ResponseBody, RoleResponse } from "@lucidcms/core/types";
 
 interface Params {
@@ -35,8 +33,8 @@ const useCreateSingle = (props?: UseCreateSingleProps) => {
 	>({
 		mutationFn: createSingleReq,
 		successToast: {
-			title: T("role_created_toast_title"),
-			message: T("role_created_toast_message"),
+			title: T()("role_created_toast_title"),
+			message: T()("role_created_toast_message"),
 		},
 		invalidates: ["roles.getMultiple"],
 		onSuccess: props?.onSuccess,

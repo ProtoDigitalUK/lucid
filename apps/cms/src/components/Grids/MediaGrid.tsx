@@ -2,7 +2,7 @@ import { type Component, For, createMemo } from "solid-js";
 import api from "@/services/api";
 import useRowTarget from "@/hooks/useRowTarget";
 import type useSearchParams from "@/hooks/useSearchParams";
-import contentLanguageStore from "@/store/contentLanguageStore";
+import contentLocaleStore from "@/store/contentLocaleStore";
 import Grid from "@/components/Groups/Grid";
 import MediaCard, { MediaCardLoading } from "@/components/Cards/MediaCard";
 import CreateUpdateMediaPanel from "@/components/Panels/Media/CreateUpdateMediaPanel";
@@ -26,8 +26,8 @@ const MediaGrid: Component<MediaGridProps> = (props) => {
 
 	// ----------------------------------
 	// Memos
-	const contentLanguage = createMemo(
-		() => contentLanguageStore.get.contentLanguage,
+	const contentLocale = createMemo(
+		() => contentLocaleStore.get.contentLocale,
 	);
 
 	// ----------------------------------
@@ -36,7 +36,7 @@ const MediaGrid: Component<MediaGridProps> = (props) => {
 		queryParams: {
 			queryString: props.searchParams.getQueryString,
 			headers: {
-				"lucid-content-lang": contentLanguage,
+				"lucid-content-locale": contentLocale,
 			},
 		},
 		enabled: () => props.searchParams.getSettled(),
@@ -62,7 +62,7 @@ const MediaGrid: Component<MediaGridProps> = (props) => {
 						<MediaCard
 							media={item}
 							rowTarget={rowTarget}
-							contentLanguage={contentLanguage()}
+							contentLocale={contentLocale()}
 						/>
 					)}
 				</For>

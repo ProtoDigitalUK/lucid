@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "@solidjs/router";
 import { type Component, createMemo, createEffect } from "solid-js";
 import type { CollectionResponse, CustomField } from "@lucidcms/core/types";
 import api from "@/services/api";
+import userStore from "@/store/userStore";
 import useSearchParams, { type FilterSchema } from "@/hooks/useSearchParams";
 import Layout from "@/components/Groups/Layout";
 import DocumentsTable from "@/components/Tables/DocumentsTable";
@@ -116,16 +117,24 @@ const CollectionsDocumentsListRoute: Component = () => {
 				isSuccess: collection.isSuccess,
 			}}
 			actions={{
-				contentLanguage: collection.data?.data.translations ?? false,
+				contentLocale: collection.data?.data.translations ?? false,
+				createLink: {
+					link: `/collections/${collectionKey()}/create`,
+					permission: userStore.get.hasPermission(["create_content"])
+						.all,
+					label: T()("create_dynamic", {
+						name: collection.data?.data.singular || "",
+					}),
+				},
 			}}
 			breadcrumbs={[
 				{
 					link: "/collections",
-					label: T("collections"),
+					label: T()("collections"),
 				},
 				{
 					link: `/collections/${collectionKey()}`,
-					label: collection.data?.data.title || T("documents"),
+					label: collection.data?.data.title || T()("documents"),
 				},
 			]}
 			headingChildren={

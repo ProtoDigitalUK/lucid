@@ -1,15 +1,10 @@
 import T from "@/translations";
 import { type Component, createMemo } from "solid-js";
 import classNames from "classnames";
-// Stores
 import userStore from "@/store/userStore";
-// Types
 import type { MediaResponse } from "@lucidcms/core/types";
-// Hooks
 import type useRowTarget from "@/hooks/useRowTarget";
-// Utils
 import helpers from "@/utils/helpers";
-// Components
 import AspectRatio from "@/components/Partials/AspectRatio";
 import Pill from "@/components/Partials/Pill";
 import ClickToCopy from "@/components/Partials/ClickToCopy";
@@ -19,7 +14,7 @@ import MediaPreview from "@/components/Partials/MediaPreview";
 interface MediaCardProps {
 	media: MediaResponse;
 	rowTarget: ReturnType<typeof useRowTarget<"clear" | "delete" | "update">>;
-	contentLanguage?: number;
+	contentLocale?: string;
 }
 
 export const MediaCardLoading: Component = () => {
@@ -47,12 +42,12 @@ const MediaCard: Component<MediaCardProps> = (props) => {
 
 	const titleTranslation = createMemo(() => {
 		return props.media.titleTranslations.find(
-			(translation) => translation.languageId === props.contentLanguage,
+			(translation) => translation.localeCode === props.contentLocale,
 		);
 	});
 	const altTranslation = createMemo(() => {
 		return props.media.altTranslations.find(
-			(translation) => translation.languageId === props.contentLanguage,
+			(translation) => translation.localeCode === props.contentLocale,
 		);
 	});
 
@@ -80,7 +75,7 @@ const MediaCard: Component<MediaCardProps> = (props) => {
 				<ActionDropdown
 					actions={[
 						{
-							label: T("edit"),
+							label: T()("edit"),
 							type: "button",
 							onClick: () => {
 								props.rowTarget.setTargetId(props.media.id);
@@ -89,7 +84,7 @@ const MediaCard: Component<MediaCardProps> = (props) => {
 							permission: hasUpdatePermission(),
 						},
 						{
-							label: T("clear_processed"),
+							label: T()("clear_processed"),
 							type: "button",
 							onClick: () => {
 								props.rowTarget.setTargetId(props.media.id);
@@ -99,7 +94,7 @@ const MediaCard: Component<MediaCardProps> = (props) => {
 							permission: hasUpdatePermission(),
 						},
 						{
-							label: T("delete"),
+							label: T()("delete"),
 							type: "button",
 							onClick: () => {
 								props.rowTarget.setTargetId(props.media.id);
@@ -137,7 +132,7 @@ const MediaCard: Component<MediaCardProps> = (props) => {
 			{/* Content */}
 			<div class="p-15 border-t border-border">
 				<h3 class="mb-0.5 line-clamp-1">
-					{titleTranslation()?.value || T("no_translation")}
+					{titleTranslation()?.value || T()("no_translation")}
 				</h3>
 				<ClickToCopy
 					type="simple"

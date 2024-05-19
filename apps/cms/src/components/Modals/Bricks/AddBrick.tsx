@@ -1,16 +1,12 @@
 import { type Component, For, createSignal, createMemo, Show } from "solid-js";
 import { FaSolidMagnifyingGlass, FaSolidXmark } from "solid-icons/fa";
 import classNames from "classnames";
-// Types
-import type { BrickConfigT } from "@headless/types/src/bricks";
-import type { CollectionResponse } from "@lucidcms/core/types";
-// Assets
-import brickIcon from "@/assets/svgs/default-brick-icon.svg";
-// Store
-import builderStore from "@/store/builderStore";
-// Components
+import type { CollectionBrickConfig } from "@lucidcms/core/types";
+import brickIcon from "@/assets/svgs/default-brick-icon-white.svg";
+import brickStore from "@/store/brickStore";
 import Modal from "@/components/Groups/Modal";
 import BrickPreview from "@/components/Partials/BrickPreview";
+import Tooltip from "@/components/Partials/Tooltip";
 
 interface AddBrickProps {
 	state: {
@@ -18,8 +14,7 @@ interface AddBrickProps {
 		setOpen: (_open: boolean) => void;
 	};
 	data: {
-		collection?: CollectionResponse;
-		brickConfig: BrickConfigT[];
+		brickConfig: CollectionBrickConfig[];
 	};
 }
 
@@ -35,23 +30,12 @@ const AddBrick: Component<AddBrickProps> = (props) => {
 	// ------------------------------
 	// Memos
 	const brickList = createMemo(() => {
-		return props.data.brickConfig
-			.filter((brickConfig) => {
-				const collectionBrick = props.data.collection?.bricks.find(
-					(collectionBrick) =>
-						collectionBrick.key === brickConfig.key,
-				);
-				if (!collectionBrick) return false;
-
-				if (collectionBrick.type === "builder") return true;
-				return false;
-			})
-			.filter((brickConfig) => {
-				if (!getSearchQuery()) return true;
-				return brickConfig.title
-					.toLowerCase()
-					.includes(getSearchQuery().toLowerCase());
-			});
+		return props.data.brickConfig.filter((brickConfig) => {
+			if (!getSearchQuery()) return true;
+			return brickConfig.title
+				.toLowerCase()
+				.includes(getSearchQuery().toLowerCase());
+		});
 	});
 
 	const highlightedBrick = createMemo(() => {
@@ -85,7 +69,7 @@ const AddBrick: Component<AddBrickProps> = (props) => {
 					<FaSolidMagnifyingGlass class="w-15 text-unfocused" />
 				</div>
 				<input
-					class="h-full w-full border-b border-border px-10 focus:outline-none text-title placeholder:text-unfocused"
+					class="h-full bg-container-3 w-full border-b border-border px-10 focus:outline-none text-title placeholder:text-unfocused"
 					placeholder="search"
 					value={getSearchQuery()}
 					onInput={(e) => setSearchQuery(e.currentTarget.value)}
@@ -129,13 +113,8 @@ const AddBrick: Component<AddBrickProps> = (props) => {
 											setHighlightedBrick(brickConfig.key)
 										}
 										onClick={() => {
-											builderStore.get.addBrick({
-												brick: {
-													key: brickConfig.key,
-													type: "builder",
-													fields: [],
-													groups: [],
-												},
+											brickStore.get.addBrick({
+												brickConfig: brickConfig,
 											});
 											props.state.setOpen(false);
 										}}
@@ -145,6 +124,7 @@ const AddBrick: Component<AddBrickProps> = (props) => {
 											src={brickIcon}
 											alt={brickConfig.title}
 											class="w-6 mr-2.5"
+											loading="lazy"
 										/>
 										{brickConfig.title}
 									</button>
@@ -155,17 +135,24 @@ const AddBrick: Component<AddBrickProps> = (props) => {
 				</div>
 				{/* Preview */}
 				<div class="w-[60%] p-15 h-full pl-0">
-					<div class="bg-container-4 h-full rounded-md flex items-center justify-center">
+					<div class="bg-container-4 h-full rounded-md flex items-center justify-center relative">
 						<div class="w-[80%]">
 							<BrickPreview
 								data={{
-									brick: highlightedBrick(),
+									brick: {
+										title: highlightedBrick()?.title || "",
+										image: highlightedBrick()?.preview
+											?.image,
+									},
 								}}
 								options={{
 									rounded: true,
 								}}
 							/>
 						</div>
+						<Show when={highlightedBrick()?.description}>
+							<Tooltip copy={highlightedBrick()?.description} />
+						</Show>
 					</div>
 				</div>
 			</div>

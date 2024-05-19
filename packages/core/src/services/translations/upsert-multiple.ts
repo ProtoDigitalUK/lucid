@@ -1,10 +1,10 @@
 import serviceWrapper from "../../utils/service-wrapper.js";
-import languagesServices from "../languages/index.js";
+import localesServices from "../locales/index.js";
 import {
 	shouldUpdateTranslations,
 	mergeTranslationGroups,
-	getUniqueLanguageIDs,
 	type TranslationsObj,
+	getUniquelocaleCodes,
 } from "../../utils/translation-helpers.js";
 import Repository from "../../libs/repositories/index.js";
 import type { ServiceConfig } from "../../utils/service-wrapper.js";
@@ -22,20 +22,20 @@ const upsertMultiple = async <K extends string>(
 	data: ServiceData<K>,
 ) => {
 	if (shouldUpdateTranslations(data.items.map((item) => item.translations))) {
-		await serviceWrapper(
-			languagesServices.checks.checkLanguagesExist,
-			false,
-		)(serviceConfig, {
-			languageIds: getUniqueLanguageIDs(
-				data.items.map((item) => item.translations || []),
-			),
-		});
+		await serviceWrapper(localesServices.checks.checkLocalesExist, false)(
+			serviceConfig,
+			{
+				localeCodes: getUniquelocaleCodes(
+					data.items.map((item) => item.translations || []),
+				),
+			},
+		);
 
 		const translations = mergeTranslationGroups<K>(data.items)
 			.map((translation) => {
 				return {
 					value: translation.value ?? "",
-					languageId: translation.languageId,
+					localeCode: translation.localeCode,
 					translationKeyId: data.keys[translation.key] ?? null,
 				};
 			})
@@ -43,7 +43,7 @@ const upsertMultiple = async <K extends string>(
 				(translation) => translation.translationKeyId !== null,
 			) as Array<{
 			value: string;
-			languageId: number;
+			localeCode: string;
 			translationKeyId: number;
 		}>;
 

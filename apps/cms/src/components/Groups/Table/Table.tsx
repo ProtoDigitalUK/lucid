@@ -10,15 +10,11 @@ import {
 	Switch,
 	Match,
 } from "solid-js";
-// Types
 import type { ResponseBody } from "@lucidcms/core/types";
-// Hooks
 import type useSearchParams from "@/hooks/useSearchParams";
-// Assets
 import notifySvg from "@/assets/illustrations/notify.svg";
 import emptySvg from "@/assets/illustrations/empty.svg";
 import noPermission from "@/assets/illustrations/no-permission.svg";
-// Components
 import Table from "@/components/Groups/Table";
 import Query from "@/components/Groups/Query";
 import SelectCol from "@/components/Tables/Columns/SelectCol";
@@ -180,8 +176,8 @@ export const TableRoot: Component<TableRootProps> = (props) => {
 						type="table"
 						content={{
 							image: noPermission,
-							title: T("no_permission"),
-							description: T("no_permission_description"),
+							title: T()("no_permission"),
+							description: T()("no_permission_description"),
 						}}
 					/>
 				</Match>
@@ -190,8 +186,8 @@ export const TableRoot: Component<TableRootProps> = (props) => {
 						type="table"
 						content={{
 							image: notifySvg,
-							title: T("error_title"),
-							description: T("error_message"),
+							title: T()("error_title"),
+							description: T()("error_message"),
 						}}
 					/>
 				</Match>
@@ -202,8 +198,8 @@ export const TableRoot: Component<TableRootProps> = (props) => {
 						type="table"
 						content={{
 							image: emptySvg,
-							title: T("no_results"),
-							description: T("no_results_message"),
+							title: T()("no_results"),
+							description: T()("no_results_message"),
 						}}
 					>
 						<Show when={props.searchParams.hasFiltersApplied()}>
@@ -215,7 +211,7 @@ export const TableRoot: Component<TableRootProps> = (props) => {
 									props.searchParams.resetFilters();
 								}}
 							>
-								{T("reset_filters")}
+								{T()("reset_filters")}
 							</Button>
 						</Show>
 					</ErrorBlock>

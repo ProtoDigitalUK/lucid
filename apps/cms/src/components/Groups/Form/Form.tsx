@@ -1,13 +1,10 @@
 import T from "@/translations";
 import { type Component, type JSXElement, Switch, Match, Show } from "solid-js";
-// Components
 import Layout from "@/components/Groups/Layout";
 import Button from "@/components/Partials/Button";
 import ErrorMessage from "@/components/Partials/ErrorMessage";
 import ErrorBlock from "@/components/Partials/ErrorBlock";
-// Assets
 import notifySvg from "@/assets/illustrations/notify.svg";
-// Types
 import type { ErrorResponse } from "@lucidcms/core/types";
 
 interface FormProps {
@@ -38,8 +35,8 @@ export const Form: Component<FormProps> = (props) => {
 					type={"page-layout"}
 					content={{
 						image: notifySvg,
-						title: T("error_title"),
-						description: T("error_message"),
+						title: T()("error_title"),
+						description: T()("error_message"),
 					}}
 				/>
 			</Match>

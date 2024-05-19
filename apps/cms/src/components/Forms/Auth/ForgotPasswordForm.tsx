@@ -32,7 +32,7 @@ const ForgotPasswordForm: Component<ForgotPasswordFormProps> = (props) => {
 				errors: forgotPassword.errors(),
 			}}
 			content={{
-				submit: T("send_password_reset"),
+				submit: T()("send_password_reset"),
 			}}
 			onSubmit={() => {
 				forgotPassword.action.mutate({ email: email() });
@@ -45,7 +45,7 @@ const ForgotPasswordForm: Component<ForgotPasswordFormProps> = (props) => {
 				value={email()}
 				onChange={setEmail}
 				copy={{
-					label: T("email"),
+					label: T()("email"),
 				}}
 				required={true}
 				autoFoucs={true}
@@ -57,7 +57,7 @@ const ForgotPasswordForm: Component<ForgotPasswordFormProps> = (props) => {
 					type="button"
 					href="/login"
 				>
-					{T("back_to_login")}
+					{T()("back_to_login")}
 				</A>
 			</Show>
 		</Form.Root>

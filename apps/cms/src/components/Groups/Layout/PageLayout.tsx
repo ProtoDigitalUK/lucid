@@ -77,8 +77,8 @@ export const PageLayout: Component<PageWrapperProps> = (props) => {
 							type="page-layout"
 							content={{
 								image: notifySvg,
-								title: T("error_title"),
-								description: T("error_message"),
+								title: T()("error_title"),
+								description: T()("error_message"),
 							}}
 						/>
 					</Match>

@@ -1,10 +1,7 @@
 import { type Component, Show } from "solid-js";
-// Hooks
 import type useSearchParams from "@/hooks/useSearchParams";
-// Types
 import type { FilterProps } from "@/components/Groups/Query/Filter";
 import type { SortProps } from "@/components/Groups/Query/Sort";
-// Components
 import Query from "@/components/Groups/Query";
 
 interface QueryRowProps {

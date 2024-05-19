@@ -1,8 +1,6 @@
 import T from "@/translations";
-// Utils
 import request from "@/utils/request";
 import serviceHelpers from "@/utils/service-helpers";
-// Types
 import type { ResponseBody, UserResponse } from "@lucidcms/core/types";
 
 interface Params {
@@ -38,8 +36,8 @@ const useUpdateSingle = (props?: UseUpdateSingleProps) => {
 	>({
 		mutationFn: updateSingleReq,
 		successToast: {
-			title: T("user_update_toast_title"),
-			message: T("user_update_toast_message"),
+			title: T()("user_update_toast_title"),
+			message: T()("user_update_toast_message"),
 		},
 		invalidates: ["users.getMultiple", "users.getSingle"],
 		onSuccess: props?.onSuccess,

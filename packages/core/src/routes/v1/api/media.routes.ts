@@ -19,7 +19,7 @@ const mediaRoutes = async (fastify: FastifyInstance) => {
 		url: "",
 		middleware: {
 			authenticate: true,
-			contentLanguage: true,
+			contentLocale: true,
 		},
 		swaggerSchema: media.getMultiple.swaggerSchema,
 		zodSchema: media.getMultiple.zodSchema,

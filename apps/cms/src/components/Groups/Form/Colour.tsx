@@ -1,8 +1,6 @@
 import { type Component, createSignal, For, Show } from "solid-js";
 import classnames from "classnames";
-// Types
 import type { ErrorResult, FieldErrors } from "@lucidcms/core/types";
-// Components
 import Form from "@/components/Groups/Form";
 
 interface ColourProps {
@@ -40,7 +38,7 @@ export const Colour: Component<ColourProps> = (props) => {
 			/>
 			<input
 				class={classnames(
-					"focus:outline-none text-sm text-title font-medium p-1 bg-container-4 border border-border h-10 w-full rounded-md mt-1 focus:border-primary-base duration-200 transition-colors",
+					"focus:outline-none disabled:cursor-not-allowed disabled:opacity-80 text-sm text-title font-medium p-1 bg-container-4 border border-border h-10 w-full rounded-md mt-1 focus:border-primary-base duration-200 transition-colors",
 				)}
 				onKeyDown={(e) => {
 					e.stopPropagation();
@@ -68,7 +66,7 @@ export const Colour: Component<ColourProps> = (props) => {
 						{(preset) => (
 							<li class="inline-block">
 								<button
-									class="focus:outline-none focus:ring-2 focus:ring-primary-base focus:ring-opacity-50 rounded-md h-6 w-6 mr-1 border border-border"
+									class="focus:outline-none focus:ring-1 focus:ring-primary-base focus:ring-opacity-50 rounded-md h-6 w-6 mr-1 border border-border"
 									style={{
 										"background-color": preset,
 									}}

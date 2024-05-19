@@ -29,7 +29,6 @@ const getMultipleController: RouteController<
 			{
 				collectionKey: request.params.collectionKey,
 				query: request.query,
-				languageId: request.language.id,
 			},
 		);
 
@@ -74,7 +73,7 @@ export default {
 			}),
 		},
 		headers: swaggerHeaders({
-			contentLanguage: true,
+			contentLocale: true,
 		}),
 		querystring: swaggerQueryString({
 			filters: [],

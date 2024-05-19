@@ -31,8 +31,8 @@ const DeleteEmail: Component<DeleteEmailProps> = (props) => {
 				isError: deleteEmail.action.isError,
 			}}
 			content={{
-				title: T("delete_email_modal_title"),
-				description: T("delete_email_modal_description"),
+				title: T()("delete_email_modal_title"),
+				description: T()("delete_email_modal_description"),
 				error: deleteEmail.errors()?.message,
 			}}
 			onConfirm={() => {

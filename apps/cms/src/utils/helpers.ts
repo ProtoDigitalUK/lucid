@@ -150,25 +150,38 @@ const formatUserInitials = (user: {
 const updateTranslation = (
 	setter: Setter<
 		{
-			languageId: number | null;
+			localeCode: string | null;
 			value: string | null;
 		}[]
 	>,
 	translation: {
-		languageId: number | null;
+		localeCode: string | null;
 		value: string | null;
 	},
 ) => {
 	setter((prev) => {
 		const index = prev.findIndex(
-			(t) => t.languageId === translation.languageId,
+			(t) => t.localeCode === translation.localeCode,
 		);
 		if (index === -1) return [...prev, translation];
 
 		return prev.map((item) =>
-			item.languageId === translation.languageId ? translation : item,
+			item.localeCode === translation.localeCode ? translation : item,
 		);
 	});
+};
+
+const getTranslation = (
+	translations?: {
+		value: string | null;
+		localeCode: string | null;
+	}[],
+	contentLocale?: string,
+) => {
+	const translation = translations?.find(
+		(t) => t.localeCode === contentLocale,
+	);
+	return translation?.value ?? null;
 };
 
 // ---------------------------------------------
@@ -183,6 +196,7 @@ const helpers = {
 	formatUserName,
 	formatUserInitials,
 	updateTranslation,
+	getTranslation,
 };
 
 export default helpers;

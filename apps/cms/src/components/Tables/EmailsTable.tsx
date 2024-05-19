@@ -50,61 +50,61 @@ const EmailsTable: Component<EmailsTableProps> = (props) => {
 				searchParams={props.searchParams}
 				head={[
 					{
-						label: T("status"),
+						label: T()("status"),
 						key: "status",
 						icon: <FaSolidT />,
 					},
 					{
-						label: T("subject"),
+						label: T()("subject"),
 						key: "subject",
 						icon: <FaSolidT />,
 					},
 					{
-						label: T("template"),
+						label: T()("template"),
 						key: "template",
 						icon: <FaSolidT />,
 					},
 					{
-						label: T("to"),
+						label: T()("to"),
 						key: "to",
 						icon: <FaSolidEnvelope />,
 					},
 					{
-						label: T("from"),
+						label: T()("from"),
 						key: "from",
 						icon: <FaSolidEnvelope />,
 					},
 					{
-						label: T("sent_count"),
+						label: T()("sent_count"),
 						key: "sentCount",
 						icon: <FaSolidPaperPlane />,
 						sortable: true,
 					},
 					{
-						label: T("failed_count"),
+						label: T()("failed_count"),
 						key: "errorCount",
 						icon: <FaSolidPaperPlane />,
 						sortable: true,
 					},
 					{
-						label: T("type"),
+						label: T()("type"),
 						key: "type",
 						icon: <FaSolidT />,
 					},
 					{
-						label: T("first_attempt"),
+						label: T()("first_attempt"),
 						key: "createdAt",
 						icon: <FaSolidCalendar />,
 						sortable: true,
 					},
 					{
-						label: T("last_attempt"),
+						label: T()("last_attempt"),
 						key: "lastAttemptAt",
 						icon: <FaSolidCalendar />,
 						sortable: true,
 					},
 					{
-						label: T("last_success_at"),
+						label: T()("last_success_at"),
 						key: "lastSuccessAt",
 						icon: <FaSolidCalendar />,
 						sortable: true,

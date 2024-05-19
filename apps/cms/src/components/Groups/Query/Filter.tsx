@@ -10,9 +10,7 @@ import {
 	Show,
 } from "solid-js";
 import { FaSolidFilter, FaSolidXmark } from "solid-icons/fa";
-// Hooks
 import type useSearchParams from "@/hooks/useSearchParams";
-// Components
 import { DropdownMenu } from "@kobalte/core";
 import DropdownContent from "@/components/Partials/DropdownContent";
 import Form from "@/components/Groups/Form";
@@ -211,7 +209,7 @@ const FilterItem: Component<FilterItemProps> = (props) => {
 						>
 							{props.filter.options
 								? props.filter.options[0].label
-								: T("active")}
+								: T()("active")}
 						</Button>
 						<Button
 							theme="secondary-toggle"
@@ -229,7 +227,7 @@ const FilterItem: Component<FilterItemProps> = (props) => {
 						>
 							{props.filter.options
 								? props.filter.options[0].label
-								: T("inactive")}
+								: T()("inactive")}
 						</Button>
 					</div>
 				</Match>
@@ -263,7 +261,7 @@ export const Filter: Component<FilterProps> = (props) => {
 				<DropdownMenu.Icon>
 					<FaSolidFilter />
 				</DropdownMenu.Icon>
-				<span class="ml-2">{T("filter")}</span>
+				<span class="ml-2">{T()("filter")}</span>
 			</DropdownMenu.Trigger>
 			<DropdownContent
 				options={{

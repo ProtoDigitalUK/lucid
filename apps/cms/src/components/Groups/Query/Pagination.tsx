@@ -9,11 +9,8 @@ import {
 	Match,
 } from "solid-js";
 import { FaSolidChevronLeft, FaSolidChevronRight } from "solid-icons/fa";
-// Types
 import type { ResponseBody } from "@lucidcms/core/types";
-// Hooks
 import type useSearchParams from "@/hooks/useSearchParams";
-// Components
 import Layout from "@/components/Groups/Layout";
 import { Pagination as KobPagination } from "@kobalte/core";
 
@@ -52,10 +49,10 @@ export const Pagination: Component<PaginationProps> = (props) => {
 			<span class="text-sm text-body md:mb-0 mb-2">
 				<Switch>
 					<Match when={textData().total === 0}>
-						{T("pagination_empty")}
+						{T()("pagination_empty")}
 					</Match>
 					<Match when={textData().total > 0}>
-						{T("pagination_text", {
+						{T()("pagination_text", {
 							page: textData().page,
 							lastPage: textData().lastPage,
 							total: textData().total,

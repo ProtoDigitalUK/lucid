@@ -3,11 +3,6 @@ import { permissionGroups } from "./services/permissions.js";
 
 export default {
 	seedDefaults: {
-		language: {
-			code: "en",
-			isDefault: 1,
-			isEnabled: 1,
-		},
 		user: {
 			firstName: "Lucid",
 			lastName: "CMS",
@@ -25,7 +20,6 @@ export default {
 					...permissionGroups.roles.permissions,
 					...permissionGroups.media.permissions,
 					...permissionGroups.settings.permissions,
-					...permissionGroups.languages.permissions,
 					...permissionGroups.emails.permissions,
 					...permissionGroups.content.permissions,
 				],

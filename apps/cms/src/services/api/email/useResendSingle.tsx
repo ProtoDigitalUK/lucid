@@ -1,9 +1,7 @@
 import T from "@/translations";
-// Utils
 import serviceHelpers from "@/utils/service-helpers";
 import spawnToast from "@/utils/spawn-toast";
 import request from "@/utils/request";
-// Types
 import type { ResponseBody } from "@lucidcms/core/types";
 
 interface Params {
@@ -45,15 +43,15 @@ const useResendSingle = (props: UseResendSingleProps) => {
 		onSuccess: (data) => {
 			if (data.data.success) {
 				spawnToast({
-					title: T("email_resent_toast_title"),
-					message: T("email_resent_toast_message"),
+					title: T()("email_resent_toast_title"),
+					message: T()("email_resent_toast_message"),
 					status: "success",
 				});
 				props.onSuccess?.();
 			} else {
 				spawnToast({
-					title: T("email_resent_toast_erro_title"),
-					message: T("email_resent_toast_error_message"),
+					title: T()("email_resent_toast_erro_title"),
+					message: T()("email_resent_toast_error_message"),
 					status: "error",
 				});
 			}

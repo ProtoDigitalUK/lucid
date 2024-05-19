@@ -1,8 +1,6 @@
 import T from "@/translations";
-// Utils
 import request from "@/utils/request";
 import serviceHelpers from "@/utils/service-helpers";
-// Types
 import type { ResponseBody } from "@lucidcms/core/types";
 
 interface Params {
@@ -41,8 +39,8 @@ const useForgotPassword = (props: UseForgotPasswordProps) => {
 	>({
 		mutationFn: sendPasswordResetReq,
 		successToast: {
-			title: T("password_reset_toast_title"),
-			message: T("password_reset_toast_message"),
+			title: T()("password_reset_toast_title"),
+			message: T()("password_reset_toast_message"),
 		},
 		onSuccess: props.onSuccess,
 		onError: props.onError,

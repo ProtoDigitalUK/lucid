@@ -1,9 +1,7 @@
 import T from "@/translations";
-// Utils
 import spawnToast from "@/utils/spawn-toast";
 import request from "@/utils/request";
 import serviceHelpers from "@/utils/service-helpers";
-// Types
 import type { ResponseBody, RoleResponse } from "@lucidcms/core/types";
 
 interface Params {
@@ -45,9 +43,9 @@ const useUpdateSingle = (props?: UseUpdateSingleProps) => {
 		],
 		onSuccess: () => {
 			spawnToast({
-				title: T("role_update_toast_title"),
-				message: T("role_update_toast_message", {
-					name: T("role"),
+				title: T()("role_update_toast_title"),
+				message: T()("role_update_toast_message", {
+					name: T()("role"),
 				}),
 				status: "success",
 			});

@@ -2,9 +2,7 @@ import { type Component, createSignal, onMount, onCleanup } from "solid-js";
 import classnames from "classnames";
 import Quill from "quill";
 import "quill/dist/quill.snow.css";
-// Types
 import type { ErrorResult, FieldErrors } from "@lucidcms/core/types";
-// Components
 import Form from "@/components/Groups/Form";
 
 interface WYSIWYGProps {
@@ -17,6 +15,7 @@ interface WYSIWYGProps {
 		describedBy?: string;
 	};
 	required?: boolean;
+	disabled?: boolean;
 	errors?: ErrorResult | FieldErrors;
 	noMargin?: boolean;
 }
@@ -47,8 +46,9 @@ export const WYSIWYG: Component<WYSIWYGProps> = (props) => {
 			},
 		});
 		quill.on("text-change", () => {
-			const value = quill.root.innerHTML;
-			props.onChange(value);
+			if (props.disabled) return;
+			if (props.value === quill.root.innerHTML) return;
+			props.onChange(quill.root.innerHTML);
 		});
 
 		quill.root.innerHTML = props.value;
@@ -78,7 +78,12 @@ export const WYSIWYG: Component<WYSIWYGProps> = (props) => {
 				required={props.required}
 				theme={"basic"}
 			/>
-			<div class="mt-1">
+			<div
+				class={classnames("mt-1", {
+					"cursor-not-allowed opacity-80 pointer-events-none":
+						props.disabled,
+				})}
+			>
 				<div
 					ref={quillElement}
 					onFocus={() => setInputFocus(true)}

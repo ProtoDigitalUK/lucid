@@ -1,9 +1,7 @@
 import T from "@/translations";
 import { type Component, For, createMemo } from "solid-js";
 import { FaSolidSort } from "solid-icons/fa";
-// Hooks
 import type useSearchParams from "@/hooks/useSearchParams";
-// Components
 import { DropdownMenu } from "@kobalte/core";
 import DropdownContent from "@/components/Partials/DropdownContent";
 import classNames from "classnames";
@@ -30,7 +28,7 @@ export const PerPage: Component<PerPageProps> = (props) => {
 		<DropdownMenu.Root>
 			<DropdownMenu.Trigger class="dropdown-trigger px-15 py-2 border border-border hover:border-primary-base rounded-md text-title fill-title flex items-center text-base font-display">
 				<span class="mr-2">
-					{T("per_page", {
+					{T()("per_page", {
 						count: currentPerPage(),
 					})}
 				</span>
@@ -51,7 +49,7 @@ export const PerPage: Component<PerPageProps> = (props) => {
 							<button
 								tabIndex={0}
 								class={classNames(
-									"w-full flex items-center justify-between group focus:outline-none focus:ring-2 focus:ring-primary-base px-1.5 py-1 rounded-md",
+									"w-full flex items-center justify-between group focus:outline-none focus:ring-1 focus:ring-primary-base px-1.5 py-1 rounded-md",
 									{
 										"bg-container-2 text-body":
 											currentPerPage() === perpage,

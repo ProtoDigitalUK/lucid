@@ -62,7 +62,7 @@ const lucidPlugin = async (fastify: FastifyInstance) => {
 				"_csrf",
 				"_access",
 				"_refresh",
-				"lucid-content-lang",
+				"lucid-content-locale",
 				"Content-Length",
 			],
 			credentials: true,

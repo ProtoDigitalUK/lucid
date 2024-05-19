@@ -1,5 +1,3 @@
-import type z from "zod";
-import type { FieldSchema } from "../schemas/collection-fields.js";
 import type {
 	MediaType,
 	FieldResponseValue,
@@ -11,6 +9,7 @@ import type {
 	FieldTypes,
 	CustomField,
 } from "../libs/builders/field-builder/types.js";
+import type { FieldInsertItem } from "../services/collection-document-bricks/helpers/flatten-fields.js";
 import type { FieldProp } from "../libs/formatters/collection-document-fields.js";
 import type { FieldFilters } from "../libs/builders/collection-builder/index.js";
 import Formatter from "../libs/formatters/index.js";
@@ -60,7 +59,7 @@ export const fieldTypeValueKey = (type: FieldTypes, columns?: boolean) => {
 	}
 };
 
-export const fieldColumnValueMap = (field: z.infer<typeof FieldSchema>) => {
+export const fieldColumnValueMap = (field: FieldInsertItem) => {
 	switch (field.type) {
 		case "link": {
 			const value = field.value as LinkValue | undefined;
@@ -76,6 +75,20 @@ export const fieldColumnValueMap = (field: z.infer<typeof FieldSchema>) => {
 					target: value.target,
 					label: value.label,
 				}),
+			};
+		}
+		case "checkbox": {
+			if (field.value === 1 || field.value === 0)
+				return {
+					boolValue: field.value,
+				};
+			return {
+				boolValue: field.value ? 1 : 0,
+			};
+		}
+		case "json": {
+			return {
+				jsonValue: Formatter.stringifyJSON(field.value),
 			};
 		}
 		default: {
@@ -150,13 +163,13 @@ export const fieldResponseValueFormat = (props: FieldResponseValueFormat) => {
 				titleTranslations: props.field?.media_title_translations?.map(
 					(t) => ({
 						value: t.value,
-						languageId: t.language_id,
+						localeCode: t.locale_code,
 					}),
 				),
 				altTranslations: props.field?.media_alt_translations?.map(
 					(t) => ({
 						value: t.value,
-						languageId: t.language_id,
+						localeCode: t.locale_code,
 					}),
 				),
 				type: (props.field?.media_type as MediaType) ?? null,
@@ -219,5 +232,8 @@ export const fieldResponseValueFormat = (props: FieldResponseValueFormat) => {
 		}
 	}
 
-	return { value, meta };
+	return {
+		value,
+		meta,
+	};
 };

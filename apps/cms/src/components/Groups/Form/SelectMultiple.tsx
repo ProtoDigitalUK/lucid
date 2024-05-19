@@ -8,13 +8,10 @@ import {
 	Match,
 } from "solid-js";
 import classnames from "classnames";
-// Types
 import type { ErrorResult } from "@lucidcms/core/types";
-// Components
 import { FaSolidCheck, FaSolidXmark, FaSolidSort } from "solid-icons/fa";
 import { DropdownMenu } from "@kobalte/core";
 import DropdownContent from "@/components/Partials/DropdownContent";
-// Components
 import Form from "@/components/Groups/Form";
 
 export type SelectMultipleValueT = {
@@ -135,7 +132,7 @@ export const SelectMultiple: Component<SelectMultipleProps> = (props) => {
 										>
 											<FaSolidXmark size={16} class="" />
 											<span class="sr-only">
-												{T("remove")}
+												{T()("remove")}
 											</span>
 										</button>
 									</span>
@@ -164,7 +161,7 @@ export const SelectMultiple: Component<SelectMultipleProps> = (props) => {
 								>
 									<FaSolidXmark size={14} />
 									<span class="sr-only">
-										{T("remove_all")}
+										{T()("remove_all")}
 									</span>
 								</button>
 							</Show>
@@ -216,8 +213,8 @@ export const SelectMultiple: Component<SelectMultipleProps> = (props) => {
 							</ul>
 						</Match>
 						<Match when={props.options.length === 0}>
-							<span class="text-primary-contrast w-full block px-2.5 py-1 text-sm">
-								{T("no_options_available")}
+							<span class="text-body w-full block px-2.5 py-1 text-sm">
+								{T()("no_options_available")}
 							</span>
 						</Match>
 					</Switch>

@@ -24,7 +24,7 @@
 	"swagger_query_string_sort_description": "Prefix the value with a minus sign (-) to sort in descending order and seperate values by a comma if you want to sort by multiple values",
 	"swagger_query_string_page_description": "The page number of the paginated response",
 	"swagger_query_string_per_page_description": "The number of items per page in the paginated response",
-	"swagger_content_language_header_description": "The language id of the content you wish to filter translations by. If left empty, the default language will be used.",
+	"swagger_content_locale_header_description": "The locale code of the content you wish to filter translations by. If left empty, the default language will be used.",
 	"login_error_name": "There was an error logging in.",
 	"login_error_message": "The username/email or password you entered is incorrect.",
 	"login_suspended_error_message": "Your account has been suspended. Please contact an administrator.",
@@ -58,7 +58,7 @@
 	"password_reset_success_subject": "Password reset successful",
 	"please_ensure_passwords_match": "Please ensure that the passwords match and try again.",
 	"ensure_file_has_been_uploaded": "Please ensure that a file has been uploaded and try again.",
-	"make_sure_all_translations_languages_exist": "Please make sure all translation languages exist.",
+	"make_sure_all_translations_locales_exist": "Please make sure all translation locales exist.",
 	"file_too_large_max_size_is": "File {{name}} is too large. Max file size is {{size}} bytes.",
 	"file_exceeds_storage_limit_max_limit_is": "Files exceed storage limit. Max storage limit is {{size}} bytes.",
 	"collection_not_found_message": "Collection with key \"{{collectionKey}}\" not found",
@@ -99,6 +99,10 @@
 	"error_locked_collection_name": "collection Locked",
 	"error_locked_collection_message": "The {{name}} collection is locked and cannot be updated.",
 	"error_locked_collection_message_delete": "The {{name}} collection is locked and cannot be deleted.",
+	"config_locales_empty": "Please ensure the locales array is not empty.",
+	"config_default_locale_undefined": "Please ensure the defaultLocale is defined.",
+	"config_default_locale_not_found": "Please ensure the defaultLocale exists in the locales array.",
+	"config_duplicate_locale": "Please ensure the locales array does not contain duplicate values.",
 	"update": "Update",
 	"delete": "Delete",
 	"create": "Create",
@@ -122,5 +126,5 @@
 	"role": "Role",
 	"account": "Account",
 	"permission": "Permission",
-	"language": "Language"
+	"locale": "Locale"
 }

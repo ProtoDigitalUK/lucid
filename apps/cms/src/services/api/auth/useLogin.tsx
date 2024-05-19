@@ -1,9 +1,7 @@
 import T from "@/translations";
 import { useNavigate } from "@solidjs/router";
-// Utils
 import request from "@/utils/request";
 import serviceHelpers from "@/utils/service-helpers";
-// Types
 import type { ResponseBody, UserResponse } from "@lucidcms/core/types";
 
 interface Params {
@@ -38,8 +36,8 @@ const useLogin = (props?: UseLoginProps) => {
 	>({
 		mutationFn: loginReq,
 		successToast: {
-			title: T("login_success_toast_title"),
-			message: T("login_success_toast_message"),
+			title: T()("login_success_toast_title"),
+			message: T()("login_success_toast_message"),
 		},
 		invalidates: ["roles.getMultiple", "roles.getSingle"],
 		onSuccess: () => {

@@ -1,11 +1,15 @@
 import {
 	type Component,
-	type Accessor,
 	createSignal,
-	onMount,
 	batch,
+	createMemo,
+	createEffect,
 } from "solid-js";
-import type { CustomField } from "@lucidcms/core/types";
+import type {
+	CustomField,
+	FieldResponse,
+	FieldErrors,
+} from "@lucidcms/core/types";
 import brickStore from "@/store/brickStore";
 import brickHelpers from "@/utils/brick-helpers";
 import Form from "@/components/Groups/Form";
@@ -14,12 +18,12 @@ interface InputFieldProps {
 	type: "number" | "text" | "datetime-local";
 	state: {
 		brickIndex: number;
-		field: CustomField;
+		fieldConfig: CustomField;
+		fieldData?: FieldResponse;
 		groupId?: number | string;
-		contentLanguage?: number;
-
-		getFieldPath: Accessor<string[]>;
-		getGroupPath: Accessor<Array<string | number>>;
+		repeaterKey?: string;
+		contentLocale: string;
+		fieldError: FieldErrors | undefined;
 	};
 }
 
@@ -29,25 +33,27 @@ export const InputField: Component<InputFieldProps> = (props) => {
 	const [getValue, setValue] = createSignal("");
 
 	// -------------------------------
+	// Memos
+	const fieldData = createMemo(() => {
+		return props.state.fieldData;
+	});
+
+	// -------------------------------
 	// Effects
-	onMount(() => {
-		const field = brickHelpers.getBrickField({
-			brickIndex: props.state.brickIndex,
-			fieldPath: props.state.getFieldPath(),
-			groupPath: props.state.getGroupPath(),
-			field: props.state.field,
-			contentLanguage: props.state.contentLanguage,
+	createEffect(() => {
+		const value = brickHelpers.getFieldValue<string | number>({
+			fieldData: fieldData(),
+			fieldConfig: props.state.fieldConfig,
+			contentLocale: props.state.contentLocale,
 		});
 
 		switch (props.type) {
 			case "number": {
-				const value = field?.value as number | undefined;
 				setValue(typeof value !== "number" ? "" : value.toString());
 				break;
 			}
 			default: {
-				const value = (field?.value as string | undefined) || "";
-				setValue(value);
+				setValue(typeof value !== "string" ? "" : value);
 				break;
 			}
 		}
@@ -57,28 +63,36 @@ export const InputField: Component<InputFieldProps> = (props) => {
 	// Render
 	return (
 		<Form.Input
-			id={`field-${props.state.field.key}-${props.state.brickIndex}-${props.state.groupId}`}
+			id={brickHelpers.customFieldId({
+				key: props.state.fieldConfig.key,
+				brickIndex: props.state.brickIndex,
+				groupId: props.state.groupId,
+			})}
 			value={getValue()}
 			onChange={(value) => {
 				batch(() => {
 					brickStore.get.setFieldValue({
 						brickIndex: props.state.brickIndex,
-						fieldPath: props.state.getFieldPath(),
-						groupPath: props.state.getGroupPath(),
+						fieldConfig: props.state.fieldConfig,
+						key: props.state.fieldConfig.key,
+						groupId: props.state.groupId,
+						repeaterKey: props.state.repeaterKey,
 						value: props.type === "number" ? Number(value) : value,
+						contentLocale: props.state.contentLocale,
 					});
 					setValue(value);
 				});
 			}}
-			name={props.state.field.key}
+			name={props.state.fieldConfig.key}
 			type={props.type}
 			copy={{
-				label: props.state.field.title,
-				placeholder: props.state.field.placeholder,
-				describedBy: props.state.field.description,
+				label: props.state.fieldConfig.title,
+				placeholder: props.state.fieldConfig.placeholder,
+				describedBy: props.state.fieldConfig.description,
 			}}
-			// errors={props.state.fieldError}
-			required={props.state.field.validation?.required || false}
+			errors={props.state.fieldError}
+			disabled={props.state.fieldConfig.disabled}
+			required={props.state.fieldConfig.validation?.required || false}
 			theme={"basic"}
 		/>
 	);
