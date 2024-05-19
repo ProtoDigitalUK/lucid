@@ -3,10 +3,11 @@ import serviceHelpers from "@/utils/service-helpers";
 import type { ResponseBody } from "@lucidcms/core/types";
 
 export const csrfReq = async () => {
-	const csrfToken = sessionStorage.getItem("_csrf");
-	if (csrfToken) {
-		return csrfToken;
-	}
+	// TODO: Re-add this when functionality - currently does a csrf fetch on every request that needs it
+	// const csrfToken = sessionStorage.getItem("_csrf");
+	// if (csrfToken) {
+	// 	return csrfToken;
+	// }
 
 	const res = await request<
 		ResponseBody<{
