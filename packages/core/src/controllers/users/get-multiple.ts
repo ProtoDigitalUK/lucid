@@ -24,6 +24,9 @@ const getMultipleController: RouteController<
 			},
 			{
 				query: request.query,
+				auth: {
+					id: request.auth.id,
+				},
 			},
 		);
 

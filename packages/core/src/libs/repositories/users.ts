@@ -126,6 +126,7 @@ export default class UsersRepo {
 	selectMultipleFiltered = async (props: {
 		query: z.infer<typeof usersSchema.getMultiple.query>;
 		config: Config;
+		exclude: number[];
 	}) => {
 		const usersQuery = this.db
 			.selectFrom("lucid_users")
@@ -160,6 +161,7 @@ export default class UsersRepo {
 				join.onRef("lucid_user_roles.user_id", "=", "lucid_users.id"),
 			)
 			.where("lucid_users.is_deleted", "=", 0)
+			.where("lucid_users.id", "not in", props.exclude)
 			.groupBy("lucid_users.id");
 
 		const usersCountQuery = this.db
