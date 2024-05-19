@@ -96,12 +96,12 @@ const updateSingle = async (
 	if (data.email !== undefined && emailExists !== undefined) {
 		throw new LucidAPIError({
 			type: "basic",
-			status: 500,
+			status: 400,
 			errorResponse: {
 				body: {
 					email: {
 						code: "invalid",
-						message: T("duplicate_entry_error_message"),
+						message: T("this_email_is_already_in_use"),
 					},
 				},
 			},
@@ -110,12 +110,12 @@ const updateSingle = async (
 	if (data.username !== undefined && usernameExists !== undefined) {
 		throw new LucidAPIError({
 			type: "basic",
-			status: 500,
+			status: 400,
 			errorResponse: {
 				body: {
 					username: {
 						code: "invalid",
-						message: T("duplicate_entry_error_message"),
+						message: T("this_username_is_already_in_use"),
 					},
 				},
 			},

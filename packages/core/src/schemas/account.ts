@@ -13,7 +13,6 @@ export default {
 			lastName: z.string().optional(),
 			username: z.string().min(3).optional(),
 			email: z.string().email().optional(),
-			roleIds: z.array(z.number()).optional(),
 		}),
 		query: undefined,
 		params: undefined,

@@ -269,6 +269,7 @@ const UpsertRolePanel: Component<UpsertRolePanelProps> = (props) => {
 														}
 														copy={{
 															label: T()(
+																// @ts-expect-error
 																`permissions_${permission}`,
 															),
 														}}

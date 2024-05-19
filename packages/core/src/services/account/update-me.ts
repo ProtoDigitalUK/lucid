@@ -1,8 +1,6 @@
 import T from "../../translations/index.js";
 import type { FastifyRequest } from "fastify";
 import { LucidAPIError } from "../../utils/error-handler.js";
-import usersService from "../users/index.js";
-import serviceWrapper from "../../utils/service-wrapper.js";
 import Repository from "../../libs/repositories/index.js";
 import type { ServiceConfig } from "../../utils/service-wrapper.js";
 
@@ -12,7 +10,6 @@ export interface ServiceData {
 	lastName?: string;
 	username?: string;
 	email?: string;
-	roleIds?: number[];
 }
 
 const updateMe = async (serviceConfig: ServiceConfig, data: ServiceData) => {
@@ -74,28 +71,34 @@ const updateMe = async (serviceConfig: ServiceConfig, data: ServiceData) => {
 					],
 				})
 			: undefined,
-		data.roleIds !== undefined
-			? serviceWrapper(usersService.checks.checkRolesExist, false)(
-					serviceConfig,
-					{
-						roleIds: data.roleIds,
-					},
-				)
-			: undefined,
 	]);
 
 	if (data.email !== undefined && userWithEmail !== undefined) {
 		throw new LucidAPIError({
 			type: "basic",
-			message: T("this_email_is_already_in_use"),
 			status: 400,
+			errorResponse: {
+				body: {
+					email: {
+						code: "invalid",
+						message: T("this_email_is_already_in_use"),
+					},
+				},
+			},
 		});
 	}
 	if (data.username !== undefined && userWithUsername !== undefined) {
 		throw new LucidAPIError({
 			type: "basic",
-			message: T("this_username_is_already_in_use"),
 			status: 400,
+			errorResponse: {
+				body: {
+					username: {
+						code: "invalid",
+						message: T("this_username_is_already_in_use"),
+					},
+				},
+			},
 		});
 	}
 
@@ -129,14 +132,6 @@ const updateMe = async (serviceConfig: ServiceConfig, data: ServiceData) => {
 	// TODO: send email to user to confirm email change ?
 
 	if (getUser.super_admin === 0) return;
-
-	await serviceWrapper(usersService.updateMultipleRoles, false)(
-		serviceConfig,
-		{
-			userId: data.auth.id,
-			roleIds: data.roleIds,
-		},
-	);
 };
 
 export default updateMe;

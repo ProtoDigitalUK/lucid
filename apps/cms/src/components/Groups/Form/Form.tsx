@@ -6,6 +6,7 @@ import ErrorMessage from "@/components/Partials/ErrorMessage";
 import ErrorBlock from "@/components/Partials/ErrorBlock";
 import notifySvg from "@/assets/illustrations/notify.svg";
 import type { ErrorResponse } from "@lucidcms/core/types";
+import classNames from "classnames";
 
 interface FormProps {
 	type: "standard" | "page-layout";
@@ -19,6 +20,9 @@ interface FormProps {
 	};
 	content: {
 		submit: string;
+	};
+	options?: {
+		buttonFullWidth?: boolean;
 	};
 	permission?: boolean;
 	onSubmit?: () => void;
@@ -52,7 +56,7 @@ export const Form: Component<FormProps> = (props) => {
 						{/* Standard Submit */}
 						<Match when={props.type === "standard"}>
 							{props.children}
-							<div class="mt-10 w-full">
+							<div class="mt-30 w-full">
 								<Show when={props.state.errors?.message}>
 									<ErrorMessage
 										theme="container"
@@ -62,7 +66,10 @@ export const Form: Component<FormProps> = (props) => {
 
 								<Button
 									size="medium"
-									classes="w-full"
+									classes={classNames({
+										"w-full":
+											props.options?.buttonFullWidth,
+									})}
 									type="submit"
 									theme="primary"
 									loading={props.state.isLoading}

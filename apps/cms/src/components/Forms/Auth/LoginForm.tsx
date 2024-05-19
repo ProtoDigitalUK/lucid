@@ -31,6 +31,9 @@ const LoginForm: Component<LoginFormProps> = (props) => {
 			content={{
 				submit: "Login",
 			}}
+			options={{
+				buttonFullWidth: true,
+			}}
 			onSubmit={() => {
 				login.action.mutate({
 					usernameOrEmail: usernameOrEmail(),

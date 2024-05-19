@@ -170,7 +170,8 @@ export default class UsersRepo {
 			.leftJoin("lucid_user_roles", (join) =>
 				join.onRef("lucid_user_roles.user_id", "=", "lucid_users.id"),
 			)
-			.where("lucid_users.is_deleted", "=", 0);
+			.where("lucid_users.is_deleted", "=", 0)
+			.where("lucid_users.id", "not in", props.exclude);
 
 		const { main, count } = queryBuilder(
 			{

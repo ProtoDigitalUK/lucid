@@ -9,13 +9,6 @@ import Button from "@/components/Partials/Button";
 import ProgressBar from "@/components/Partials/ProgressBar";
 import ClearAllProcessedImages from "@/components/Modals/Media/ClearAllProcessedImages";
 import DetailsList from "@/components/Partials/DetailsList";
-import Form from "@/components/Groups/Form";
-import {
-	getLocale,
-	setLocale,
-	localesConfig,
-	type SupportedLocales,
-} from "@/translations";
 
 interface GeneralSettingsRouteProps {
 	settings?: SettingsResponse;
@@ -43,50 +36,6 @@ const GeneralSettingsRoute: Component<GeneralSettingsRouteProps> = (props) => {
 	// Render
 	return (
 		<>
-			{/* Locales */}
-			<InfoRow.Root
-				title={T()("locales")}
-				description={T()("locales_setting_message")}
-			>
-				<InfoRow.Content
-					title={T()("cms_locale")}
-					description={T()("cms_locale_description")}
-				>
-					<Form.Select
-						id={"cms-locale"}
-						value={getLocale()}
-						options={localesConfig.map((locale) => ({
-							label: locale.name || locale.code,
-							value: locale.code,
-						}))}
-						onChange={(value) => {
-							setLocale(value as SupportedLocales);
-						}}
-						name={"cms-locale"}
-						noClear={true}
-						theme={"basic"}
-					/>
-				</InfoRow.Content>
-				<InfoRow.Content
-					title={T()("content_locales")}
-					description={T()("content_locales_description")}
-				>
-					<DetailsList
-						type="text"
-						items={
-							contentLocales().map((locale) => ({
-								label: locale.name || locale.code,
-								value: `${locale.code} ${
-									locale.isDefault === 1
-										? `(${T()("default")})`
-										: ""
-								} `,
-							})) || []
-						}
-					/>
-				</InfoRow.Content>
-			</InfoRow.Root>
-
 			{/* Storage */}
 			<InfoRow.Root
 				title={T()("storage_breakdown")}
@@ -142,6 +91,31 @@ const GeneralSettingsRoute: Component<GeneralSettingsRouteProps> = (props) => {
 							count: props.settings?.media.processed.total || 0,
 						})}
 					</Button>
+				</InfoRow.Content>
+			</InfoRow.Root>
+
+			{/* Locales */}
+			<InfoRow.Root
+				title={T()("locales")}
+				description={T()("locales_setting_message")}
+			>
+				<InfoRow.Content
+					title={T()("content_locales")}
+					description={T()("content_locales_description")}
+				>
+					<DetailsList
+						type="text"
+						items={
+							contentLocales().map((locale) => ({
+								label: locale.name || locale.code,
+								value: `${locale.code} ${
+									locale.isDefault === 1
+										? `(${T()("default")})`
+										: ""
+								} `,
+							})) || []
+						}
+					/>
 				</InfoRow.Content>
 			</InfoRow.Root>
 

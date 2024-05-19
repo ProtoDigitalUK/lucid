@@ -34,6 +34,9 @@ const ForgotPasswordForm: Component<ForgotPasswordFormProps> = (props) => {
 			content={{
 				submit: T()("send_password_reset"),
 			}}
+			options={{
+				buttonFullWidth: true,
+			}}
 			onSubmit={() => {
 				forgotPassword.action.mutate({ email: email() });
 			}}
