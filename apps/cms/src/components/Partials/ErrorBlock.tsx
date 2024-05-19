@@ -29,28 +29,28 @@ const ErrorBlock: Component<ErrorBlockProps> = (props) => {
 				},
 			)}
 		>
-			<div class="text-center max-w-xl flex flex-col items-center p-10">
+			<div class="text-center max-w-xl w-full flex flex-col items-center p-30">
 				<Show when={props.content.image}>
 					<img
 						src={props.content.image}
-						class="h-auto mx-auto mb-10 max-w-xs w-full max-h-40 object-contain"
+						class="h-auto mx-auto mb-30 max-w-xs w-full max-h-40 object-contain"
 						alt=""
 					/>
 				</Show>
-				<h2 class="mb-2">{props.content.title}</h2>
-				<p class="max-w-[400px]">{props.content.description}</p>
+				<h2 class="mb-15">{props.content.title}</h2>
+				<p class="max-w-96">{props.content.description}</p>
 				<Show when={props.link !== undefined}>
 					<Link
 						theme={"primary"}
 						size="medium"
-						classes="mt-10"
+						classes="mt-30"
 						href={props.link?.href || ""}
 					>
 						{props.link?.text || ""}
 					</Link>
 				</Show>
 				<Show when={props.children}>
-					<div class="mt-10">{props.children}</div>
+					<div class="mt-30">{props.children}</div>
 				</Show>
 			</div>
 		</div>

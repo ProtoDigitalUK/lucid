@@ -1,3 +1,4 @@
+import T from "@/translations";
 import { type Component, For, createMemo } from "solid-js";
 import api from "@/services/api";
 import useRowTarget from "@/hooks/useRowTarget";
@@ -11,6 +12,9 @@ import ClearProcessedMedia from "@/components/Modals/Media/ClearProcessedImages"
 
 interface MediaGridProps {
 	searchParams: ReturnType<typeof useSearchParams>;
+	state: {
+		setOpenCreateMediaPanel: (state: boolean) => void;
+	};
 }
 
 const MediaGrid: Component<MediaGridProps> = (props) => {
@@ -52,6 +56,19 @@ const MediaGrid: Component<MediaGridProps> = (props) => {
 					isLoading: media.isLoading,
 					isError: media.isError,
 					isSuccess: media.isSuccess,
+				}}
+				options={{
+					showCreateEntry: true,
+				}}
+				callbacks={{
+					createEntry: () => {
+						props.state.setOpenCreateMediaPanel(true);
+					},
+				}}
+				copy={{
+					noEntryTitle: T()("no_media"),
+					noEntryDescription: T()("no_media_description"),
+					noEntryButton: T()("upload_media"),
 				}}
 				searchParams={props.searchParams}
 				meta={media.data?.meta}

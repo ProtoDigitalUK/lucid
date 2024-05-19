@@ -13,7 +13,6 @@ import {
 import type { ResponseBody } from "@lucidcms/core/types";
 import type useSearchParams from "@/hooks/useSearchParams";
 import notifySvg from "@/assets/illustrations/notify.svg";
-import emptySvg from "@/assets/illustrations/empty.svg";
 import noPermission from "@/assets/illustrations/no-permission.svg";
 import Table from "@/components/Groups/Table";
 import Query from "@/components/Groups/Query";
@@ -21,6 +20,7 @@ import SelectCol from "@/components/Tables/Columns/SelectCol";
 import LoadingRow from "@/components/Tables/Rows/LoadingRow";
 import ErrorBlock from "@/components/Partials/ErrorBlock";
 import Button from "@/components/Partials/Button";
+import NoEntriesBlock from "@/components/Partials/NoEntriesBlock";
 
 interface TableRootProps {
 	key: string;
@@ -43,9 +43,16 @@ interface TableRootProps {
 	};
 	options?: {
 		isSelectable?: boolean;
+		showCreateEntry?: boolean;
 	};
 	callbacks?: {
 		deleteRows?: (_selected: boolean[]) => Promise<void>;
+		createEntry?: () => void;
+	};
+	copy?: {
+		noEntryTitle?: string;
+		noEntryDescription?: string;
+		noEntryButton?: string;
 	};
 	children: (_props: {
 		include: boolean[];
@@ -136,6 +143,12 @@ export const TableRoot: Component<TableRootProps> = (props) => {
 			};
 		});
 	});
+	const showCreateEntry = createMemo(() => {
+		return (
+			props.options?.showCreateEntry === true &&
+			!props.searchParams.hasFiltersApplied()
+		);
+	});
 
 	// ----------------------------------------
 	// Effects
@@ -194,27 +207,38 @@ export const TableRoot: Component<TableRootProps> = (props) => {
 				<Match
 					when={props.rows === 0 && props.state.isLoading === false}
 				>
-					<ErrorBlock
-						type="table"
-						content={{
-							image: emptySvg,
-							title: T()("no_results"),
-							description: T()("no_results_message"),
-						}}
-					>
-						<Show when={props.searchParams.hasFiltersApplied()}>
-							<Button
-								type="submit"
-								theme="primary"
-								size="medium"
-								onClick={() => {
-									props.searchParams.resetFilters();
-								}}
-							>
-								{T()("reset_filters")}
-							</Button>
-						</Show>
-					</ErrorBlock>
+					<Show when={showCreateEntry()}>
+						<NoEntriesBlock
+							copy={{
+								title: props.copy?.noEntryTitle,
+								description: props.copy?.noEntryDescription,
+								button: props.copy?.noEntryButton,
+							}}
+							action={props.callbacks?.createEntry}
+						/>
+					</Show>
+					<Show when={!showCreateEntry()}>
+						<ErrorBlock
+							type="table"
+							content={{
+								title: T()("no_results"),
+								description: T()("no_results_message"),
+							}}
+						>
+							<Show when={props.searchParams.hasFiltersApplied()}>
+								<Button
+									type="submit"
+									theme="primary"
+									size="medium"
+									onClick={() => {
+										props.searchParams.resetFilters();
+									}}
+								>
+									{T()("reset_filters")}
+								</Button>
+							</Show>
+						</ErrorBlock>
+					</Show>
 				</Match>
 				<Match when={props.state.isSuccess || props.state.isLoading}>
 					{/* Table */}

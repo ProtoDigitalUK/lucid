@@ -1,15 +1,22 @@
 import T from "@/translations";
-import { type Component, Show, Switch, Match, type JSXElement } from "solid-js";
+import {
+	type Component,
+	Show,
+	Switch,
+	Match,
+	type JSXElement,
+	createMemo,
+} from "solid-js";
 import type { ResponseBody } from "@lucidcms/core/types";
 import type useSearchParams from "@/hooks/useSearchParams";
 import notifySvg from "@/assets/illustrations/notify.svg";
-import emptySvg from "@/assets/illustrations/empty.svg";
 import noPermission from "@/assets/illustrations/no-permission.svg";
 import Query from "@/components/Groups/Query";
 import ErrorBlock from "@/components/Partials/ErrorBlock";
 import Button from "@/components/Partials/Button";
 import SkeletonCard from "@/components/Cards/SkeletonCard";
 import Layout from "@/components/Groups/Layout";
+import NoEntriesBlock from "@/components/Partials/NoEntriesBlock";
 
 interface GridRootProps {
 	items: number;
@@ -17,6 +24,17 @@ interface GridRootProps {
 		isLoading: boolean;
 		isError: boolean;
 		isSuccess: boolean;
+	};
+	options?: {
+		showCreateEntry?: boolean;
+	};
+	callbacks?: {
+		createEntry?: () => void;
+	};
+	copy?: {
+		noEntryTitle?: string;
+		noEntryDescription?: string;
+		noEntryButton?: string;
 	};
 	searchParams?: ReturnType<typeof useSearchParams>;
 	permission?: boolean;
@@ -26,6 +44,15 @@ interface GridRootProps {
 }
 
 export const GridRoot: Component<GridRootProps> = (props) => {
+	// ----------------------------------
+	// Memos
+	const showCreateEntry = createMemo(() => {
+		return (
+			props.options?.showCreateEntry === true &&
+			!props.searchParams?.hasFiltersApplied()
+		);
+	});
+
 	// ----------------------------------
 	// Render
 	return (
@@ -54,27 +81,40 @@ export const GridRoot: Component<GridRootProps> = (props) => {
 				<Match
 					when={props.items === 0 && props.state.isLoading === false}
 				>
-					<ErrorBlock
-						type="page-layout"
-						content={{
-							image: emptySvg,
-							title: T()("no_results"),
-							description: T()("no_results_message"),
-						}}
-					>
-						<Show when={props.searchParams?.hasFiltersApplied()}>
-							<Button
-								type="submit"
-								theme="primary"
-								size="medium"
-								onClick={() => {
-									props.searchParams?.resetFilters();
-								}}
+					<Show when={showCreateEntry()}>
+						<NoEntriesBlock
+							copy={{
+								title: props.copy?.noEntryTitle,
+								description: props.copy?.noEntryDescription,
+								button: props.copy?.noEntryButton,
+							}}
+							action={props.callbacks?.createEntry}
+						/>
+					</Show>
+					<Show when={!showCreateEntry()}>
+						<ErrorBlock
+							type="page-layout"
+							content={{
+								title: T()("no_results"),
+								description: T()("no_results_message"),
+							}}
+						>
+							<Show
+								when={props.searchParams?.hasFiltersApplied()}
 							>
-								{T()("reset_filters")}
-							</Button>
-						</Show>
-					</ErrorBlock>
+								<Button
+									type="submit"
+									theme="primary"
+									size="medium"
+									onClick={() => {
+										props.searchParams?.resetFilters();
+									}}
+								>
+									{T()("reset_filters")}
+								</Button>
+							</Show>
+						</ErrorBlock>
+					</Show>
 				</Match>
 				<Match when={props.state.isSuccess || props.state.isLoading}>
 					<Layout.PageContent>

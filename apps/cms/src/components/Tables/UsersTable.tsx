@@ -11,6 +11,9 @@ import DeleteUser from "@/components/Modals/User/DeleteRole";
 
 interface UsersTableProps {
 	searchParams: ReturnType<typeof useSearchParams>;
+	state: {
+		setOpenCreateUserPanel: (state: boolean) => void;
+	};
 }
 
 const UsersTable: Component<UsersTableProps> = (props) => {
@@ -84,11 +87,17 @@ const UsersTable: Component<UsersTableProps> = (props) => {
 				}}
 				options={{
 					isSelectable: false,
+					showCreateEntry: true,
 				}}
 				callbacks={{
-					deleteRows: async () => {
-						alert("Delete rows");
+					createEntry: () => {
+						props.state.setOpenCreateUserPanel(true);
 					},
+				}}
+				copy={{
+					noEntryTitle: T()("no_users"),
+					noEntryDescription: T()("no_users_description"),
+					noEntryButton: T()("create_user"),
 				}}
 			>
 				{({ include, isSelectable, selected, setSelected }) => (
