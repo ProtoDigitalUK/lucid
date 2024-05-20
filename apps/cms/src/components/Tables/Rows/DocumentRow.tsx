@@ -39,7 +39,7 @@ const DocumentRow: Component<DocumentRowProps> = (props) => {
 				{
 					label: T()("edit"),
 					type: "link",
-					href: `/collections/${props.collection.key}/${props.document.id}`,
+					href: `/admin/collections/${props.collection.key}/${props.document.id}`,
 					permission: userStore.get.hasPermission(["update_content"])
 						.all,
 				},

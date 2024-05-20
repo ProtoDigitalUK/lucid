@@ -89,7 +89,9 @@ const CollectionsDocumentsEditRoute: Component<
 		onSuccess: (data) => {
 			brickStore.set("fieldsErrors", []);
 			if (props.mode === "create") {
-				navigate(`/collections/${collectionKey()}/${data.data.id}`);
+				navigate(
+					`/admin/collections/${collectionKey()}/${data.data.id}`,
+				);
 			}
 		},
 		onError: (errors) => {
@@ -175,16 +177,16 @@ const CollectionsDocumentsEditRoute: Component<
 				<Layout.PageBreadcrumbs
 					breadcrumbs={[
 						{
-							link: "/collections",
+							link: "/admin/collections",
 							label: T()("collections"),
 						},
 						{
-							link: `/collections/${collectionKey()}`,
+							link: `/admin/collections/${collectionKey()}`,
 							label: collection.data?.data.title || "",
 							include: collection.data?.data.mode === "multiple",
 						},
 						{
-							link: `/collections/${collectionKey()}/${
+							link: `/admin/collections/${collectionKey()}/${
 								props.mode === "create"
 									? "create"
 									: documentId()
@@ -383,7 +385,7 @@ const CollectionsDocumentsEditRoute: Component<
 					callbacks={{
 						onSuccess: () => {
 							navigate(
-								`/collections/${collection.data?.data.key}`,
+								`/admin/collections/${collection.data?.data.key}`,
 							);
 						},
 					}}

@@ -128,7 +128,9 @@ const DocumentsTable: Component<DocumentsTableProps> = (props) => {
 						});
 					},
 					createEntry: () => {
-						navigate(`/collections/${collectionKey()}/create`);
+						navigate(
+							`/admin/collections/${collectionKey()}/create`,
+						);
 					},
 				}}
 			>

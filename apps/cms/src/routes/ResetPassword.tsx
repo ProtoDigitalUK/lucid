@@ -18,7 +18,7 @@ const ResetPasswordRoute: Component = () => {
 	const token = urlParams.get("token");
 
 	if (!token) {
-		navigate("/login");
+		navigate("/admin/login");
 	}
 
 	// ----------------------------------------
@@ -49,7 +49,7 @@ const ResetPasswordRoute: Component = () => {
 					}}
 					link={{
 						text: T()("back_to_login"),
-						href: "/login",
+						href: "/admin/login",
 					}}
 				/>
 			</Match>

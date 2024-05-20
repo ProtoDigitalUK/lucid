@@ -10,6 +10,7 @@ export default defineConfig({
 		}),
 		solidPlugin(),
 	],
+	base: "/admin/",
 	server: {
 		port: 3000,
 	},

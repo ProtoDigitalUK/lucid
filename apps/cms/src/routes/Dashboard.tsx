@@ -57,7 +57,7 @@ const DashboardRoute: Component = () => {
 							description: T()(
 								"starting_point_collections_description",
 							),
-							href: "/collections",
+							href: "/admin/collections",
 							icon: "collection",
 						},
 						{
@@ -65,7 +65,7 @@ const DashboardRoute: Component = () => {
 							description: T()(
 								"starting_point_media_description",
 							),
-							href: "/media",
+							href: "/admin/media",
 							icon: "media",
 						},
 						{
@@ -73,7 +73,7 @@ const DashboardRoute: Component = () => {
 							description: T()(
 								"starting_point_emails_description",
 							),
-							href: "/emails",
+							href: "/admin/emails",
 							icon: "email",
 						},
 						{
@@ -81,7 +81,7 @@ const DashboardRoute: Component = () => {
 							description: T()(
 								"starting_point_users_description",
 							),
-							href: "/users",
+							href: "/admin/users",
 							icon: "users",
 						},
 						{
@@ -89,7 +89,7 @@ const DashboardRoute: Component = () => {
 							description: T()(
 								"starting_point_roles_description",
 							),
-							href: "/roles",
+							href: "/admin/roles",
 							icon: "roles",
 						},
 						{
@@ -97,7 +97,7 @@ const DashboardRoute: Component = () => {
 							description: T()(
 								"starting_point_settings_description",
 							),
-							href: "/settings",
+							href: "/admin/settings",
 							icon: "settings",
 						},
 					]}

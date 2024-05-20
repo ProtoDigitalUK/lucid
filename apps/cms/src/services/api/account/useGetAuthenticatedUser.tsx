@@ -37,7 +37,7 @@ const useGetAuthenticatedUser = (params: QueryHook<QueryParams>) => {
 			userStore.set("user", query.data.data);
 		}
 		if (query.isError) {
-			navigate("/login");
+			navigate("/admin/login");
 		}
 	});
 

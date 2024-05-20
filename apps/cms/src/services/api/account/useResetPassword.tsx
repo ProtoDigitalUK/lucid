@@ -51,7 +51,7 @@ const useResetPassword = (props?: UseResetPasswordProps) => {
 		},
 		invalidates: ["roles.getMultiple", "roles.getSingle"],
 		onSuccess: () => {
-			navigate("/login");
+			navigate("/admin/login");
 			props?.onSuccess?.();
 		},
 		onError: () => {

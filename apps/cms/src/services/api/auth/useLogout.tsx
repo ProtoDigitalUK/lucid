@@ -1,7 +1,6 @@
 import T from "@/translations";
 import { useNavigate } from "@solidjs/router";
 import userStore from "@/store/userStore";
-import { clearCookie } from "@/utils/cookie";
 import request from "@/utils/request";
 import serviceHelpers from "@/utils/service-helpers";
 import type { ResponseBody } from "@lucidcms/core/types";
@@ -44,13 +43,12 @@ const useLogout = (props?: UseLogoutProps) => {
 		invalidates: ["roles.getMultiple", "roles.getSingle"],
 		onSuccess: () => {
 			userStore.get.reset();
-			navigate("/login");
+			navigate("/admin/login");
 			sessionStorage.removeItem("_csrf");
 			props?.onSuccess?.();
 		},
 		onError: () => {
-			clearCookie("auth");
-			navigate("/login");
+			navigate("/admin/login");
 			props?.onError?.();
 		},
 	});

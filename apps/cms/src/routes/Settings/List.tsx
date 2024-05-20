@@ -21,8 +21,8 @@ const SettingsListRoute: Component = () => {
 	// Memos
 	const currentTab = createMemo(() => {
 		const path = location.pathname;
-		if (path === "/settings") return "general";
-		if (path === "/settings/integrations") return "integrations";
+		if (path === "/admin/settings") return "general";
+		if (path === "/admin/settings/integrations") return "integrations";
 		return "";
 	});
 	const isLoading = createMemo(() => settingsData.isLoading);
@@ -45,11 +45,11 @@ const SettingsListRoute: Component = () => {
 					tabs={[
 						{
 							label: T()("general"),
-							href: "/settings",
+							href: "/admin/settings",
 						},
 						{
 							label: T()("integrations"),
-							href: "/settings/integrations",
+							href: "/admin/settings/integrations",
 						},
 					]}
 				/>

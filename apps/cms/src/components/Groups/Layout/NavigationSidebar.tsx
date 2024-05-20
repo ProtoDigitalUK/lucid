@@ -25,19 +25,19 @@ export const NavigationSidebar: Component = () => {
 				<ul class="pb-15">
 					<Navigation.IconLink
 						type="link"
-						href="/"
+						href="/admin"
 						icon="dashboard"
 						title={T()("home")}
 					/>
 					<Navigation.IconLink
 						type="link"
-						href="/collections"
+						href="/admin/collections"
 						icon="collection"
 						title={T()("collections")}
 					/>
 					<Navigation.IconLink
 						type="link"
-						href="/media"
+						href="/admin/media"
 						icon="media"
 						title={T()("media")}
 						permission={
@@ -50,7 +50,7 @@ export const NavigationSidebar: Component = () => {
 					/>
 					<Navigation.IconLink
 						type="link"
-						href="/users"
+						href="/admin/users"
 						icon="users"
 						title={T()("users")}
 						permission={
@@ -63,7 +63,7 @@ export const NavigationSidebar: Component = () => {
 					/>
 					<Navigation.IconLink
 						type="link"
-						href="/roles"
+						href="/admin/roles"
 						icon="roles"
 						title={T()("roles")}
 						permission={
@@ -76,7 +76,7 @@ export const NavigationSidebar: Component = () => {
 					/>
 					<Navigation.IconLink
 						type="link"
-						href="/emails"
+						href="/admin/emails"
 						icon="email"
 						title={T()("emails")}
 						permission={
@@ -85,7 +85,7 @@ export const NavigationSidebar: Component = () => {
 					/>
 					<Navigation.IconLink
 						type="link"
-						href="/settings"
+						href="/admin/settings"
 						icon="settings"
 						title={T()("settings")}
 					/>
@@ -103,7 +103,7 @@ export const NavigationSidebar: Component = () => {
 					<Show when={user()}>
 						<li>
 							<A
-								href="/account"
+								href="/admin/account"
 								class="flex items-center justify-center"
 							>
 								<UserDisplay

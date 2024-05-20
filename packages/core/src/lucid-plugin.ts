@@ -8,6 +8,7 @@ import fastifyStatic from "@fastify/static";
 import cors from "@fastify/cors";
 import fastifyCookie from "@fastify/cookie";
 import fs from "fs-extra";
+import { ReadableStream } from "node:stream/web";
 import fastifyMultipart from "@fastify/multipart";
 import fastifySwagger from "@fastify/swagger";
 import fastifySwaggerUi from "@fastify/swagger-ui";
@@ -94,21 +95,58 @@ const lucidPlugin = async (fastify: FastifyInstance) => {
 		// ------------------------------------
 		// Routes
 		fastify.register(routes);
+
 		fastify.register(fastifyStatic, {
-			root: [path.resolve("public"), path.join(currentDir, "../cms")],
+			root: path.resolve("public"),
 			wildcard: false,
 		});
-		fastify.setNotFoundHandler((request, reply) => {
+
+		fastify.register(fastifyStatic, {
+			root: path.join(currentDir, "../cms"),
+			prefix: "/admin",
+			wildcard: false,
+			decorateReply: false,
+		});
+
+		fastify.get("/admin", async (_, reply) => {
 			const indexPath = path.resolve(currentDir, "../cms/index.html");
+			// console.log(indexPath);
+			// const stream = fs.createReadStream(indexPath);
+			// const readableStream = ReadableStream.from(stream)
+			// const response = new Response(readableStream, {
+			//   status: 200,
+			//   headers: { 'content-type': 'application/octet-stream' }
+			// })
+			// reply.send(response)
 
+			const file = await fs.readFile(indexPath);
+			reply.type("text/html").send(file);
+
+			// const stream = fs.createReadStream(indexPath);
+			// reply.type("text/html").send(stream);
+		});
+
+		fastify.get("/admin/*", async (_, reply) => {
+			const indexPath = path.resolve(currentDir, "../cms/index.html");
+			// console.log(indexPath);
+			// const stream = fs.createReadStream(indexPath);
+			// const readableStream = ReadableStream.from(stream)
+			// const response = new Response(readableStream, {
+			//   status: 200,
+			//   headers: { 'content-type': 'application/octet-stream' }
+			// })
+			// reply.send(response)
+
+			const file = await fs.readFile(indexPath);
+			reply.type("text/html").send(file);
+
+			// const stream = fs.createReadStream(indexPath);
+			// reply.type("text/html").send(stream);
+		});
+
+		fastify.setNotFoundHandler((request, reply) => {
 			if (request.url.startsWith("/api")) {
-				reply.code(404).send("Page not found");
-				return;
-			}
-
-			if (fs.existsSync(indexPath)) {
-				const stream = fs.createReadStream(indexPath);
-				reply.type("text/html").send(stream);
+				reply.code(404).send("API route not found");
 			} else {
 				reply.code(404).send("Page not found");
 			}

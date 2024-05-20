@@ -41,7 +41,7 @@ const useLogin = (props?: UseLoginProps) => {
 		},
 		invalidates: ["roles.getMultiple", "roles.getSingle"],
 		onSuccess: () => {
-			navigate("/");
+			navigate("/admin");
 			props?.onSuccess?.();
 		},
 		onError: props?.onError,
