@@ -60,6 +60,13 @@ export const RepeaterField: Component<RepeaterFieldProps> = (props) => {
 				"mt-5": props.state.repeaterDepth > 0,
 			})}
 		>
+			<p
+				class={
+					"block text-sm transition-colors duration-200 ease-in-out mb-2"
+				}
+			>
+				{fieldConfig().title}
+			</p>
 			{/* Repeater Body */}
 			<Switch>
 				<Match when={groups().length > 0}>
