@@ -69,7 +69,7 @@ const DocumentsTable: Component<DocumentsTableProps> = (props) => {
 	// ----------------------------------
 	// Mutations
 	const deleteMultiple = api.collections.document.useDeleteMultiple({
-		collectionName: props.collection.singular,
+		getCollectionName: () => props.collection.singular || T()("collection"),
 	});
 
 	// ----------------------------------

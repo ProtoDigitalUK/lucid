@@ -100,7 +100,8 @@ const CollectionsDocumentsEditRoute: Component<
 				getBodyError<FieldErrors[]>("fields", errors) || [],
 			);
 		},
-		collectionName: collection.data?.data.singular || "",
+		getCollectionName: () =>
+			collection.data?.data.singular || T()("collection"),
 	});
 
 	// ----------------------------------

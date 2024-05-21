@@ -24,7 +24,7 @@ const DeleteDocument: Component<DeleteDocumentProps> = (props) => {
 			props.state.setOpen(false);
 			if (props.callbacks?.onSuccess) props.callbacks.onSuccess();
 		},
-		collectionName: props.collection.singular,
+		getCollectionName: () => props.collection.singular || T()("collection"),
 	});
 
 	// ------------------------------

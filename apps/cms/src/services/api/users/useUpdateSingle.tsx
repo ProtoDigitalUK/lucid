@@ -35,10 +35,10 @@ const useUpdateSingle = (props?: UseUpdateSingleProps) => {
 		ResponseBody<UserResponse>
 	>({
 		mutationFn: updateSingleReq,
-		successToast: {
+		getSuccessToast: () => ({
 			title: T()("user_update_toast_title"),
 			message: T()("user_update_toast_message"),
-		},
+		}),
 		invalidates: ["users.getMultiple", "users.getSingle"],
 		onSuccess: props?.onSuccess,
 		onError: props?.onError,

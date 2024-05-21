@@ -36,10 +36,10 @@ const useLogout = (props?: UseLogoutProps) => {
 		}>
 	>({
 		mutationFn: logoutReq,
-		successToast: {
+		getSuccessToast: () => ({
 			title: T()("logout_success_toast_title"),
 			message: T()("logout_success_toast_message"),
-		},
+		}),
 		invalidates: ["roles.getMultiple", "roles.getSingle"],
 		onSuccess: () => {
 			userStore.get.reset();

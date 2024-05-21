@@ -36,10 +36,10 @@ const useUpdateMe = (props?: useUpdateMeProps) => {
 	// Mutation
 	return serviceHelpers.useMutationWrapper<Params, ResponseBody<undefined>>({
 		mutationFn: updateMeReq,
-		successToast: {
+		getSuccessToast: () => ({
 			title: T()("account_update_toast_title"),
 			message: T()("account_update_toast_message"),
-		},
+		}),
 		invalidates: ["users.getMultiple", "users.getSingle"],
 		onSuccess: props?.onSuccess,
 		onError: props?.onError,
