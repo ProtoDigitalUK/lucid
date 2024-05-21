@@ -75,8 +75,12 @@ export const RepeaterField: Component<RepeaterFieldProps> = (props) => {
 							brickStore.get.swapGroupOrder({
 								brickIndex: props.state.brickIndex,
 								repeaterKey: fieldConfig().key,
-								groupId: index,
+								selectedGroupId: index,
 								targetGroupId: targetindex,
+
+								groupId: props.state.groupId,
+								parentRepeaterKey:
+									props.state.parentRepeaterKey,
 							});
 						}}
 					>
@@ -96,6 +100,9 @@ export const RepeaterField: Component<RepeaterFieldProps> = (props) => {
 											groupIndex: i(),
 											repeaterDepth:
 												props.state.repeaterDepth,
+											parentRepeaterKey:
+												props.state.parentRepeaterKey,
+											parentGroupId: props.state.groupId,
 										}}
 									/>
 								)}

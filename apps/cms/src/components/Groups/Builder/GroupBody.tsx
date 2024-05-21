@@ -20,6 +20,8 @@ interface GroupBodyProps {
 		dragDropKey: string;
 		groupIndex: number;
 		repeaterDepth: number;
+		parentRepeaterKey: string | undefined;
+		parentGroupId: string | number | undefined;
 	};
 }
 
@@ -44,11 +46,13 @@ export const GroupBody: Component<GroupBodyProps> = (props) => {
 	// Functions
 	const toggleDropdown = () => {
 		setGroupOpen(!getGroupOpen());
-		brickStore.get.toggleGroupOpen(
-			props.state.brickIndex,
-			props.state.repeaterKey,
-			groupId(),
-		);
+		brickStore.get.toggleGroupOpen({
+			brickIndex: props.state.brickIndex,
+			repeaterKey: props.state.repeaterKey,
+			groupId: groupId(),
+			parentGroupId: props.state.parentGroupId,
+			parentRepeaterKey: props.state.parentRepeaterKey,
+		});
 	};
 
 	// -------------------------------
@@ -129,7 +133,11 @@ export const GroupBody: Component<GroupBodyProps> = (props) => {
 							brickStore.get.removeRepeaterGroup({
 								brickIndex: brickIndex(),
 								repeaterKey: props.state.repeaterKey,
-								groupId: groupId(),
+								targetGroupId: groupId(),
+
+								groupId: props.state.parentGroupId,
+								parentRepeaterKey:
+									props.state.parentRepeaterKey,
 							});
 						}}
 					/>
