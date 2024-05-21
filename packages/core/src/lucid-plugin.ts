@@ -110,15 +110,6 @@ const lucidPlugin = async (fastify: FastifyInstance) => {
 
 		fastify.get("/admin", async (_, reply) => {
 			const indexPath = path.resolve(currentDir, "../cms/index.html");
-			// console.log(indexPath);
-			// const stream = fs.createReadStream(indexPath);
-			// const readableStream = ReadableStream.from(stream)
-			// const response = new Response(readableStream, {
-			//   status: 200,
-			//   headers: { 'content-type': 'application/octet-stream' }
-			// })
-			// reply.send(response)
-
 			const file = await fs.readFile(indexPath);
 			reply.type("text/html").send(file);
 
@@ -128,20 +119,20 @@ const lucidPlugin = async (fastify: FastifyInstance) => {
 
 		fastify.get("/admin/*", async (_, reply) => {
 			const indexPath = path.resolve(currentDir, "../cms/index.html");
-			// console.log(indexPath);
-			// const stream = fs.createReadStream(indexPath);
-			// const readableStream = ReadableStream.from(stream)
-			// const response = new Response(readableStream, {
-			//   status: 200,
-			//   headers: { 'content-type': 'application/octet-stream' }
-			// })
-			// reply.send(response)
-
 			const file = await fs.readFile(indexPath);
 			reply.type("text/html").send(file);
 
 			// const stream = fs.createReadStream(indexPath);
 			// reply.type("text/html").send(stream);
+		});
+
+		fastify.get("/", async (_, reply) => {
+			const indexPath = path.resolve(
+				currentDir,
+				"../assets/landing.html",
+			);
+			const file = await fs.readFile(indexPath);
+			reply.type("text/html").send(file);
 		});
 
 		fastify.setNotFoundHandler((request, reply) => {
