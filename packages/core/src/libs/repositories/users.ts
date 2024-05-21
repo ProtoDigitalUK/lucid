@@ -135,8 +135,6 @@ export default class UsersRepo {
 		config: Config;
 		authId: number;
 	}) => {
-		console.log(props.query);
-
 		const usersQuery = this.db
 			.selectFrom("lucid_users")
 			.select((eb) => [

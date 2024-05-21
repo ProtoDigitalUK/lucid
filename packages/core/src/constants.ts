@@ -43,7 +43,7 @@ export default {
 		perPage: 10,
 	},
 	locations: {
-		resetPassword: "/reset-password",
+		resetPassword: "/admin/reset-password",
 	},
 	errors: {
 		name: T("default_error_name"),

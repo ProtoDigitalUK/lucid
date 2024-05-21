@@ -92,6 +92,13 @@ const lucidPlugin = async (fastify: FastifyInstance) => {
 			config: config,
 		});
 
+		const cmsEntryFile = await fs.readFile(
+			path.resolve(currentDir, "../cms/index.html"),
+		);
+		const landingPageFile = await fs.readFile(
+			path.resolve(currentDir, "../assets/landing.html"),
+		);
+
 		// ------------------------------------
 		// Routes
 		fastify.register(routes);
@@ -101,40 +108,26 @@ const lucidPlugin = async (fastify: FastifyInstance) => {
 			wildcard: false,
 		});
 
+		// Serve CMS
 		fastify.register(fastifyStatic, {
 			root: path.join(currentDir, "../cms"),
 			prefix: "/admin",
 			wildcard: false,
 			decorateReply: false,
 		});
-
 		fastify.get("/admin", async (_, reply) => {
-			const indexPath = path.resolve(currentDir, "../cms/index.html");
-			const file = await fs.readFile(indexPath);
-			reply.type("text/html").send(file);
-
-			// const stream = fs.createReadStream(indexPath);
-			// reply.type("text/html").send(stream);
+			reply.type("text/html").send(cmsEntryFile);
 		});
-
 		fastify.get("/admin/*", async (_, reply) => {
-			const indexPath = path.resolve(currentDir, "../cms/index.html");
-			const file = await fs.readFile(indexPath);
-			reply.type("text/html").send(file);
-
-			// const stream = fs.createReadStream(indexPath);
-			// reply.type("text/html").send(stream);
+			reply.type("text/html").send(cmsEntryFile);
 		});
 
+		// Serve landing page
 		fastify.get("/", async (_, reply) => {
-			const indexPath = path.resolve(
-				currentDir,
-				"../assets/landing.html",
-			);
-			const file = await fs.readFile(indexPath);
-			reply.type("text/html").send(file);
+			reply.type("text/html").send(landingPageFile);
 		});
 
+		//
 		fastify.setNotFoundHandler((request, reply) => {
 			if (request.url.startsWith("/api")) {
 				reply.code(404).send("API route not found");

@@ -72,7 +72,7 @@ const LoginForm: Component<LoginFormProps> = (props) => {
 				<A
 					class="block text-sm mt-1 hover:text-primary-hover duration-200 transition-colors"
 					type="button"
-					href="/forgot-password"
+					href="/admin/forgot-password"
 				>
 					{T()("forgot_password")}
 				</A>
