@@ -32,6 +32,7 @@ export default class CollectionDocumentBricksFormatter {
 		collection: CollectionBuilder;
 		host: string;
 		defaultLocaleCode?: string;
+		locales: string[];
 	}): BrickResponse[] => {
 		return props.bricks
 			.filter((brick) => {
@@ -62,6 +63,7 @@ export default class CollectionDocumentBricksFormatter {
 							host: props.host,
 							builder: builder,
 							defaultLocaleCode: props.defaultLocaleCode,
+							locales: props.locales,
 						},
 					),
 				};
@@ -72,6 +74,7 @@ export default class CollectionDocumentBricksFormatter {
 		collection: CollectionBuilder;
 		host: string;
 		defaultLocaleCode?: string;
+		locales: string[];
 	}): FieldResponse[] => {
 		return props.bricks
 			.filter((brick) => {
@@ -85,6 +88,7 @@ export default class CollectionDocumentBricksFormatter {
 					host: props.host,
 					builder: props.collection,
 					defaultLocaleCode: props.defaultLocaleCode,
+					locales: props.locales,
 				}),
 			);
 	};
