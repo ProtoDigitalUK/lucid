@@ -36,17 +36,18 @@ export const WYSIWYGField: Component<WYSIWYGFieldProps> = (props) => {
 	const fieldData = createMemo(() => {
 		return props.state.fieldData;
 	});
-
-	// -------------------------------
-	// Effects
-	createEffect(() => {
-		const value = brickHelpers.getFieldValue<string>({
+	const fieldValue = createMemo(() => {
+		return brickHelpers.getFieldValue<string>({
 			fieldData: fieldData(),
 			fieldConfig: props.state.fieldConfig,
 			contentLocale: props.state.contentLocale,
 		});
+	});
 
-		setValue(value || "");
+	// -------------------------------
+	// Effects
+	createEffect(() => {
+		setValue(fieldValue() || "");
 	});
 
 	// -------------------------------

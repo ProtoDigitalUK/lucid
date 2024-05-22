@@ -37,16 +37,18 @@ export const LinkField: Component<LinkFieldProps> = (props) => {
 	const fieldData = createMemo(() => {
 		return props.state.fieldData;
 	});
-
-	// -------------------------------
-	// Effects
-	createEffect(() => {
-		const value = brickHelpers.getFieldValue<LinkValue | null>({
+	const fieldValue = createMemo(() => {
+		return brickHelpers.getFieldValue<LinkValue | null>({
 			fieldData: fieldData(),
 			fieldConfig: props.state.fieldConfig,
 			contentLocale: props.state.contentLocale,
 		});
-		setValue(value);
+	});
+
+	// -------------------------------
+	// Effects
+	createEffect(() => {
+		setValue(fieldValue());
 	});
 
 	// -------------------------------

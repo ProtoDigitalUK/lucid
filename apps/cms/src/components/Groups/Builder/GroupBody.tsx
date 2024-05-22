@@ -34,6 +34,9 @@ export const GroupBody: Component<GroupBodyProps> = (props) => {
 	// Memos
 	const groupId = createMemo(() => props.state.groupId);
 	const brickIndex = createMemo(() => props.state.brickIndex);
+	const parentGroupId = createMemo(() => props.state.parentGroupId);
+	const parentRepeaterKey = createMemo(() => props.state.parentRepeaterKey);
+	const repeaterKey = createMemo(() => props.state.repeaterKey);
 	const configChildrenFields = createMemo(
 		() => props.state.fieldConfig.fields,
 	);
@@ -47,11 +50,11 @@ export const GroupBody: Component<GroupBodyProps> = (props) => {
 	const toggleDropdown = () => {
 		setGroupOpen(!getGroupOpen());
 		brickStore.get.toggleGroupOpen({
-			brickIndex: props.state.brickIndex,
-			repeaterKey: props.state.repeaterKey,
+			brickIndex: brickIndex(),
+			repeaterKey: repeaterKey(),
 			groupId: groupId(),
-			parentGroupId: props.state.parentGroupId,
-			parentRepeaterKey: props.state.parentRepeaterKey,
+			parentGroupId: parentGroupId(),
+			parentRepeaterKey: parentRepeaterKey(),
 		});
 	};
 
@@ -132,12 +135,10 @@ export const GroupBody: Component<GroupBodyProps> = (props) => {
 						callback={() => {
 							brickStore.get.removeRepeaterGroup({
 								brickIndex: brickIndex(),
-								repeaterKey: props.state.repeaterKey,
+								repeaterKey: repeaterKey(),
 								targetGroupId: groupId(),
-
-								groupId: props.state.parentGroupId,
-								parentRepeaterKey:
-									props.state.parentRepeaterKey,
+								groupId: parentGroupId(),
+								parentRepeaterKey: parentRepeaterKey(),
 							});
 						}}
 					/>
@@ -178,7 +179,7 @@ export const GroupBody: Component<GroupBodyProps> = (props) => {
 									fieldConfig: config,
 									fields: groupFields(),
 									groupId: groupId(),
-									repeaterKey: props.state.repeaterKey,
+									repeaterKey: repeaterKey(),
 									repeaterDepth: nextRepeaterDepth(),
 								}}
 							/>

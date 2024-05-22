@@ -37,16 +37,18 @@ export const InputField: Component<InputFieldProps> = (props) => {
 	const fieldData = createMemo(() => {
 		return props.state.fieldData;
 	});
-
-	// -------------------------------
-	// Effects
-	createEffect(() => {
-		const value = brickHelpers.getFieldValue<string | number>({
+	const fieldValue = createMemo(() => {
+		return brickHelpers.getFieldValue<string | number>({
 			fieldData: fieldData(),
 			fieldConfig: props.state.fieldConfig,
 			contentLocale: props.state.contentLocale,
 		});
+	});
 
+	// -------------------------------
+	// Effects
+	createEffect(() => {
+		const value = fieldValue();
 		switch (props.type) {
 			case "number": {
 				setValue(typeof value !== "number" ? "" : value.toString());

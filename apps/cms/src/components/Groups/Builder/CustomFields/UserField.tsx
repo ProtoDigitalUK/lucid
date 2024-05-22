@@ -37,17 +37,18 @@ export const UserField: Component<UserFieldProps> = (props) => {
 	const fieldData = createMemo(() => {
 		return props.state.fieldData;
 	});
-
-	// -------------------------------
-	// Effects
-	createEffect(() => {
-		const value = brickHelpers.getFieldValue<number>({
+	const fieldValue = createMemo(() => {
+		return brickHelpers.getFieldValue<number>({
 			fieldData: fieldData(),
 			fieldConfig: props.state.fieldConfig,
 			contentLocale: props.state.contentLocale,
 		});
+	});
 
-		setValue(value);
+	// -------------------------------
+	// Effects
+	createEffect(() => {
+		setValue(fieldValue());
 	});
 
 	// -------------------------------

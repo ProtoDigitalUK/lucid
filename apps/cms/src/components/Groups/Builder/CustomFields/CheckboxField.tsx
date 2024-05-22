@@ -36,16 +36,18 @@ export const CheckboxField: Component<CheckboxFieldProps> = (props) => {
 	const fieldData = createMemo(() => {
 		return props.state.fieldData;
 	});
-
-	// -------------------------------
-	// Effects
-	createEffect(() => {
-		const value = brickHelpers.getFieldValue<1 | 0>({
+	const fieldValue = createMemo(() => {
+		return brickHelpers.getFieldValue<1 | 0>({
 			fieldData: fieldData(),
 			fieldConfig: props.state.fieldConfig,
 			contentLocale: props.state.contentLocale,
 		});
-		setValue(value || 0);
+	});
+
+	// -------------------------------
+	// Effects
+	createEffect(() => {
+		setValue(fieldValue() || 0);
 	});
 
 	// -------------------------------

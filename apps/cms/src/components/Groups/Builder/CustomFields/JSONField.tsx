@@ -37,17 +37,18 @@ export const JSONField: Component<JSONFieldProps> = (props) => {
 	const fieldData = createMemo(() => {
 		return props.state.fieldData;
 	});
-
-	// -------------------------------
-	// Effects
-	createEffect(() => {
-		const value = brickHelpers.getFieldValue<string>({
+	const fieldValue = createMemo(() => {
+		return brickHelpers.getFieldValue<string>({
 			fieldData: fieldData(),
 			fieldConfig: props.state.fieldConfig,
 			contentLocale: props.state.contentLocale,
 		});
+	});
 
-		setValue(JSON.stringify(value ?? "", null, 4));
+	// -------------------------------
+	// Effects
+	createEffect(() => {
+		setValue(JSON.stringify(fieldValue() ?? "", null, 4));
 	});
 
 	// -------------------------------

@@ -25,6 +25,7 @@ export const DynamicField: Component<DynamicFieldProps> = (props) => {
 	const contentLocale = createMemo(
 		() => contentLocaleStore.get.contentLocale ?? "",
 	);
+	const fieldConfig = createMemo(() => props.state.fieldConfig);
 	const locales = createMemo(() => contentLocaleStore.get.locales);
 	const fieldData = createMemo(() => {
 		if (props.state.fieldConfig.type === "tab") return;
@@ -57,25 +58,24 @@ export const DynamicField: Component<DynamicFieldProps> = (props) => {
 	// -------------------------------
 	// Render
 	return (
-		<Show when={props.state.fieldConfig.hidden !== true}>
+		<Show when={fieldConfig().hidden !== true}>
 			<div class="w-full mb-15 last:mb-0 relative">
-				<Show when={props.state.fieldConfig.type !== "tab"}>
-					<FieldTypeIcon type={props.state.fieldConfig.type} />
+				<Show when={fieldConfig().type !== "tab"}>
+					<FieldTypeIcon type={fieldConfig().type} />
 				</Show>
 				<div
 					class={classNames("w-full h-full", {
-						"pl-[38px]": props.state.fieldConfig.type !== "tab",
+						"pl-[38px]": fieldConfig().type !== "tab",
 					})}
 				>
 					<Switch>
-						<Match when={props.state.fieldConfig.type === "tab"}>
+						<Match when={fieldConfig().type === "tab"}>
 							<Show
 								when={
-									props.state.activeTab ===
-									props.state.fieldConfig.key
+									props.state.activeTab === fieldConfig().key
 								}
 							>
-								<For each={props.state.fieldConfig.fields}>
+								<For each={fieldConfig().fields}>
 									{(config) => (
 										<DynamicField
 											state={{
@@ -96,12 +96,12 @@ export const DynamicField: Component<DynamicFieldProps> = (props) => {
 								</For>
 							</Show>
 						</Match>
-						<Match when={props.state.fieldConfig.type === "text"}>
+						<Match when={fieldConfig().type === "text"}>
 							<CustomFields.InputField
 								type="text"
 								state={{
 									brickIndex: props.state.brickIndex,
-									fieldConfig: props.state.fieldConfig,
+									fieldConfig: fieldConfig(),
 									fieldData: fieldData(),
 									groupId: props.state.groupId,
 									repeaterKey: props.state.repeaterKey,
@@ -110,11 +110,11 @@ export const DynamicField: Component<DynamicFieldProps> = (props) => {
 								}}
 							/>
 						</Match>
-						<Match when={props.state.fieldConfig.type === "user"}>
+						<Match when={fieldConfig().type === "user"}>
 							<CustomFields.UserField
 								state={{
 									brickIndex: props.state.brickIndex,
-									fieldConfig: props.state.fieldConfig,
+									fieldConfig: fieldConfig(),
 									fieldData: fieldData(),
 									groupId: props.state.groupId,
 									repeaterKey: props.state.repeaterKey,
@@ -123,12 +123,12 @@ export const DynamicField: Component<DynamicFieldProps> = (props) => {
 								}}
 							/>
 						</Match>
-						<Match when={props.state.fieldConfig.type === "number"}>
+						<Match when={fieldConfig().type === "number"}>
 							<CustomFields.InputField
 								type="number"
 								state={{
 									brickIndex: props.state.brickIndex,
-									fieldConfig: props.state.fieldConfig,
+									fieldConfig: fieldConfig(),
 									fieldData: fieldData(),
 									groupId: props.state.groupId,
 									repeaterKey: props.state.repeaterKey,
@@ -137,14 +137,12 @@ export const DynamicField: Component<DynamicFieldProps> = (props) => {
 								}}
 							/>
 						</Match>
-						<Match
-							when={props.state.fieldConfig.type === "datetime"}
-						>
+						<Match when={fieldConfig().type === "datetime"}>
 							<CustomFields.InputField
 								type="datetime-local"
 								state={{
 									brickIndex: props.state.brickIndex,
-									fieldConfig: props.state.fieldConfig,
+									fieldConfig: fieldConfig(),
 									fieldData: fieldData(),
 									groupId: props.state.groupId,
 									repeaterKey: props.state.repeaterKey,
@@ -153,13 +151,11 @@ export const DynamicField: Component<DynamicFieldProps> = (props) => {
 								}}
 							/>
 						</Match>
-						<Match
-							when={props.state.fieldConfig.type === "checkbox"}
-						>
+						<Match when={fieldConfig().type === "checkbox"}>
 							<CustomFields.CheckboxField
 								state={{
 									brickIndex: props.state.brickIndex,
-									fieldConfig: props.state.fieldConfig,
+									fieldConfig: fieldConfig(),
 									fieldData: fieldData(),
 									groupId: props.state.groupId,
 									repeaterKey: props.state.repeaterKey,
@@ -168,11 +164,11 @@ export const DynamicField: Component<DynamicFieldProps> = (props) => {
 								}}
 							/>
 						</Match>
-						<Match when={props.state.fieldConfig.type === "colour"}>
+						<Match when={fieldConfig().type === "colour"}>
 							<CustomFields.ColourField
 								state={{
 									brickIndex: props.state.brickIndex,
-									fieldConfig: props.state.fieldConfig,
+									fieldConfig: fieldConfig(),
 									fieldData: fieldData(),
 									groupId: props.state.groupId,
 									repeaterKey: props.state.repeaterKey,
@@ -181,11 +177,11 @@ export const DynamicField: Component<DynamicFieldProps> = (props) => {
 								}}
 							/>
 						</Match>
-						<Match when={props.state.fieldConfig.type === "json"}>
+						<Match when={fieldConfig().type === "json"}>
 							<CustomFields.JSONField
 								state={{
 									brickIndex: props.state.brickIndex,
-									fieldConfig: props.state.fieldConfig,
+									fieldConfig: fieldConfig(),
 									fieldData: fieldData(),
 									groupId: props.state.groupId,
 									repeaterKey: props.state.repeaterKey,
@@ -194,11 +190,11 @@ export const DynamicField: Component<DynamicFieldProps> = (props) => {
 								}}
 							/>
 						</Match>
-						<Match when={props.state.fieldConfig.type === "link"}>
+						<Match when={fieldConfig().type === "link"}>
 							<CustomFields.LinkField
 								state={{
 									brickIndex: props.state.brickIndex,
-									fieldConfig: props.state.fieldConfig,
+									fieldConfig: fieldConfig(),
 									fieldData: fieldData(),
 									groupId: props.state.groupId,
 									repeaterKey: props.state.repeaterKey,
@@ -207,11 +203,11 @@ export const DynamicField: Component<DynamicFieldProps> = (props) => {
 								}}
 							/>
 						</Match>
-						<Match when={props.state.fieldConfig.type === "media"}>
+						<Match when={fieldConfig().type === "media"}>
 							<CustomFields.MediaField
 								state={{
 									brickIndex: props.state.brickIndex,
-									fieldConfig: props.state.fieldConfig,
+									fieldConfig: fieldConfig(),
 									fieldData: fieldData(),
 									groupId: props.state.groupId,
 									repeaterKey: props.state.repeaterKey,
@@ -220,11 +216,11 @@ export const DynamicField: Component<DynamicFieldProps> = (props) => {
 								}}
 							/>
 						</Match>
-						<Match when={props.state.fieldConfig.type === "select"}>
+						<Match when={fieldConfig().type === "select"}>
 							<CustomFields.SelectField
 								state={{
 									brickIndex: props.state.brickIndex,
-									fieldConfig: props.state.fieldConfig,
+									fieldConfig: fieldConfig(),
 									fieldData: fieldData(),
 									groupId: props.state.groupId,
 									repeaterKey: props.state.repeaterKey,
@@ -233,13 +229,11 @@ export const DynamicField: Component<DynamicFieldProps> = (props) => {
 								}}
 							/>
 						</Match>
-						<Match
-							when={props.state.fieldConfig.type === "textarea"}
-						>
+						<Match when={fieldConfig().type === "textarea"}>
 							<CustomFields.TextareaField
 								state={{
 									brickIndex: props.state.brickIndex,
-									fieldConfig: props.state.fieldConfig,
+									fieldConfig: fieldConfig(),
 									fieldData: fieldData(),
 									groupId: props.state.groupId,
 									repeaterKey: props.state.repeaterKey,
@@ -248,13 +242,11 @@ export const DynamicField: Component<DynamicFieldProps> = (props) => {
 								}}
 							/>
 						</Match>
-						<Match
-							when={props.state.fieldConfig.type === "wysiwyg"}
-						>
+						<Match when={fieldConfig().type === "wysiwyg"}>
 							<CustomFields.WYSIWYGField
 								state={{
 									brickIndex: props.state.brickIndex,
-									fieldConfig: props.state.fieldConfig,
+									fieldConfig: fieldConfig(),
 									fieldData: fieldData(),
 									groupId: props.state.groupId,
 									repeaterKey: props.state.repeaterKey,
@@ -263,13 +255,11 @@ export const DynamicField: Component<DynamicFieldProps> = (props) => {
 								}}
 							/>
 						</Match>
-						<Match
-							when={props.state.fieldConfig.type === "repeater"}
-						>
+						<Match when={fieldConfig().type === "repeater"}>
 							<CustomFields.RepeaterField
 								state={{
 									brickIndex: props.state.brickIndex,
-									fieldConfig: props.state.fieldConfig,
+									fieldConfig: fieldConfig(),
 									fieldData: fieldData(),
 									groupId: props.state.groupId,
 									parentRepeaterKey: props.state.repeaterKey,

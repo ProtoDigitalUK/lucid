@@ -38,23 +38,26 @@ export const MediaField: Component<MediaFieldProps> = (props) => {
 	const fieldData = createMemo(() => {
 		return props.state.fieldData;
 	});
+	const fieldValue = createMemo(() => {
+		return brickHelpers.getFieldValue<number>({
+			fieldData: fieldData(),
+			fieldConfig: props.state.fieldConfig,
+			contentLocale: props.state.contentLocale,
+		});
+	});
+	const fieldMeta = createMemo(() => {
+		return brickHelpers.getFieldMeta<MediaMeta>({
+			fieldData: fieldData(),
+			fieldConfig: props.state.fieldConfig,
+			contentLocale: props.state.contentLocale,
+		});
+	});
 
 	// -------------------------------
 	// Effects
 	createEffect(() => {
-		const value = brickHelpers.getFieldValue<number>({
-			fieldData: fieldData(),
-			fieldConfig: props.state.fieldConfig,
-			contentLocale: props.state.contentLocale,
-		});
-		const meta = brickHelpers.getFieldMeta<MediaMeta>({
-			fieldData: fieldData(),
-			fieldConfig: props.state.fieldConfig,
-			contentLocale: props.state.contentLocale,
-		});
-
-		setValue(value);
-		setMeta(meta);
+		setValue(fieldValue());
+		setMeta(fieldMeta());
 	});
 
 	// -------------------------------
