@@ -17,7 +17,7 @@ const serverStartLog = async (address: string, start: [number, number]) => {
 		`${bgYellow} LUCID CMS ${reset} ${textYellow}v${projectPackage.version}${reset} ready in ${textGreen}${loadTime} ms\n${reset}`,
 	);
 
-	console.log(`┃ API              ${textBlue}${address}${reset}`);
+	console.log(`┃ Lucid Admin      ${textBlue}${address}/admin${reset}`);
 	console.log(`┃ Environment      ${textBlue}${config.mode}${reset}`);
 	console.log(
 		`┃ Documentation    ${textBlue}${constants.documentation}${reset}`,
