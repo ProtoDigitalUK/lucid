@@ -279,6 +279,7 @@ export interface ResponseBody<D = unknown> {
 
 export interface ErrorResponse {
 	status: number;
+	code?: string;
 	name: string;
 	message: string;
 	errors?: ErrorResult;

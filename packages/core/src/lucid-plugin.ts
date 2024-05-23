@@ -8,7 +8,6 @@ import fastifyStatic from "@fastify/static";
 import cors from "@fastify/cors";
 import fastifyCookie from "@fastify/cookie";
 import fs from "fs-extra";
-import { ReadableStream } from "node:stream/web";
 import fastifyMultipart from "@fastify/multipart";
 import fastifySwagger from "@fastify/swagger";
 import fastifySwaggerUi from "@fastify/swagger-ui";
@@ -157,6 +156,7 @@ const lucidPlugin = async (fastify: FastifyInstance) => {
 			const response = Object.fromEntries(
 				Object.entries({
 					status,
+					code,
 					name,
 					message,
 					errors: errorResponse,

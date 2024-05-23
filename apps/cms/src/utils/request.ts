@@ -61,12 +61,24 @@ const request = async <Response, Data = unknown>(
 		headers: headers,
 	});
 
-	if (fetchRes.status === 401) {
-		return await useRefreshToken(params);
+	switch (fetchRes.status) {
+		case 401: {
+			return await useRefreshToken(params);
+		}
+		case 403: {
+			const data = (await fetchRes.json()) as ErrorResponse;
+			if (data.code === "csrf") {
+				sessionStorage.removeItem("_csrf");
+				return await request(params);
+			}
+			break;
+		}
+		case 204: {
+			return {} as Response;
+		}
 	}
-	if (fetchRes.status === 204) return {} as Response;
-
 	const data = await fetchRes.json();
+
 	if (!fetchRes.ok) {
 		const errorObj = data as ErrorResponse;
 		handleSiteErrors(errorObj);
