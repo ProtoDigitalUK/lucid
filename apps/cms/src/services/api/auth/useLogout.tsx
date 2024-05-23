@@ -3,6 +3,7 @@ import { useNavigate } from "@solidjs/router";
 import userStore from "@/store/userStore";
 import request from "@/utils/request";
 import serviceHelpers from "@/utils/service-helpers";
+import { clearCsrfSession } from "./useCsrf";
 import type { ResponseBody } from "@lucidcms/core/types";
 
 export const logoutReq = () => {
@@ -44,7 +45,7 @@ const useLogout = (props?: UseLogoutProps) => {
 		onSuccess: () => {
 			userStore.get.reset();
 			navigate("/admin/login");
-			sessionStorage.removeItem("_csrf");
+			clearCsrfSession();
 			props?.onSuccess?.();
 		},
 		onError: () => {

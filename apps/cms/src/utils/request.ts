@@ -1,7 +1,7 @@
 import queryBuilder, { type QueryBuilderProps } from "@/utils/query-builder";
 import { LucidError, handleSiteErrors } from "@/utils/error-handling";
 import type { ErrorResponse } from "@lucidcms/core/types";
-import { csrfReq } from "@/services/api/auth/useCsrf";
+import { csrfReq, clearCsrfSession } from "@/services/api/auth/useCsrf";
 import useRefreshToken from "@/services/api/auth/useRefreshToken";
 
 export interface RequestParams<Data> {
@@ -61,7 +61,7 @@ const handleResponse = async <ResponseBody, Data = unknown>(
 		case 403: {
 			const data = (await fetchRes.json()) as ErrorResponse;
 			if (data.code === "csrf") {
-				sessionStorage.removeItem("_csrf");
+				clearCsrfSession();
 				return await request(params);
 			}
 			break;

@@ -388,5 +388,7 @@
 	"account_details": "Your Details",
 	"account_details_description": "Update your account details.",
 	"configuration": "Configuration",
-	"configuration_description": "Manage config settings specific to your account."
+	"configuration_description": "Manage config settings specific to your account.",
+	"error_fetching_refresh_token": "There was an error fetching the refresh token.",
+	"unauthorised": "Unauthorised"
 }

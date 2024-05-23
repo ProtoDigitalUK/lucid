@@ -1,3 +1,4 @@
+import T from "@/translations";
 import { createSignal } from "solid-js";
 import request, { type RequestParams, getFetchURL } from "@/utils/request";
 import { LucidError } from "@/utils/error-handling";
@@ -25,10 +26,10 @@ const useRefreshToken = async <Response, Data = unknown>(
 	setRefreshTokenPromise(null);
 
 	if (!successful) {
-		throw new LucidError("There was an error fetching the refresh token.", {
+		throw new LucidError(T()("error_fetching_refresh_token"), {
 			status: 401,
-			name: "Unauthorized",
-			message: "There was an error fetching the refresh token.",
+			name: T()("unauthorised"),
+			message: T()("error_fetching_refresh_token"),
 		});
 	}
 

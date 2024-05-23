@@ -13,7 +13,7 @@ export class LucidError extends Error {
 }
 
 export const validateSetError = (error: unknown) => {
-	console.error(error);
+	// console.error(error);
 	if (error instanceof LucidError) {
 		return error.errorRes;
 	}
