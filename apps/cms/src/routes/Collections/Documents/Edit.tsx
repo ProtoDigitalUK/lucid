@@ -43,7 +43,9 @@ const CollectionsDocumentsEditRoute: Component<
 	// Hooks & State
 	const params = useParams();
 	const navigate = useNavigate();
-	const navGuard = navGuardHook();
+	const navGuard = navGuardHook({
+		brickMutateLock: true,
+	});
 	const [getDeleteOpen, setDeleteOpen] = createSignal(false);
 
 	// ----------------------------------

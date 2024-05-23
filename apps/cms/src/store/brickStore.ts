@@ -110,6 +110,7 @@ const [get, set] = createStore<BrickStoreT>({
 	reset() {
 		set("bricks", []);
 		set("fieldsErrors", []);
+		set("documentMutated", false);
 	},
 	// Bricks
 	setBricks(document, collection) {
