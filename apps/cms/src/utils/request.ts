@@ -17,53 +17,46 @@ interface RequestConfig<Data> {
 	headers?: Record<string, string>;
 }
 
-export const getFetchURL = (url: string) => {
-	if (!import.meta.env.PROD) {
-		return `${import.meta.env.VITE_API_DEV_URL}${url}`;
+export const getFetchURL = (url: string, query?: QueryBuilderProps): string => {
+	let targetUrl = import.meta.env.PROD
+		? url
+		: `${import.meta.env.VITE_API_DEV_URL}${url}`;
+	if (query) {
+		targetUrl += `?${queryBuilder(query)}`;
 	}
-	return url;
+	return targetUrl;
 };
 
-const request = async <Response, Data = unknown>(
+const prepareRequestBody = <Data>(
+	body?: Data | FormData,
+): string | FormData | undefined => {
+	if (!body) return undefined;
+	return body instanceof FormData ? body : JSON.stringify(body);
+};
+
+const prepareHeaders = async (
+	csrf?: boolean,
+	headers: Record<string, string> = {},
+	body?: string | FormData | undefined,
+): Promise<Record<string, string>> => {
+	const updatedHeaders = { ...headers };
+	if (csrf) {
+		const csrfToken = await csrfReq();
+		if (csrfToken) updatedHeaders._csrf = csrfToken;
+	}
+	if (headers["Content-Type"] === undefined && typeof body === "string") {
+		updatedHeaders["Content-Type"] = "application/json";
+	}
+	return updatedHeaders;
+};
+
+const handleResponse = async <ResponseBody, Data = unknown>(
 	params: RequestParams<Data>,
-): Promise<Response> => {
-	let fetchURL = getFetchURL(params.url);
-
-	if (params.query) {
-		const queryString = queryBuilder(params.query);
-		if (queryString) {
-			fetchURL = `${fetchURL}?${queryString}`;
-		}
-	}
-
-	let csrfToken: string | null = null;
-	if (params.csrf) csrfToken = await csrfReq();
-
-	let body: string | undefined | FormData = undefined;
-	if (params.config?.body !== undefined) {
-		if (params.config.body instanceof FormData) {
-			body = params.config.body;
-		} else {
-			body = JSON.stringify(params.config.body);
-		}
-	}
-
-	const headers: Record<string, string> = params.config?.headers || {};
-	if (typeof body === "string") {
-		headers["Content-Type"] = "application/json";
-	}
-	if (csrfToken) headers._csrf = csrfToken;
-
-	const fetchRes = await fetch(fetchURL, {
-		method: params.config?.method,
-		body,
-		credentials: "include",
-		headers: headers,
-	});
-
+	fetchRes: Response,
+): Promise<ResponseBody> => {
 	switch (fetchRes.status) {
 		case 401: {
-			return await useRefreshToken(params);
+			return useRefreshToken(params);
 		}
 		case 403: {
 			const data = (await fetchRes.json()) as ErrorResponse;
@@ -74,9 +67,10 @@ const request = async <Response, Data = unknown>(
 			break;
 		}
 		case 204: {
-			return {} as Response;
+			return {} as ResponseBody;
 		}
 	}
+
 	const data = await fetchRes.json();
 
 	if (!fetchRes.ok) {
@@ -85,7 +79,28 @@ const request = async <Response, Data = unknown>(
 		throw new LucidError(errorObj.message, errorObj);
 	}
 
-	return data as Response;
+	return data as ResponseBody;
+};
+
+const request = async <ResponseBody, Data = unknown>(
+	params: RequestParams<Data>,
+): Promise<ResponseBody> => {
+	const fetchURL = getFetchURL(params.url, params.query);
+	const body = prepareRequestBody(params.config?.body);
+	const headers = await prepareHeaders(
+		params.csrf,
+		params.config?.headers,
+		body,
+	);
+
+	const fetchRes = await fetch(fetchURL, {
+		method: params.config?.method,
+		credentials: "include",
+		body: body,
+		headers: headers,
+	});
+
+	return handleResponse(params, fetchRes);
 };
 
 export default request;
