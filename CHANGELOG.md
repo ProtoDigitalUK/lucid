@@ -39,7 +39,7 @@
 
 ### Bug Fixes
 
-- Fixed issue with group parent id update query not working in SQLlite. ([525d9e8](https://github.com/ProtoDigitalUK/lucid/commit/525d9e860fcf02d92864b94762d8e54e51de99a1))
+- Fixed issue with group parent id update query not working in SQLite. ([525d9e8](https://github.com/ProtoDigitalUK/lucid/commit/525d9e860fcf02d92864b94762d8e54e51de99a1))
 - Added sort on field formatter groups to ensure correct group order. ([3a2c7e8](https://github.com/ProtoDigitalUK/lucid/commit/3a2c7e825433736fc2c61682a282aece21969a69))
 - Get multiple document fields now include media and users joins. ([095fe8a](https://github.com/ProtoDigitalUK/lucid/commit/095fe8adb070b9494ec98fd3de4850583475c2ea))
 

@@ -4,7 +4,7 @@ import { ParseJSONResultsPlugin } from "../../kysely/parse-json-results-plugin.j
 import { AdapterType } from "../../types.js";
 import { jsonArrayFrom } from "kysely/helpers/sqlite";
 
-export default class SqlLiteAdapter extends DatabaseAdapter {
+export default class SqliteAdapter extends DatabaseAdapter {
 	constructor(config: SqliteDialectConfig) {
 		super({
 			adapter: AdapterType.SQLITE,
