@@ -45,12 +45,12 @@ The lucid.config file is the heart of Lucid and is where you will define everyth
 Here is the minimum required file to get Lucid up and running:
 
 ```ts title="lucid.config.ts"
-import lucid, { SQLLiteAdapter } from "@lucidcms/core";
+import lucid, { SQLiteAdapter } from "@lucidcms/core";
 
 export default lucid.config({
   mode: "development",
   host: "http://localhost:8393",
-  db: new SQLLiteAdapter({
+  db: new SQLiteAdapter({
     database: async () => new Database("db.sqlite"),
   }),
   keys: {
