@@ -4,6 +4,7 @@ import {
 	batch,
 	createMemo,
 	createEffect,
+	Show,
 } from "solid-js";
 import type {
 	CustomField,
@@ -24,6 +25,7 @@ interface InputFieldProps {
 		repeaterKey?: string;
 		contentLocale: string;
 		fieldError: FieldErrors | undefined;
+		altLocaleHasError: boolean;
 	};
 }
 
@@ -93,6 +95,7 @@ export const InputField: Component<InputFieldProps> = (props) => {
 				describedBy: props.state.fieldConfig.description,
 			}}
 			errors={props.state.fieldError}
+			altLocaleHasError={props.state.altLocaleHasError}
 			disabled={props.state.fieldConfig.disabled}
 			required={props.state.fieldConfig.validation?.required || false}
 			theme={"basic"}

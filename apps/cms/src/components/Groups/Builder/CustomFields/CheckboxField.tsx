@@ -23,6 +23,7 @@ interface CheckboxFieldProps {
 		repeaterKey?: string;
 		contentLocale: string;
 		fieldError: FieldErrors | undefined;
+		altLocaleHasError: boolean;
 	};
 }
 
@@ -81,6 +82,7 @@ export const CheckboxField: Component<CheckboxFieldProps> = (props) => {
 				true: props.state.fieldConfig?.copy?.true,
 				false: props.state.fieldConfig?.copy?.false,
 			}}
+			altLocaleHasError={props.state.altLocaleHasError}
 			disabled={props.state.fieldConfig.disabled}
 			errors={props.state.fieldError}
 			required={props.state.fieldConfig.validation?.required || false}

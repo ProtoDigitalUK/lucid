@@ -41,6 +41,7 @@ export interface SelectProps {
 	required?: boolean;
 	disabled?: boolean;
 	errors?: ErrorResult | FieldErrors;
+	altLocaleHasError?: boolean;
 	noMargin?: boolean;
 	noClear?: boolean;
 	hasError?: boolean;
@@ -130,6 +131,7 @@ export const Select: Component<SelectProps> = (props) => {
 						focused={inputFocus()}
 						required={props.required}
 						theme={props.theme}
+						altLocaleHasError={props.altLocaleHasError}
 					/>
 					{/* Trigger */}
 					<DropdownMenu.Trigger

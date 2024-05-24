@@ -54,6 +54,15 @@ export const DynamicField: Component<DynamicFieldProps> = (props) => {
 			);
 		});
 	});
+	const altLocaleHasError = createMemo(() => {
+		return brickStore.get.fieldsErrors.some((f) => {
+			return (
+				f.key === props.state.fieldConfig.key &&
+				f.localeCode !== contentLocale() &&
+				f.groupId === props.state.groupId
+			);
+		});
+	});
 
 	// -------------------------------
 	// Render
@@ -107,6 +116,7 @@ export const DynamicField: Component<DynamicFieldProps> = (props) => {
 									repeaterKey: props.state.repeaterKey,
 									contentLocale: contentLocale(),
 									fieldError: fieldError(),
+									altLocaleHasError: altLocaleHasError(),
 								}}
 							/>
 						</Match>
@@ -120,6 +130,7 @@ export const DynamicField: Component<DynamicFieldProps> = (props) => {
 									repeaterKey: props.state.repeaterKey,
 									contentLocale: contentLocale(),
 									fieldError: fieldError(),
+									altLocaleHasError: altLocaleHasError(),
 								}}
 							/>
 						</Match>
@@ -134,6 +145,7 @@ export const DynamicField: Component<DynamicFieldProps> = (props) => {
 									repeaterKey: props.state.repeaterKey,
 									contentLocale: contentLocale(),
 									fieldError: fieldError(),
+									altLocaleHasError: altLocaleHasError(),
 								}}
 							/>
 						</Match>
@@ -148,6 +160,7 @@ export const DynamicField: Component<DynamicFieldProps> = (props) => {
 									repeaterKey: props.state.repeaterKey,
 									contentLocale: contentLocale(),
 									fieldError: fieldError(),
+									altLocaleHasError: altLocaleHasError(),
 								}}
 							/>
 						</Match>
@@ -161,6 +174,7 @@ export const DynamicField: Component<DynamicFieldProps> = (props) => {
 									repeaterKey: props.state.repeaterKey,
 									contentLocale: contentLocale(),
 									fieldError: fieldError(),
+									altLocaleHasError: altLocaleHasError(),
 								}}
 							/>
 						</Match>
@@ -174,6 +188,7 @@ export const DynamicField: Component<DynamicFieldProps> = (props) => {
 									repeaterKey: props.state.repeaterKey,
 									contentLocale: contentLocale(),
 									fieldError: fieldError(),
+									altLocaleHasError: altLocaleHasError(),
 								}}
 							/>
 						</Match>
@@ -187,6 +202,7 @@ export const DynamicField: Component<DynamicFieldProps> = (props) => {
 									repeaterKey: props.state.repeaterKey,
 									contentLocale: contentLocale(),
 									fieldError: fieldError(),
+									altLocaleHasError: altLocaleHasError(),
 								}}
 							/>
 						</Match>
@@ -200,6 +216,7 @@ export const DynamicField: Component<DynamicFieldProps> = (props) => {
 									repeaterKey: props.state.repeaterKey,
 									contentLocale: contentLocale(),
 									fieldError: fieldError(),
+									altLocaleHasError: altLocaleHasError(),
 								}}
 							/>
 						</Match>
@@ -213,6 +230,7 @@ export const DynamicField: Component<DynamicFieldProps> = (props) => {
 									repeaterKey: props.state.repeaterKey,
 									contentLocale: contentLocale(),
 									fieldError: fieldError(),
+									altLocaleHasError: altLocaleHasError(),
 								}}
 							/>
 						</Match>
@@ -226,6 +244,7 @@ export const DynamicField: Component<DynamicFieldProps> = (props) => {
 									repeaterKey: props.state.repeaterKey,
 									contentLocale: contentLocale(),
 									fieldError: fieldError(),
+									altLocaleHasError: altLocaleHasError(),
 								}}
 							/>
 						</Match>
@@ -239,6 +258,7 @@ export const DynamicField: Component<DynamicFieldProps> = (props) => {
 									repeaterKey: props.state.repeaterKey,
 									contentLocale: contentLocale(),
 									fieldError: fieldError(),
+									altLocaleHasError: altLocaleHasError(),
 								}}
 							/>
 						</Match>
@@ -252,6 +272,7 @@ export const DynamicField: Component<DynamicFieldProps> = (props) => {
 									repeaterKey: props.state.repeaterKey,
 									contentLocale: contentLocale(),
 									fieldError: fieldError(),
+									altLocaleHasError: altLocaleHasError(),
 								}}
 							/>
 						</Match>

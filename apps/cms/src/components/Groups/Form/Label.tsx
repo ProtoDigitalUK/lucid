@@ -1,5 +1,7 @@
+import T from "@/translations";
 import { type Component, Show } from "solid-js";
 import classnames from "classnames";
+import { FaSolidGlobe } from "solid-icons/fa";
 
 interface LabelProps {
 	id: string;
@@ -8,6 +10,7 @@ interface LabelProps {
 	required?: boolean;
 	noPadding?: boolean;
 	theme?: "basic";
+	altLocaleHasError?: boolean;
 }
 
 export const Label: Component<LabelProps> = (props) => {
@@ -16,7 +19,7 @@ export const Label: Component<LabelProps> = (props) => {
 			<label
 				for={props.id}
 				class={classnames(
-					"block text-sm transition-colors duration-200 ease-in-out",
+					"text-sm transition-colors duration-200 ease-in-out flex justify-between",
 					{
 						"text-primary-hover": props.focused,
 						"pt-2 px-2.5":
@@ -25,9 +28,20 @@ export const Label: Component<LabelProps> = (props) => {
 					},
 				)}
 			>
-				{props?.label}
-				<Show when={props.required}>
-					<span class="text-error-base ml-1 inline">*</span>
+				<span>
+					{props?.label}
+					<Show when={props.required}>
+						<span class="text-error-base ml-1 inline">*</span>
+					</Show>
+				</span>
+
+				<Show when={props.altLocaleHasError}>
+					<span
+						class="text-error-base ml-1 inline"
+						title={T()("this_filed_has_errors_in_other_locales")}
+					>
+						<FaSolidGlobe size={12} />
+					</span>
 				</Show>
 			</label>
 		</Show>
