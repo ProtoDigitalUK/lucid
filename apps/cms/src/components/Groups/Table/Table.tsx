@@ -43,7 +43,7 @@ interface TableRootProps {
 	};
 	options?: {
 		isSelectable?: boolean;
-		showCreateEntry?: boolean;
+		showNoEntries?: boolean;
 	};
 	callbacks?: {
 		deleteRows?: (_selected: boolean[]) => Promise<void>;
@@ -53,6 +53,8 @@ interface TableRootProps {
 		noEntryTitle?: string;
 		noEntryDescription?: string;
 		noEntryButton?: string;
+		noResultTitle?: string;
+		noResultDescription?: string;
 	};
 	children: (_props: {
 		include: boolean[];
@@ -143,9 +145,9 @@ export const TableRoot: Component<TableRootProps> = (props) => {
 			};
 		});
 	});
-	const showCreateEntry = createMemo(() => {
+	const showNoEntries = createMemo(() => {
 		return (
-			props.options?.showCreateEntry === true &&
+			props.options?.showNoEntries === true &&
 			!props.searchParams.hasFiltersApplied()
 		);
 	});
@@ -207,7 +209,7 @@ export const TableRoot: Component<TableRootProps> = (props) => {
 				<Match
 					when={props.rows === 0 && props.state.isLoading === false}
 				>
-					<Show when={showCreateEntry()}>
+					<Show when={showNoEntries()}>
 						<NoEntriesBlock
 							copy={{
 								title: props.copy?.noEntryTitle,
@@ -217,12 +219,16 @@ export const TableRoot: Component<TableRootProps> = (props) => {
 							action={props.callbacks?.createEntry}
 						/>
 					</Show>
-					<Show when={!showCreateEntry()}>
+					<Show when={!showNoEntries()}>
 						<ErrorBlock
 							type="table"
 							content={{
-								title: T()("no_results"),
-								description: T()("no_results_message"),
+								title:
+									props.copy?.noResultTitle ??
+									T()("no_results"),
+								description:
+									props.copy?.noResultDescription ??
+									T()("no_results_message"),
 							}}
 						>
 							<Show when={props.searchParams.hasFiltersApplied()}>

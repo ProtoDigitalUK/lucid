@@ -73,7 +73,7 @@ const RolesTable: Component<RolesTableProps> = (props) => {
 				}}
 				options={{
 					isSelectable: false,
-					showCreateEntry: true,
+					showNoEntries: true,
 				}}
 				callbacks={{
 					createEntry: () => {

@@ -32,7 +32,7 @@ const CollectionGrid: Component<CollectionGridProps> = (props) => {
 				isSuccess: collections.isSuccess,
 			}}
 			options={{
-				showCreateEntry: true,
+				showNoEntries: true,
 			}}
 			copy={{
 				noEntryTitle: T()("no_collections"),

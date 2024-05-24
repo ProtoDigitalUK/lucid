@@ -87,7 +87,7 @@ const UsersTable: Component<UsersTableProps> = (props) => {
 				}}
 				options={{
 					isSelectable: false,
-					showCreateEntry: true,
+					showNoEntries: true,
 				}}
 				callbacks={{
 					createEntry: () => {

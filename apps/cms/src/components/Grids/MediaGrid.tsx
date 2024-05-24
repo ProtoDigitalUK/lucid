@@ -58,7 +58,7 @@ const MediaGrid: Component<MediaGridProps> = (props) => {
 					isSuccess: media.isSuccess,
 				}}
 				options={{
-					showCreateEntry: true,
+					showNoEntries: true,
 				}}
 				callbacks={{
 					createEntry: () => {

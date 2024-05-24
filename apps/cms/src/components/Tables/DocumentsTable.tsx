@@ -96,7 +96,7 @@ const DocumentsTable: Component<DocumentsTableProps> = (props) => {
 				}}
 				options={{
 					isSelectable: true,
-					showCreateEntry: true,
+					showNoEntries: true,
 				}}
 				copy={{
 					noEntryTitle: T()("no_documents", {

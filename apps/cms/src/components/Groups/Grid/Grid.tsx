@@ -26,7 +26,7 @@ interface GridRootProps {
 		isSuccess: boolean;
 	};
 	options?: {
-		showCreateEntry?: boolean;
+		showNoEntries?: boolean;
 	};
 	callbacks?: {
 		createEntry?: () => void;
@@ -46,9 +46,9 @@ interface GridRootProps {
 export const GridRoot: Component<GridRootProps> = (props) => {
 	// ----------------------------------
 	// Memos
-	const showCreateEntry = createMemo(() => {
+	const showNoEntries = createMemo(() => {
 		return (
-			props.options?.showCreateEntry === true &&
+			props.options?.showNoEntries === true &&
 			!props.searchParams?.hasFiltersApplied()
 		);
 	});
@@ -81,7 +81,7 @@ export const GridRoot: Component<GridRootProps> = (props) => {
 				<Match
 					when={props.items === 0 && props.state.isLoading === false}
 				>
-					<Show when={showCreateEntry()}>
+					<Show when={showNoEntries()}>
 						<NoEntriesBlock
 							copy={{
 								title: props.copy?.noEntryTitle,
@@ -91,7 +91,7 @@ export const GridRoot: Component<GridRootProps> = (props) => {
 							action={props.callbacks?.createEntry}
 						/>
 					</Show>
-					<Show when={!showCreateEntry()}>
+					<Show when={!showNoEntries()}>
 						<ErrorBlock
 							type="page-layout"
 							content={{

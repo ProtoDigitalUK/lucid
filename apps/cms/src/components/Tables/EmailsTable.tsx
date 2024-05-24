@@ -117,6 +117,11 @@ const EmailsTable: Component<EmailsTableProps> = (props) => {
 				}}
 				options={{
 					isSelectable: false,
+					showNoEntries: true,
+				}}
+				copy={{
+					noEntryTitle: T()("no_emails"),
+					noEntryDescription: T()("no_emails_description"),
 				}}
 			>
 				{({ include, isSelectable, selected, setSelected }) => (

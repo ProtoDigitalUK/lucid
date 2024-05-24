@@ -261,12 +261,12 @@
 
 	"update_role_panel_title": "Edit {{name}} Role",
 	"update_role_panel_description": "Update the permissions for the {{name}} role.",
-	"create_role_panel_title": "Create Role",
-	"create_role_panel_description": "Create a new role with the permissions you require.",
+	"create_role_panel_title": "Create a New Role",
+	"create_role_panel_description": "Configure the name and permissions for the new role.",
 	"update_user_panel_title": "Update User",
 	"update_user_panel_description": "Update the details for the user.",
-	"create_user_panel_title": "Create User",
-	"create_user_panel_description": "Create a new user.",
+	"create_user_panel_title": "Create a New User",
+	"create_user_panel_description": "New users will receive an email with a link to set their password. If this isn't received, you can resend the email or get the link from viewing the email from the emails page.",
 	"update_media_panel_title": "Update Media",
 	"update_media_panel_description": "Update the media entry.",
 	"create_media_panel_title": "Create Media",
@@ -392,5 +392,7 @@
 	"configuration_description": "Manage config settings specific to your account.",
 	"error_fetching_refresh_token": "There was an error fetching the refresh token.",
 	"unauthorised": "Unauthorised",
-	"this_filed_has_errors_in_other_locales": "This field has errors in other locales"
+	"this_filed_has_errors_in_other_locales": "This field has errors in other locales",
+	"no_emails": "No Emails Found",
+	"no_emails_description": "We cannot find any emails. It doesn't look like any emails have been sent yet."
 }
