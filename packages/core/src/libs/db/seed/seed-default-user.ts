@@ -23,6 +23,7 @@ const seedDefaultUser = async (serviceConfig: ServiceConfig) => {
 			username: constants.seedDefaults.user.username,
 			firstName: constants.seedDefaults.user.firstName,
 			lastName: constants.seedDefaults.user.lastName,
+			triggerPasswordReset: 1,
 			password: hashedPassword,
 		});
 	} catch (error) {

@@ -75,6 +75,7 @@ const createSingle = async (
 		firstName: data.firstName,
 		lastName: data.lastName,
 		superAdmin: data.authSuperAdmin === 1 ? data.superAdmin : 0,
+		triggerPasswordReset: 1,
 	});
 
 	if (newUser === undefined) {

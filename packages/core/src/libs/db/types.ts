@@ -71,6 +71,11 @@ export interface HeadlessUsers {
 	first_name: string | null;
 	last_name: string | null;
 	password: string;
+	triggered_password_reset: ColumnType<
+		BooleanInt,
+		BooleanInt | undefined,
+		BooleanInt
+	>;
 	is_deleted: BooleanInt | null;
 	is_deleted_at: TimestampMutateable;
 	deleted_by: number | null;

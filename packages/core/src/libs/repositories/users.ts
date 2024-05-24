@@ -60,6 +60,7 @@ export default class UsersRepo {
 				"updated_at",
 				"username",
 				"super_admin",
+				"triggered_password_reset",
 				props.config.db
 					.jsonArrayFrom(
 						eb
@@ -317,6 +318,7 @@ export default class UsersRepo {
 		superAdmin?: BooleanInt;
 		email: string;
 		username: string;
+		triggerPasswordReset: BooleanInt;
 		firstName?: string;
 		lastName?: string;
 		password: string;
@@ -331,6 +333,7 @@ export default class UsersRepo {
 				first_name: props.firstName,
 				last_name: props.lastName,
 				password: props.password,
+				triggered_password_reset: props.triggerPasswordReset,
 			})
 			.executeTakeFirst();
 	};
