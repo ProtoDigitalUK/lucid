@@ -14,7 +14,6 @@ const collection = new CollectionBuilder("page", {
 	});
 
 export default lucid.config({
-	mode: "development",
 	host: "http://localhost:8393",
 	db: new SQLiteAdapter({
 		database: async () => new Database("db.sqlite"),

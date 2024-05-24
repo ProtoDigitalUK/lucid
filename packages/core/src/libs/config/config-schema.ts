@@ -1,7 +1,6 @@
 import z from "zod";
 
 const ConfigSchema = z.object({
-	mode: z.union([z.literal("production"), z.literal("development")]),
 	db: z.unknown(),
 	host: z.string(),
 	keys: z.object({

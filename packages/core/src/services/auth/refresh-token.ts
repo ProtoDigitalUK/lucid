@@ -11,7 +11,7 @@ const key = "_refresh";
 export const generateRefreshToken = async (
 	reply: FastifyReply,
 	request: FastifyRequest,
-	user_id: number,
+	userId: number,
 ) => {
 	await clearRefreshToken(request, reply);
 	const UserTokensRepo = Repository.get(
@@ -20,7 +20,7 @@ export const generateRefreshToken = async (
 	);
 
 	const payload = {
-		id: user_id,
+		id: userId,
 	};
 
 	const token = jwt.sign(
@@ -34,13 +34,13 @@ export const generateRefreshToken = async (
 	reply.setCookie(key, token, {
 		maxAge: constants.refreshTokenExpiration,
 		httpOnly: true,
-		secure: request.server.config.mode === "production",
+		secure: request.protocol === "https",
 		sameSite: "strict",
 		path: "/",
 	});
 
 	await UserTokensRepo.createSingle({
-		userId: user_id,
+		userId: userId,
 		token: token,
 		tokenType: "refresh",
 		expiryDate: new Date(
@@ -99,7 +99,7 @@ export const verifyRefreshToken = async (
 		});
 
 		if (token === undefined) {
-			throw new Error("No refresh token found");
+			throw new Error(T("no_refresh_token_found"));
 		}
 
 		return {

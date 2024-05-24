@@ -129,5 +129,6 @@
 	"role": "Role",
 	"account": "Account",
 	"permission": "Permission",
-	"locale": "Locale"
+	"locale": "Locale",
+	"no_refresh_token_found": "No refresh token found."
 }
