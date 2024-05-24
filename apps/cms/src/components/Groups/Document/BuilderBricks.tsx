@@ -33,7 +33,7 @@ export const BuilderBricks: Component<BuilderBricksProps> = (props) => {
 		<Show when={props.brickConfig.length > 0}>
 			<div class="p-15 md:p-30">
 				<div class="flex justify-between mb-15">
-					<h2>Builder Area:</h2>
+					<h2>{T()("builder_area")}:</h2>
 					<Button
 						type="button"
 						theme="primary"
@@ -45,7 +45,7 @@ export const BuilderBricks: Component<BuilderBricksProps> = (props) => {
 						{T()("add_brick")}
 					</Button>
 				</div>
-				<ol class="">
+				<ol class="w-full">
 					<DragDrop
 						sortOrder={(index, targetindex) => {
 							brickStore.get.swapBrickOrder({
@@ -146,6 +146,9 @@ const BuilderBrickRow: Component<BuilderBrickRowProps> = (props) => {
 					"flex items-center justify-between cursor-pointer px-15 py-2.5 focus:outline-none focus:ring-1 rounded-md ring-inset ring-primary-base",
 					{
 						"mb-15": getBrickOpen(),
+						"ring-1 ring-inset":
+							props.dragDrop.getDraggingTarget()?.index ===
+							brickIndex(),
 					},
 				)}
 				onClick={toggleDropdown}

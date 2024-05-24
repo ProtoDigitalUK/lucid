@@ -145,6 +145,7 @@
 	"type": "Type",
 	"image": "Image",
 	"video": "Video",
+	"builder_area": "Builder Area",
 	"audio": "Audio",
 	"document": "Document",
 	"archive": "Archive",

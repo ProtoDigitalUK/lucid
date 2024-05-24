@@ -88,6 +88,9 @@ export const GroupBody: Component<GroupBodyProps> = (props) => {
 					"w-full bg-container-4 focus:outline-none focus:ring-1 ring-inset ring-primary-base cursor-pointer p-2.5 rounded-md border border-border flex justify-between items-center",
 					{
 						"border-b-0 rounded-b-none": getGroupOpen(),
+						"ring-1 ring-inset":
+							props.state.dragDrop.getDraggingTarget()?.index ===
+							groupId(),
 					},
 				)}
 				onClick={toggleDropdown}
