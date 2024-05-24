@@ -76,6 +76,11 @@ export interface HeadlessUsers {
 		BooleanInt | undefined,
 		BooleanInt
 	>;
+	is_invite_pending: ColumnType<
+		BooleanInt,
+		BooleanInt | undefined,
+		BooleanInt
+	>;
 	is_deleted: BooleanInt | null;
 	is_deleted_at: TimestampMutateable;
 	deleted_by: number | null;

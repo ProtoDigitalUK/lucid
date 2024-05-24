@@ -13,6 +13,7 @@ interface UserPropT {
 	updated_at: Date | string | null;
 	username: string;
 	triggered_password_reset?: BooleanInt;
+	is_invite_pending?: BooleanInt;
 	roles?: {
 		id: number;
 		description: string | null;
@@ -51,6 +52,7 @@ export default class UsersFormatter {
 			roles: roles,
 			permissions: permissions,
 			triggerPasswordReset: props.user.triggered_password_reset,
+			isInvitePending: props.user.is_invite_pending,
 			createdAt: Formatter.formatDate(props.user.created_at),
 			updatedAt: Formatter.formatDate(props.user.updated_at),
 		};
@@ -65,6 +67,7 @@ export default class UsersFormatter {
 			firstName: { type: "string", example: "Admin" },
 			lastName: { type: "string", example: "User" },
 			triggerPasswordReset: { type: "number", example: 0 },
+			isInvitePending: { type: "number", example: 0 },
 			roles: UserPermissionsFormatter.swaggerRoles,
 			permissions: UserPermissionsFormatter.swaggerPermissions,
 			createdAt: { type: "string", example: "2021-06-10T20:00:00.000Z" },

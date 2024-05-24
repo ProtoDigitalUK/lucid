@@ -25,6 +25,9 @@ const Migration00000004: MigrationFn = (adapter) => {
 				.addColumn("triggered_password_reset", "integer", (col) =>
 					col.defaultTo(0),
 				)
+				.addColumn("is_invite_pending", "integer", (col) =>
+					col.defaultTo(0),
+				)
 				.addColumn("is_deleted", "integer", (col) => col.defaultTo(0))
 				.addColumn("is_deleted_at", "timestamp")
 				.addColumn("deleted_by", "integer", (col) =>
