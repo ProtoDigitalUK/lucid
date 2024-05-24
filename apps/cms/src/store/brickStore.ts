@@ -73,7 +73,7 @@ type BrickStoreT = {
 		key: string;
 		groupId?: number | string;
 		parentRepeaterKey?: string;
-		contentLocale: string;
+		locales: string[];
 	}) => void;
 	removeRepeaterGroup: (params: {
 		brickIndex: number;
@@ -302,13 +302,22 @@ const [get, set] = createStore<BrickStoreT>({
 				const groupFields: FieldResponse[] = [];
 
 				for (const field of params.fieldConfig) {
-					groupFields.push({
+					const newField: FieldResponse = {
 						key: field.key,
 						type: field.type,
-						translations: {
-							[params.contentLocale]: field.default,
-						},
-					});
+					};
+
+					if (field.translations === true) {
+						for (const locale of params.locales) {
+							newField.translations = {
+								[locale]: field.default,
+							};
+						}
+					} else {
+						newField.value = field.default;
+					}
+
+					groupFields.push(newField);
 				}
 
 				if (field.groups.length === 0) {

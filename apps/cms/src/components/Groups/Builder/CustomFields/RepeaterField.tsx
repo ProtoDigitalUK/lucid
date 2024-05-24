@@ -22,8 +22,8 @@ interface RepeaterFieldProps {
 export const RepeaterField: Component<RepeaterFieldProps> = (props) => {
 	// -------------------------------
 	// Memos
-	const contentLocale = createMemo(
-		() => contentLocaleStore.get.contentLocale ?? "",
+	const contentLocales = createMemo(
+		() => contentLocaleStore.get.locales.map((locale) => locale.code) || [],
 	);
 	const fieldConfig = createMemo(() => props.state.fieldConfig);
 	const brickIndex = createMemo(() => props.state.brickIndex);
@@ -48,7 +48,7 @@ export const RepeaterField: Component<RepeaterFieldProps> = (props) => {
 			key: fieldConfig().key,
 			groupId: props.state.groupId,
 			parentRepeaterKey: props.state.parentRepeaterKey,
-			contentLocale: contentLocale(),
+			locales: contentLocales(),
 		});
 	};
 
