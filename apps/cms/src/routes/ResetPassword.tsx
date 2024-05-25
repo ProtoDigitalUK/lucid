@@ -54,10 +54,10 @@ const ResetPasswordRoute: Component = () => {
 				/>
 			</Match>
 			<Match when={checkToken.isSuccess}>
-				<h1 class="mb-2 text-center 3xl:text-left">
+				<h1 class="mb-2 text-center">
 					{T()("reset_password_route_title")}
 				</h1>
-				<p class="mb-10 text-center 3xl:text-left">
+				<p class="mb-10 text-center">
 					{T()("reset_password_route_description")}
 				</p>
 				<div class="mb-10">

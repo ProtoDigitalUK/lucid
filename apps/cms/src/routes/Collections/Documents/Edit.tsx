@@ -277,7 +277,7 @@ const CollectionsDocumentsEditRoute: Component<
 						/>
 					</div>
 					{/* Sidebar */}
-					<aside class="w-full lg:max-w-[300px] lg:overflow-scroll bg-container-1 border-b lg:border-b-0 lg:border-l border-border ">
+					<aside class="w-full lg:max-w-[300px] lg:overflow-y-auto bg-container-1 border-b lg:border-b-0 lg:border-l border-border ">
 						<div class="p-15 md:p-30">
 							<h2 class="mb-15">{T()("document")}</h2>
 							<DetailsList
