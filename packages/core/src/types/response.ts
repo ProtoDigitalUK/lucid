@@ -14,7 +14,6 @@ export interface UserResponse {
 	firstName: string | null;
 	lastName: string | null;
 	triggerPasswordReset?: BooleanInt;
-	isInvitePending?: BooleanInt;
 
 	roles?: UserPermissionsResponse["roles"];
 	permissions?: UserPermissionsResponse["permissions"];

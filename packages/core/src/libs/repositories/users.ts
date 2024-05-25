@@ -61,7 +61,6 @@ export default class UsersRepo {
 				"username",
 				"super_admin",
 				"triggered_password_reset",
-				"is_invite_pending",
 				props.config.db
 					.jsonArrayFrom(
 						eb
@@ -148,7 +147,6 @@ export default class UsersRepo {
 				"lucid_users.updated_at",
 				"lucid_users.username",
 				"lucid_users.super_admin",
-				"lucid_users.is_invite_pending",
 				props.config.db
 					.jsonArrayFrom(
 						eb
@@ -323,7 +321,7 @@ export default class UsersRepo {
 		triggerPasswordReset: BooleanInt;
 		firstName?: string;
 		lastName?: string;
-		password: string;
+		password?: string;
 	}) => {
 		return this.db
 			.insertInto("lucid_users")

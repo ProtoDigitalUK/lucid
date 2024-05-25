@@ -22,8 +22,6 @@ const createSingleController: RouteController<
 			{
 				email: request.body.email,
 				username: request.body.username,
-				password: request.body.password,
-				passwordConfirmation: request.body.passwordConfirmation,
 				roleIds: request.body.roleIds,
 				firstName: request.body.firstName,
 				lastName: request.body.lastName,

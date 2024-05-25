@@ -2,6 +2,7 @@ import T from "../../translations/index.js";
 import argon2 from "argon2";
 import userTokens from "../user-tokens/index.js";
 import email from "../email/index.js";
+import constants from "../../constants.js";
 import serviceWrapper from "../../utils/service-wrapper.js";
 import { LucidAPIError } from "../../utils/error-handler.js";
 import Repository from "../../libs/repositories/index.js";
@@ -61,13 +62,13 @@ const resetPassword = async (
 			],
 		}),
 		serviceWrapper(email.sendEmail, false)(serviceConfig, {
-			template: "password-reset",
+			template: constants.emailTemplates.passwordResetSuccess,
 			type: "internal",
 			to: user.email,
 			subject: T("password_reset_success_subject"),
 			data: {
-				first_name: user.first_name,
-				last_name: user.last_name,
+				firstName: user.first_name,
+				lastName: user.last_name,
 			},
 		}),
 	]);

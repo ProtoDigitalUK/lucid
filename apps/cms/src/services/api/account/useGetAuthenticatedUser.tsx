@@ -9,7 +9,12 @@ import type { ResponseBody, UserResponse } from "@lucidcms/core/types";
 // biome-ignore lint/suspicious/noEmptyInterface: <explanation>
 interface QueryParams {}
 
-const useGetAuthenticatedUser = (params: QueryHook<QueryParams>) => {
+const useGetAuthenticatedUser = (
+	params: QueryHook<QueryParams>,
+	options?: {
+		authLayout?: boolean;
+	},
+) => {
 	const navigate = useNavigate();
 	const queryParams = createMemo(() =>
 		serviceHelpers.getQueryParams<QueryParams>(params.queryParams),
@@ -37,6 +42,9 @@ const useGetAuthenticatedUser = (params: QueryHook<QueryParams>) => {
 			userStore.set("user", query.data.data);
 		}
 		if (query.isError) {
+			if (options?.authLayout) {
+				return;
+			}
 			navigate("/admin/login");
 		}
 	});

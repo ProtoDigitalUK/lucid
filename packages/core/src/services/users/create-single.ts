@@ -1,17 +1,18 @@
 import T from "../../translations/index.js";
 import { LucidAPIError } from "../../utils/error-handler.js";
-import argon2 from "argon2";
 import usersServices from "./index.js";
 import serviceWrapper from "../../utils/service-wrapper.js";
 import type { BooleanInt } from "../../libs/db/types.js";
 import Repository from "../../libs/repositories/index.js";
+import { add } from "date-fns";
+import constants from "../../constants.js";
+import email from "../email/index.js";
+import userTokens from "../user-tokens/index.js";
 import type { ServiceConfig } from "../../utils/service-wrapper.js";
 
 export interface ServiceData {
 	email: string;
 	username: string;
-	password: string;
-	passwordConfirmation: string;
 	firstName?: string;
 	lastName?: string;
 	superAdmin?: BooleanInt;
@@ -66,16 +67,13 @@ const createSingle = async (
 		});
 	}
 
-	const hashedPassword = await argon2.hash(data.password);
-
 	const newUser = await UsersRepo.createSingle({
 		email: data.email,
 		username: data.username,
-		password: hashedPassword,
 		firstName: data.firstName,
 		lastName: data.lastName,
 		superAdmin: data.authSuperAdmin === 1 ? data.superAdmin : 0,
-		triggerPasswordReset: 1,
+		triggerPasswordReset: 0,
 	});
 
 	if (newUser === undefined) {
@@ -95,6 +93,33 @@ const createSingle = async (
 			userId: newUser.id,
 			roleId: r,
 		})),
+	});
+
+	// send invite email
+	const expiryDate = add(new Date(), {
+		minutes: constants.userInviteTokenExpirationMinutes,
+	}).toISOString();
+
+	const userToken = await serviceWrapper(userTokens.createSingle, false)(
+		serviceConfig,
+		{
+			userId: newUser.id,
+			tokenType: "password_reset",
+			expiryDate: expiryDate,
+		},
+	);
+
+	await serviceWrapper(email.sendEmail, false)(serviceConfig, {
+		type: "internal",
+		to: data.email,
+		subject: T("user_invite_email_subject"),
+		template: constants.emailTemplates.userInvite,
+		data: {
+			firstName: data.firstName,
+			lastName: data.lastName,
+			email: data.email,
+			resetLink: `${serviceConfig.config.host}${constants.locations.resetPassword}?token=${userToken.token}`,
+		},
 	});
 
 	return newUser.id;

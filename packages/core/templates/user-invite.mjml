@@ -1,0 +1,19 @@
+<mjml>
+  <mj-body background-color="#ffffff" font-size="13px">
+    <mj-section mj-class="main-section">
+      <mj-column vertical-align="middle" width="100%">
+        <mj-text mj-class="big-text">
+          Hi, {{firstName}}.
+        </mj-text>
+
+        <mj-text mj-class="text">
+          A new user account has been created for you. Please click the link below to set your password.
+        </mj-text>
+
+        <mj-button mj-class="btn" href="{{reset_link}}">
+          Set Your Password
+        </mj-button>
+      </mj-column>
+    </mj-section>
+  </mj-body>
+</mjml>

@@ -14,9 +14,14 @@ const AuthRoutes: Component<AuthRoutesProps> = (props) => {
 
 	// ----------------------------------
 	// Mutations & Queries
-	const authenticatedUser = api.account.useGetAuthenticatedUser({
-		queryParams: {},
-	});
+	const authenticatedUser = api.account.useGetAuthenticatedUser(
+		{
+			queryParams: {},
+		},
+		{
+			authLayout: true,
+		},
+	);
 
 	// ----------------------------------
 	// Effects

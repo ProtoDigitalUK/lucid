@@ -52,9 +52,15 @@ export default {
 		code: null,
 		errorResponse: null,
 	},
+	emailTemplates: {
+		resetPassword: "reset-password",
+		userInvite: "user-invite",
+		passwordResetSuccess: "password-reset-success",
+	},
 	csrfExpiration: 604800, // 7 days in seconds
 	refreshTokenExpiration: 604800, // 7 days in seconds
 	accessTokenExpiration: 300, // 5 minutes in seconds
-	passwordResetTokenExpirationMinutes: 15,
+	passwordResetTokenExpirationMinutes: 15, // 15 minutes
+	userInviteTokenExpirationMinutes: 1440, // 24 hours in minutes
 	documentation: "https://lucidcms.io/getting-started",
 };

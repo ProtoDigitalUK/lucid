@@ -70,13 +70,8 @@ export interface HeadlessUsers {
 	username: string;
 	first_name: string | null;
 	last_name: string | null;
-	password: string;
+	password: ColumnType<string, string | undefined, string>;
 	triggered_password_reset: ColumnType<
-		BooleanInt,
-		BooleanInt | undefined,
-		BooleanInt
-	>;
-	is_invite_pending: ColumnType<
 		BooleanInt,
 		BooleanInt | undefined,
 		BooleanInt

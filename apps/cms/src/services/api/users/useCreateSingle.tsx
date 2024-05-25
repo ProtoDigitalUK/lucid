@@ -7,8 +7,6 @@ interface Params {
 	body: {
 		email: string;
 		username: string;
-		password: string;
-		passwordConfirmation: string;
 		firstName?: string;
 		lastName?: string;
 		superAdmin?: 1 | 0;
