@@ -8,6 +8,9 @@ interface Params {
 	lastName?: string;
 	username?: string;
 	email?: string;
+	currentPassword?: string;
+	newPassword?: string;
+	passwordConfirmation?: string;
 }
 
 export const updateMeReq = (params: Params) => {
@@ -21,6 +24,9 @@ export const updateMeReq = (params: Params) => {
 				lastName: params.lastName,
 				username: params.username,
 				email: params.email,
+				currentPassword: params.currentPassword,
+				newPassword: params.newPassword,
+				passwordConfirmation: params.passwordConfirmation,
 			},
 		},
 	});

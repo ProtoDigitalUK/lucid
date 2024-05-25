@@ -56,6 +56,7 @@ export default {
 		resetPassword: "reset-password",
 		userInvite: "user-invite",
 		passwordResetSuccess: "password-reset-success",
+		emailChanged: "email-changed",
 	},
 	csrfExpiration: 604800, // 7 days in seconds
 	refreshTokenExpiration: 604800, // 7 days in seconds

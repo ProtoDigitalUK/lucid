@@ -26,6 +26,9 @@ const updateMeController: RouteController<
 				lastName: request.body.lastName,
 				username: request.body.username,
 				email: request.body.email,
+				currentPassword: request.body.currentPassword,
+				newPassword: request.body.newPassword,
+				passwordConfirmation: request.body.passwordConfirmation,
 			},
 		);
 

@@ -2,6 +2,10 @@ import T from "../../translations/index.js";
 import type { FastifyRequest } from "fastify";
 import { LucidAPIError } from "../../utils/error-handler.js";
 import Repository from "../../libs/repositories/index.js";
+import argon2 from "argon2";
+import email from "../email/index.js";
+import serviceWrapper from "../../utils/service-wrapper.js";
+import constants from "../../constants.js";
 import type { ServiceConfig } from "../../utils/service-wrapper.js";
 
 export interface ServiceData {
@@ -10,13 +14,16 @@ export interface ServiceData {
 	lastName?: string;
 	username?: string;
 	email?: string;
+	currentPassword?: string;
+	newPassword?: string;
+	passwordConfirmation?: string;
 }
 
 const updateMe = async (serviceConfig: ServiceConfig, data: ServiceData) => {
 	const UsersRepo = Repository.get("users", serviceConfig.db);
 
 	const getUser = await UsersRepo.selectSingle({
-		select: ["super_admin"],
+		select: ["super_admin", "password", "first_name"],
 		where: [
 			{
 				key: "id",
@@ -102,6 +109,36 @@ const updateMe = async (serviceConfig: ServiceConfig, data: ServiceData) => {
 		});
 	}
 
+	// password
+	let newPassword = undefined;
+	let triggerPasswordReset = undefined;
+
+	if (data.newPassword !== undefined && data.currentPassword !== undefined) {
+		const passwordValid = await argon2.verify(
+			getUser.password,
+			data.currentPassword,
+		);
+
+		if (!passwordValid) {
+			throw new LucidAPIError({
+				type: "basic",
+				message: T("please_ensure_password_is_correct"),
+				status: 400,
+				errorResponse: {
+					body: {
+						currentPassword: {
+							code: "invalid",
+							message: T("please_ensure_password_is_correct"),
+						},
+					},
+				},
+			});
+		}
+
+		newPassword = await argon2.hash(data.newPassword);
+		triggerPasswordReset = 0 as const;
+	}
+
 	const updateMe = await UsersRepo.updateSingle({
 		data: {
 			firstName: data.firstName,
@@ -109,6 +146,8 @@ const updateMe = async (serviceConfig: ServiceConfig, data: ServiceData) => {
 			username: data.username,
 			email: data.email,
 			updatedAt: new Date().toISOString(),
+			password: newPassword,
+			triggerPasswordReset: triggerPasswordReset,
 		},
 		where: [
 			{
@@ -129,7 +168,17 @@ const updateMe = async (serviceConfig: ServiceConfig, data: ServiceData) => {
 		});
 	}
 
-	// TODO: send email to user to confirm email change ?
+	if (data.email === undefined) return;
+
+	await serviceWrapper(email.sendEmail, false)(serviceConfig, {
+		template: constants.emailTemplates.emailChanged,
+		type: "internal",
+		to: data.email,
+		subject: T("email_update_success_subject"),
+		data: {
+			firstName: data.firstName || getUser.first_name,
+		},
+	});
 
 	if (getUser.super_admin === 0) return;
 };

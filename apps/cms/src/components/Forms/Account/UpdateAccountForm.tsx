@@ -1,5 +1,5 @@
 import T from "@/translations";
-import { type Component, createSignal, createMemo } from "solid-js";
+import { type Component, createSignal, createMemo, Show } from "solid-js";
 import { getBodyError } from "@/utils/error-helpers";
 import helpers from "@/utils/helpers";
 import api from "@/services/api";
@@ -19,11 +19,18 @@ const UpdateAccountForm: Component<UpdateAccountFormProps> = (props) => {
 	const [lastName, setLastName] = createSignal(props.lastName ?? "");
 	const [username, setUsername] = createSignal(props.username ?? "");
 	const [email, setEmail] = createSignal(props.email ?? "");
+	const [currentPassword, setCurrentPassword] = createSignal("");
+	const [newPassword, setNewPassword] = createSignal("");
+	const [confirmPassword, setConfirmPassword] = createSignal("");
 
 	// ----------------------------------------
 	// Mutations
 	const updateMe = api.account.useUpdateMe({
-		onSuccess: () => {},
+		onSuccess: () => {
+			setCurrentPassword("");
+			setNewPassword("");
+			setConfirmPassword("");
+		},
 	});
 
 	// ----------------------------------------
@@ -35,12 +42,18 @@ const UpdateAccountForm: Component<UpdateAccountFormProps> = (props) => {
 				lastName: props.lastName,
 				username: props.username,
 				email: props.email,
+				currentPassword: "",
+				newPassword: "",
+				passwordConfirmation: "",
 			},
 			{
 				firstName: firstName(),
 				lastName: lastName(),
 				username: username(),
 				email: email(),
+				currentPassword: currentPassword(),
+				newPassword: newPassword(),
+				passwordConfirmation: confirmPassword(),
 			},
 		);
 	});
@@ -65,6 +78,7 @@ const UpdateAccountForm: Component<UpdateAccountFormProps> = (props) => {
 				updateMe.action.mutate(updateData().data);
 			}}
 		>
+			<h3 class="mb-15">{T()("details")}</h3>
 			<div class="grid grid-cols-2 gap-15">
 				<Form.Input
 					id="firstName"
@@ -113,6 +127,47 @@ const UpdateAccountForm: Component<UpdateAccountFormProps> = (props) => {
 				required={true}
 				errors={getBodyError("email", updateMe.errors)}
 			/>
+			<div class="mt-30">
+				<h3 class="mb-15">{T()("update_password")}</h3>
+				<Form.Input
+					id="currentPassword"
+					name="currentPassword"
+					type="password"
+					value={currentPassword()}
+					onChange={setCurrentPassword}
+					copy={{
+						label: T()("current_password"),
+					}}
+					errors={getBodyError("currentPassword", updateMe.errors)}
+				/>
+				<Form.Input
+					id="newPassword"
+					name="newPassword"
+					type="password"
+					value={newPassword()}
+					onChange={setNewPassword}
+					copy={{
+						label: T()("new_password"),
+					}}
+					errors={getBodyError("newPassword", updateMe.errors)}
+				/>
+				<Show when={newPassword() !== ""}>
+					<Form.Input
+						id="passwordConfirmation"
+						name="passwordConfirmation"
+						type="password"
+						value={confirmPassword()}
+						onChange={setConfirmPassword}
+						copy={{
+							label: T()("confirm_password"),
+						}}
+						errors={getBodyError(
+							"passwordConfirmation",
+							updateMe.errors,
+						)}
+					/>
+				</Show>
+			</div>
 		</Form.Root>
 	);
 };

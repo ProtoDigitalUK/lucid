@@ -1,0 +1,15 @@
+<mjml>
+  <mj-body background-color="#ffffff" font-size="13px">
+    <mj-section mj-class="main-section">
+      <mj-column vertical-align="middle" width="100%">
+        <mj-text mj-class="big-text">
+          Hi, {{firstName}}.
+        </mj-text>
+
+        <mj-text mj-class="text">
+          Your email has been successfully changed. If you did not request this change, please contact an administrator immediately.
+        </mj-text>
+      </mj-column>
+    </mj-section>
+  </mj-body>
+</mjml>

@@ -290,6 +290,7 @@ export default class UsersRepo {
 			isDeleted?: BooleanInt;
 			isDeletedAt?: string;
 			deletedBy?: number;
+			triggerPasswordReset?: BooleanInt;
 		};
 	}) => {
 		let query = this.db
@@ -305,6 +306,7 @@ export default class UsersRepo {
 				is_deleted: props.data.isDeleted,
 				is_deleted_at: props.data.isDeletedAt,
 				deleted_by: props.data.deletedBy,
+				triggered_password_reset: props.data.triggerPasswordReset,
 			})
 			.returning(["id", "first_name", "last_name", "email"]);
 

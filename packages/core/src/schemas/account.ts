@@ -8,12 +8,44 @@ export default {
 		params: undefined,
 	},
 	updateMe: {
-		body: z.object({
-			firstName: z.string().optional(),
-			lastName: z.string().optional(),
-			username: z.string().min(3).optional(),
-			email: z.string().email().optional(),
-		}),
+		body: z
+			.object({
+				firstName: z.string().optional(),
+				lastName: z.string().optional(),
+				username: z.string().min(3).optional(),
+				email: z.string().email().optional(),
+				currentPassword: z.string().optional(),
+				newPassword: z.string().min(8).max(128).optional(),
+				passwordConfirmation: z.string().min(8).max(128).optional(),
+			})
+			.refine(
+				(data) =>
+					!(
+						data.newPassword !== undefined &&
+						(!data.currentPassword || data.currentPassword === "")
+					),
+				{
+					message: T("please_provide_current_password"),
+					path: ["currentPassword"],
+				},
+			)
+			.refine(
+				(data) =>
+					!data.currentPassword || data.newPassword !== undefined,
+				{
+					message: T("please_provide_new_password"),
+					path: ["newPassword"],
+				},
+			)
+			.refine(
+				(data) =>
+					!data.newPassword ||
+					data.newPassword === data.passwordConfirmation,
+				{
+					message: T("please_ensure_passwords_match"),
+					path: ["passwordConfirmation"],
+				},
+			),
 		query: undefined,
 		params: undefined,
 	},

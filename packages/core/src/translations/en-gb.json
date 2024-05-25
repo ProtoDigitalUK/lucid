@@ -57,6 +57,7 @@
 	"reset_password_email_subject": "Reset your password",
 	"user_invite_email_subject": "You have been invited to join a Lucid project",
 	"password_reset_success_subject": "Password reset successful",
+	"email_update_success_subject": "Email update successful",
 	"please_ensure_passwords_match": "Please ensure that the passwords match and try again.",
 	"ensure_file_has_been_uploaded": "Please ensure that a file has been uploaded and try again.",
 	"make_sure_all_translations_locales_exist": "Please make sure all translation locales exist.",
@@ -131,5 +132,9 @@
 	"account": "Account",
 	"permission": "Permission",
 	"locale": "Locale",
-	"no_refresh_token_found": "No refresh token found."
+	"no_refresh_token_found": "No refresh token found.",
+	"please_ensure_password_is_correct": "Please ensure the password is correct and try again.",
+	"please_provide_all_password_fields_if_one_is_provided": "Please provide all password fields if one is provided.",
+	"please_provide_new_password": "Please provide a new password.",
+	"please_provide_current_password": "Please provide your current password."
 }

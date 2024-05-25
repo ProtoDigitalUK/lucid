@@ -13,7 +13,7 @@ import lucidLogger from "../libs/logging/index.js";
  * @param {number} [data.status] - The HTTP status code
  * @param {LucidAPIErrorData["code"]} [data.code] - The error code
  * @param {z.ZodError} [data.zod] - The Zod error object - this is formatted and stored in the errors property
- * @param {ErrorResult} [data.errors] - The error result object - this is returned in the response
+ * @param {ErrorResult} [data.errorResponse] - The error result object - this is returned in the response
  * @returns {void}
  * @example
  * throw new LucidAPIError({
@@ -28,7 +28,7 @@ import lucidLogger from "../libs/logging/index.js";
  *    name: "Validation Error",
  *    message: "Validation error occurred",
  *    status: 400,
- *    errors: {
+ *    errorResponse: {
  *        body: {
  *            email: {
  *                code: "invalid_email",

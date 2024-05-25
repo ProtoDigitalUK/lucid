@@ -4,12 +4,13 @@ import T, {
 	localesConfig,
 	type SupportedLocales,
 } from "@/translations";
-import { createMemo, type Component } from "solid-js";
+import { createMemo, type Component, Show } from "solid-js";
 import userStore from "@/store/userStore";
 import Layout from "@/components/Groups/Layout";
 import InfoRow from "@/components/Blocks/InfoRow";
 import UpdateAccountForm from "@/components/Forms/Account/UpdateAccountForm";
 import Form from "@/components/Groups/Form";
+import Alert from "@/components/Blocks/Alert";
 
 const AccountRoute: Component = () => {
 	// ----------------------------------------
@@ -22,8 +23,35 @@ const AccountRoute: Component = () => {
 		<Layout.PageLayout
 			title={T()("account_route_title")}
 			description={T()("account_route_description")}
+			topBar={
+				<Alert
+					style="page-heading"
+					alerts={[
+						{
+							type: "error",
+							message: T()("please_reset_password_message"),
+							show: user()?.triggerPasswordReset === 1,
+						},
+					]}
+				/>
+			}
 		>
 			<Layout.PageContent>
+				{/* Account Details */}
+				<InfoRow.Root
+					title={T()("account_details")}
+					description={T()("account_details_description")}
+				>
+					<InfoRow.Content>
+						<UpdateAccountForm
+							firstName={user()?.firstName ?? undefined}
+							lastName={user()?.lastName ?? undefined}
+							username={user()?.username ?? undefined}
+							email={user()?.email ?? undefined}
+						/>
+					</InfoRow.Content>
+				</InfoRow.Root>
+
 				{/* Configuration */}
 				<InfoRow.Root
 					title={T()("configuration")}
@@ -46,20 +74,6 @@ const AccountRoute: Component = () => {
 							name={"cms-locale"}
 							noClear={true}
 							theme={"basic"}
-						/>
-					</InfoRow.Content>
-				</InfoRow.Root>
-				{/* Account Details */}
-				<InfoRow.Root
-					title={T()("account_details")}
-					description={T()("account_details_description")}
-				>
-					<InfoRow.Content>
-						<UpdateAccountForm
-							firstName={user()?.firstName ?? undefined}
-							lastName={user()?.lastName ?? undefined}
-							username={user()?.username ?? undefined}
-							email={user()?.email ?? undefined}
 						/>
 					</InfoRow.Content>
 				</InfoRow.Root>

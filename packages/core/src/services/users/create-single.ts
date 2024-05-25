@@ -83,19 +83,7 @@ const createSingle = async (
 		});
 	}
 
-	if (data.roleIds === undefined || data.roleIds.length === 0)
-		return newUser.id;
-
-	const UserRolesRepo = Repository.get("user-roles", serviceConfig.db);
-
-	await UserRolesRepo.createMultiple({
-		items: data.roleIds.map((r) => ({
-			userId: newUser.id,
-			roleId: r,
-		})),
-	});
-
-	// send invite email
+	// Email Invite
 	const expiryDate = add(new Date(), {
 		minutes: constants.userInviteTokenExpirationMinutes,
 	}).toISOString();
@@ -120,6 +108,19 @@ const createSingle = async (
 			email: data.email,
 			resetLink: `${serviceConfig.config.host}${constants.locations.resetPassword}?token=${userToken.token}`,
 		},
+	});
+
+	// Roles
+	if (data.roleIds === undefined || data.roleIds.length === 0)
+		return newUser.id;
+
+	const UserRolesRepo = Repository.get("user-roles", serviceConfig.db);
+
+	await UserRolesRepo.createMultiple({
+		items: data.roleIds.map((r) => ({
+			userId: newUser.id,
+			roleId: r,
+		})),
 	});
 
 	return newUser.id;

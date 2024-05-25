@@ -46,7 +46,7 @@ const Alert: Component<AlertProps> = (props) => {
 										"bg-warning-base text-warning-contrast":
 											type === "warning" &&
 											props.style === "page-heading",
-										"bg-error-base":
+										"bg-error-base text-error-contrast":
 											type === "error" &&
 											props.style === "page-heading",
 										"bg-primary-base text-primary-contrast":
@@ -64,7 +64,7 @@ const Alert: Component<AlertProps> = (props) => {
 												(type === "success" ||
 													type === "info") &&
 												props.style === "block",
-											"bg-error-base text-white":
+											"bg-error-base text-error-contrast":
 												type === "error" &&
 												props.style === "block",
 											"bg-warning-base text-primary-contrast":

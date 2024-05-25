@@ -1,19 +1,28 @@
+import T from "@/translations";
 import {
 	type Component,
 	Switch,
 	Match,
 	createMemo,
 	type JSXElement,
+	createEffect,
 } from "solid-js";
+import { useNavigate, useLocation } from "@solidjs/router";
 import LogoIcon from "@/assets/svgs/logo-icon.svg";
 import api from "@/services/api";
 import Layout from "@/components/Groups/Layout";
+import spawnToast from "@/utils/spawn-toast";
 
 interface MainLayoutProps {
 	children?: JSXElement;
 }
 
 const MainLayout: Component<MainLayoutProps> = (props) => {
+	// ----------------------------------
+	// Hooks
+	const navigate = useNavigate();
+	const location = useLocation();
+
 	// ----------------------------------
 	// Mutations & Queries
 	const authenticatedUser = api.account.useGetAuthenticatedUser({
@@ -30,6 +39,23 @@ const MainLayout: Component<MainLayoutProps> = (props) => {
 	});
 	const isSuccess = createMemo(() => {
 		return authenticatedUser.isSuccess && locales.isSuccess;
+	});
+
+	// ------------------------------------------------------
+	// Effects
+	createEffect(() => {
+		if (
+			authenticatedUser.data?.data.triggerPasswordReset === 1 &&
+			location.pathname !== "/admin/account"
+		) {
+			spawnToast({
+				title: T()("password_reset_required"),
+				message: T()("please_reset_password_message"),
+				status: "error",
+			});
+
+			navigate("/admin/account");
+		}
 	});
 
 	// ------------------------------------------------------
