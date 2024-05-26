@@ -54,29 +54,31 @@ const handleResponse = async <ResponseBody, Data = unknown>(
 	params: RequestParams<Data>,
 	fetchRes: Response,
 ): Promise<ResponseBody> => {
-	switch (fetchRes.status) {
-		case 401: {
-			return useRefreshToken(params);
-		}
-		case 403: {
-			const data = (await fetchRes.json()) as ErrorResponse;
-			if (data.code === "csrf") {
-				clearCsrfSession();
-				return await request(params);
-			}
-			break;
-		}
-		case 204: {
-			return {} as ResponseBody;
-		}
+	if (fetchRes.status === 204) {
+		return {} as ResponseBody;
 	}
 
 	const data = await fetchRes.json();
 
+	if (fetchRes.status === 401) {
+		if ((data as ErrorResponse).code === "authorisation") {
+			return useRefreshToken(params);
+		}
+	}
+
+	if (fetchRes.status === 403) {
+		if ((data as ErrorResponse).code === "csrf") {
+			clearCsrfSession();
+			return await request(params);
+		}
+	}
+
 	if (!fetchRes.ok) {
-		const errorObj = data as ErrorResponse;
-		handleSiteErrors(errorObj);
-		throw new LucidError(errorObj.message, errorObj);
+		handleSiteErrors(data as ErrorResponse);
+		throw new LucidError(
+			(data as ErrorResponse).message,
+			data as ErrorResponse,
+		);
 	}
 
 	return data as ResponseBody;

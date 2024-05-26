@@ -10,6 +10,7 @@ const authenticate = async (request: FastifyRequest) => {
 		throw new LucidAPIError({
 			type: "authorisation",
 			message: T("not_authorised_to_perform_action"),
+			code: "authorisation",
 		});
 	}
 

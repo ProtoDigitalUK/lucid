@@ -37,6 +37,7 @@ const loginController: RouteController<
 			type: "basic",
 			name: T("default_error_name"),
 			message: T("default_error_message"),
+			code: "login",
 			status: 500,
 		});
 	}
