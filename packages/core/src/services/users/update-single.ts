@@ -18,7 +18,8 @@ export interface ServiceData {
 	password?: string;
 	roleIds?: number[];
 	superAdmin?: BooleanInt;
-
+	triggerPasswordReset?: BooleanInt;
+	isDeleted?: BooleanInt;
 	auth: {
 		id: number;
 		superAdmin: BooleanInt;
@@ -140,6 +141,8 @@ const updateSingle = async (
 				superAdmin:
 					data.auth.superAdmin === 1 ? data.superAdmin : undefined,
 				updatedAt: new Date().toISOString(),
+				triggerPasswordReset: data.triggerPasswordReset,
+				isDeleted: data.isDeleted,
 			},
 			where: [
 				{

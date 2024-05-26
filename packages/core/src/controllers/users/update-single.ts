@@ -25,6 +25,8 @@ const updateSingleController: RouteController<
 				userId: Number.parseInt(request.params.id),
 				roleIds: request.body.roleIds,
 				superAdmin: request.body.superAdmin,
+				triggerPasswordReset: request.body.triggerPasswordReset,
+				isDeleted: request.body.isDeleted,
 			},
 		);
 

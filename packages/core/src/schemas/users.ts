@@ -18,6 +18,10 @@ export default {
 		body: z.object({
 			roleIds: z.array(z.number()).optional(),
 			superAdmin: z.union([z.literal(1), z.literal(0)]).optional(),
+			triggerPasswordReset: z
+				.union([z.literal(1), z.literal(0)])
+				.optional(),
+			isDeleted: z.literal(0).optional(),
 		}),
 		query: undefined,
 		params: z.object({

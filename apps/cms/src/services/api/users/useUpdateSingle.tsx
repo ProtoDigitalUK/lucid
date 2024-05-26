@@ -8,6 +8,8 @@ interface Params {
 	body: {
 		roleIds?: number[];
 		superAdmin?: 1 | 0;
+		triggerPasswordReset?: 1 | 0;
+		isDeleted?: 0;
 	};
 }
 

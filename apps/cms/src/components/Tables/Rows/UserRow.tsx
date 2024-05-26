@@ -11,7 +11,9 @@ import DateCol from "../Columns/DateCol";
 interface UserRowProps extends TableRowProps {
 	user: UserResponse;
 	include: boolean[];
-	rowTarget: ReturnType<typeof useRowTarget<"update" | "delete">>;
+	rowTarget: ReturnType<
+		typeof useRowTarget<"update" | "delete" | "passwordReset">
+	>;
 }
 
 const UserRow: Component<UserRowProps> = (props) => {
@@ -40,6 +42,16 @@ const UserRow: Component<UserRowProps> = (props) => {
 						props.rowTarget.setTrigger("delete", true);
 					},
 					permission: userStore.get.hasPermission(["delete_user"])
+						.all,
+				},
+				{
+					label: T()("reset_password"),
+					type: "button",
+					onClick: () => {
+						props.rowTarget.setTargetId(props.user.id);
+						props.rowTarget.setTrigger("passwordReset", true);
+					},
+					permission: userStore.get.hasPermission(["update_user"])
 						.all,
 				},
 			]}
