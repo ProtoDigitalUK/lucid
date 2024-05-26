@@ -163,7 +163,7 @@
 	"general": "General",
 	"integrations": "Integrations",
 	"processed_images": "Processed Images",
-	"processed_images_setting_message": "Each image can have a maximum of {{limit}} processed images. These do not count towards your storage limit",
+	"processed_images_setting_message": "Each image can have a maximum of {{limit}} processed images. These count towards your storage limit",
 	"clear_all": "Clear all",
 	"clear_all_processed_images_setting_message": "After clearing all your processed images, it's recommended to review each page of your client(s) to reprocess the images. The first load will take longer since that's when processing occurs.",
 	"clear_all_processed_images_button": "Clear all {{count}} images",

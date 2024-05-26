@@ -94,7 +94,7 @@ export const IconLink: Component<IconLinkProps> = (props) => {
 											? "!border-container-4"
 											: ""
 									}
-									end={props.href === "/"}
+									end={props.href === "/admin"}
 								>
 									<Icons />
 								</A>
