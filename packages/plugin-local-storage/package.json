@@ -1,6 +1,6 @@
 {
 	"name": "@lucidcms/plugin-local-storage",
-	"version": "1.0.1",
+	"version": "1.0.2",
 	"description": "The official Local Storage plugin for Lucid",
 	"type": "module",
 	"types": "./dist/index.d.ts",
@@ -43,7 +43,7 @@
 		"typescript": "^5.4.4"
 	},
 	"peerDependencies": {
-		"@lucidcms/core": "^0.4.0-alpha.0"
+		"@lucidcms/core": "^0.5.0-alpha.0"
 	},
 	"dependencies": {
 		"fs-extra": "^11.2.0",
