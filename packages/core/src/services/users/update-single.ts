@@ -5,6 +5,8 @@ import usersServices from "./index.js";
 import serviceWrapper from "../../utils/service-wrapper.js";
 import type { BooleanInt } from "../../libs/db/types.js";
 import Repository from "../../libs/repositories/index.js";
+import email from "../email/index.js";
+import constants from "../../constants.js";
 import type { ServiceConfig } from "../../utils/service-wrapper.js";
 
 export interface ServiceData {
@@ -38,7 +40,7 @@ const updateSingle = async (
 	}
 
 	const user = await UsersRepo.selectSingle({
-		select: ["id"],
+		select: ["id", "first_name"],
 		where: [
 			{
 				key: "id",
@@ -163,7 +165,17 @@ const updateSingle = async (
 		});
 	}
 
-	// TODO: send email to user to confirm email change ?
+	if (data.email !== undefined) {
+		await serviceWrapper(email.sendEmail, false)(serviceConfig, {
+			template: constants.emailTemplates.emailChanged,
+			type: "internal",
+			to: data.email,
+			subject: T("email_update_success_subject"),
+			data: {
+				firstName: data.firstName || user.first_name,
+			},
+		});
+	}
 
 	return user.id;
 };
