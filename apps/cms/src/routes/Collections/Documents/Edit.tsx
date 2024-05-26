@@ -70,6 +70,7 @@ const CollectionsDocumentsEditRoute: Component<
 			},
 		},
 		enabled: () => !!collectionKey(),
+		refetchOnWindowFocus: false,
 	});
 	const document = api.collections.document.useGetSingle({
 		queryParams: {
@@ -151,7 +152,10 @@ const CollectionsDocumentsEditRoute: Component<
 	createEffect(() => {
 		if (isSuccess()) {
 			brickStore.get.reset();
-
+			brickStore.set(
+				"collectionTranslations",
+				collection.data?.data.translations || false,
+			);
 			brickStore.get.setBricks(
 				document.data?.data,
 				collection.data?.data,

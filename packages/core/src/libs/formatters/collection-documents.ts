@@ -74,6 +74,8 @@ export default class CollectionDocumentsFormatter {
 					builder: props.collection,
 					defaultLocaleCode: props.defaultLocaleCode,
 					locales: props.locales,
+					collectionTranslations:
+						props.collection.data.config.translations,
 				},
 			);
 		}

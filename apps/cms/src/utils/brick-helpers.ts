@@ -97,7 +97,10 @@ const getFieldValue = <T>(props: {
 }) => {
 	if (!props.fieldData) return undefined;
 
-	if (props.fieldConfig.translations === true) {
+	if (
+		props.fieldConfig.translations === true &&
+		brickStore.get.collectionTranslations === true
+	) {
 		return props.fieldData.translations?.[props.contentLocale] as T;
 	}
 	return props.fieldData.value as T;
@@ -110,7 +113,10 @@ const getFieldMeta = <T extends FieldResponseMeta>(props: {
 }) => {
 	if (!props.fieldData) return undefined;
 
-	if (props.fieldConfig.translations === true) {
+	if (
+		props.fieldConfig.translations === true &&
+		brickStore.get.collectionTranslations === true
+	) {
 		return (props.fieldData.meta as Record<string, T>)?.[
 			props.contentLocale
 		];

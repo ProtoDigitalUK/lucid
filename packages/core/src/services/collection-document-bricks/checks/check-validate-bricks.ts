@@ -18,7 +18,7 @@ import Repository from "../../../libs/repositories/index.js";
 
 export interface ServiceData {
 	bricks: Array<BrickInsertItem>;
-	collectionKey: string;
+	collection: CollectionBuilder;
 }
 
 const validateBricks = async (
@@ -30,10 +30,7 @@ const validateBricks = async (
 			return brick.fields || [];
 		}) || [];
 
-	const [collection, media, users] = await Promise.all([
-		collectionsServices.getSingleInstance({
-			key: data.collectionKey,
-		}),
+	const [media, users] = await Promise.all([
 		getAllMedia(serviceConfig, flatFields),
 		getAllUsers(serviceConfig, flatFields),
 	]);
@@ -41,7 +38,7 @@ const validateBricks = async (
 	// validate bricks
 	const { errors, hasErrors } = await validateBrickData({
 		bricks: data.bricks,
-		collection: collection,
+		collection: data.collection,
 		media: media,
 		users: users,
 	});

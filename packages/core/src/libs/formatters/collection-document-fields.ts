@@ -55,6 +55,7 @@ export default class CollectionDocumentFieldsFormatter {
 		builder: BrickBuilder | CollectionBuilder;
 		defaultLocaleCode: string | undefined;
 		locales: string[];
+		collectionTranslations: boolean;
 	}): FieldResponse[] => {
 		const fieldTree = props.builder.fieldTreeNoTab;
 		const sortedGroups = props.groups.sort(
@@ -69,6 +70,7 @@ export default class CollectionDocumentFieldsFormatter {
 			parentGroupId: null,
 			defaultLocaleCode: props.defaultLocaleCode,
 			locales: props.locales,
+			collectionTranslations: props.collectionTranslations,
 		});
 	};
 	formatMultipleFlat = (props: {
@@ -77,6 +79,7 @@ export default class CollectionDocumentFieldsFormatter {
 		builder: BrickBuilder | CollectionBuilder;
 		defaultLocaleCode: string | undefined;
 		locales: string[];
+		collectionTranslations: boolean;
 	}): FieldResponse[] => {
 		if (props.fields.length === 0) return [];
 		const fieldsRes: FieldResponse[] = [];
@@ -100,6 +103,7 @@ export default class CollectionDocumentFieldsFormatter {
 				includeGroupId: true,
 				defaultLocaleCode: props.defaultLocaleCode,
 				locales: props.locales,
+				collectionTranslations: props.collectionTranslations,
 			});
 			if (field) fieldsRes.push(field);
 		}
@@ -115,6 +119,7 @@ export default class CollectionDocumentFieldsFormatter {
 		parentGroupId: number | null;
 		defaultLocaleCode: string | undefined;
 		locales: string[];
+		collectionTranslations: boolean;
 	}): FieldResponse[] => {
 		const fieldsRes: FieldResponse[] = [];
 		for (const cf of props.customFields) {
@@ -131,6 +136,7 @@ export default class CollectionDocumentFieldsFormatter {
 						parentGroupId: props.groupId,
 						defaultLocaleCode: props.defaultLocaleCode,
 						locales: props.locales,
+						collectionTranslations: props.collectionTranslations,
 					}),
 				});
 				continue;
@@ -149,6 +155,7 @@ export default class CollectionDocumentFieldsFormatter {
 				includeGroupId: true,
 				defaultLocaleCode: props.defaultLocaleCode,
 				locales: props.locales,
+				collectionTranslations: props.collectionTranslations,
 			});
 			if (field) fieldsRes.push(field);
 		}
@@ -163,6 +170,7 @@ export default class CollectionDocumentFieldsFormatter {
 		parentGroupId: number | null;
 		defaultLocaleCode: string | undefined;
 		locales: string[];
+		collectionTranslations: boolean;
 	}): FieldGroupResponse[] => {
 		const groups: FieldGroupResponse[] = [];
 
@@ -189,6 +197,7 @@ export default class CollectionDocumentFieldsFormatter {
 					parentGroupId: group.parent_group_id,
 					defaultLocaleCode: props.defaultLocaleCode,
 					locales: props.locales,
+					collectionTranslations: props.collectionTranslations,
 				}),
 			});
 		}
@@ -202,8 +211,9 @@ export default class CollectionDocumentFieldsFormatter {
 		includeGroupId?: boolean;
 		defaultLocaleCode?: string;
 		locales: string[];
+		collectionTranslations: boolean;
 	}): FieldResponse | null => {
-		if (props.cf.translations === true) {
+		if (props.cf.translations === true && props.collectionTranslations) {
 			return this.addEmptyLocales({
 				field: this.reduceFieldLocales({
 					fields: props.fields,
@@ -244,7 +254,6 @@ export default class CollectionDocumentFieldsFormatter {
 		includeGroupId?: boolean;
 	}): FieldResponse => {
 		// ** Reduce same fields into one entry with translations object containing values for each locale
-		// TODO: update this so it adds in empty values for locales that dont have a FieldProp value
 		return props.fields.reduce<FieldResponse>(
 			(acc, field) => {
 				if (acc.translations === undefined) acc.translations = {};
