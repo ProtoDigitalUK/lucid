@@ -42,7 +42,7 @@ export const generateAccessToken = async (
 		reply.setCookie(key, token, {
 			maxAge: constants.accessTokenExpiration,
 			httpOnly: true,
-			secure: request.server.config.mode === "production",
+			secure: request.protocol === "https",
 			sameSite: "strict",
 			path: "/",
 		});

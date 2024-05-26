@@ -24,7 +24,7 @@ export const deleteMultipleReq = (params: Params) => {
 interface UseDeleteMultipleProps {
 	onSuccess?: () => void;
 	onError?: () => void;
-	collectionName: string;
+	getCollectionName: () => string;
 }
 
 const useDeleteMultiple = (props: UseDeleteMultipleProps) => {
@@ -32,17 +32,14 @@ const useDeleteMultiple = (props: UseDeleteMultipleProps) => {
 	// Mutation
 	return serviceHelpers.useMutationWrapper<Params, ResponseBody<null>>({
 		mutationFn: deleteMultipleReq,
-		successToast: {
+		getSuccessToast: () => ({
 			title: T()("deleted_toast_title", {
-				name: props.collectionName,
+				name: props.getCollectionName(),
 			}),
 			message: T()("deleted_toast_message", {
-				name: {
-					value: props.collectionName,
-					toLowerCase: true,
-				},
+				name: props.getCollectionName().toLowerCase(),
 			}),
-		},
+		}),
 		invalidates: ["collections.document.getMultiple"],
 		onSuccess: props.onSuccess,
 		onError: props.onError,

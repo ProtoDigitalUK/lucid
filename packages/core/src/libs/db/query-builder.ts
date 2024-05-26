@@ -23,6 +23,12 @@ export interface QueryBuilderConfigT<DB, Table extends keyof DB> {
 			queryKey: string;
 			tableKey: ReferenceExpression<DB, Table>;
 		}[];
+		exclude?: {
+			queryKey: string;
+			tableKey: ReferenceExpression<DB, Table>;
+			value: unknown;
+			operator: ComparisonOperatorExpression;
+		}[];
 	};
 }
 
@@ -109,6 +115,24 @@ const queryBuilder = <DB, Table extends keyof DB, O, T>(
 					]),
 				);
 			}
+		}
+	}
+
+	// -----------------------------------------
+	// Exclude
+	for (const exclude of requestQuery.exclude || []) {
+		const meta = config.meta.exclude?.find(
+			(meta) => meta.queryKey === exclude,
+		);
+		if (!meta) continue;
+
+		mainQuery = mainQuery.where(meta.tableKey, meta.operator, meta.value);
+		if (countQuery) {
+			countQuery = countQuery.where(
+				meta.tableKey,
+				meta.operator,
+				meta.value,
+			);
 		}
 	}
 

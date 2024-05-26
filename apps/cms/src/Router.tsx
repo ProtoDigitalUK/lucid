@@ -2,32 +2,17 @@ import type { Component } from "solid-js";
 import { Router, Route } from "@solidjs/router";
 import AuthRoutes from "@/layouts/AuthRoutes";
 import MainLayout from "@/layouts/Main";
-
-// ------------------------------------------------------
 // Routes
-
-// root
 import LoginRoute from "@/routes/Login";
 import ForgotPasswordRoute from "@/routes/ForgotPassword";
 import ResetPasswordRoute from "@/routes/ResetPassword";
 import DashboardRoute from "@/routes/Dashboard";
-
-// media
 import MediaListRoute from "@/routes/Media/List";
-
-// users
 import UsersListRoute from "@/routes/Users/List";
-
-// roles
 import RolesListRoute from "@/routes/Roles/List";
-
-// settings
 import SettingsListRoute from "@/routes/Settings/List";
-
-// emails
 import EmailListRoute from "@/routes/Emails/List";
-
-// collections
+import AccountRoute from "@/routes/Account";
 import CollectionsListRoute from "@/routes/Collections/List";
 import CollectionsDocumentsListRoute from "./routes/Collections/Documents/List";
 import CollectionsDocumentsEditRoute from "./routes/Collections/Documents/Edit";
@@ -36,8 +21,9 @@ const AppRouter: Component = () => {
 	return (
 		<Router>
 			{/* Authenticated */}
-			<Route path="/" component={MainLayout}>
+			<Route path="/admin" component={MainLayout}>
 				<Route path="/" component={DashboardRoute} />
+				<Route path="/account" component={AccountRoute} />
 				{/* Collections */}
 				<Route path="/collections" component={CollectionsListRoute} />
 				<Route
@@ -72,7 +58,7 @@ const AppRouter: Component = () => {
 				/>
 			</Route>
 			{/* Non authenticated */}
-			<Route path="/" component={AuthRoutes}>
+			<Route path="/admin" component={AuthRoutes}>
 				<Route path="/login" component={LoginRoute} />
 				<Route
 					path="/forgot-password"

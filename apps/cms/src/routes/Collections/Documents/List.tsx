@@ -79,7 +79,7 @@ const CollectionsDocumentsListRoute: Component = () => {
 	createEffect(() => {
 		if (collection.isSuccess) {
 			if (collection.data.data.mode === "single") {
-				navigate("/collections");
+				navigate("/admin/collections");
 			}
 		}
 	});
@@ -119,7 +119,7 @@ const CollectionsDocumentsListRoute: Component = () => {
 			actions={{
 				contentLocale: collection.data?.data.translations ?? false,
 				createLink: {
-					link: `/collections/${collectionKey()}/create`,
+					link: `/admin/collections/${collectionKey()}/create`,
 					permission: userStore.get.hasPermission(["create_content"])
 						.all,
 					label: T()("create_dynamic", {
@@ -129,11 +129,11 @@ const CollectionsDocumentsListRoute: Component = () => {
 			}}
 			breadcrumbs={[
 				{
-					link: "/collections",
+					link: "/admin/collections",
 					label: T()("collections"),
 				},
 				{
-					link: `/collections/${collectionKey()}`,
+					link: `/admin/collections/${collectionKey()}`,
 					label: collection.data?.data.title || T()("documents"),
 				},
 			]}

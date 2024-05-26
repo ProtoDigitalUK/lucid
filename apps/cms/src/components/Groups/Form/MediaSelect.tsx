@@ -30,6 +30,7 @@ interface MediaSelectProps {
 	noMargin?: boolean;
 	required?: boolean;
 	errors?: ErrorResult | FieldErrors;
+	altLocaleHasError?: boolean;
 }
 
 export const MediaSelect: Component<MediaSelectProps> = (props) => {
@@ -87,6 +88,7 @@ export const MediaSelect: Component<MediaSelectProps> = (props) => {
 				label={props.copy?.label}
 				required={props.required}
 				theme={"basic"}
+				altLocaleHasError={props.altLocaleHasError}
 			/>
 			<div class="mt-2.5 w-full">
 				<Switch>

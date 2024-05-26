@@ -73,24 +73,30 @@ type BrickStoreT = {
 		key: string;
 		groupId?: number | string;
 		parentRepeaterKey?: string;
-		contentLocale: string;
+		locales: string[];
 	}) => void;
 	removeRepeaterGroup: (params: {
 		brickIndex: number;
 		repeaterKey: string;
-		groupId: number | string;
+		targetGroupId: number | string;
+		groupId?: number | string;
+		parentRepeaterKey?: string;
 	}) => void;
 	swapGroupOrder: (_props: {
 		brickIndex: number;
 		repeaterKey: string;
-		groupId: number | string;
+		selectedGroupId: number | string;
 		targetGroupId: number | string;
+		groupId?: number | string;
+		parentRepeaterKey?: string;
 	}) => void;
-	toggleGroupOpen: (
-		brickIndex: number,
-		repeaterKey: string,
-		groupId: number | string,
-	) => void;
+	toggleGroupOpen: (_props: {
+		brickIndex: number;
+		repeaterKey: string;
+		groupId: number | string;
+		parentRepeaterKey: string | undefined;
+		parentGroupId: string | number | undefined;
+	}) => void;
 };
 
 const [get, set] = createStore<BrickStoreT>({
@@ -104,6 +110,7 @@ const [get, set] = createStore<BrickStoreT>({
 	reset() {
 		set("bricks", []);
 		set("fieldsErrors", []);
+		set("documentMutated", false);
 	},
 	// Bricks
 	setBricks(document, collection) {
@@ -295,13 +302,22 @@ const [get, set] = createStore<BrickStoreT>({
 				const groupFields: FieldResponse[] = [];
 
 				for (const field of params.fieldConfig) {
-					groupFields.push({
+					const newField: FieldResponse = {
 						key: field.key,
 						type: field.type,
-						translations: {
-							[params.contentLocale]: field.default,
-						},
-					});
+					};
+
+					if (field.translations === true) {
+						for (const locale of params.locales) {
+							newField.translations = {
+								[locale]: field.default,
+							};
+						}
+					} else {
+						newField.value = field.default;
+					}
+
+					groupFields.push(newField);
 				}
 
 				if (field.groups.length === 0) {
@@ -337,18 +353,23 @@ const [get, set] = createStore<BrickStoreT>({
 				const field = brickHelpers.findFieldRecursive({
 					fields: draft[params.brickIndex].fields,
 					targetKey: params.repeaterKey,
+
+					groupId: params.groupId,
+					repeaterKey: params.parentRepeaterKey,
 				});
+
+				console.log(field, params);
 
 				if (!field) return;
 				if (field.type !== "repeater") return;
 				if (field.groups === undefined) return;
 
-				const groupIndex = field.groups.findIndex(
-					(g) => g.id === params.groupId,
+				const targetGroupIndex = field.groups.findIndex(
+					(g) => g.id === params.targetGroupId,
 				);
-				if (groupIndex === -1) return;
+				if (targetGroupIndex === -1) return;
 
-				field.groups.splice(groupIndex, 1);
+				field.groups.splice(targetGroupIndex, 1);
 			}),
 		);
 		set("documentMutated", true);
@@ -360,24 +381,28 @@ const [get, set] = createStore<BrickStoreT>({
 				const field = brickHelpers.findFieldRecursive({
 					fields: draft[params.brickIndex].fields,
 					targetKey: params.repeaterKey,
+					groupId: params.groupId,
+					repeaterKey: params.parentRepeaterKey,
 				});
 
 				if (!field) return;
 				if (field.type !== "repeater") return;
 				if (field.groups === undefined) field.groups = [];
 
-				const groupIndex = field.groups.findIndex(
-					(group) => group.id === params.groupId,
+				const selectedIndex = field.groups.findIndex(
+					(group) => group.id === params.selectedGroupId,
 				);
 				const targetGroupIndex = field.groups.findIndex(
 					(group) => group.id === params.targetGroupId,
 				);
 
-				if (groupIndex === -1 || targetGroupIndex === -1) return;
+				console.log(selectedIndex, targetGroupIndex);
 
-				const groupOrder = field.groups[groupIndex].order;
+				if (selectedIndex === -1 || targetGroupIndex === -1) return;
 
-				field.groups[groupIndex].order =
+				const groupOrder = field.groups[selectedIndex].order;
+
+				field.groups[selectedIndex].order =
 					field.groups[targetGroupIndex].order;
 				field.groups[targetGroupIndex].order = groupOrder;
 
@@ -386,18 +411,21 @@ const [get, set] = createStore<BrickStoreT>({
 		);
 		set("documentMutated", true);
 	},
-	toggleGroupOpen: (brickIndex, repeaterKey, groupId) => {
+	toggleGroupOpen: (props) => {
 		set(
 			"bricks",
 			produce((draft) => {
 				const field = brickHelpers.findFieldRecursive({
-					fields: draft[brickIndex].fields,
-					targetKey: repeaterKey,
+					fields: draft[props.brickIndex].fields,
+					targetKey: props.repeaterKey,
+
+					groupId: props.parentGroupId,
+					repeaterKey: props.parentRepeaterKey,
 				});
 
 				if (!field || !field.groups) return;
 
-				const group = field.groups.find((g) => g.id === groupId);
+				const group = field.groups.find((g) => g.id === props.groupId);
 				if (!group) return;
 
 				group.open = group.open === 1 ? 0 : 1;

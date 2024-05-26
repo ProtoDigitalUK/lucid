@@ -4,7 +4,6 @@ import {
 	createSignal,
 	type Accessor,
 } from "solid-js";
-import classNames from "classnames";
 
 interface DragItemProps {
 	index: number | string;
@@ -115,14 +114,7 @@ const DragDrop: Component<DragDropProps> = (props) => {
 	// ----------------------------------
 	// Render
 	return (
-		<div
-			class={classNames(
-				"scale-100 w-full transition-transform duration-200",
-				{
-					"scale-x-[101%]": getIsDragging(),
-				},
-			)}
-		>
+		<div class={"w-full"}>
 			{props.children({
 				dragDrop: {
 					getIsDragging,

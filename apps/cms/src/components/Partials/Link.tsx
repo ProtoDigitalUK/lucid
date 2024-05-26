@@ -13,6 +13,7 @@ interface LinkProps extends JSX.HTMLAttributes<HTMLAnchorElement> {
 	href?: string;
 	classes?: string;
 	permission?: boolean;
+	target?: string;
 }
 
 const Link: Component<LinkProps> = (props) => {

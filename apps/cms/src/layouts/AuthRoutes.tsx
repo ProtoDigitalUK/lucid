@@ -1,4 +1,6 @@
-import type { Component, JSXElement } from "solid-js";
+import { createEffect, type Component, type JSXElement } from "solid-js";
+import { useNavigate } from "@solidjs/router";
+import api from "@/services/api";
 import LogoIcon from "@/assets/svgs/logo-icon.svg";
 
 interface AuthRoutesProps {
@@ -6,6 +8,29 @@ interface AuthRoutesProps {
 }
 
 const AuthRoutes: Component<AuthRoutesProps> = (props) => {
+	// ----------------------------------
+	// State & Hooks
+	const navigate = useNavigate();
+
+	// ----------------------------------
+	// Mutations & Queries
+	const authenticatedUser = api.account.useGetAuthenticatedUser(
+		{
+			queryParams: {},
+		},
+		{
+			authLayout: true,
+		},
+	);
+
+	// ----------------------------------
+	// Effects
+	createEffect(() => {
+		if (authenticatedUser.isSuccess) {
+			navigate("/admin");
+		}
+	});
+
 	// ----------------------------------
 	// Render
 	return (

@@ -31,6 +31,9 @@ const LoginForm: Component<LoginFormProps> = (props) => {
 			content={{
 				submit: "Login",
 			}}
+			options={{
+				buttonFullWidth: true,
+			}}
 			onSubmit={() => {
 				login.action.mutate({
 					usernameOrEmail: usernameOrEmail(),
@@ -69,7 +72,7 @@ const LoginForm: Component<LoginFormProps> = (props) => {
 				<A
 					class="block text-sm mt-1 hover:text-primary-hover duration-200 transition-colors"
 					type="button"
-					href="/forgot-password"
+					href="/admin/forgot-password"
 				>
 					{T()("forgot_password")}
 				</A>

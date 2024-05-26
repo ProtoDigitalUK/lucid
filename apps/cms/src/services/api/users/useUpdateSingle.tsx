@@ -8,6 +8,8 @@ interface Params {
 	body: {
 		roleIds?: number[];
 		superAdmin?: 1 | 0;
+		triggerPasswordReset?: 1 | 0;
+		isDeleted?: 0;
 	};
 }
 
@@ -35,10 +37,10 @@ const useUpdateSingle = (props?: UseUpdateSingleProps) => {
 		ResponseBody<UserResponse>
 	>({
 		mutationFn: updateSingleReq,
-		successToast: {
+		getSuccessToast: () => ({
 			title: T()("user_update_toast_title"),
 			message: T()("user_update_toast_message"),
-		},
+		}),
 		invalidates: ["users.getMultiple", "users.getSingle"],
 		onSuccess: props?.onSuccess,
 		onError: props?.onError,

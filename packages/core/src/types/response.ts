@@ -13,6 +13,7 @@ export interface UserResponse {
 	username: string;
 	firstName: string | null;
 	lastName: string | null;
+	triggerPasswordReset?: BooleanInt;
 
 	roles?: UserPermissionsResponse["roles"];
 	permissions?: UserPermissionsResponse["permissions"];
@@ -279,6 +280,7 @@ export interface ResponseBody<D = unknown> {
 
 export interface ErrorResponse {
 	status: number;
+	code?: string;
 	name: string;
 	message: string;
 	errors?: ErrorResult;

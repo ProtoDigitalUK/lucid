@@ -1,7 +1,6 @@
 import type { LucidConfig } from "../../types/config.js";
 
 export const defaultConfig: Partial<LucidConfig> = {
-	mode: "development",
 	paths: {
 		emailTemplates: "./templates",
 	},

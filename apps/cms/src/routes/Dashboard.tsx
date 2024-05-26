@@ -1,15 +1,19 @@
 import T from "@/translations";
 import type { Component } from "solid-js";
-import api from "@/services/api";
 import userStore from "@/store/userStore";
-import Button from "@/components/Partials/Button";
+import api from "@/services/api";
+import { FaSolidCode } from "solid-icons/fa";
+import constants from "@/constants";
 import Layout from "@/components/Groups/Layout";
 import StartingPoints from "@/components/Blocks/StartingPoints";
+import Alert from "@/components/Blocks/Alert";
 
 const DashboardRoute: Component = () => {
 	// ----------------------------------------
-	// Mutations
-	const logout = api.auth.useLogout();
+	// Queries / Mutations
+	const settings = api.settings.useGetSettings({
+		queryParams: {},
+	});
 
 	// ----------------------------------------
 	// Render
@@ -21,8 +25,31 @@ const DashboardRoute: Component = () => {
 					: "",
 			})}
 			description={T()("dashboard_route_description")}
+			actions={{
+				link: {
+					href: constants.documentationUrl,
+					label: T()("documentation"),
+					permission: true,
+					icon: <FaSolidCode />,
+				},
+			}}
 		>
 			<Layout.PageContent>
+				<Alert
+					style="block"
+					alerts={[
+						{
+							type: "warning",
+							message: T()("media_support_config_stategy_error"),
+							show: settings.data?.data.media.enabled === false,
+						},
+						{
+							type: "warning",
+							message: T()("email_support_config_stategy_error"),
+							show: settings.data?.data.email.enabled === false,
+						},
+					]}
+				/>
 				<StartingPoints
 					links={[
 						{
@@ -30,54 +57,51 @@ const DashboardRoute: Component = () => {
 							description: T()(
 								"starting_point_collections_description",
 							),
-							href: "/collections",
+							href: "/admin/collections",
+							icon: "collection",
 						},
 						{
 							title: T()("starting_point_media"),
 							description: T()(
 								"starting_point_media_description",
 							),
-							href: "/media",
+							href: "/admin/media",
+							icon: "media",
 						},
 						{
 							title: T()("starting_point_emails"),
 							description: T()(
 								"starting_point_emails_description",
 							),
-							href: "/emails",
+							href: "/admin/emails",
+							icon: "email",
 						},
 						{
 							title: T()("starting_point_users"),
 							description: T()(
 								"starting_point_users_description",
 							),
-							href: "/users",
+							href: "/admin/users",
+							icon: "users",
 						},
 						{
 							title: T()("starting_point_roles"),
 							description: T()(
 								"starting_point_roles_description",
 							),
-							href: "/roles",
+							href: "/admin/roles",
+							icon: "roles",
 						},
 						{
 							title: T()("starting_point_settings"),
 							description: T()(
 								"starting_point_settings_description",
 							),
-							href: "/settings",
+							href: "/admin/settings",
+							icon: "settings",
 						},
 					]}
 				/>
-				<Button
-					type="submit"
-					theme="primary"
-					size="medium"
-					loading={logout.action.isPending}
-					onClick={() => logout.action.mutate({})}
-				>
-					{T()("logout")}
-				</Button>
 			</Layout.PageContent>
 		</Layout.PageLayout>
 	);

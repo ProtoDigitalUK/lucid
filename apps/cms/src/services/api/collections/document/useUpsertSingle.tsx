@@ -1,4 +1,5 @@
 import T from "@/translations";
+import type { Accessor } from "solid-js";
 import request from "@/utils/request";
 import serviceHelpers from "@/utils/service-helpers";
 import type { BrickData } from "@/store/brickStore";
@@ -39,7 +40,7 @@ interface UseUpdateSingleProps {
 		}>,
 	) => void;
 	onError?: (_errors: ErrorResponse | undefined) => void;
-	collectionName: string;
+	getCollectionName: () => string;
 }
 
 const useUpsertSingle = (props: UseUpdateSingleProps) => {
@@ -52,16 +53,15 @@ const useUpsertSingle = (props: UseUpdateSingleProps) => {
 		}>
 	>({
 		mutationFn: upsertSingleReq,
-		successToast: {
-			title: T()("update_toast_title", {
-				name: props.collectionName || "Content",
-			}),
-			message: T()("update_toast_message", {
-				name: {
-					value: props.collectionName || "Content",
-					toLowerCase: true,
-				},
-			}),
+		getSuccessToast: () => {
+			return {
+				title: T()("update_toast_title", {
+					name: props.getCollectionName(),
+				}),
+				message: T()("update_toast_message", {
+					name: props.getCollectionName().toLowerCase(),
+				}),
+			};
 		},
 		invalidates: [
 			"collections.document.getMultiple",

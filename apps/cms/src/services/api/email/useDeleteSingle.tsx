@@ -30,10 +30,10 @@ const useDeleteSingle = (props: UseDeleteProps) => {
 		ResponseBody<EmailResponse>
 	>({
 		mutationFn: deleteSingleReq,
-		successToast: {
+		getSuccessToast: () => ({
 			title: T()("email_deleted_toast_title"),
 			message: T()("email_deleted_toast_message"),
-		},
+		}),
 		invalidates: ["email.getMultiple"],
 		onSuccess: props.onSuccess,
 		onError: props.onError,

@@ -5,6 +5,8 @@ import usersServices from "./index.js";
 import serviceWrapper from "../../utils/service-wrapper.js";
 import type { BooleanInt } from "../../libs/db/types.js";
 import Repository from "../../libs/repositories/index.js";
+import email from "../email/index.js";
+import constants from "../../constants.js";
 import type { ServiceConfig } from "../../utils/service-wrapper.js";
 
 export interface ServiceData {
@@ -16,8 +18,12 @@ export interface ServiceData {
 	password?: string;
 	roleIds?: number[];
 	superAdmin?: BooleanInt;
-
-	authSuperAdmin: BooleanInt;
+	triggerPasswordReset?: BooleanInt;
+	isDeleted?: BooleanInt;
+	auth: {
+		id: number;
+		superAdmin: BooleanInt;
+	};
 }
 
 const updateSingle = async (
@@ -26,8 +32,16 @@ const updateSingle = async (
 ) => {
 	const UsersRepo = Repository.get("users", serviceConfig.db);
 
+	if (data.auth.id === data.userId) {
+		throw new LucidAPIError({
+			type: "basic",
+			message: T("error_cant_update_yourself"),
+			status: 400,
+		});
+	}
+
 	const user = await UsersRepo.selectSingle({
-		select: ["id"],
+		select: ["id", "first_name"],
 		where: [
 			{
 				key: "id",
@@ -85,12 +99,12 @@ const updateSingle = async (
 	if (data.email !== undefined && emailExists !== undefined) {
 		throw new LucidAPIError({
 			type: "basic",
-			status: 500,
+			status: 400,
 			errorResponse: {
 				body: {
 					email: {
 						code: "invalid",
-						message: T("duplicate_entry_error_message"),
+						message: T("this_email_is_already_in_use"),
 					},
 				},
 			},
@@ -99,12 +113,12 @@ const updateSingle = async (
 	if (data.username !== undefined && usernameExists !== undefined) {
 		throw new LucidAPIError({
 			type: "basic",
-			status: 500,
+			status: 400,
 			errorResponse: {
 				body: {
 					username: {
 						code: "invalid",
-						message: T("duplicate_entry_error_message"),
+						message: T("this_username_is_already_in_use"),
 					},
 				},
 			},
@@ -125,8 +139,10 @@ const updateSingle = async (
 				email: data.email,
 				password: hashedPassword,
 				superAdmin:
-					data.authSuperAdmin === 1 ? data.superAdmin : undefined,
+					data.auth.superAdmin === 1 ? data.superAdmin : undefined,
 				updatedAt: new Date().toISOString(),
+				triggerPasswordReset: data.triggerPasswordReset,
+				isDeleted: data.isDeleted,
 			},
 			where: [
 				{
@@ -152,7 +168,17 @@ const updateSingle = async (
 		});
 	}
 
-	// TODO: send email to user to confirm email change ?
+	if (data.email !== undefined) {
+		await serviceWrapper(email.sendEmail, false)(serviceConfig, {
+			template: constants.emailTemplates.emailChanged,
+			type: "internal",
+			to: data.email,
+			subject: T("email_update_success_subject"),
+			data: {
+				firstName: data.firstName || user.first_name,
+			},
+		});
+	}
 
 	return user.id;
 };

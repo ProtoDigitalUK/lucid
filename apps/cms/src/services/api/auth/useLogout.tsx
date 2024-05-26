@@ -1,9 +1,9 @@
 import T from "@/translations";
 import { useNavigate } from "@solidjs/router";
 import userStore from "@/store/userStore";
-import { clearCookie } from "@/utils/cookie";
 import request from "@/utils/request";
 import serviceHelpers from "@/utils/service-helpers";
+import { clearCsrfSession } from "./useCsrf";
 import type { ResponseBody } from "@lucidcms/core/types";
 
 export const logoutReq = () => {
@@ -37,20 +37,19 @@ const useLogout = (props?: UseLogoutProps) => {
 		}>
 	>({
 		mutationFn: logoutReq,
-		successToast: {
+		getSuccessToast: () => ({
 			title: T()("logout_success_toast_title"),
 			message: T()("logout_success_toast_message"),
-		},
+		}),
 		invalidates: ["roles.getMultiple", "roles.getSingle"],
 		onSuccess: () => {
 			userStore.get.reset();
-			navigate("/login");
-			sessionStorage.removeItem("_csrf");
+			navigate("/admin/login");
+			clearCsrfSession();
 			props?.onSuccess?.();
 		},
 		onError: () => {
-			clearCookie("auth");
-			navigate("/login");
+			navigate("/admin/login");
 			props?.onError?.();
 		},
 	});

@@ -1,4 +1,14 @@
-import { For, type Component } from "solid-js";
+import { type Component, Switch, Match, For } from "solid-js";
+import classNames from "classnames";
+import {
+	FaSolidPhotoFilm,
+	FaSolidUsers,
+	FaSolidGear,
+	FaSolidHouse,
+	FaSolidUserLock,
+	FaSolidEnvelope,
+	FaSolidBox,
+} from "solid-icons/fa";
 import { A } from "@solidjs/router";
 
 interface StartingPointsProps {
@@ -6,32 +16,43 @@ interface StartingPointsProps {
 		title: string;
 		description: string;
 		href: string;
+		icon: "collection" | "media" | "users" | "settings" | "roles" | "email";
 	}>;
 }
 
 const StartingPoints: Component<StartingPointsProps> = (props) => {
+	// ----------------------------------
+	// Classes
+	const iconClasses = classNames("w-4 h-4 text-primary-contrast");
+
 	// -------------------------------
 	// Render
 	return (
-		<ul class="grid grid-cols-1 gap-15 border-b border-border md:grid-cols-3 mb-15 pb-15 last:mb-0 last:pb-0">
+		<ul class="grid grid-cols-1 gap-15 md:grid-cols-3 mb-15 pb-15 last:mb-0 last:pb-0">
 			<For each={props.links}>
 				{(link) => (
-					<li class="relative bg-container-2 border border-border p-15 rounded-md h-full flex space-x-4 focus-within:ring-1 focus-within:ring-primary-base">
-						<div class="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-md bg-pink-500">
-							<svg
-								class="h-6 w-6 text-white"
-								fill="none"
-								viewBox="0 0 24 24"
-								stroke-width="1.5"
-								stroke="currentColor"
-								aria-hidden="true"
-							>
-								<path
-									stroke-linecap="round"
-									stroke-linejoin="round"
-									d="M3.75 5.25h16.5m-16.5 4.5h16.5m-16.5 4.5h16.5m-16.5 4.5h16.5"
-								/>
-							</svg>
+					<li class="relative bg-container-2 border border-border p-15 rounded-md h-full flex space-x-2.5 focus-within:ring-1 focus-within:ring-primary-base">
+						<div class="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-md bg-primary-base">
+							<Switch>
+								<Match when={link.icon === "collection"}>
+									<FaSolidBox class={iconClasses} />
+								</Match>
+								<Match when={link.icon === "media"}>
+									<FaSolidPhotoFilm class={iconClasses} />
+								</Match>
+								<Match when={link.icon === "users"}>
+									<FaSolidUsers class={iconClasses} />
+								</Match>
+								<Match when={link.icon === "settings"}>
+									<FaSolidGear class={iconClasses} />
+								</Match>
+								<Match when={link.icon === "roles"}>
+									<FaSolidUserLock class={iconClasses} />
+								</Match>
+								<Match when={link.icon === "email"}>
+									<FaSolidEnvelope class={iconClasses} />
+								</Match>
+							</Switch>
 						</div>
 						<div>
 							<h3 class="text-sm font-medium text-title">

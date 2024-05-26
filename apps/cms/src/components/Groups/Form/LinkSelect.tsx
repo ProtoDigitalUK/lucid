@@ -19,6 +19,7 @@ interface LinkSelectProps {
 	noMargin?: boolean;
 	required?: boolean;
 	errors?: ErrorResult | FieldErrors;
+	altLocaleHasError?: boolean;
 }
 
 export const LinkSelect: Component<LinkSelectProps> = (props) => {
@@ -55,6 +56,7 @@ export const LinkSelect: Component<LinkSelectProps> = (props) => {
 				label={props.copy?.label}
 				required={props.required}
 				theme={"basic"}
+				altLocaleHasError={props.altLocaleHasError}
 			/>
 			<div class="mt-2.5 w-full flex flex-wrap gap-2.5">
 				<Switch>

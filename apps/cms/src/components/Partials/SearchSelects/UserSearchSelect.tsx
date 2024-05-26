@@ -1,3 +1,4 @@
+import T from "@/translations";
 import { type Component, createSignal } from "solid-js";
 import type { ValueT, SelectProps } from "@/components/Groups/Form/Select";
 import type { ErrorResult, FieldErrors } from "@lucidcms/core/types";
@@ -12,6 +13,7 @@ interface UserSearchSelectProps {
 	id: string;
 	copy?: SelectProps["copy"];
 	errors?: ErrorResult | FieldErrors;
+	altLocaleHasError?: boolean;
 	theme?: "basic";
 	disabled?: boolean;
 	required?: boolean;
@@ -37,7 +39,10 @@ const UserSearchSelect: Component<UserSearchSelectProps> = (props) => {
 			id={props.id}
 			value={props.value}
 			onChange={props.setValue}
-			copy={props.copy}
+			copy={{
+				...props.copy,
+				searchPlaceholder: T()("search_by_username"),
+			}}
 			name={props.name}
 			search={{
 				value: getSearchQuery(),
@@ -47,10 +52,11 @@ const UserSearchSelect: Component<UserSearchSelectProps> = (props) => {
 			options={
 				users.data?.data.map((user) => ({
 					value: user.id,
-					label: helpers.formatUserName(user),
+					label: helpers.formatUserName(user, "username"),
 				})) || []
 			}
 			errors={props.errors}
+			altLocaleHasError={props.altLocaleHasError}
 			theme={props.theme}
 			disabled={props.disabled}
 			required={props.required}

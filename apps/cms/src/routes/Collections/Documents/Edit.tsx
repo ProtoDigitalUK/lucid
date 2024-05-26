@@ -43,7 +43,9 @@ const CollectionsDocumentsEditRoute: Component<
 	// Hooks & State
 	const params = useParams();
 	const navigate = useNavigate();
-	const navGuard = navGuardHook();
+	const navGuard = navGuardHook({
+		brickMutateLock: true,
+	});
 	const [getDeleteOpen, setDeleteOpen] = createSignal(false);
 
 	// ----------------------------------
@@ -89,7 +91,9 @@ const CollectionsDocumentsEditRoute: Component<
 		onSuccess: (data) => {
 			brickStore.set("fieldsErrors", []);
 			if (props.mode === "create") {
-				navigate(`/collections/${collectionKey()}/${data.data.id}`);
+				navigate(
+					`/admin/collections/${collectionKey()}/${data.data.id}`,
+				);
 			}
 		},
 		onError: (errors) => {
@@ -98,7 +102,8 @@ const CollectionsDocumentsEditRoute: Component<
 				getBodyError<FieldErrors[]>("fields", errors) || [],
 			);
 		},
-		collectionName: collection.data?.data.singular || "",
+		getCollectionName: () =>
+			collection.data?.data.singular || T()("collection"),
 	});
 
 	// ----------------------------------
@@ -175,16 +180,16 @@ const CollectionsDocumentsEditRoute: Component<
 				<Layout.PageBreadcrumbs
 					breadcrumbs={[
 						{
-							link: "/collections",
+							link: "/admin/collections",
 							label: T()("collections"),
 						},
 						{
-							link: `/collections/${collectionKey()}`,
+							link: `/admin/collections/${collectionKey()}`,
 							label: collection.data?.data.title || "",
 							include: collection.data?.data.mode === "multiple",
 						},
 						{
-							link: `/collections/${collectionKey()}/${
+							link: `/admin/collections/${collectionKey()}/${
 								props.mode === "create"
 									? "create"
 									: documentId()
@@ -272,7 +277,7 @@ const CollectionsDocumentsEditRoute: Component<
 						/>
 					</div>
 					{/* Sidebar */}
-					<aside class="w-full lg:max-w-[300px] lg:overflow-scroll bg-container-1 border-b lg:border-b-0 lg:border-l border-border ">
+					<aside class="w-full lg:max-w-[300px] lg:overflow-y-auto bg-container-1 border-b lg:border-b-0 lg:border-l border-border ">
 						<div class="p-15 md:p-30">
 							<h2 class="mb-15">{T()("document")}</h2>
 							<DetailsList
@@ -383,7 +388,7 @@ const CollectionsDocumentsEditRoute: Component<
 					callbacks={{
 						onSuccess: () => {
 							navigate(
-								`/collections/${collection.data?.data.key}`,
+								`/admin/collections/${collection.data?.data.key}`,
 							);
 						},
 					}}

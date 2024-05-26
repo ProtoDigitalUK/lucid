@@ -18,6 +18,7 @@ export interface PageHeadingProps {
 	title: string;
 	description?: string;
 	children?: JSXElement;
+	topBar?: JSXElement;
 	breadcrumbs?: {
 		link: string;
 		label: string;
@@ -41,6 +42,13 @@ export interface PageHeadingProps {
 			link: string;
 			label: string;
 			permission?: boolean;
+		};
+		link?: {
+			href: string;
+			label: string;
+			permission?: boolean;
+			icon: JSXElement;
+			newTab?: boolean;
 		};
 		contentLocale?: boolean;
 	};
@@ -88,6 +96,7 @@ export const PageHeading: Component<PageHeadingProps> = (props) => {
 				"border-b": !props.options?.noBorder,
 			})}
 		>
+			<Show when={props.topBar}>{props.topBar}</Show>
 			<Layout.PageBreadcrumbs breadcrumbs={props.breadcrumbs} />
 			<div
 				class={
@@ -161,6 +170,28 @@ export const PageHeading: Component<PageHeadingProps> = (props) => {
 								<span class="sr-only">
 									{props.actions?.createLink?.label ??
 										T()("create")}
+								</span>
+							</Link>
+						</Show>
+						<Show
+							when={
+								props.actions?.link !== undefined &&
+								props.actions.link.permission !== false
+							}
+						>
+							<Link
+								theme="primary"
+								size="icon"
+								href={props.actions?.link?.href}
+								target={
+									props.actions?.link?.newTab
+										? "_blank"
+										: undefined
+								}
+							>
+								{props.actions?.link?.icon}
+								<span class="sr-only">
+									{props.actions?.link?.label}
 								</span>
 							</Link>
 						</Show>

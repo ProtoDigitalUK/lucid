@@ -1,18 +1,19 @@
 import type { FastifyRequest, FastifyReply } from "fastify";
 import crypto from "node:crypto";
 import constants from "../../constants.js";
-import getConfig from "../../libs/config/get-config.js";
 
 const key = "_csrf";
 
-export const generateCSRFToken = async (reply: FastifyReply) => {
+export const generateCSRFToken = async (
+	request: FastifyRequest,
+	reply: FastifyReply,
+) => {
 	const token = crypto.randomBytes(32).toString("hex");
-	const config = await getConfig();
 
 	reply.setCookie(key, token, {
 		maxAge: constants.csrfExpiration,
 		httpOnly: true,
-		secure: config.mode === "production",
+		secure: request.protocol === "https",
 		sameSite: "strict",
 		path: "/",
 	});

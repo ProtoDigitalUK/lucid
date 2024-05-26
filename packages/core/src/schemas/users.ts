@@ -1,24 +1,16 @@
-import T from "../translations/index.js";
 import defaultQuery from "./default-query.js";
 import z from "zod";
 
 export default {
 	createSingle: {
-		body: z
-			.object({
-				email: z.string().email(),
-				username: z.string(),
-				password: z.string().min(8).max(128),
-				passwordConfirmation: z.string().min(8).max(128),
-				roleIds: z.array(z.number()),
-				firstName: z.string().optional(),
-				lastName: z.string().optional(),
-				superAdmin: z.union([z.literal(1), z.literal(0)]).optional(),
-			})
-			.refine((data) => data.password === data.passwordConfirmation, {
-				message: T("please_ensure_passwords_match"),
-				path: ["passwordConfirmation"],
-			}),
+		body: z.object({
+			email: z.string().email(),
+			username: z.string(),
+			roleIds: z.array(z.number()),
+			firstName: z.string().optional(),
+			lastName: z.string().optional(),
+			superAdmin: z.union([z.literal(1), z.literal(0)]).optional(),
+		}),
 		query: undefined,
 		params: undefined,
 	},
@@ -26,6 +18,10 @@ export default {
 		body: z.object({
 			roleIds: z.array(z.number()).optional(),
 			superAdmin: z.union([z.literal(1), z.literal(0)]).optional(),
+			triggerPasswordReset: z
+				.union([z.literal(1), z.literal(0)])
+				.optional(),
+			isDeleted: z.literal(0).optional(),
 		}),
 		query: undefined,
 		params: z.object({
@@ -68,7 +64,7 @@ export default {
 				)
 				.optional(),
 			include: z.array(z.enum(["permissions"])).optional(),
-			exclude: defaultQuery.exclude,
+			exclude: z.array(z.enum(["current"])).optional(),
 			page: defaultQuery.page,
 			perPage: defaultQuery.perPage,
 		}),

@@ -15,13 +15,14 @@ interface QueryParams {
 	location?: Record<string, QueryParamsValueT>;
 	headers?: Record<string, QueryParamsValueT>;
 	include?: Record<string, QueryParamsValueT>;
+	exclude?: Record<string, QueryParamsValueT>;
 	perPage?: Accessor<number> | number;
 }
 
 interface MutationWrapperProps<Params, Response> {
 	mutationFn: (_params: Params) => Promise<Response>;
-	successToast?: { title: string; message: string };
-	errorToast?: { title: string; message: string };
+	getSuccessToast?: () => { title: string; message: string };
+	getErrorToast?: () => { title: string; message: string };
 	invalidates?: string[];
 	onSuccess?: (_data: Response) => void;
 	onError?: (_errors: ErrorResponse | undefined) => void;
@@ -45,8 +46,15 @@ const resolveObject = (obj?: Record<string, QueryParamsValueT>) => {
 
 // Get query params
 const getQueryParams = <T extends QueryParams>(params: T) => {
-	const { queryString, filters, location, headers, include, perPage } =
-		params;
+	const {
+		queryString,
+		filters,
+		location,
+		headers,
+		include,
+		perPage,
+		exclude,
+	} = params;
 
 	return {
 		queryString: helpers.resolveValue(queryString) as string,
@@ -54,6 +62,7 @@ const getQueryParams = <T extends QueryParams>(params: T) => {
 		location: resolveObject(location),
 		headers: resolveObject(headers) as Record<string, string>,
 		include: resolveObject(include) as Record<string, boolean>,
+		exclude: resolveObject(exclude) as Record<string, boolean>,
 		perPage: helpers.resolveValue(perPage) as number,
 	};
 };
@@ -69,8 +78,8 @@ const getQueryKey = (params: ReturnType<typeof getQueryParams>) => {
 // Mutation wrapper
 const useMutationWrapper = <Params, Response>({
 	mutationFn,
-	successToast,
-	errorToast,
+	getSuccessToast,
+	getErrorToast,
 	invalidates = [],
 	onSuccess,
 	onError,
@@ -82,10 +91,11 @@ const useMutationWrapper = <Params, Response>({
 		mutationFn,
 		onSettled: (data, error) => {
 			if (data) {
-				if (successToast) {
+				if (getSuccessToast) {
+					const successToastData = getSuccessToast();
 					spawnToast({
-						title: successToast.title,
-						message: successToast.message,
+						title: successToastData.title,
+						message: successToastData.message,
 						status: "success",
 					});
 				}
@@ -97,10 +107,11 @@ const useMutationWrapper = <Params, Response>({
 					});
 				}
 			} else if (error) {
-				if (errorToast) {
+				if (getErrorToast) {
+					const errorToast = getErrorToast();
 					spawnToast({
-						title: errorToast.title || "Error",
-						message: errorToast.message || "An error occurred",
+						title: errorToast.title,
+						message: errorToast.message,
 						status: "error",
 					});
 				}

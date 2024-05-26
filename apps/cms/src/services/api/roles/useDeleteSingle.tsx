@@ -30,10 +30,10 @@ const useDeleteSingle = (props: UseDeleteProps) => {
 		ResponseBody<RoleResponse>
 	>({
 		mutationFn: deleteSingleReq,
-		successToast: {
+		getSuccessToast: () => ({
 			title: T()("role_deleted_toast_title"),
 			message: T()("role_deleted_toast_message"),
-		},
+		}),
 		invalidates: ["roles.getMultiple", "roles.getSingle"],
 		onSuccess: props.onSuccess,
 		onError: props.onError,

@@ -23,6 +23,7 @@ interface ColourFieldProps {
 		repeaterKey?: string;
 		contentLocale: string;
 		fieldError: FieldErrors | undefined;
+		altLocaleHasError: boolean;
 	};
 }
 
@@ -36,16 +37,18 @@ export const ColourField: Component<ColourFieldProps> = (props) => {
 	const fieldData = createMemo(() => {
 		return props.state.fieldData;
 	});
-
-	// -------------------------------
-	// Effects
-	createEffect(() => {
-		const value = brickHelpers.getFieldValue<string>({
+	const fieldValue = createMemo(() => {
+		return brickHelpers.getFieldValue<string>({
 			fieldData: fieldData(),
 			fieldConfig: props.state.fieldConfig,
 			contentLocale: props.state.contentLocale,
 		});
-		setValue(value || "");
+	});
+
+	// -------------------------------
+	// Effects
+	createEffect(() => {
+		setValue(fieldValue() || "");
 	});
 
 	// -------------------------------
@@ -78,6 +81,7 @@ export const ColourField: Component<ColourFieldProps> = (props) => {
 					label: props.state.fieldConfig.title,
 					describedBy: props.state.fieldConfig.description,
 				}}
+				altLocaleHasError={props.state.altLocaleHasError}
 				presets={props.state.fieldConfig.presets}
 				disabled={props.state.fieldConfig.disabled}
 				errors={props.state.fieldError}

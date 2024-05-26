@@ -11,6 +11,9 @@ import DeleteRole from "@/components/Modals/Role/DeleteRole";
 
 interface RolesTableProps {
 	searchParams: ReturnType<typeof useSearchParams>;
+	state: {
+		setOpenCreateRolePanel: (state: boolean) => void;
+	};
 }
 
 const RolesTable: Component<RolesTableProps> = (props) => {
@@ -70,6 +73,17 @@ const RolesTable: Component<RolesTableProps> = (props) => {
 				}}
 				options={{
 					isSelectable: false,
+					showNoEntries: true,
+				}}
+				callbacks={{
+					createEntry: () => {
+						props.state.setOpenCreateRolePanel(true);
+					},
+				}}
+				copy={{
+					noEntryTitle: T()("no_roles"),
+					noEntryDescription: T()("no_roles_description"),
+					noEntryButton: T()("create_role"),
 				}}
 			>
 				{({ include, isSelectable, selected, setSelected }) => (

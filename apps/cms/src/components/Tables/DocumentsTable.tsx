@@ -1,7 +1,7 @@
 import T from "@/translations";
 import { type Component, type Accessor, Index, createMemo } from "solid-js";
 import { FaSolidT, FaSolidCalendar, FaSolidUser } from "solid-icons/fa";
-import { useParams } from "@solidjs/router";
+import { useParams, useNavigate } from "@solidjs/router";
 import type { CollectionResponse, CustomField } from "@lucidcms/core/types";
 import type useSearchParams from "@/hooks/useSearchParams";
 import useRowTarget from "@/hooks/useRowTarget";
@@ -20,6 +20,7 @@ interface DocumentsTableProps {
 const DocumentsTable: Component<DocumentsTableProps> = (props) => {
 	// ----------------------------------
 	// State & Hooks
+	const navigate = useNavigate();
 	const params = useParams();
 	const rowTarget = useRowTarget({
 		triggers: {
@@ -68,7 +69,7 @@ const DocumentsTable: Component<DocumentsTableProps> = (props) => {
 	// ----------------------------------
 	// Mutations
 	const deleteMultiple = api.collections.document.useDeleteMultiple({
-		collectionName: props.collection.singular,
+		getCollectionName: () => props.collection.singular || T()("collection"),
 	});
 
 	// ----------------------------------
@@ -95,6 +96,21 @@ const DocumentsTable: Component<DocumentsTableProps> = (props) => {
 				}}
 				options={{
 					isSelectable: true,
+					showNoEntries: true,
+				}}
+				copy={{
+					noEntryTitle: T()("no_documents", {
+						collectionMultiple: props.collection.title,
+					}),
+					noEntryDescription: T()("no_documents_description", {
+						collectionMultiple:
+							props.collection.title.toLowerCase(),
+						collectionSingle:
+							props.collection.singular.toLowerCase(),
+					}),
+					noEntryButton: T()("create_document", {
+						collectionSingle: props.collection.singular,
+					}),
 				}}
 				callbacks={{
 					deleteRows: async (selected) => {
@@ -110,6 +126,11 @@ const DocumentsTable: Component<DocumentsTableProps> = (props) => {
 								ids: ids,
 							},
 						});
+					},
+					createEntry: () => {
+						navigate(
+							`/admin/collections/${collectionKey()}/create`,
+						);
 					},
 				}}
 			>

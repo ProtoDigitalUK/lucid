@@ -39,6 +39,7 @@ export default class CollectionDocumentsFormatter {
 		collection: CollectionBuilder;
 		host: string;
 		defaultLocaleCode?: string;
+		locales: string[];
 	}) => {
 		return props.documents.map((d) =>
 			this.formatSingle({
@@ -46,6 +47,7 @@ export default class CollectionDocumentsFormatter {
 				collection: props.collection,
 				host: props.host,
 				defaultLocaleCode: props.defaultLocaleCode,
+				locales: props.locales,
 			}),
 		);
 	};
@@ -56,6 +58,7 @@ export default class CollectionDocumentsFormatter {
 		fields?: FieldResponse[] | null;
 		host: string;
 		defaultLocaleCode?: string;
+		locales: string[];
 	}): CollectionDocumentResponse => {
 		let fields: FieldResponse[] | null = null;
 
@@ -70,6 +73,7 @@ export default class CollectionDocumentsFormatter {
 					host: props.host,
 					builder: props.collection,
 					defaultLocaleCode: props.defaultLocaleCode,
+					locales: props.locales,
 				},
 			);
 		}

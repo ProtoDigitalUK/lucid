@@ -51,12 +51,12 @@ const sendResetPassword = async (
 		type: "internal",
 		to: userExists.email,
 		subject: T("reset_password_email_subject"),
-		template: "reset-password",
+		template: constants.emailTemplates.resetPassword,
 		data: {
-			first_name: userExists.first_name,
-			last_name: userExists.last_name,
+			firstName: userExists.first_name,
+			lastName: userExists.last_name,
 			email: userExists.email,
-			reset_link: `${serviceConfig.config.host}${constants.locations.resetPassword}?token=${userToken.token}`,
+			resetLink: `${serviceConfig.config.host}${constants.locations.resetPassword}?token=${userToken.token}`,
 		},
 	});
 

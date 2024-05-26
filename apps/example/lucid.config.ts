@@ -1,6 +1,6 @@
 import lucid, {
 	// LibSQLAdapter,
-	SQLLiteAdapter,
+	SQLiteAdapter,
 	// PostgresAdapter,
 } from "@lucidcms/core";
 import Database from "better-sqlite3";
@@ -17,9 +17,8 @@ import FormsCollection from "./src/lucid/collections/forms.js";
 import HeaderMenuCollection from "./src/lucid/collections/header-menu.js";
 
 export default lucid.config({
-	mode: "development",
 	host: "http://localhost:8393",
-	db: new SQLLiteAdapter({
+	db: new SQLiteAdapter({
 		database: async () => new Database("db.sqlite"),
 	}),
 	// db: new LibSQLAdapter({

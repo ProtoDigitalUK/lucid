@@ -45,13 +45,13 @@ const useResetPassword = (props?: UseResetPasswordProps) => {
 		}>
 	>({
 		mutationFn: resetPasswordReq,
-		successToast: {
+		getSuccessToast: () => ({
 			title: T()("password_reset_success_toast_title"),
 			message: T()("password_reset_success_toast_message"),
-		},
+		}),
 		invalidates: ["roles.getMultiple", "roles.getSingle"],
 		onSuccess: () => {
-			navigate("/login");
+			navigate("/admin/login");
 			props?.onSuccess?.();
 		},
 		onError: () => {

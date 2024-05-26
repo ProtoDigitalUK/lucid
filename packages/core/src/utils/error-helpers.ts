@@ -10,6 +10,7 @@ export const ensureThrowAPIError = (
 		error.setMissingValues({
 			name: data.name,
 			message: data.message,
+			code: data.code,
 		});
 		throw error;
 	}

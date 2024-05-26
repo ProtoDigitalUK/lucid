@@ -20,6 +20,8 @@ interface GroupBodyProps {
 		dragDropKey: string;
 		groupIndex: number;
 		repeaterDepth: number;
+		parentRepeaterKey: string | undefined;
+		parentGroupId: string | number | undefined;
 	};
 }
 
@@ -32,6 +34,9 @@ export const GroupBody: Component<GroupBodyProps> = (props) => {
 	// Memos
 	const groupId = createMemo(() => props.state.groupId);
 	const brickIndex = createMemo(() => props.state.brickIndex);
+	const parentGroupId = createMemo(() => props.state.parentGroupId);
+	const parentRepeaterKey = createMemo(() => props.state.parentRepeaterKey);
+	const repeaterKey = createMemo(() => props.state.repeaterKey);
 	const configChildrenFields = createMemo(
 		() => props.state.fieldConfig.fields,
 	);
@@ -44,11 +49,13 @@ export const GroupBody: Component<GroupBodyProps> = (props) => {
 	// Functions
 	const toggleDropdown = () => {
 		setGroupOpen(!getGroupOpen());
-		brickStore.get.toggleGroupOpen(
-			props.state.brickIndex,
-			props.state.repeaterKey,
-			groupId(),
-		);
+		brickStore.get.toggleGroupOpen({
+			brickIndex: brickIndex(),
+			repeaterKey: repeaterKey(),
+			groupId: groupId(),
+			parentGroupId: parentGroupId(),
+			parentRepeaterKey: parentRepeaterKey(),
+		});
 	};
 
 	// -------------------------------
@@ -81,6 +88,9 @@ export const GroupBody: Component<GroupBodyProps> = (props) => {
 					"w-full bg-container-4 focus:outline-none focus:ring-1 ring-inset ring-primary-base cursor-pointer p-2.5 rounded-md border border-border flex justify-between items-center",
 					{
 						"border-b-0 rounded-b-none": getGroupOpen(),
+						"ring-1 ring-inset":
+							props.state.dragDrop.getDraggingTarget()?.index ===
+							groupId(),
 					},
 				)}
 				onClick={toggleDropdown}
@@ -128,8 +138,10 @@ export const GroupBody: Component<GroupBodyProps> = (props) => {
 						callback={() => {
 							brickStore.get.removeRepeaterGroup({
 								brickIndex: brickIndex(),
-								repeaterKey: props.state.repeaterKey,
-								groupId: groupId(),
+								repeaterKey: repeaterKey(),
+								targetGroupId: groupId(),
+								groupId: parentGroupId(),
+								parentRepeaterKey: parentRepeaterKey(),
 							});
 						}}
 					/>
@@ -170,7 +182,7 @@ export const GroupBody: Component<GroupBodyProps> = (props) => {
 									fieldConfig: config,
 									fields: groupFields(),
 									groupId: groupId(),
-									repeaterKey: props.state.repeaterKey,
+									repeaterKey: repeaterKey(),
 									repeaterDepth: nextRepeaterDepth(),
 								}}
 							/>

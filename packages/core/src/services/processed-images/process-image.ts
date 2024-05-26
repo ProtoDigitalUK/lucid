@@ -8,6 +8,8 @@ import mediaHelpers from "../../utils/media-helpers.js";
 import Repository from "../../libs/repositories/index.js";
 import mediaServices from "../media/index.js";
 import type { ServiceConfig } from "../../utils/service-wrapper.js";
+import optionsServices from "../options/index.js";
+import serviceWrapper from "../../utils/service-wrapper.js";
 
 export interface ServiceData {
 	key: string;
@@ -28,6 +30,7 @@ const processImage = async (
 		config: serviceConfig.config,
 	});
 
+	// get og image
 	const res = await mediaStrategy.stream(data.key);
 
 	// If there is no response
@@ -55,10 +58,15 @@ const processImage = async (
 	}
 
 	// Optimise image
-	const imageRes = await processedImageServices.optimiseImage(serviceConfig, {
-		buffer: await mediaHelpers.streamToBuffer(res.response.body),
-		options: data.options,
-	});
+	const [imageRes, processedCount] = await Promise.all([
+		processedImageServices.optimiseImage(serviceConfig, {
+			buffer: await mediaHelpers.streamToBuffer(res.response.body),
+			options: data.options,
+		}),
+		processedImageServices.getSingleCount(serviceConfig, {
+			key: data.key,
+		}),
+	]);
 
 	if (!imageRes.success || !imageRes.data) {
 		return {
@@ -73,16 +81,23 @@ const processImage = async (
 	stream.end(Buffer.from(imageRes.data.buffer));
 
 	// Check if the processed image limit has been reached for this key, if so return processed image without saving
-	const processedCount = await processedImageServices.getSingleCount(
-		serviceConfig,
-		{
-			key: data.key,
-		},
-	);
+	if (processedCount >= serviceConfig.config.media.processed.limit) {
+		return {
+			key: data.processKey,
+			contentLength: imageRes.data.size,
+			contentType: imageRes.data.mimeType,
+			body: stream,
+		};
+	}
 
-	const processedLimit = serviceConfig.config.media.processed.limit;
-
-	if (processedCount >= processedLimit) {
+	// Check if we can store it
+	const canStoreRes = await serviceWrapper(
+		processedImageServices.checks.checkCanStore,
+		false,
+	)(serviceConfig, {
+		size: imageRes.data.size,
+	});
+	if (canStoreRes.success === false) {
 		return {
 			key: data.processKey,
 			contentLength: imageRes.data.size,
@@ -101,6 +116,7 @@ const processImage = async (
 			ProcessedImagesRepo.createSingle({
 				key: data.processKey,
 				mediaKey: data.key,
+				fileSize: imageRes.data.size,
 			}),
 			mediaStrategy.uploadSingle({
 				key: data.processKey,
@@ -114,6 +130,10 @@ const processImage = async (
 					type: "image",
 					key: data.processKey,
 				},
+			}),
+			serviceWrapper(optionsServices.updateSingle, false)(serviceConfig, {
+				name: "media_storage_used",
+				valueInt: canStoreRes.proposedSize,
 			}),
 		]);
 	}

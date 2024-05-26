@@ -12,7 +12,6 @@ import type {
 } from "@lucidcms/core/types";
 import brickStore from "@/store/brickStore";
 import brickHelpers from "@/utils/brick-helpers";
-import Form from "@/components/Groups/Form";
 import UserSearchSelect from "@/components/Partials/SearchSelects/UserSearchSelect";
 
 interface UserFieldProps {
@@ -24,6 +23,7 @@ interface UserFieldProps {
 		repeaterKey?: string;
 		contentLocale: string;
 		fieldError: FieldErrors | undefined;
+		altLocaleHasError: boolean;
 	};
 }
 
@@ -37,17 +37,18 @@ export const UserField: Component<UserFieldProps> = (props) => {
 	const fieldData = createMemo(() => {
 		return props.state.fieldData;
 	});
-
-	// -------------------------------
-	// Effects
-	createEffect(() => {
-		const value = brickHelpers.getFieldValue<number>({
+	const fieldValue = createMemo(() => {
+		return brickHelpers.getFieldValue<number>({
 			fieldData: fieldData(),
 			fieldConfig: props.state.fieldConfig,
 			contentLocale: props.state.contentLocale,
 		});
+	});
 
-		setValue(value);
+	// -------------------------------
+	// Effects
+	createEffect(() => {
+		setValue(fieldValue());
 	});
 
 	// -------------------------------
@@ -80,6 +81,7 @@ export const UserField: Component<UserFieldProps> = (props) => {
 			}}
 			name={props.state.fieldConfig.key}
 			errors={props.state.fieldError}
+			altLocaleHasError={props.state.altLocaleHasError}
 			disabled={props.state.fieldConfig.disabled}
 			required={props.state.fieldConfig.validation?.required || false}
 			theme={"basic"}

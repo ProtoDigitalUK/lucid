@@ -70,7 +70,12 @@ const RolesListRoute: Component = () => {
 				/>
 			}
 		>
-			<RolesTable searchParams={searchParams} />
+			<RolesTable
+				searchParams={searchParams}
+				state={{
+					setOpenCreateRolePanel: setOpenCreateRolePanel,
+				}}
+			/>
 			<UpsertRolePanel
 				state={{
 					open: openCreateRolePanel(),

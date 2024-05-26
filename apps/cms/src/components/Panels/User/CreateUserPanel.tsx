@@ -25,9 +25,6 @@ const CreateUserPanel: Component<CreateUserPanelProps> = (props) => {
 	const [getFirstName, setFirstName] = createSignal<string>("");
 	const [getLastName, setLastName] = createSignal<string>("");
 	const [getEmail, setEmail] = createSignal<string>("");
-	const [getPassword, setPassword] = createSignal<string>("");
-	const [getPasswordConfirmation, setPasswordConfirmation] =
-		createSignal<string>("");
 	const [getIsSuperAdmin, setIsSuperAdmin] = createSignal<1 | 0>(0);
 
 	// ---------------------------------
@@ -72,8 +69,6 @@ const CreateUserPanel: Component<CreateUserPanelProps> = (props) => {
 				createUser.action.mutate({
 					body: {
 						email: getEmail(),
-						password: getPassword(),
-						passwordConfirmation: getPasswordConfirmation(),
 						username: getUsername(),
 						firstName: getFirstName() || undefined,
 						lastName: getLastName() || undefined,
@@ -92,7 +87,6 @@ const CreateUserPanel: Component<CreateUserPanelProps> = (props) => {
 				setFirstName("");
 				setLastName("");
 				setEmail("");
-				setPassword("");
 				setIsSuperAdmin(0);
 				setSelectedRoles([]);
 			}}
@@ -166,36 +160,6 @@ const CreateUserPanel: Component<CreateUserPanelProps> = (props) => {
 							noMargin={true}
 							required={true}
 							errors={getBodyError("email", createUser.errors)}
-						/>
-						<Form.Input
-							id="password"
-							value={getPassword()}
-							onChange={setPassword}
-							name={"password"}
-							type="password"
-							copy={{
-								label: T()("password"),
-							}}
-							noMargin={true}
-							required={true}
-							errors={getBodyError("password", createUser.errors)}
-						/>
-						<Form.Input
-							id="passwordConfirmation"
-							value={getPasswordConfirmation()}
-							onChange={setPasswordConfirmation}
-							name={"passwordConfirmation"}
-							type="password"
-							copy={{
-								label: T()("password_confirmation"),
-								describedBy: T()("password_description"),
-							}}
-							noMargin={true}
-							required={true}
-							errors={getBodyError(
-								"passwordConfirmation",
-								createUser.errors,
-							)}
 						/>
 					</InputGrid>
 					<Form.SelectMultiple

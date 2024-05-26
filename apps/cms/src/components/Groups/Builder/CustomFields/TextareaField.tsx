@@ -23,6 +23,7 @@ interface TextareaFieldProps {
 		repeaterKey?: string;
 		contentLocale: string;
 		fieldError: FieldErrors | undefined;
+		altLocaleHasError: boolean;
 	};
 }
 
@@ -36,17 +37,18 @@ export const TextareaField: Component<TextareaFieldProps> = (props) => {
 	const fieldData = createMemo(() => {
 		return props.state.fieldData;
 	});
-
-	// -------------------------------
-	// Effects
-	createEffect(() => {
-		const value = brickHelpers.getFieldValue<string>({
+	const fieldValue = createMemo(() => {
+		return brickHelpers.getFieldValue<string>({
 			fieldData: fieldData(),
 			fieldConfig: props.state.fieldConfig,
 			contentLocale: props.state.contentLocale,
 		});
+	});
 
-		setValue(value || "");
+	// -------------------------------
+	// Effects
+	createEffect(() => {
+		setValue(fieldValue() || "");
 	});
 
 	// -------------------------------
@@ -79,6 +81,7 @@ export const TextareaField: Component<TextareaFieldProps> = (props) => {
 				placeholder: props.state.fieldConfig.placeholder,
 				describedBy: props.state.fieldConfig.description,
 			}}
+			altLocaleHasError={props.state.altLocaleHasError}
 			disabled={props.state.fieldConfig.disabled}
 			errors={props.state.fieldError}
 			required={props.state.fieldConfig.validation?.required || false}

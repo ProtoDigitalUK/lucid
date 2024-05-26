@@ -92,7 +92,12 @@ const UsersListRoute: Component = () => {
 				/>
 			}
 		>
-			<UsersTable searchParams={searchParams} />
+			<UsersTable
+				searchParams={searchParams}
+				state={{
+					setOpenCreateUserPanel: setOpenCreateUserPanel,
+				}}
+			/>
 			<CreateUserPanel
 				state={{
 					open: openCreateUserPanel(),

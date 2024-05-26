@@ -41,13 +41,15 @@ const MediaCard: Component<MediaCardProps> = (props) => {
 	});
 
 	const titleTranslation = createMemo(() => {
-		return props.media.titleTranslations.find(
-			(translation) => translation.localeCode === props.contentLocale,
+		return helpers.getTranslation(
+			props.media.titleTranslations,
+			props.contentLocale,
 		);
 	});
 	const altTranslation = createMemo(() => {
-		return props.media.altTranslations.find(
-			(translation) => translation.localeCode === props.contentLocale,
+		return helpers.getTranslation(
+			props.media.altTranslations,
+			props.contentLocale,
 		);
 	});
 
@@ -114,11 +116,7 @@ const MediaCard: Component<MediaCardProps> = (props) => {
 			<AspectRatio ratio="16:9" innerClass={"overflow-hidden"}>
 				<MediaPreview
 					media={props.media}
-					alt={
-						altTranslation()?.value ||
-						titleTranslation()?.value ||
-						""
-					}
+					alt={altTranslation() || titleTranslation() || ""}
 				/>
 				<span class="inset-0 top-auto absolute flex gap-1 p-15">
 					<Pill theme="primary">
@@ -132,7 +130,7 @@ const MediaCard: Component<MediaCardProps> = (props) => {
 			{/* Content */}
 			<div class="p-15 border-t border-border">
 				<h3 class="mb-0.5 line-clamp-1">
-					{titleTranslation()?.value || T()("no_translation")}
+					{titleTranslation() || T()("no_translation")}
 				</h3>
 				<ClickToCopy
 					type="simple"

@@ -55,7 +55,9 @@
 	"if_account_exists_with_email_not_found": "If an account exists with the email provided, a password reset link will be sent to the email address.",
 	"error_creating_user_token": "An error occurred while creating the token.",
 	"reset_password_email_subject": "Reset your password",
+	"user_invite_email_subject": "You have been invited to join a Lucid project",
 	"password_reset_success_subject": "Password reset successful",
+	"email_update_success_subject": "Email update successful",
 	"please_ensure_passwords_match": "Please ensure that the passwords match and try again.",
 	"ensure_file_has_been_uploaded": "Please ensure that a file has been uploaded and try again.",
 	"make_sure_all_translations_locales_exist": "Please make sure all translation locales exist.",
@@ -103,6 +105,9 @@
 	"config_default_locale_undefined": "Please ensure the defaultLocale is defined.",
 	"config_default_locale_not_found": "Please ensure the defaultLocale exists in the locales array.",
 	"config_duplicate_locale": "Please ensure the locales array does not contain duplicate values.",
+	"error_cant_update_yourself": "You can't update yourself.",
+	"error_cant_delete_yourself": "You can't delete yourself.",
+	"error_cant_delete_last_user": "You can't delete the last user.",
 	"update": "Update",
 	"delete": "Delete",
 	"create": "Create",
@@ -126,5 +131,10 @@
 	"role": "Role",
 	"account": "Account",
 	"permission": "Permission",
-	"locale": "Locale"
+	"locale": "Locale",
+	"no_refresh_token_found": "No refresh token found.",
+	"please_ensure_password_is_correct": "Please ensure the password is correct and try again.",
+	"please_provide_all_password_fields_if_one_is_provided": "Please provide all password fields if one is provided.",
+	"please_provide_new_password": "Please provide a new password.",
+	"please_provide_current_password": "Please provide your current password."
 }

@@ -70,7 +70,12 @@ export interface HeadlessUsers {
 	username: string;
 	first_name: string | null;
 	last_name: string | null;
-	password: string;
+	password: ColumnType<string, string | undefined, string>;
+	triggered_password_reset: ColumnType<
+		BooleanInt,
+		BooleanInt | undefined,
+		BooleanInt
+	>;
 	is_deleted: BooleanInt | null;
 	is_deleted_at: TimestampMutateable;
 	deleted_by: number | null;
@@ -152,6 +157,7 @@ export interface HeadlessMedia {
 export interface HeadlessProcessedImages {
 	key: string;
 	media_key: string | null;
+	file_size: number;
 }
 
 export interface HeadlessCollectionDocuments {

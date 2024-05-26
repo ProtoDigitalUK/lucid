@@ -7,7 +7,7 @@ import sendEmail from "./services/email/send-external.js";
 import serviceWrapper from "./utils/service-wrapper.js";
 import LibSQLAdapter from "./libs/db/adapters/libsql/index.js";
 import PostgresAdapter from "./libs/db/adapters/postgres/index.js";
-import SQLLiteAdapter from "./libs/db/adapters/sqllite/index.js";
+import SQLiteAdapter from "./libs/db/adapters/sqlite/index.js";
 import { LucidAPIError, LucidError } from "./utils/error-handler.js";
 import lucidLogger from "./libs/logging/index.js";
 
@@ -22,7 +22,7 @@ export {
 	CollectionBuilder,
 	// Adapters
 	LibSQLAdapter,
-	SQLLiteAdapter,
+	SQLiteAdapter,
 	PostgresAdapter,
 	// Errors
 	LucidError,

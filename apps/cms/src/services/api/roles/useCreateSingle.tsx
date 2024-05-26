@@ -32,10 +32,10 @@ const useCreateSingle = (props?: UseCreateSingleProps) => {
 		ResponseBody<RoleResponse>
 	>({
 		mutationFn: createSingleReq,
-		successToast: {
+		getSuccessToast: () => ({
 			title: T()("role_created_toast_title"),
 			message: T()("role_created_toast_message"),
-		},
+		}),
 		invalidates: ["roles.getMultiple"],
 		onSuccess: props?.onSuccess,
 		onError: props?.onError,

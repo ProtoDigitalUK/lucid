@@ -23,6 +23,7 @@ interface CheckboxFieldProps {
 		repeaterKey?: string;
 		contentLocale: string;
 		fieldError: FieldErrors | undefined;
+		altLocaleHasError: boolean;
 	};
 }
 
@@ -36,16 +37,18 @@ export const CheckboxField: Component<CheckboxFieldProps> = (props) => {
 	const fieldData = createMemo(() => {
 		return props.state.fieldData;
 	});
-
-	// -------------------------------
-	// Effects
-	createEffect(() => {
-		const value = brickHelpers.getFieldValue<1 | 0>({
+	const fieldValue = createMemo(() => {
+		return brickHelpers.getFieldValue<1 | 0>({
 			fieldData: fieldData(),
 			fieldConfig: props.state.fieldConfig,
 			contentLocale: props.state.contentLocale,
 		});
-		setValue(value || 0);
+	});
+
+	// -------------------------------
+	// Effects
+	createEffect(() => {
+		setValue(fieldValue() || 0);
 	});
 
 	// -------------------------------
@@ -79,6 +82,7 @@ export const CheckboxField: Component<CheckboxFieldProps> = (props) => {
 				true: props.state.fieldConfig?.copy?.true,
 				false: props.state.fieldConfig?.copy?.false,
 			}}
+			altLocaleHasError={props.state.altLocaleHasError}
 			disabled={props.state.fieldConfig.disabled}
 			errors={props.state.fieldError}
 			required={props.state.fieldConfig.validation?.required || false}

@@ -19,6 +19,7 @@ interface JSONTextareaProps {
 	required?: boolean;
 	disabled?: boolean;
 	errors?: ErrorResult | FieldErrors;
+	altLocaleHasError?: boolean;
 	noMargin?: boolean;
 	theme?: "basic";
 }
@@ -99,6 +100,7 @@ export const JSONTextarea: Component<JSONTextareaProps> = (props) => {
 					focused={inputFocus()}
 					required={props.required}
 					theme={props.theme}
+					altLocaleHasError={props.altLocaleHasError}
 				/>
 				<div class="relative">
 					<textarea

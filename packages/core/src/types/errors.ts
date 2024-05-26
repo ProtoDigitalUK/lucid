@@ -6,7 +6,7 @@ export interface LucidAPIErrorData {
 	name?: string;
 	message?: string;
 	status?: number;
-	code?: "csrf";
+	code?: "csrf" | "login" | "authorisation";
 	zod?: z.ZodError;
 	errorResponse?: ErrorResult;
 }

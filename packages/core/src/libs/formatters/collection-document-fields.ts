@@ -2,6 +2,7 @@ import type {
 	FieldResponse,
 	FieldGroupResponse,
 	FieldResponseMeta,
+	FieldResponseValue,
 } from "../../types/response.js";
 import type { JSONString } from "../db/types.js";
 import type CollectionBuilder from "../builders/collection-builder/index.js";
@@ -53,6 +54,7 @@ export default class CollectionDocumentFieldsFormatter {
 		host: string;
 		builder: BrickBuilder | CollectionBuilder;
 		defaultLocaleCode: string | undefined;
+		locales: string[];
 	}): FieldResponse[] => {
 		const fieldTree = props.builder.fieldTreeNoTab;
 		const sortedGroups = props.groups.sort(
@@ -66,6 +68,7 @@ export default class CollectionDocumentFieldsFormatter {
 			groupId: null,
 			parentGroupId: null,
 			defaultLocaleCode: props.defaultLocaleCode,
+			locales: props.locales,
 		});
 	};
 	formatMultipleFlat = (props: {
@@ -73,6 +76,7 @@ export default class CollectionDocumentFieldsFormatter {
 		host: string;
 		builder: BrickBuilder | CollectionBuilder;
 		defaultLocaleCode: string | undefined;
+		locales: string[];
 	}): FieldResponse[] => {
 		if (props.fields.length === 0) return [];
 		const fieldsRes: FieldResponse[] = [];
@@ -95,6 +99,7 @@ export default class CollectionDocumentFieldsFormatter {
 				host: props.host,
 				includeGroupId: true,
 				defaultLocaleCode: props.defaultLocaleCode,
+				locales: props.locales,
 			});
 			if (field) fieldsRes.push(field);
 		}
@@ -109,6 +114,7 @@ export default class CollectionDocumentFieldsFormatter {
 		groupId: number | null;
 		parentGroupId: number | null;
 		defaultLocaleCode: string | undefined;
+		locales: string[];
 	}): FieldResponse[] => {
 		const fieldsRes: FieldResponse[] = [];
 		for (const cf of props.customFields) {
@@ -124,6 +130,7 @@ export default class CollectionDocumentFieldsFormatter {
 						host: props.host,
 						parentGroupId: props.groupId,
 						defaultLocaleCode: props.defaultLocaleCode,
+						locales: props.locales,
 					}),
 				});
 				continue;
@@ -141,6 +148,7 @@ export default class CollectionDocumentFieldsFormatter {
 				host: props.host,
 				includeGroupId: true,
 				defaultLocaleCode: props.defaultLocaleCode,
+				locales: props.locales,
 			});
 			if (field) fieldsRes.push(field);
 		}
@@ -154,6 +162,7 @@ export default class CollectionDocumentFieldsFormatter {
 		host: string;
 		parentGroupId: number | null;
 		defaultLocaleCode: string | undefined;
+		locales: string[];
 	}): FieldGroupResponse[] => {
 		const groups: FieldGroupResponse[] = [];
 
@@ -179,6 +188,7 @@ export default class CollectionDocumentFieldsFormatter {
 					groupId: group.group_id,
 					parentGroupId: group.parent_group_id,
 					defaultLocaleCode: props.defaultLocaleCode,
+					locales: props.locales,
 				}),
 			});
 		}
@@ -191,13 +201,19 @@ export default class CollectionDocumentFieldsFormatter {
 		host: string;
 		includeGroupId?: boolean;
 		defaultLocaleCode?: string;
+		locales: string[];
 	}): FieldResponse | null => {
 		if (props.cf.translations === true) {
-			return this.reduceFieldLocales({
-				fields: props.fields,
+			return this.addEmptyLocales({
+				field: this.reduceFieldLocales({
+					fields: props.fields,
+					cf: props.cf,
+					host: props.host,
+					includeGroupId: props.includeGroupId,
+				}),
 				cf: props.cf,
 				host: props.host,
-				includeGroupId: props.includeGroupId,
+				locales: props.locales,
 			});
 		}
 		const defaultField = props.fields.find(
@@ -256,6 +272,34 @@ export default class CollectionDocumentFieldsFormatter {
 				type: props.cf.type as FieldTypes,
 			},
 		);
+	};
+	private addEmptyLocales = (props: {
+		field: FieldResponse;
+		cf: CustomField;
+		host: string;
+		locales: string[];
+	}): FieldResponse => {
+		if (props.field.translations === undefined)
+			props.field.translations = {};
+		if (props.field.meta === undefined) props.field.meta = {};
+
+		const emptyLocales = props.locales.filter(
+			(l) =>
+				!(
+					props.field.translations as Record<
+						string,
+						FieldResponseValue
+					>
+				)[l],
+		);
+		for (const locale of emptyLocales) {
+			(props.field.translations as Record<string, FieldResponseValue>)[
+				locale
+			] = props.cf.default ?? null;
+			(props.field.meta as Record<string, FieldResponseMeta>)[locale] =
+				null;
+		}
+		return props.field;
 	};
 	static swagger = {
 		type: "object",

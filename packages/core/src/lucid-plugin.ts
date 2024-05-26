@@ -91,24 +91,45 @@ const lucidPlugin = async (fastify: FastifyInstance) => {
 			config: config,
 		});
 
+		const cmsEntryFile = await fs.readFile(
+			path.resolve(currentDir, "../cms/index.html"),
+		);
+		const landingPageFile = await fs.readFile(
+			path.resolve(currentDir, "../assets/landing.html"),
+		);
+
 		// ------------------------------------
 		// Routes
 		fastify.register(routes);
+
 		fastify.register(fastifyStatic, {
-			root: [path.resolve("public"), path.join(currentDir, "../cms")],
+			root: path.resolve("public"),
 			wildcard: false,
 		});
+
+		// Serve CMS
+		fastify.register(fastifyStatic, {
+			root: path.join(currentDir, "../cms"),
+			prefix: "/admin",
+			wildcard: false,
+			decorateReply: false,
+		});
+		fastify.get("/admin", async (_, reply) => {
+			reply.type("text/html").send(cmsEntryFile);
+		});
+		fastify.get("/admin/*", async (_, reply) => {
+			reply.type("text/html").send(cmsEntryFile);
+		});
+
+		// Serve landing page
+		fastify.get("/", async (_, reply) => {
+			reply.type("text/html").send(landingPageFile);
+		});
+
+		//
 		fastify.setNotFoundHandler((request, reply) => {
-			const indexPath = path.resolve(currentDir, "../cms/index.html");
-
 			if (request.url.startsWith("/api")) {
-				reply.code(404).send("Page not found");
-				return;
-			}
-
-			if (fs.existsSync(indexPath)) {
-				const stream = fs.createReadStream(indexPath);
-				reply.type("text/html").send(stream);
+				reply.code(404).send("API route not found");
 			} else {
 				reply.code(404).send("Page not found");
 			}
@@ -135,6 +156,7 @@ const lucidPlugin = async (fastify: FastifyInstance) => {
 			const response = Object.fromEntries(
 				Object.entries({
 					status,
+					code,
 					name,
 					message,
 					errors: errorResponse,

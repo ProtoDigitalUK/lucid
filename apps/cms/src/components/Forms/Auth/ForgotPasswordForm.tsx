@@ -34,6 +34,9 @@ const ForgotPasswordForm: Component<ForgotPasswordFormProps> = (props) => {
 			content={{
 				submit: T()("send_password_reset"),
 			}}
+			options={{
+				buttonFullWidth: true,
+			}}
 			onSubmit={() => {
 				forgotPassword.action.mutate({ email: email() });
 			}}
@@ -55,7 +58,7 @@ const ForgotPasswordForm: Component<ForgotPasswordFormProps> = (props) => {
 				<A
 					class="block text-sm mt-1 hover:text-primary-hover duration-200 transition-colors"
 					type="button"
-					href="/login"
+					href="/admin/login"
 				>
 					{T()("back_to_login")}
 				</A>

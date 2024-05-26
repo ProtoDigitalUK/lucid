@@ -1,5 +1,36 @@
 # @lucidcms/core
 
+## v0.5.0-alpha.0
+
+### Features:
+
+- Finished the MVP of the document builder page so documents can be created, deleted and updated. Bricks and fields can be edited, removed and re-ordered etc.
+- Supported locales are now listed on the settings page ([092140e](https://github.com/ProtoDigitalUK/lucid/commit/092140ec929200e35dae9bc6b13af615dd135c7b))
+- Translations are now controllable on a per field basis for better granularity in setting up bricks and collections. ([43c4f90](https://github.com/ProtoDigitalUK/lucid/commit/43c4f90b8f32e69bcf43a40e70e9f520ce493aa8))
+- Bricks can now have a description set against them in config ([848e9cc](https://github.com/ProtoDigitalUK/lucid/commit/848e9cc0fa8ebe711b9f7712c6b6f39526b2a342))
+- Document builder now has a image preview icon that opens a modal on bricks that have preview images set. ([d2a4fc3](https://github.com/ProtoDigitalUK/lucid/commit/d2a4fc357425eb2369d91d88db8c7ce3986899c1))
+- Added internationalisation support to the CMS frontend though we currently only have en translations ([ebe94e3](https://github.com/ProtoDigitalUK/lucid/commit/ebe94e3a6f577d3b1a5b12991316eb72eb8897da))
+- Collections, documents, media, roles and users now all have a no data state that prompts users to create an entry. ([76bed15](https://github.com/ProtoDigitalUK/lucid/commit/76bed15881017cb9fb968021f809233a74fce06d))
+- New account page added for users to control their locale preference and update their details. ([c3e4e8f](https://github.com/ProtoDigitalUK/lucid/commit/c3e4e8ff008c05d30703d03aed4c51387abcecc8))
+- Creating a user no longer requires a password to be set against them, instead we utilise the password reset flow so new users can set their own password. ([b262176](https://github.com/ProtoDigitalUK/lucid/commit/b262176fb130da2a01c0ca569f1155fdc88a45b1))
+- Users can now update their own password on the account route and added support to force accounts to update their password before being able to use the CMS. ([d10572f](https://github.com/ProtoDigitalUK/lucid/commit/d10572f12ae8c4e36e6c49344600df62999c9cd2))
+- Users with permission can now mark other users to update their password on next login/use of their account. ([032418f](https://github.com/ProtoDigitalUK/lucid/commit/032418fb03f9631bb4b27827e3583212c1e69896))
+
+### Breaking changes:
+
+- Languages have been renamed to locales across the frontend/backend and are now controlled via config ([32f41b9](https://github.com/ProtoDigitalUK/lucid/commit/32f41b955c0e0536f60464f99c84796aa9af9ecb))
+- Fields req and res objects now either return all locale translations or none depending on if the translation support flag is true on a field. ([e7d83c4](https://github.com/ProtoDigitalUK/lucid/commit/e7d83c48609132da8d70e5fedf6de3c8dc1fdfe2))
+
+### Bug Fixes:
+
+- Fixed issue with collection document multiple formatter not passing down the default locale config value. ([44c53e9](https://github.com/ProtoDigitalUK/lucid/commit/44c53e97ca69e4a567ee2167d86c0bca2b467997))
+- Fixed issue with media panel not invalidating media in time when reopening the panel after updating it. ([4c2e806](https://github.com/ProtoDigitalUK/lucid/commit/4c2e80689fc9e03c2b77fa72c578aca0674b2432))
+- Fixed issue where you could update the currently authenticate user with the update user endpoint. ([d640912](https://github.com/ProtoDigitalUK/lucid/commit/d640912ad18fb00dd9443f693be815fbf45e4e5a))
+- Fixed issue where you could delete yourself and along with that all users. ([5e90524](https://github.com/ProtoDigitalUK/lucid/commit/5e9052440fea53eaee5423a8891cab161cdc14ba))
+- Fixed issue with brick store group functions where required props weren't passed down that were required to target second level and deeper groups. ([469dce4](https://github.com/ProtoDigitalUK/lucid/commit/469dce4663f73a626739c51c594849bf8fc8a7ae))
+- Fixed CSRF token refetching in fetch wrapper. ([70cb5b0](https://github.com/ProtoDigitalUK/lucid/commit/70cb5b0d9b23572c44857f867f9e67f52aff4289))
+- Processed images now records size and gets set against the storage limit defined by config. ([fa83851](https://github.com/ProtoDigitalUK/lucid/commit/fa83851de37590473fdf89888774d091f8ca3751))
+
 ## v0.4.0-alpha.0
 
 ### Features:
@@ -39,7 +70,7 @@
 
 ### Bug Fixes
 
-- Fixed issue with group parent id update query not working in SQLlite. ([525d9e8](https://github.com/ProtoDigitalUK/lucid/commit/525d9e860fcf02d92864b94762d8e54e51de99a1))
+- Fixed issue with group parent id update query not working in SQLite. ([525d9e8](https://github.com/ProtoDigitalUK/lucid/commit/525d9e860fcf02d92864b94762d8e54e51de99a1))
 - Added sort on field formatter groups to ensure correct group order. ([3a2c7e8](https://github.com/ProtoDigitalUK/lucid/commit/3a2c7e825433736fc2c61682a282aece21969a69))
 - Get multiple document fields now include media and users joins. ([095fe8a](https://github.com/ProtoDigitalUK/lucid/commit/095fe8adb070b9494ec98fd3de4850583475c2ea))
 

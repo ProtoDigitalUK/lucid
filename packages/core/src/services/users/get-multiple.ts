@@ -6,6 +6,9 @@ import type { ServiceConfig } from "../../utils/service-wrapper.js";
 
 export interface ServiceData {
 	query: z.infer<typeof usersSchema.getMultiple.query>;
+	auth: {
+		id: number;
+	};
 }
 
 const getMultiple = async (serviceConfig: ServiceConfig, data: ServiceData) => {
@@ -15,6 +18,7 @@ const getMultiple = async (serviceConfig: ServiceConfig, data: ServiceData) => {
 	const [users, count] = await UsersRepo.selectMultipleFiltered({
 		query: data.query,
 		config: serviceConfig.config,
+		authId: data.auth.id,
 	});
 
 	return {

@@ -4,7 +4,6 @@ import { createMemo, createSignal } from "solid-js";
 import en from "./en.json";
 
 // TODO: selected locale needs to be persisted in local storage (fine for now as we only have 1 locale)
-// TODO: html lang attribute should be set based on selected locale
 
 const supportedLocales = ["en"] as const;
 export type SupportedLocales = (typeof supportedLocales)[number];
@@ -13,7 +12,7 @@ export const [getLocale, setLocale] = createSignal<SupportedLocales>("en");
 
 i18next.init<keyof typeof en>({
 	lng: getLocale(),
-	debug: true,
+	debug: false,
 	resources: {
 		en: {
 			translation: en,
@@ -24,7 +23,11 @@ i18next.init<keyof typeof en>({
 
 const T = createMemo(() => {
 	i18next.changeLanguage(getLocale());
-	return i18next.t.bind(i18next);
+	document.documentElement.lang = getLocale();
+	return i18next.t.bind(i18next) as (
+		key: keyof typeof en,
+		data?: Record<string, string | number>,
+	) => string;
 });
 
 export const localesConfig: Array<{

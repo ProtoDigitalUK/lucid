@@ -45,10 +45,10 @@ const useUpdateSingle = (props?: UseUpdateSingleProps) => {
 	// Mutation
 	return serviceHelpers.useMutationWrapper<Params, ResponseBody<null>>({
 		mutationFn: updateSingleReq,
-		successToast: {
+		getSuccessToast: () => ({
 			title: T()("media_update_toast_title"),
 			message: T()("media_update_toast_message"),
-		},
+		}),
 		invalidates: ["media.getMultiple", "media.getSingle"],
 		onSuccess: props?.onSuccess,
 		onError: props?.onError,

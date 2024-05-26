@@ -27,12 +27,32 @@ const clearExpiredTokens = async (serviceConfig: ServiceConfig) => {
 const updateMediaStorage = async (serviceConfig: ServiceConfig) => {
 	try {
 		const MediaRepo = Repository.get("media", serviceConfig.db);
+		const ProcessedImagesRepo = Repository.get(
+			"processed-images",
+			serviceConfig.db,
+		);
 		const OptionsRepo = Repository.get("options", serviceConfig.db);
 
-		const mediaItems = await MediaRepo.selectMultiple({
-			select: ["file_size"],
-			where: [],
-		});
+		const [mediaItems, processeddImagesItems] = await Promise.all([
+			MediaRepo.selectMultiple({
+				select: ["file_size"],
+				where: [],
+			}),
+			ProcessedImagesRepo.selectMultiple({
+				select: ["file_size"],
+				where: [],
+			}),
+		]);
+
+		const totlaMediaSize = mediaItems.reduce((acc, item) => {
+			return acc + item.file_size;
+		}, 0);
+		const totalProcessedImagesSize = processeddImagesItems.reduce(
+			(acc, item) => {
+				return acc + item.file_size;
+			},
+			0,
+		);
 
 		await OptionsRepo.updateSingle({
 			where: [
@@ -43,9 +63,7 @@ const updateMediaStorage = async (serviceConfig: ServiceConfig) => {
 				},
 			],
 			data: {
-				valueInt: mediaItems.reduce((acc, item) => {
-					return acc + item.file_size;
-				}, 0),
+				valueInt: totlaMediaSize + totalProcessedImagesSize,
 			},
 		});
 	} catch (error) {

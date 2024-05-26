@@ -1,6 +1,8 @@
+import T from "../../translations/index.js";
 import { LucidAPIError } from "../../utils/error-handler.js";
 import Repository from "../../libs/repositories/index.js";
 import type { ServiceConfig } from "../../utils/service-wrapper.js";
+import UsersServices from "./index.js";
 
 export interface ServiceData {
 	userId: number;
@@ -12,6 +14,16 @@ const deleteSingle = async (
 	data: ServiceData,
 ) => {
 	const UsersRepo = Repository.get("users", serviceConfig.db);
+
+	if (data.currentUserId === data.userId) {
+		throw new LucidAPIError({
+			type: "basic",
+			message: T("error_cant_delete_yourself"),
+			status: 400,
+		});
+	}
+
+	await UsersServices.checks.checkNotLastUser(serviceConfig);
 
 	const deleteUserRes = await UsersRepo.updateSingle({
 		data: {

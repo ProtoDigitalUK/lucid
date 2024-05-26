@@ -1,7 +1,7 @@
 import queryBuilder, { type QueryBuilderProps } from "@/utils/query-builder";
 import { LucidError, handleSiteErrors } from "@/utils/error-handling";
 import type { ErrorResponse } from "@lucidcms/core/types";
-import { csrfReq } from "@/services/api/auth/useCsrf";
+import { csrfReq, clearCsrfSession } from "@/services/api/auth/useCsrf";
 import useRefreshToken from "@/services/api/auth/useRefreshToken";
 
 export interface RequestParams<Data> {
@@ -17,63 +17,92 @@ interface RequestConfig<Data> {
 	headers?: Record<string, string>;
 }
 
-export const getFetchURL = (url: string) => {
-	if (!import.meta.env.PROD) {
-		return `${import.meta.env.VITE_API_DEV_URL}${url}`;
+export const getFetchURL = (url: string, query?: QueryBuilderProps): string => {
+	let targetUrl = import.meta.env.PROD
+		? url
+		: `${import.meta.env.VITE_API_DEV_URL}${url}`;
+	if (query) {
+		targetUrl += `?${queryBuilder(query)}`;
 	}
-	return url;
+	return targetUrl;
 };
 
-const request = async <Response, Data = unknown>(
+const prepareRequestBody = <Data>(
+	body?: Data | FormData,
+): string | FormData | undefined => {
+	if (!body) return undefined;
+	return body instanceof FormData ? body : JSON.stringify(body);
+};
+
+const prepareHeaders = async (
+	csrf?: boolean,
+	headers: Record<string, string> = {},
+	body?: string | FormData | undefined,
+): Promise<Record<string, string>> => {
+	const updatedHeaders = { ...headers };
+	if (csrf) {
+		const csrfToken = await csrfReq();
+		if (csrfToken) updatedHeaders._csrf = csrfToken;
+	}
+	if (headers["Content-Type"] === undefined && typeof body === "string") {
+		updatedHeaders["Content-Type"] = "application/json";
+	}
+	return updatedHeaders;
+};
+
+const handleResponse = async <ResponseBody, Data = unknown>(
 	params: RequestParams<Data>,
-): Promise<Response> => {
-	let fetchURL = getFetchURL(params.url);
+	fetchRes: Response,
+): Promise<ResponseBody> => {
+	if (fetchRes.status === 204) {
+		return {} as ResponseBody;
+	}
 
-	if (params.query) {
-		const queryString = queryBuilder(params.query);
-		if (queryString) {
-			fetchURL = `${fetchURL}?${queryString}`;
+	const data = await fetchRes.json();
+
+	if (fetchRes.status === 401) {
+		if ((data as ErrorResponse).code === "authorisation") {
+			return useRefreshToken(params);
 		}
 	}
 
-	let csrfToken: string | null = null;
-	if (params.csrf) csrfToken = await csrfReq();
-
-	let body: string | undefined | FormData = undefined;
-	if (params.config?.body !== undefined) {
-		if (params.config.body instanceof FormData) {
-			body = params.config.body;
-		} else {
-			body = JSON.stringify(params.config.body);
+	if (fetchRes.status === 403) {
+		if ((data as ErrorResponse).code === "csrf") {
+			clearCsrfSession();
+			return await request(params);
 		}
 	}
 
-	const headers: Record<string, string> = params.config?.headers || {};
-	if (typeof body === "string") {
-		headers["Content-Type"] = "application/json";
+	if (!fetchRes.ok) {
+		handleSiteErrors(data as ErrorResponse);
+		throw new LucidError(
+			(data as ErrorResponse).message,
+			data as ErrorResponse,
+		);
 	}
-	if (csrfToken) headers._csrf = csrfToken;
+
+	return data as ResponseBody;
+};
+
+const request = async <ResponseBody, Data = unknown>(
+	params: RequestParams<Data>,
+): Promise<ResponseBody> => {
+	const fetchURL = getFetchURL(params.url, params.query);
+	const body = prepareRequestBody(params.config?.body);
+	const headers = await prepareHeaders(
+		params.csrf,
+		params.config?.headers,
+		body,
+	);
 
 	const fetchRes = await fetch(fetchURL, {
 		method: params.config?.method,
-		body,
 		credentials: "include",
+		body: body,
 		headers: headers,
 	});
 
-	if (fetchRes.status === 401) {
-		return await useRefreshToken(params);
-	}
-	if (fetchRes.status === 204) return {} as Response;
-
-	const data = await fetchRes.json();
-	if (!fetchRes.ok) {
-		const errorObj = data as ErrorResponse;
-		handleSiteErrors(errorObj);
-		throw new LucidError(errorObj.message, errorObj);
-	}
-
-	return data as Response;
+	return handleResponse(params, fetchRes);
 };
 
 export default request;

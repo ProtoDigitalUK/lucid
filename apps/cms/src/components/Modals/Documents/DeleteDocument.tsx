@@ -24,7 +24,7 @@ const DeleteDocument: Component<DeleteDocumentProps> = (props) => {
 			props.state.setOpen(false);
 			if (props.callbacks?.onSuccess) props.callbacks.onSuccess();
 		},
-		collectionName: props.collection.singular,
+		getCollectionName: () => props.collection.singular || T()("collection"),
 	});
 
 	// ------------------------------
@@ -42,10 +42,7 @@ const DeleteDocument: Component<DeleteDocumentProps> = (props) => {
 					name: props.collection.singular,
 				}),
 				description: T()("delete_document_modal_description", {
-					name: {
-						value: props.collection.singular,
-						toLowerCase: true,
-					},
+					name: props.collection.singular.toLowerCase(),
 				}),
 				error: deleteDocument.errors()?.message,
 			}}

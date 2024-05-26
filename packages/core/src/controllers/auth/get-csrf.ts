@@ -12,7 +12,7 @@ const getCSRFController: RouteController<
 	typeof authSchema.getCSRF.query
 > = async (request, reply) => {
 	try {
-		const token = await auth.csrf.generateCSRFToken(reply);
+		const token = await auth.csrf.generateCSRFToken(request, reply);
 
 		reply.status(200).send(
 			await buildResponse(request, {

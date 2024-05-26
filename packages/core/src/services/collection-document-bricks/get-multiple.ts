@@ -13,7 +13,6 @@ const getMultiple = async (serviceConfig: ServiceConfig, data: ServiceData) => {
 		"collection-document-bricks",
 		serviceConfig.db,
 	);
-	const LocalesRepo = Repository.get("locales", serviceConfig.db);
 
 	const CollectionDocumentBricksFormatter = Formatter.get(
 		"collection-document-bricks",
@@ -35,12 +34,18 @@ const getMultiple = async (serviceConfig: ServiceConfig, data: ServiceData) => {
 			collection: collection,
 			host: serviceConfig.config.host,
 			defaultLocaleCode: serviceConfig.config.localisation.defaultLocale,
+			locales: serviceConfig.config.localisation.locales.map(
+				(l) => l.code,
+			),
 		}),
 		fields: CollectionDocumentBricksFormatter.formatCollectionSudoBrick({
 			bricks: bricks,
 			collection: collection,
 			host: serviceConfig.config.host,
 			defaultLocaleCode: serviceConfig.config.localisation.defaultLocale,
+			locales: serviceConfig.config.localisation.locales.map(
+				(l) => l.code,
+			),
 		}),
 	};
 };

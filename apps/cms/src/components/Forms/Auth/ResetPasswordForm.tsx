@@ -30,6 +30,9 @@ const ResetPasswordForm: Component<ResetPasswordFormProps> = (props) => {
 			content={{
 				submit: T()("reset_password"),
 			}}
+			options={{
+				buttonFullWidth: true,
+			}}
 			onSubmit={() => {
 				resetPassword.action.mutate({
 					token: props.token,

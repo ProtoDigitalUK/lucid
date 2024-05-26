@@ -6,7 +6,7 @@ lucid.fastify.post("/send-email", async (request, reply) => {
 		subject: "Hello",
 		template: "password-reset",
 		data: {
-			first_name: "William",
+			firstName: "William",
 		},
 	});
 

@@ -2,8 +2,10 @@ import request from "@/utils/request";
 import serviceHelpers from "@/utils/service-helpers";
 import type { ResponseBody } from "@lucidcms/core/types";
 
+export const csrfSessionKey = "_csrf";
+
 export const csrfReq = async () => {
-	const csrfToken = sessionStorage.getItem("_csrf");
+	const csrfToken = sessionStorage.getItem(csrfSessionKey);
 	if (csrfToken) {
 		return csrfToken;
 	}
@@ -20,11 +22,14 @@ export const csrfReq = async () => {
 	});
 
 	if (res.data) {
-		sessionStorage.setItem("_csrf", res.data._csrf);
+		sessionStorage.setItem(csrfSessionKey, res.data._csrf);
 		return res.data._csrf;
 	}
 
 	return null;
+};
+export const clearCsrfSession = () => {
+	sessionStorage.removeItem(csrfSessionKey);
 };
 
 interface UseCSRFProps {

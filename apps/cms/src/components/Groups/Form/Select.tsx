@@ -34,12 +34,14 @@ export interface SelectProps {
 	copy?: {
 		label?: string;
 		describedBy?: string;
+		searchPlaceholder?: string;
 	};
 	onBlur?: () => void;
 	autoFoucs?: boolean;
 	required?: boolean;
 	disabled?: boolean;
 	errors?: ErrorResult | FieldErrors;
+	altLocaleHasError?: boolean;
 	noMargin?: boolean;
 	noClear?: boolean;
 	hasError?: boolean;
@@ -79,16 +81,16 @@ export const Select: Component<SelectProps> = (props) => {
 
 	// ----------------------------------------
 	// Memos
-	const selectOptions = createMemo(() => {
-		if (props.noClear) return props.options;
+	// const selectOptions = createMemo(() => {
+	// 	if (props.noClear) return props.options;
 
-		const options = JSON.parse(JSON.stringify(props.options));
-		options.unshift({
-			value: undefined,
-			label: T()("clear"),
-		});
-		return options;
-	});
+	// 	const options = JSON.parse(JSON.stringify(props.options));
+	// 	options.unshift({
+	// 		value: undefined,
+	// 		label: T()("deselect"),
+	// 	});
+	// 	return options;
+	// });
 
 	// ----------------------------------------
 	// Render
@@ -129,6 +131,7 @@ export const Select: Component<SelectProps> = (props) => {
 						focused={inputFocus()}
 						required={props.required}
 						theme={props.theme}
+						altLocaleHasError={props.altLocaleHasError}
 					/>
 					{/* Trigger */}
 					<DropdownMenu.Trigger
@@ -155,7 +158,24 @@ export const Select: Component<SelectProps> = (props) => {
 								{T()("nothing_selected")}
 							</span>
 						)}
-						<FaSolidSort size={16} class="text-title ml-1" />
+						<div class="flex items-center gap-1">
+							<Show when={props.noClear !== true}>
+								<button
+									type="button"
+									class="pointer-events-auto h-5 w-5 flex items-center justify-center rounded-full text-primary-contrast hover:bg-error-base duration-200 transition-colors focus:outline-none focus:ring-1 ring-error-base focus:fill-error-base"
+									onClick={(e) => {
+										e.stopPropagation();
+										props.onChange(undefined);
+									}}
+								>
+									<FaSolidXmark
+										size={16}
+										class="text-title"
+									/>
+								</button>
+							</Show>
+							<FaSolidSort size={16} class="text-title ml-1" />
+						</div>
 					</DropdownMenu.Trigger>
 				</div>
 				<DropdownContent
@@ -176,7 +196,10 @@ export const Select: Component<SelectProps> = (props) => {
 								<input
 									type="text"
 									class="bg-container-1 px-2.5 rounded-md w-full border border-border text-sm text-title font-medium h-10 focus:outline-none focus:border-primary-base"
-									placeholder={T()("search")}
+									placeholder={
+										props.copy?.searchPlaceholder ||
+										T()("search")
+									}
 									value={props.search?.value || ""}
 									onKeyDown={(e) => {
 										e.stopPropagation();
@@ -225,7 +248,7 @@ export const Select: Component<SelectProps> = (props) => {
 					<Switch>
 						<Match when={props.options.length > 0}>
 							<ul class="flex flex-col">
-								<For each={selectOptions()}>
+								<For each={props.options}>
 									{(option) => (
 										<li
 											class="flex items-center justify-between text-sm text-body hover:bg-primary-hover hover:text-primary-contrast px-2.5 py-1 rounded-md cursor-pointer focus:outline-none focus:bg-primary-hover focus:text-primary-contrast"

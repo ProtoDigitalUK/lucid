@@ -21,7 +21,7 @@ export const deleteSingleReq = (params: Params) => {
 interface UseDeleteProps {
 	onSuccess?: () => void;
 	onError?: () => void;
-	collectionName: string;
+	getCollectionName: () => string;
 }
 
 const useDeleteSingle = (props: UseDeleteProps) => {
@@ -29,17 +29,14 @@ const useDeleteSingle = (props: UseDeleteProps) => {
 	// Mutation
 	return serviceHelpers.useMutationWrapper<Params, ResponseBody<null>>({
 		mutationFn: deleteSingleReq,
-		successToast: {
+		getSuccessToast: () => ({
 			title: T()("deleted_toast_title", {
-				name: props.collectionName,
+				name: props.getCollectionName(),
 			}),
 			message: T()("deleted_toast_message", {
-				name: {
-					value: props.collectionName,
-					toLowerCase: true,
-				},
+				name: props.getCollectionName().toLowerCase(),
 			}),
-		},
+		}),
 		invalidates: ["collections.document.getMultiple"],
 		onSuccess: props.onSuccess,
 		onError: props.onError,

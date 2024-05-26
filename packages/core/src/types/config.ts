@@ -100,7 +100,6 @@ export type MediaStrategy = {
 
 // the version of config that is used in the lucid.config.ts file
 export interface LucidConfig {
-	mode: "production" | "development";
 	db: DatabaseAdapter;
 	host: string;
 	keys: {
@@ -142,7 +141,6 @@ export interface LucidConfig {
 }
 
 export interface Config extends z.infer<typeof ConfigSchema> {
-	mode: "production" | "development";
 	db: DatabaseAdapter;
 	email?: {
 		from: {

@@ -49,7 +49,7 @@ const deleteSingle = async (
 	}
 
 	const allProcessedImages = await ProcessedImagesRepo.selectMultiple({
-		select: ["key"],
+		select: ["key", "file_size"],
 		where: [
 			{
 				key: "media_key",
@@ -82,6 +82,10 @@ const deleteSingle = async (
 			{
 				key: deleteMedia.key,
 				size: deleteMedia.file_size,
+				processedSize: allProcessedImages.reduce(
+					(acc, i) => acc + i.file_size,
+					0,
+				),
 			},
 		),
 		serviceWrapper(translationsServices.deleteMultiple, false)(

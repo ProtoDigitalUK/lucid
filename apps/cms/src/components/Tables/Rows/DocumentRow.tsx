@@ -15,6 +15,7 @@ import Table from "@/components/Groups/Table";
 import DateCol from "@/components/Tables/Columns/DateCol";
 import AuthorCol from "@/components/Tables/Columns/AuthorCol";
 import TextCol from "@/components/Tables/Columns/TextCol";
+import PillCol from "../Columns/PillCol";
 
 interface DocumentRowProps extends TableRowProps {
 	document: CollectionDocumentResponse;
@@ -38,7 +39,7 @@ const DocumentRow: Component<DocumentRowProps> = (props) => {
 				{
 					label: T()("edit"),
 					type: "link",
-					href: `/collections/${props.collection.key}/${props.document.id}`,
+					href: `/admin/collections/${props.collection.key}/${props.document.id}`,
 					permission: userStore.get.hasPermission(["update_content"])
 						.all,
 				},
@@ -121,16 +122,20 @@ const DocumentDynamicColumns: Component<{
 			<Match when={fieldData()?.type === "textarea"}>
 				<TextCol
 					text={fieldValue() as string | undefined | null}
-					options={{ include: props?.include[props.index] }}
+					options={{
+						include: props?.include[props.index],
+						maxLines: 2,
+					}}
 				/>
 			</Match>
 			<Match when={fieldData()?.type === "checkbox"}>
-				<TextCol
+				<PillCol
 					text={
 						(fieldValue() as 1 | 0 | undefined | null) === 1
-							? "✅"
-							: "❌"
+							? T()("yes")
+							: T()("no")
 					}
+					theme="primary"
 					options={{ include: props?.include[props.index] }}
 				/>
 			</Match>

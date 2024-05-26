@@ -7,10 +7,14 @@ import type useSearchParams from "@/hooks/useSearchParams";
 import Table from "@/components/Groups/Table";
 import UserRow from "@/components/Tables/Rows/UserRow";
 import UpdateUserPanel from "@/components/Panels/User/UpdateUserPanel";
-import DeleteUser from "@/components/Modals/User/DeleteRole";
+import DeleteUser from "@/components/Modals/User/DeleteUser";
+import TriggerPasswordReset from "../Modals/User/TriggerPasswordReset";
 
 interface UsersTableProps {
 	searchParams: ReturnType<typeof useSearchParams>;
+	state: {
+		setOpenCreateUserPanel: (state: boolean) => void;
+	};
 }
 
 const UsersTable: Component<UsersTableProps> = (props) => {
@@ -20,6 +24,7 @@ const UsersTable: Component<UsersTableProps> = (props) => {
 		triggers: {
 			update: false,
 			delete: false,
+			passwordReset: false,
 		},
 	});
 
@@ -28,6 +33,9 @@ const UsersTable: Component<UsersTableProps> = (props) => {
 	const users = api.users.useGetMultiple({
 		queryParams: {
 			queryString: props.searchParams.getQueryString,
+			exclude: {
+				current: true,
+			},
 		},
 		enabled: () => props.searchParams.getSettled(),
 	});
@@ -81,11 +89,17 @@ const UsersTable: Component<UsersTableProps> = (props) => {
 				}}
 				options={{
 					isSelectable: false,
+					showNoEntries: true,
 				}}
 				callbacks={{
-					deleteRows: async () => {
-						alert("Delete rows");
+					createEntry: () => {
+						props.state.setOpenCreateUserPanel(true);
 					},
+				}}
+				copy={{
+					noEntryTitle: T()("no_users"),
+					noEntryDescription: T()("no_users_description"),
+					noEntryButton: T()("create_user"),
 				}}
 			>
 				{({ include, isSelectable, selected, setSelected }) => (
@@ -123,6 +137,15 @@ const UsersTable: Component<UsersTableProps> = (props) => {
 					open: rowTarget.getTriggers().delete,
 					setOpen: (state: boolean) => {
 						rowTarget.setTrigger("delete", state);
+					},
+				}}
+			/>
+			<TriggerPasswordReset
+				id={rowTarget.getTargetId}
+				state={{
+					open: rowTarget.getTriggers().passwordReset,
+					setOpen: (state: boolean) => {
+						rowTarget.setTrigger("passwordReset", state);
 					},
 				}}
 			/>

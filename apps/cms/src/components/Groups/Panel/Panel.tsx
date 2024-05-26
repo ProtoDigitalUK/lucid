@@ -101,9 +101,12 @@ export const Panel: Component<PanelProps> = (props) => {
 	// Effects
 	createEffect(() => {
 		if (props.open) {
-			props.reset();
+			// props.reset();
 			setContentLocale(getDefaultContentLocale());
 			setBodyHeightValue();
+		}
+		if (props.open === false) {
+			props.reset();
 		}
 	});
 

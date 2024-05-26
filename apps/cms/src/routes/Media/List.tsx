@@ -1,11 +1,13 @@
 import T from "@/translations";
-import { type Component, createSignal } from "solid-js";
+import { type Component, createSignal, Show } from "solid-js";
 import useSearchParams from "@/hooks/useSearchParams";
 import userStore from "@/store/userStore";
+import api from "@/services/api";
 import Layout from "@/components/Groups/Layout";
 import Query from "@/components/Groups/Query";
 import MediaGrid from "@/components/Grids/MediaGrid";
 import CreateUpdateMediaPanel from "@/components/Panels/Media/CreateUpdateMediaPanel";
+import Alert from "@/components/Blocks/Alert";
 
 const MediaListRoute: Component = () => {
 	// ----------------------------------
@@ -54,6 +56,12 @@ const MediaListRoute: Component = () => {
 	);
 	const [getOpenCreateMediaPanel, setOpenCreateMediaPanel] =
 		createSignal<boolean>(false);
+
+	// ----------------------------------------
+	// Queries / Mutations
+	const settings = api.settings.useGetSettings({
+		queryParams: {},
+	});
 
 	// ----------------------------------
 	// Render
@@ -163,8 +171,30 @@ const MediaListRoute: Component = () => {
 				},
 				contentLocale: true,
 			}}
+			topBar={
+				<Show when={settings.data?.data.media.enabled === false}>
+					<Alert
+						style="page-heading"
+						alerts={[
+							{
+								type: "warning",
+								message: T()(
+									"media_support_config_stategy_error",
+								),
+								show:
+									settings.data?.data.media.enabled === false,
+							},
+						]}
+					/>
+				</Show>
+			}
 		>
-			<MediaGrid searchParams={searchParams} />
+			<MediaGrid
+				searchParams={searchParams}
+				state={{
+					setOpenCreateMediaPanel: setOpenCreateMediaPanel,
+				}}
+			/>
 			<CreateUpdateMediaPanel
 				state={{
 					open: getOpenCreateMediaPanel(),

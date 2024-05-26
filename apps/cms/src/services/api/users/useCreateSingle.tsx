@@ -7,8 +7,6 @@ interface Params {
 	body: {
 		email: string;
 		username: string;
-		password: string;
-		passwordConfirmation: string;
 		firstName?: string;
 		lastName?: string;
 		superAdmin?: 1 | 0;
@@ -40,10 +38,10 @@ const useCreateSingle = (props?: UseUpdateSingleProps) => {
 		ResponseBody<UserResponse>
 	>({
 		mutationFn: createSingleReq,
-		successToast: {
+		getSuccessToast: () => ({
 			title: T()("user_create_toast_title"),
 			message: T()("user_create_toast_message"),
-		},
+		}),
 		invalidates: ["users.getMultiple"],
 		onSuccess: props?.onSuccess,
 		onError: props?.onError,

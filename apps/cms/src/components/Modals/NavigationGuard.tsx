@@ -1,6 +1,7 @@
 import T from "@/translations";
 import { type Component, createSignal, onCleanup, onMount } from "solid-js";
 import { useNavigate } from "@solidjs/router";
+import brickStore from "@/store/brickStore";
 import Modal from "@/components/Groups/Modal";
 
 interface NavigationGuardProps {
@@ -46,7 +47,9 @@ const NavigationGuard: Component<NavigationGuardProps> = (props) => {
 	);
 };
 
-export const navGuardHook = () => {
+export const navGuardHook = (props?: {
+	brickMutateLock?: boolean;
+}) => {
 	const [getTargetElement, setTargetElement] =
 		createSignal<HTMLLinkElement | null>(null);
 	const [getTargetCallback, setTargetCallback] = createSignal<() => void>(
@@ -55,6 +58,12 @@ export const navGuardHook = () => {
 	const [getModalOpen, setModalOpen] = createSignal<boolean>(false);
 
 	const clickEvent = (e: MouseEvent) => {
+		if (
+			props?.brickMutateLock &&
+			brickStore.get.documentMutated === false
+		) {
+			return;
+		}
 		e.preventDefault();
 		const target = e.currentTarget as HTMLLinkElement;
 		if (target) {

@@ -24,6 +24,7 @@ interface JSONFieldProps {
 		repeaterKey?: string;
 		contentLocale: string;
 		fieldError: FieldErrors | undefined;
+		altLocaleHasError: boolean;
 	};
 }
 
@@ -37,17 +38,18 @@ export const JSONField: Component<JSONFieldProps> = (props) => {
 	const fieldData = createMemo(() => {
 		return props.state.fieldData;
 	});
-
-	// -------------------------------
-	// Effects
-	createEffect(() => {
-		const value = brickHelpers.getFieldValue<string>({
+	const fieldValue = createMemo(() => {
+		return brickHelpers.getFieldValue<string>({
 			fieldData: fieldData(),
 			fieldConfig: props.state.fieldConfig,
 			contentLocale: props.state.contentLocale,
 		});
+	});
 
-		setValue(JSON.stringify(value ?? "", null, 4));
+	// -------------------------------
+	// Effects
+	createEffect(() => {
+		setValue(JSON.stringify(fieldValue() ?? "", null, 4));
 	});
 
 	// -------------------------------
@@ -80,6 +82,7 @@ export const JSONField: Component<JSONFieldProps> = (props) => {
 				placeholder: props.state.fieldConfig.placeholder,
 				describedBy: props.state.fieldConfig.description,
 			}}
+			altLocaleHasError={props.state.altLocaleHasError}
 			disabled={props.state.fieldConfig.disabled}
 			errors={props.state.fieldError}
 			required={props.state.fieldConfig.validation?.required || false}

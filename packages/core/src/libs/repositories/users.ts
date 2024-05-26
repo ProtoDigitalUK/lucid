@@ -24,6 +24,13 @@ export default class UsersRepo {
 			.select(sql`count(*)`.as("count"))
 			.executeTakeFirst() as Promise<{ count: string } | undefined>;
 	};
+	activeCount = async () => {
+		return this.db
+			.selectFrom("lucid_users")
+			.select(sql`count(*)`.as("count"))
+			.where("is_deleted", "=", 0)
+			.executeTakeFirst() as Promise<{ count: string } | undefined>;
+	};
 	// ----------------------------------------
 	// selects
 	selectSingle = async <K extends keyof Select<HeadlessUsers>>(props: {
@@ -53,6 +60,7 @@ export default class UsersRepo {
 				"updated_at",
 				"username",
 				"super_admin",
+				"triggered_password_reset",
 				props.config.db
 					.jsonArrayFrom(
 						eb
@@ -126,6 +134,7 @@ export default class UsersRepo {
 	selectMultipleFiltered = async (props: {
 		query: z.infer<typeof usersSchema.getMultiple.query>;
 		config: Config;
+		authId: number;
 	}) => {
 		const usersQuery = this.db
 			.selectFrom("lucid_users")
@@ -238,6 +247,14 @@ export default class UsersRepo {
 							tableKey: "lucid_users.username",
 						},
 					],
+					exclude: [
+						{
+							queryKey: "current",
+							tableKey: "lucid_users.id",
+							value: props.authId,
+							operator: "<>",
+						},
+					],
 				},
 			},
 		);
@@ -273,6 +290,7 @@ export default class UsersRepo {
 			isDeleted?: BooleanInt;
 			isDeletedAt?: string;
 			deletedBy?: number;
+			triggerPasswordReset?: BooleanInt;
 		};
 	}) => {
 		let query = this.db
@@ -288,6 +306,7 @@ export default class UsersRepo {
 				is_deleted: props.data.isDeleted,
 				is_deleted_at: props.data.isDeletedAt,
 				deleted_by: props.data.deletedBy,
+				triggered_password_reset: props.data.triggerPasswordReset,
 			})
 			.returning(["id", "first_name", "last_name", "email"]);
 
@@ -301,9 +320,10 @@ export default class UsersRepo {
 		superAdmin?: BooleanInt;
 		email: string;
 		username: string;
+		triggerPasswordReset: BooleanInt;
 		firstName?: string;
 		lastName?: string;
-		password: string;
+		password?: string;
 	}) => {
 		return this.db
 			.insertInto("lucid_users")
@@ -315,6 +335,7 @@ export default class UsersRepo {
 				first_name: props.firstName,
 				last_name: props.lastName,
 				password: props.password,
+				triggered_password_reset: props.triggerPasswordReset,
 			})
 			.executeTakeFirst();
 	};

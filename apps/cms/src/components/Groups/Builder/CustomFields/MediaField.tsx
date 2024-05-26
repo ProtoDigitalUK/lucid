@@ -24,6 +24,7 @@ interface MediaFieldProps {
 		repeaterKey?: string;
 		contentLocale: string;
 		fieldError: FieldErrors | undefined;
+		altLocaleHasError: boolean;
 	};
 }
 
@@ -38,23 +39,26 @@ export const MediaField: Component<MediaFieldProps> = (props) => {
 	const fieldData = createMemo(() => {
 		return props.state.fieldData;
 	});
+	const fieldValue = createMemo(() => {
+		return brickHelpers.getFieldValue<number>({
+			fieldData: fieldData(),
+			fieldConfig: props.state.fieldConfig,
+			contentLocale: props.state.contentLocale,
+		});
+	});
+	const fieldMeta = createMemo(() => {
+		return brickHelpers.getFieldMeta<MediaMeta>({
+			fieldData: fieldData(),
+			fieldConfig: props.state.fieldConfig,
+			contentLocale: props.state.contentLocale,
+		});
+	});
 
 	// -------------------------------
 	// Effects
 	createEffect(() => {
-		const value = brickHelpers.getFieldValue<number>({
-			fieldData: fieldData(),
-			fieldConfig: props.state.fieldConfig,
-			contentLocale: props.state.contentLocale,
-		});
-		const meta = brickHelpers.getFieldMeta<MediaMeta>({
-			fieldData: fieldData(),
-			fieldConfig: props.state.fieldConfig,
-			contentLocale: props.state.contentLocale,
-		});
-
-		setValue(value);
-		setMeta(meta);
+		setValue(fieldValue());
+		setMeta(fieldMeta());
 	});
 
 	// -------------------------------
@@ -89,6 +93,7 @@ export const MediaField: Component<MediaFieldProps> = (props) => {
 					label: props.state.fieldConfig.title,
 					describedBy: props.state.fieldConfig.description,
 				}}
+				altLocaleHasError={props.state.altLocaleHasError}
 				disabled={props.state.fieldConfig.disabled}
 				extensions={props.state.fieldConfig.validation?.extensions}
 				type={props.state.fieldConfig.validation?.type}

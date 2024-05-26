@@ -1,10 +1,13 @@
 import T from "../../translations/index.js";
 import type { FastifyRequest } from "fastify";
+import argon2 from "argon2";
 import { LucidAPIError } from "../../utils/error-handler.js";
-import usersService from "../users/index.js";
 import serviceWrapper from "../../utils/service-wrapper.js";
-import Repository from "../../libs/repositories/index.js";
 import type { ServiceConfig } from "../../utils/service-wrapper.js";
+import Repository from "../../libs/repositories/index.js";
+import email from "../email/index.js";
+import account from "./index.js";
+import constants from "../../constants.js";
 
 export interface ServiceData {
 	auth: FastifyRequest["auth"];
@@ -12,14 +15,16 @@ export interface ServiceData {
 	lastName?: string;
 	username?: string;
 	email?: string;
-	roleIds?: number[];
+	currentPassword?: string;
+	newPassword?: string;
+	passwordConfirmation?: string;
 }
 
 const updateMe = async (serviceConfig: ServiceConfig, data: ServiceData) => {
 	const UsersRepo = Repository.get("users", serviceConfig.db);
 
 	const getUser = await UsersRepo.selectSingle({
-		select: ["super_admin"],
+		select: ["super_admin", "password", "first_name"],
 		where: [
 			{
 				key: "id",
@@ -39,63 +44,80 @@ const updateMe = async (serviceConfig: ServiceConfig, data: ServiceData) => {
 		});
 	}
 
-	const [userWithEmail, userWithUsername] = await Promise.all([
-		data.email !== undefined
-			? UsersRepo.selectSingle({
-					select: ["id"],
-					where: [
-						{
-							key: "email",
-							operator: "=",
-							value: data.email,
-						},
-						{
-							key: "id",
-							operator: "!=",
-							value: data.auth.id,
-						},
-					],
-				})
-			: undefined,
-		data.username !== undefined
-			? UsersRepo.selectSingle({
-					select: ["id"],
-					where: [
-						{
-							key: "username",
-							operator: "=",
-							value: data.username,
-						},
-						{
-							key: "id",
-							operator: "!=",
-							value: data.auth.id,
-						},
-					],
-				})
-			: undefined,
-		data.roleIds !== undefined
-			? serviceWrapper(usersService.checks.checkRolesExist, false)(
-					serviceConfig,
-					{
-						roleIds: data.roleIds,
-					},
-				)
-			: undefined,
-	]);
+	const [userWithEmail, userWithUsername, updatePassword] = await Promise.all(
+		[
+			data.email !== undefined
+				? UsersRepo.selectSingle({
+						select: ["id"],
+						where: [
+							{
+								key: "email",
+								operator: "=",
+								value: data.email,
+							},
+							{
+								key: "id",
+								operator: "!=",
+								value: data.auth.id,
+							},
+						],
+					})
+				: undefined,
+			data.username !== undefined
+				? UsersRepo.selectSingle({
+						select: ["id"],
+						where: [
+							{
+								key: "username",
+								operator: "=",
+								value: data.username,
+							},
+							{
+								key: "id",
+								operator: "!=",
+								value: data.auth.id,
+							},
+						],
+					})
+				: undefined,
+			serviceWrapper(account.checks.checkUpdatePassword, false)(
+				serviceConfig,
+				{
+					password: getUser.password,
+					currentPassword: data.currentPassword,
+					newPassword: data.newPassword,
+					passwordConfirmation: data.passwordConfirmation,
+				},
+			),
+		],
+	);
 
 	if (data.email !== undefined && userWithEmail !== undefined) {
 		throw new LucidAPIError({
 			type: "basic",
-			message: T("this_email_is_already_in_use"),
 			status: 400,
+			errorResponse: {
+				body: {
+					email: {
+						code: "invalid",
+						message: T("this_email_is_already_in_use"),
+					},
+				},
+			},
 		});
 	}
 	if (data.username !== undefined && userWithUsername !== undefined) {
 		throw new LucidAPIError({
 			type: "basic",
-			message: T("this_username_is_already_in_use"),
 			status: 400,
+			errorResponse: {
+				body: {
+					username: {
+						code: "invalid",
+						message: T("this_username_is_already_in_use"),
+					},
+				},
+			},
 		});
 	}
 
@@ -106,6 +128,8 @@ const updateMe = async (serviceConfig: ServiceConfig, data: ServiceData) => {
 			username: data.username,
 			email: data.email,
 			updatedAt: new Date().toISOString(),
+			password: updatePassword.newPassword,
+			triggerPasswordReset: updatePassword.triggerPasswordReset,
 		},
 		where: [
 			{
@@ -126,17 +150,19 @@ const updateMe = async (serviceConfig: ServiceConfig, data: ServiceData) => {
 		});
 	}
 
-	// TODO: send email to user to confirm email change ?
+	if (data.email !== undefined) {
+		await serviceWrapper(email.sendEmail, false)(serviceConfig, {
+			template: constants.emailTemplates.emailChanged,
+			type: "internal",
+			to: data.email,
+			subject: T("email_update_success_subject"),
+			data: {
+				firstName: data.firstName || getUser.first_name,
+			},
+		});
+	}
 
 	if (getUser.super_admin === 0) return;
-
-	await serviceWrapper(usersService.updateMultipleRoles, false)(
-		serviceConfig,
-		{
-			userId: data.auth.id,
-			roleIds: data.roleIds,
-		},
-	);
 };
 
 export default updateMe;

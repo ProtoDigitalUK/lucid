@@ -1,5 +1,7 @@
+import T from "@/translations";
 import { createSignal } from "solid-js";
 import request, { type RequestParams, getFetchURL } from "@/utils/request";
+import { LucidError } from "@/utils/error-handling";
 import { csrfReq } from "@/services/api/auth/useCsrf";
 
 const [getRunning, setRunning] = createSignal(false);
@@ -24,8 +26,11 @@ const useRefreshToken = async <Response, Data = unknown>(
 	setRefreshTokenPromise(null);
 
 	if (!successful) {
-		window.location.href = "/login";
-		return {} as Response;
+		throw new LucidError(T()("error_fetching_refresh_token"), {
+			status: 401,
+			name: T()("unauthorised"),
+			message: T()("error_fetching_refresh_token"),
+		});
 	}
 
 	return request(params);

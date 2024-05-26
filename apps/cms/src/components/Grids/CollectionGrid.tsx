@@ -1,3 +1,4 @@
+import T from "@/translations";
 import { type Component, For } from "solid-js";
 import api from "@/services/api";
 import type useSearchParams from "@/hooks/useSearchParams";
@@ -29,6 +30,13 @@ const CollectionGrid: Component<CollectionGridProps> = (props) => {
 				isLoading: collections.isLoading,
 				isError: collections.isError,
 				isSuccess: collections.isSuccess,
+			}}
+			options={{
+				showNoEntries: true,
+			}}
+			copy={{
+				noEntryTitle: T()("no_collections"),
+				noEntryDescription: T()("no_collections_description"),
 			}}
 			searchParams={props.searchParams}
 			loadingCard={<CollectionCardLoading />}

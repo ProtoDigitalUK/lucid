@@ -8,6 +8,7 @@ import {
 	createEffect,
 	type Accessor,
 } from "solid-js";
+import { useQueryClient } from "@tanstack/solid-query";
 import api from "@/services/api";
 import useSingleFileUpload from "@/hooks/useSingleFileUpload";
 import type { MediaResponse } from "@lucidcms/core/types";
@@ -31,6 +32,7 @@ interface CreateUpdateMediaPanelProps {
 const CreateUpdateMediaPanel: Component<CreateUpdateMediaPanelProps> = (
 	props,
 ) => {
+	const queryClient = useQueryClient();
 	const panelMode = createMemo(() => {
 		return props.id === undefined ? "create" : "update";
 	});
@@ -236,6 +238,9 @@ const CreateUpdateMediaPanel: Component<CreateUpdateMediaPanelProps> = (
 				createSingle.reset();
 				updateSingle.reset();
 				MediaFile.reset();
+				queryClient.invalidateQueries({
+					queryKey: ["media.getSingle"],
+				});
 				setTitleTranslations([]);
 				setAltTranslations([]);
 				setUpdateDataLock(false);
@@ -267,10 +272,10 @@ const CreateUpdateMediaPanel: Component<CreateUpdateMediaPanelProps> = (
 								<Form.Input
 									id={`name-${locale.code}`}
 									value={
-										getTitleTranslations().find(
-											(item) =>
-												item.localeCode === locale.code,
-										)?.value || ""
+										helpers.getTranslation(
+											getTitleTranslations(),
+											locale.code,
+										) || ""
 									}
 									onChange={(val) => {
 										helpers.updateTranslation(
@@ -294,11 +299,10 @@ const CreateUpdateMediaPanel: Component<CreateUpdateMediaPanelProps> = (
 									<Form.Input
 										id={`alt-${locale.code}`}
 										value={
-											getAltTranslations().find(
-												(item) =>
-													item.localeCode ===
-													locale.code,
-											)?.value || ""
+											helpers.getTranslation(
+												getAltTranslations(),
+												locale.code,
+											) || ""
 										}
 										onChange={(val) => {
 											helpers.updateTranslation(

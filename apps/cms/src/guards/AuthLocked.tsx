@@ -1,6 +1,4 @@
-import { type Component, Switch, Match, type JSXElement } from "solid-js";
-import { Navigate } from "@solidjs/router";
-import { getCookie } from "@/utils/cookie";
+import type { Component, JSXElement } from "solid-js";
 
 interface AuthLockedProps {
 	children: JSXElement;
@@ -9,13 +7,7 @@ interface AuthLockedProps {
 const AuthLocked: Component<AuthLockedProps> = (props) => {
 	// ----------------------------------------
 	// Render
-	return (
-		<Switch fallback={props.children}>
-			<Match when={getCookie("auth")}>
-				<Navigate href="/" />
-			</Match>
-		</Switch>
-	);
+	return props.children;
 };
 
 export default AuthLocked;

@@ -22,8 +22,8 @@ interface RepeaterFieldProps {
 export const RepeaterField: Component<RepeaterFieldProps> = (props) => {
 	// -------------------------------
 	// Memos
-	const contentLocale = createMemo(
-		() => contentLocaleStore.get.contentLocale ?? "",
+	const contentLocales = createMemo(
+		() => contentLocaleStore.get.locales.map((locale) => locale.code) || [],
 	);
 	const fieldConfig = createMemo(() => props.state.fieldConfig);
 	const brickIndex = createMemo(() => props.state.brickIndex);
@@ -48,7 +48,7 @@ export const RepeaterField: Component<RepeaterFieldProps> = (props) => {
 			key: fieldConfig().key,
 			groupId: props.state.groupId,
 			parentRepeaterKey: props.state.parentRepeaterKey,
-			contentLocale: contentLocale(),
+			locales: contentLocales(),
 		});
 	};
 
@@ -60,6 +60,13 @@ export const RepeaterField: Component<RepeaterFieldProps> = (props) => {
 				"mt-5": props.state.repeaterDepth > 0,
 			})}
 		>
+			<p
+				class={
+					"block text-sm transition-colors duration-200 ease-in-out mb-2"
+				}
+			>
+				{fieldConfig().title}
+			</p>
 			{/* Repeater Body */}
 			<Switch>
 				<Match when={groups().length > 0}>
@@ -68,8 +75,12 @@ export const RepeaterField: Component<RepeaterFieldProps> = (props) => {
 							brickStore.get.swapGroupOrder({
 								brickIndex: props.state.brickIndex,
 								repeaterKey: fieldConfig().key,
-								groupId: index,
+								selectedGroupId: index,
 								targetGroupId: targetindex,
+
+								groupId: props.state.groupId,
+								parentRepeaterKey:
+									props.state.parentRepeaterKey,
 							});
 						}}
 					>
@@ -89,6 +100,9 @@ export const RepeaterField: Component<RepeaterFieldProps> = (props) => {
 											groupIndex: i(),
 											repeaterDepth:
 												props.state.repeaterDepth,
+											parentRepeaterKey:
+												props.state.parentRepeaterKey,
+											parentGroupId: props.state.groupId,
 										}}
 									/>
 								)}

@@ -17,6 +17,7 @@ interface WYSIWYGProps {
 	required?: boolean;
 	disabled?: boolean;
 	errors?: ErrorResult | FieldErrors;
+	altLocaleHasError?: boolean;
 	noMargin?: boolean;
 }
 
@@ -77,6 +78,7 @@ export const WYSIWYG: Component<WYSIWYGProps> = (props) => {
 				focused={inputFocus()}
 				required={props.required}
 				theme={"basic"}
+				altLocaleHasError={props.altLocaleHasError}
 			/>
 			<div
 				class={classnames("mt-1", {
