@@ -54,6 +54,7 @@ const Migration00000006: MigrationFn = (adapter) => {
 						.onDelete("cascade")
 						.onUpdate("cascade"),
 				)
+				.addColumn("file_size", "integer", (col) => col.notNull())
 				.execute();
 
 			await db.schema

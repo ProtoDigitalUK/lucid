@@ -45,12 +45,14 @@ export default class ProcessedImagesRepo {
 	createSingle = async (props: {
 		key: string;
 		mediaKey: string;
+		fileSize: number;
 	}) => {
 		return this.db
 			.insertInto("lucid_processed_images")
 			.values({
 				key: props.key,
 				media_key: props.mediaKey,
+				file_size: props.fileSize,
 			})
 			.executeTakeFirst();
 	};

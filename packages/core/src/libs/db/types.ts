@@ -157,6 +157,7 @@ export interface HeadlessMedia {
 export interface HeadlessProcessedImages {
 	key: string;
 	media_key: string | null;
+	file_size: number;
 }
 
 export interface HeadlessCollectionDocuments {

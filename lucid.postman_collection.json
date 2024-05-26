@@ -63,7 +63,7 @@
 								"key": "_csrf",
 								"value": "{{CSRF}}",
 								"type": "text",
-								"uuid": "cc2d947a-4eca-4da3-bf18-443f50933abf"
+								"uuid": "22839a02-5a0a-4fca-9da9-a6d4fb5606dd"
 							}
 						],
 						"body": {
@@ -97,9 +97,8 @@
 						"header": [
 							{
 								"key": "_csrf",
-								"value": "{{CSRF}}",
-								"type": "text",
-								"uuid": "0f89721a-ae39-4980-a902-867a67e75825"
+								"value": "{{CSRF}}fd",
+								"uuid": "1e569e15-fa78-4f26-8924-278f1b0fce7f"
 							}
 						],
 						"body": {
@@ -135,7 +134,7 @@
 								"key": "_csrf",
 								"value": "{{CSRF}}",
 								"type": "text",
-								"uuid": "215c9047-086c-49a7-8593-d05ee7dce4f5"
+								"uuid": "40c52970-6654-4c9b-ab7e-f23d766981e5"
 							}
 						],
 						"body": {
@@ -200,7 +199,7 @@
 								"key": "_csrf",
 								"value": "{{CSRF}}",
 								"type": "text",
-								"uuid": "048d1ccb-6d3c-4147-9c22-c6f7bcaac4e1"
+								"uuid": "b609d48b-8932-481d-bd06-4fafb799600d"
 							}
 						],
 						"body": {
@@ -307,7 +306,7 @@
 								"key": "_csrf",
 								"value": "{{CSRF}}",
 								"type": "text",
-								"uuid": "be01b28e-1c6d-4d8a-a083-a13b5e32fc56"
+								"uuid": "58073230-5b4d-456d-bc05-508b1c4eaf4c"
 							}
 						],
 						"body": {
@@ -344,7 +343,7 @@
 								"key": "_csrf",
 								"value": "{{CSRF}}",
 								"type": "text",
-								"uuid": "975195c5-0800-4770-8a79-8f527d5a373a"
+								"uuid": "957b6c05-b748-4500-91bd-a60ec7ef53c1"
 							}
 						],
 						"body": {
@@ -385,7 +384,7 @@
 							{
 								"key": "_csrf",
 								"value": "{{CSRF}}",
-								"uuid": "3a6c27c6-1a96-412a-b1b5-3c77dcb7ee26"
+								"uuid": "f27eef04-0e10-4e78-a4be-d188a56290f0"
 							}
 						],
 						"body": {
@@ -420,12 +419,12 @@
 							{
 								"key": "_csrf",
 								"value": "{{CSRF}}",
-								"uuid": "3b666364-2e63-4461-9850-8f432cd2ef91"
+								"uuid": "d5c0c80f-8747-4ba5-9d86-2609b0c8602a"
 							}
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"roleIds\": [1],\r\n    \"superAdmin\": 1\r\n}",
+							"raw": "{\r\n    // \"roleIds\": [1],\r\n    // \"superAdmin\": 1\r\n    \"triggerPasswordReset\": 1\r\n    // \"isDeleted\": 0\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -547,8 +546,7 @@
 							{
 								"key": "_csrf",
 								"value": "{{CSRF}}",
-								"type": "text",
-								"uuid": "87d1d994-7aac-46a5-98ae-a55225196dea"
+								"uuid": "8d630cf8-6a5f-45b6-9ea0-3911b486ad84"
 							}
 						],
 						"body": {
@@ -561,7 +559,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{BASE_URL}}/api/v1/users/20",
+							"raw": "{{BASE_URL}}/api/v1/users/1",
 							"host": [
 								"{{BASE_URL}}"
 							],
@@ -569,7 +567,7 @@
 								"api",
 								"v1",
 								"users",
-								"20"
+								"1"
 							]
 						},
 						"description": "## Description\n\nRecieves config for bricks. This is whats defined with the BrickBuilder class in the project setup."
@@ -592,7 +590,7 @@
 									{
 										"key": "_csrf",
 										"value": "{{CSRF}}",
-										"uuid": "efbe4639-51aa-4103-9479-44f5d0d5a6b9"
+										"uuid": "4569b783-b817-4adc-a534-dd366a7c4094"
 									}
 								],
 								"body": {
@@ -705,7 +703,7 @@
 										"key": "_csrf",
 										"value": "{{CSRF}}",
 										"type": "text",
-										"uuid": "d2c12437-e0d1-4571-a3e7-0083abb4fa3c"
+										"uuid": "58b24c3b-9969-4197-a85a-ec9c8bca9586"
 									}
 								],
 								"body": {
@@ -743,7 +741,7 @@
 										"key": "_csrf",
 										"value": "{{CSRF}}",
 										"type": "text",
-										"uuid": "c987dd88-9356-4390-b31d-8e65131e0a54"
+										"uuid": "40d04870-5698-42b4-b74a-21c21ce4e93f"
 									}
 								],
 								"body": {
@@ -864,7 +862,7 @@
 							{
 								"key": "_csrf",
 								"value": "{{CSRF}}",
-								"uuid": "462ec0fa-1539-4947-9be4-bca30ed61ce6"
+								"uuid": "e6667495-c69a-49b0-9522-0d17e9f48279"
 							}
 						],
 						"body": {
@@ -900,7 +898,7 @@
 								"key": "_csrf",
 								"value": "{{CSRF}}",
 								"type": "text",
-								"uuid": "cb770312-715d-46f2-b11b-7ebcdcc1d049"
+								"uuid": "b943214f-69a7-4439-8f88-57c31054d3a5"
 							}
 						],
 						"body": {
@@ -936,7 +934,7 @@
 								"key": "_csrf",
 								"value": "{{CSRF}}",
 								"type": "text",
-								"uuid": "efe9914c-8c19-4a4b-94d9-21a78c56a8c7"
+								"uuid": "e8c00dd2-38fe-48e5-b6e8-ee89803abdb8"
 							}
 						],
 						"body": {
@@ -976,7 +974,7 @@
 								"key": "_csrf",
 								"value": "{{CSRF}}",
 								"type": "text",
-								"uuid": "a6bf7a25-144f-4fae-8a8c-e03478d15532"
+								"uuid": "456a5647-4fee-47be-915b-211899f22910"
 							}
 						],
 						"body": {
@@ -1162,7 +1160,7 @@
 								"key": "_csrf",
 								"value": "{{CSRF}}",
 								"type": "text",
-								"uuid": "e0e8af50-2ece-4a8d-99a5-3d6075f4651a"
+								"uuid": "11bcf267-3d66-4c15-8e92-e71ff80a285f"
 							}
 						],
 						"body": {
@@ -1198,7 +1196,7 @@
 								"key": "_csrf",
 								"value": "{{CSRF}}",
 								"type": "text",
-								"uuid": "405f18ad-644b-40d9-988b-c279280cdb0d"
+								"uuid": "f6c1fa3f-8026-4b66-a07f-7f2c27bfa7f8"
 							}
 						],
 						"body": {
@@ -1256,7 +1254,7 @@
 							{
 								"key": "_csrf",
 								"value": "{{CSRF}}",
-								"uuid": "5a4733bf-7e8c-49af-bebd-f9c043f7ae6d"
+								"uuid": "3498a2d3-cf8a-46f3-b147-d4b1472c1648"
 							}
 						],
 						"body": {
@@ -1297,7 +1295,7 @@
 							{
 								"key": "_csrf",
 								"value": "{{CSRF}}",
-								"uuid": "6a416a55-65d3-4737-b597-3ea028c1de6e"
+								"uuid": "ca1da9db-5e71-44db-9c53-9626279aae68"
 							}
 						],
 						"body": {
@@ -1383,7 +1381,7 @@
 								"key": "_csrf",
 								"value": "{{CSRF}}",
 								"type": "text",
-								"uuid": "9b065794-72fc-4e3b-8e37-98fac1c8e829"
+								"uuid": "dd9017ad-5e65-4d33-bed5-693d20407f71"
 							}
 						],
 						"body": {
@@ -1421,7 +1419,7 @@
 							{
 								"key": "lucid-content-lang",
 								"value": "{{LUCID_CONTENT_LANG}}",
-								"uuid": "b6f504d8-f892-48b3-8c88-9b49ab86dd16"
+								"uuid": "6563af4d-f6db-4cd4-9046-03127038e939"
 							}
 						],
 						"body": {
@@ -1493,7 +1491,7 @@
 								"key": "_csrf",
 								"value": "{{CSRF}}",
 								"type": "text",
-								"uuid": "b06fb591-5385-4a23-85eb-26be7052227a"
+								"uuid": "8f778afd-ee8f-485d-9551-b51309ff9de6"
 							}
 						],
 						"body": {
@@ -1530,7 +1528,7 @@
 								"key": "_csrf",
 								"value": "{{CSRF}}",
 								"type": "text",
-								"uuid": "7310cce3-3245-49b7-90a5-668dc06a3d5b"
+								"uuid": "a7f6bc0a-c168-46dd-8783-7e53dda102d5"
 							}
 						],
 						"body": {
@@ -1608,7 +1606,7 @@
 								"value": "image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8",
 								"description": "Accept AVIF Example",
 								"type": "text",
-								"uuid": "ac0c4a69-7215-4b6c-95b0-c63b88bfd465",
+								"uuid": "443d170a-d6fe-4165-9c1e-fd5ffcbfc054",
 								"disabled": true
 							},
 							{
@@ -1616,7 +1614,7 @@
 								"value": "image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8",
 								"description": "Accept WebP Example",
 								"type": "text",
-								"uuid": "ac0c4a69-7215-4b6c-95b0-c63b88bfd465",
+								"uuid": "443d170a-d6fe-4165-9c1e-fd5ffcbfc054",
 								"disabled": true
 							},
 							{
@@ -1624,7 +1622,7 @@
 								"value": "image/apng,image/svg+xml,image/*,*/*;q=0.8",
 								"description": "Accept no new formats",
 								"type": "text",
-								"uuid": "ac0c4a69-7215-4b6c-95b0-c63b88bfd465",
+								"uuid": "443d170a-d6fe-4165-9c1e-fd5ffcbfc054",
 								"disabled": true
 							}
 						],

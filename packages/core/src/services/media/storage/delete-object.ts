@@ -6,6 +6,7 @@ import type { ServiceConfig } from "../../../utils/service-wrapper.js";
 export interface ServiceData {
 	key: string;
 	size: number;
+	processedSize: number;
 }
 
 const deleteObject = async (
@@ -23,7 +24,8 @@ const deleteObject = async (
 		},
 	);
 
-	const newStorageUsed = (storageUsed.valueInt || 0) - data.size;
+	const newStorageUsed =
+		(storageUsed.valueInt || 0) - data.size - data.processedSize;
 
 	await Promise.all([
 		mediaStrategy.deleteSingle(data.key),

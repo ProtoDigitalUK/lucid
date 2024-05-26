@@ -1,6 +1,8 @@
 import Repository from "../../libs/repositories/index.js";
 import mediaServices from "../media/index.js";
 import type { ServiceConfig } from "../../utils/service-wrapper.js";
+import serviceWrapper from "../../utils/service-wrapper.js";
+import optionsServices from "../options/index.js";
 
 export interface ServiceData {
 	key: string;
@@ -16,21 +18,30 @@ const clearSingle = async (serviceConfig: ServiceConfig, data: ServiceData) => {
 		serviceConfig.db,
 	);
 
-	const allProcessedImages = await ProcessedImagesRepo.selectMultiple({
-		select: ["key"],
-		where: [
-			{
-				key: "media_key",
-				operator: "=",
-				value: data.key,
-			},
-		],
-	});
+	const [storageUsed, processedImages] = await Promise.all([
+		serviceWrapper(optionsServices.getSingle, false)(serviceConfig, {
+			name: "media_storage_used",
+		}),
+		ProcessedImagesRepo.selectMultiple({
+			select: ["key", "file_size"],
+			where: [
+				{
+					key: "media_key",
+					operator: "=",
+					value: data.key,
+				},
+			],
+		}),
+	]);
 
-	if (allProcessedImages.length === 0) return;
+	if (processedImages.length === 0) return;
+
+	const totalSize = processedImages.reduce((acc, i) => acc + i.file_size, 0);
+
+	const newStorageUsed = (storageUsed.valueInt || 0) - totalSize;
 
 	await Promise.all([
-		mediaStrategy.deleteMultiple(allProcessedImages.map((i) => i.key)),
+		mediaStrategy.deleteMultiple(processedImages.map((i) => i.key)),
 		ProcessedImagesRepo.deleteMultiple({
 			where: [
 				{
@@ -39,6 +50,10 @@ const clearSingle = async (serviceConfig: ServiceConfig, data: ServiceData) => {
 					value: data.key,
 				},
 			],
+		}),
+		serviceWrapper(optionsServices.updateSingle, false)(serviceConfig, {
+			name: "media_storage_used",
+			valueInt: newStorageUsed < 0 ? 0 : newStorageUsed,
 		}),
 	]);
 };
