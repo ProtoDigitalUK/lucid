@@ -12,7 +12,7 @@ const BannerBrick = new BrickBuilder("banner", {
 	})
 	.addText({
 		key: "title",
-		description: "The title of the banner",
+		description: "The title of the banner. This is displayed as an H1 tag.",
 		validation: {
 			required: true,
 		},
@@ -21,16 +21,15 @@ const BannerBrick = new BrickBuilder("banner", {
 		key: "intro",
 	})
 	.addRepeater({
-		key: "social_links",
+		key: "call_to_actions",
+		title: "Call to Actions",
 		validation: {
 			maxGroups: 3,
 		},
 	})
-	.addText({
-		key: "social_title",
-	})
-	.addText({
-		key: "social_url",
+	.addLink({
+		key: "link",
+		title: "Link",
 	})
 	.endRepeater()
 	.addTab({

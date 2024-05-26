@@ -1,22 +1,36 @@
 import { CollectionBuilder } from "@lucidcms/core";
-// Bricks
-import BannerBrick from "../bricks/banner.js";
-import IntroBrick from "../bricks/intro.js";
 
 const BlogCollection = new CollectionBuilder("blog", {
 	mode: "multiple",
 	title: "Blogs",
 	singular: "Blog",
 	description: "Manage your blogs.",
-	bricks: {
-		builder: [BannerBrick, IntroBrick],
-	},
+	translations: true,
 })
 	.addText({
 		key: "page_title",
+		hidden: false,
+		disabled: false,
+		collection: {
+			list: true,
+			filterable: true,
+		},
 	})
 	.addTextarea({
 		key: "page_excerpt",
+		collection: {
+			list: true,
+			filterable: true,
+		},
+	})
+	.addUser({
+		key: "author",
+		collection: {
+			list: true,
+		},
+	})
+	.addWysiwyg({
+		key: "content",
 	});
 
 export default BlogCollection;
