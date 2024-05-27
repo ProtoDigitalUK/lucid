@@ -119,10 +119,13 @@ const BuilderBrickRow: Component<BuilderBrickRowProps> = (props) => {
 		<li
 			data-dragkey={DRAG_DROP_KEY}
 			class={classNames(
-				"w-full bg-container-2 border border-border rounded-md mb-15 last:mb-0",
+				"w-full bg-container-2 border border-border rounded-md mb-15 last:mb-0 focus-within:outline-none focus-within:ring-1 ring-inset ring-primary-base",
 				{
 					"opacity-60":
 						props.dragDrop.getDragging()?.index === brickIndex(),
+					"ring-1 ring-inset":
+						props.dragDrop.getDraggingTarget()?.index ===
+						brickIndex(),
 				},
 			)}
 			onDragStart={(e) =>
@@ -143,13 +146,7 @@ const BuilderBrickRow: Component<BuilderBrickRowProps> = (props) => {
 			{/* Header */}
 			<div
 				class={classNames(
-					"flex items-center justify-between cursor-pointer px-15 py-2.5 focus:outline-none focus:ring-1 rounded-md ring-inset ring-primary-base",
-					{
-						"mb-15": getBrickOpen(),
-						"ring-1 ring-inset":
-							props.dragDrop.getDraggingTarget()?.index ===
-							brickIndex(),
-					},
+					"flex items-center justify-between cursor-pointer px-15 py-2.5 rounded-md focus:outline-none",
 				)}
 				onClick={toggleDropdown}
 				onKeyDown={(e) => {

@@ -7,12 +7,13 @@ import formatPostInsertBricks from "./helpers/format-post-insert-bricks.js";
 import formatInsertFields from "./helpers/format-insert-fields.js";
 import collectionBricksServices from "./index.js";
 import serviceWrapper from "../../utils/service-wrapper.js";
+import type CollectionBuilder from "../../libs/builders/collection-builder/index.js";
 
 export interface ServiceData {
 	documentId: number;
 	bricks?: Array<BrickSchema>;
 	fields?: Array<FieldSchemaType>;
-	collectionKey: string;
+	collection: CollectionBuilder;
 }
 
 const createMultiple = async (
@@ -31,6 +32,7 @@ const createMultiple = async (
 		fields: data.fields,
 		documentId: data.documentId,
 		localisation: serviceConfig.config.localisation,
+		collection: data.collection,
 	});
 	if (bricks.length === 0) return;
 
@@ -38,7 +40,7 @@ const createMultiple = async (
 	// validation
 	collectionBricksServices.checks.checkDuplicateOrder(bricks);
 	await collectionBricksServices.checks.checkValidateBricks(serviceConfig, {
-		collectionKey: data.collectionKey,
+		collection: data.collection,
 		bricks: bricks,
 	});
 

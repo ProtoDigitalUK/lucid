@@ -64,13 +64,13 @@ export const BrickBody: Component<BrickProps> = (props) => {
 			<div
 				class={classNames({
 					"p-15 pt-0": props.options.padding === "15",
-					"p-15 md:p-30 pt-0": props.options.padding === "30",
-					"-mt-15": props.options.bleedTop,
+					"p-15 md:p-30": props.options.padding === "30",
+					"!pt-15": props.options.bleedTop,
 				})}
 			>
 				{/* Tabs */}
 				<Show when={allTabs().length > 0}>
-					<div class="border-b border-border mb-15 flex flex-wrap">
+					<div class="border-b border-border mb-6 flex flex-wrap">
 						<For each={allTabs()}>
 							{(tab) => (
 								<button

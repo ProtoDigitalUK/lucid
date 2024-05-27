@@ -6,6 +6,7 @@ import type {
 } from "../../../schemas/collection-fields.js";
 import type { Config } from "../../../types.js";
 import type { BooleanInt } from "../../../libs/db/types.js";
+import type CollectionBuilder from "../../../libs/builders/collection-builder/index.js";
 
 export interface FieldInsertItem {
 	key: FieldSchemaType["key"];
@@ -31,6 +32,7 @@ interface FlatFieldsResposne {
 const flattenFields = (
 	fields: FieldSchemaType[] | FieldSchemaSimpleType[],
 	localisation: Config["localisation"],
+	collection: CollectionBuilder,
 ): FlatFieldsResposne => {
 	const fieldsRes: Array<FieldInsertItem> = [];
 	const groupsRes: Array<GroupInsertItem> = [];
@@ -93,7 +95,10 @@ const flattenFields = (
 				continue;
 			}
 
-			if (field.translations) {
+			if (
+				field.translations &&
+				collection.data.config.translations === true
+			) {
 				for (const [key, value] of Object.entries(field.translations)) {
 					const locale = localisation.locales.find(
 						(l) => l.code === key,
@@ -109,7 +114,7 @@ const flattenFields = (
 						groupRef: groupMeta?.ref,
 					});
 				}
-			} else if (field.value) {
+			} else {
 				const code = localisation.locales.find(
 					(l) => l.code === localisation.defaultLocale,
 				)?.code;

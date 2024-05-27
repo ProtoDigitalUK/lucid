@@ -35,6 +35,7 @@ type BrickStoreT = {
 			  }
 			| undefined;
 	};
+	collectionTranslations: boolean;
 	// functions
 	reset: () => void;
 	setBricks: (
@@ -103,6 +104,7 @@ const [get, set] = createStore<BrickStoreT>({
 	bricks: [],
 	fieldsErrors: [],
 	documentMutated: false,
+	collectionTranslations: false,
 	imagePreview: {
 		open: false,
 		data: undefined,
@@ -111,6 +113,7 @@ const [get, set] = createStore<BrickStoreT>({
 		set("bricks", []);
 		set("fieldsErrors", []);
 		set("documentMutated", false);
+		set("collectionTranslations", false);
 	},
 	// Bricks
 	setBricks(document, collection) {
@@ -219,7 +222,10 @@ const [get, set] = createStore<BrickStoreT>({
 
 				if (!field) return;
 
-				if (params.fieldConfig.translations === true) {
+				if (
+					params.fieldConfig.translations === true &&
+					get.collectionTranslations === true
+				) {
 					if (!field.translations) field.translations = {};
 					if (!field.meta) field.meta = {};
 
@@ -241,7 +247,10 @@ const [get, set] = createStore<BrickStoreT>({
 			type: params.fieldConfig.type,
 		};
 
-		if (params.fieldConfig.translations === true) {
+		if (
+			params.fieldConfig.translations === true &&
+			get.collectionTranslations === true
+		) {
 			for (const locale of params.locales) {
 				newField.translations = {
 					[locale]: params.fieldConfig.default,
@@ -307,7 +316,10 @@ const [get, set] = createStore<BrickStoreT>({
 						type: field.type,
 					};
 
-					if (field.translations === true) {
+					if (
+						field.translations === true &&
+						get.collectionTranslations === true
+					) {
 						for (const locale of params.locales) {
 							newField.translations = {
 								[locale]: field.default,
@@ -358,8 +370,6 @@ const [get, set] = createStore<BrickStoreT>({
 					repeaterKey: params.parentRepeaterKey,
 				});
 
-				console.log(field, params);
-
 				if (!field) return;
 				if (field.type !== "repeater") return;
 				if (field.groups === undefined) return;
@@ -395,8 +405,6 @@ const [get, set] = createStore<BrickStoreT>({
 				const targetGroupIndex = field.groups.findIndex(
 					(group) => group.id === params.targetGroupId,
 				);
-
-				console.log(selectedIndex, targetGroupIndex);
 
 				if (selectedIndex === -1 || targetGroupIndex === -1) return;
 

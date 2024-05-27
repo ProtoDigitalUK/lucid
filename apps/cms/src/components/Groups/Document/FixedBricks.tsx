@@ -63,12 +63,16 @@ const FixedBrickRow: Component<FixedBrickRowProps> = (props) => {
 	};
 
 	return (
-		<li class="w-full border-b border-border">
+		<li class="w-full border-b border-border focus-within:outline-none focus-within:ring-1 ring-inset ring-primary-base">
 			{/* Header */}
 			<div
-				class={
-					"flex justify-between cursor-pointer p-15 md:p-30 focus:outline-none focus:ring-1 ring-inset ring-primary-base"
-				}
+				class={classNames(
+					"flex justify-between cursor-pointer pt-15 px-15 md:px-30 md:pt-30 focus:outline-none",
+					{
+						"pb-0": getBrickOpen(),
+						"pb-15 md:pb-30": !getBrickOpen(),
+					},
+				)}
 				onClick={toggleDropdown}
 				onKeyDown={(e) => {
 					if (e.key === "Enter") {
@@ -81,7 +85,7 @@ const FixedBrickRow: Component<FixedBrickRowProps> = (props) => {
 				role="button"
 				tabIndex="0"
 			>
-				<h2>{config()?.title}:</h2>
+				<h2>{config()?.title}</h2>
 				<div class="flex gap-2">
 					<Builder.BrickImagePreviewButton brickConfig={config()} />
 					<button

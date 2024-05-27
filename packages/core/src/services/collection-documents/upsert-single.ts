@@ -127,7 +127,7 @@ const upsertSingle = async (
 		documentId: document.id,
 		bricks: bodyData.bricks,
 		fields: bodyData.fields,
-		collectionKey: data.collectionKey,
+		collection: collectionInstance,
 	});
 
 	await executeHooks(

@@ -1,3 +1,4 @@
+import type CollectionBuilder from "../../../libs/builders/collection-builder/index.js";
 import type { BooleanInt } from "../../../libs/db/types.js";
 import type { BrickSchema } from "../../../schemas/collection-bricks.js";
 import type { FieldSchemaType } from "../../../schemas/collection-fields.js";
@@ -18,6 +19,7 @@ const formatInsertBricks = (props: {
 	fields?: Array<FieldSchemaType>;
 	documentId: number;
 	localisation: Config["localisation"];
+	collection: CollectionBuilder;
 }): Array<BrickInsertItem> => {
 	const bricksRes: Array<BrickInsertItem> = [];
 
@@ -26,7 +28,11 @@ const formatInsertBricks = (props: {
 			const brick = props.bricks[i];
 			if (brick === undefined) continue;
 
-			const flat = flattenFields(brick.fields ?? [], props.localisation);
+			const flat = flattenFields(
+				brick.fields ?? [],
+				props.localisation,
+				props.collection,
+			);
 
 			bricksRes.push({
 				key: brick.key,
@@ -40,7 +46,11 @@ const formatInsertBricks = (props: {
 	}
 
 	if (props.fields !== undefined) {
-		const flat = flattenFields(props.fields, props.localisation);
+		const flat = flattenFields(
+			props.fields,
+			props.localisation,
+			props.collection,
+		);
 		bricksRes.push({
 			type: "collection-fields",
 			fields: flat.fields,

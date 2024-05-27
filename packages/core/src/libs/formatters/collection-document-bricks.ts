@@ -64,6 +64,8 @@ export default class CollectionDocumentBricksFormatter {
 							builder: builder,
 							defaultLocaleCode: props.defaultLocaleCode,
 							locales: props.locales,
+							collectionTranslations:
+								props.collection.data.config.translations,
 						},
 					),
 				};
@@ -89,6 +91,8 @@ export default class CollectionDocumentBricksFormatter {
 					builder: props.collection,
 					defaultLocaleCode: props.defaultLocaleCode,
 					locales: props.locales,
+					collectionTranslations:
+						props.collection.data.config.translations,
 				}),
 			);
 	};

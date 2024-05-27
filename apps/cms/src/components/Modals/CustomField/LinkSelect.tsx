@@ -31,6 +31,7 @@ const LinkSelect: Component = () => {
 			label: getLabel(),
 		});
 		linkFieldStore.set("open", false);
+		linkFieldStore.set("selectedLink", null);
 	};
 
 	// ----------------------------------
@@ -47,7 +48,10 @@ const LinkSelect: Component = () => {
 		<Modal.Root
 			state={{
 				open: open(),
-				setOpen: () => linkFieldStore.set("open", false),
+				setOpen: () => {
+					linkFieldStore.set("open", false);
+					linkFieldStore.set("selectedLink", null);
+				},
 			}}
 			options={{
 				noPadding: true,
@@ -102,6 +106,7 @@ const LinkSelect: Component = () => {
 						size="x-small"
 						onClick={() => {
 							linkFieldStore.set("open", false);
+							linkFieldStore.set("selectedLink", null);
 						}}
 					>
 						{T()("cancel")}
