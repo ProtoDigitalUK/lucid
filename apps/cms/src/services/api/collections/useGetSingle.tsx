@@ -34,6 +34,7 @@ const useGetSingle = (params: QueryHook<QueryParams>) => {
 		get enabled() {
 			return params.enabled ? params.enabled() : true;
 		},
+		refetchOnWindowFocus: params.refetchOnWindowFocus,
 	}));
 };
 
