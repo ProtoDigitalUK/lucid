@@ -1,5 +1,15 @@
 # @lucidcms/core
 
+## v0.5.0-alpha.1
+
+### Bug Fixes:
+
+- Fixed bug where field translation values where still being set on front and backend despite collections having translation set to false. ([16f1ada](https://github.com/ProtoDigitalUK/lucid/commit/16f1ada06799eb0c8e906bb1983af01c8f650c61))
+- Fixed bug in flatten fields function on backend that was dropping fields that do not have translations enabled and where the value is empty. ([449ab1d](https://github.com/ProtoDigitalUK/lucid/commit/449ab1d7915b43447c6e2821ef2063f56de5f56e))
+- Fixed issue with link select modal not clearing previously opened link on close. ([6b190a8](https://github.com/ProtoDigitalUK/lucid/commit/6b190a882dd315c31426745aa558772408247ef0))
+- Fixed document row and get field/meta helpers to use param collection translation value or brick store collection translation value. ([dfea7a0c](https://github.com/ProtoDigitalUK/lucid/commit/dfea7a0c960b7159640768a9a5152308b1978af9))
+- Fixed issue with document builder when in create mode where collection refetch on tab switch would reset field data. ([3787ce3](https://github.com/ProtoDigitalUK/lucid/commit/3787ce324a39b89fcd2be485978b0acfbe0d2140))
+
 ## v0.5.0-alpha.0
 
 ### Features:
