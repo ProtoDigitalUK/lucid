@@ -63,14 +63,14 @@ const FixedBrickRow: Component<FixedBrickRowProps> = (props) => {
 	};
 
 	return (
-		<li class="w-full border-b border-border">
+		<li class="w-full border-b border-border focus-within:outline-none focus-within:ring-1 ring-inset ring-primary-base">
 			{/* Header */}
 			<div
 				class={classNames(
-					"flex justify-between cursor-pointer border-b p-15 md:p-30 focus:outline-none focus:ring-1 ring-inset ring-primary-base",
+					"flex justify-between cursor-pointer pt-15 px-15 md:px-30 md:pt-30 focus:outline-none",
 					{
-						"border-border": getBrickOpen(),
-						"border-transparent": !getBrickOpen(),
+						"pb-0": getBrickOpen(),
+						"pb-15 md:pb-30": !getBrickOpen(),
 					},
 				)}
 				onClick={toggleDropdown}
