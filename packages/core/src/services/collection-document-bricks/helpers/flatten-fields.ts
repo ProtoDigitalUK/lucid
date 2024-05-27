@@ -114,7 +114,7 @@ const flattenFields = (
 						groupRef: groupMeta?.ref,
 					});
 				}
-			} else if (field.value) {
+			} else {
 				const code = localisation.locales.find(
 					(l) => l.code === localisation.defaultLocale,
 				)?.code;
