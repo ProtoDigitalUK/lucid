@@ -62,6 +62,7 @@ const DocumentRow: Component<DocumentRowProps> = (props) => {
 						document={props.document}
 						include={props.include}
 						index={i()}
+						collectionTranslations={props.collection.translations}
 					/>
 				)}
 			</For>
@@ -78,6 +79,7 @@ const DocumentDynamicColumns: Component<{
 	document: CollectionDocumentResponse;
 	include: boolean[];
 	index: number;
+	collectionTranslations: boolean;
 }> = (props) => {
 	// ----------------------------------
 	// Memos
@@ -92,6 +94,7 @@ const DocumentDynamicColumns: Component<{
 			fieldData: fieldData(),
 			fieldConfig: props.field,
 			contentLocale: contentLocale(),
+			collectionTranslations: props.collectionTranslations,
 		});
 	});
 	const fieldMeta = createMemo(() => {
@@ -99,6 +102,7 @@ const DocumentDynamicColumns: Component<{
 			fieldData: fieldData(),
 			fieldConfig: props.field,
 			contentLocale: contentLocale(),
+			collectionTranslations: props.collectionTranslations,
 		});
 	});
 
