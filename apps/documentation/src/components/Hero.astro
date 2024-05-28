@@ -1,4 +1,5 @@
 ---
+import packageJson from "../../../../packages/core/package.json";
 import CallToAction from "@astrojs/starlight/components/CallToAction.astro";
 import type { Props } from "@astrojs/starlight/props";
 import { Image } from "astro:assets";
@@ -39,7 +40,13 @@ if (image) {
     </div>
   </div>
   <!-- Wrapper -->
-  <div class="mx-auto max-w-2xl pt-32">
+  <div class="mx-auto max-w-2xl pt-32 flex flex-col items-center">
+    <!-- Pill -->
+    <div
+      class="px-2.5 py-0.5 text-sm border-b border-accent-base mb-5 bg-black rounded-t-md flex items-center text-center"
+    >
+      v{packageJson.version}
+    </div>
     <!-- Textarea -->
     <div class="text-center animate-fade">
       <h1
@@ -94,7 +101,6 @@ if (image) {
       //   </div>
     )
   }
-
   <!-- Blur Bottom -->
   <div
     class="absolute inset-x-0 top-[calc(100%-13rem)] -z-10 transform-gpu overflow-hidden blur-3xl sm:top-[calc(100%-30rem)]"
