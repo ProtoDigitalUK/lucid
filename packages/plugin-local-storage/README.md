@@ -15,7 +15,7 @@ npm install @lucidcms/plugin-local-storage
 ```typescript
 import LucidLocalStorage from "@lucidcms/plugin-local-storage";
 
-export default lucidConfig({
+export default lucid.config({
   // ...other config
   plugins: [
     LucidLocalStorage({

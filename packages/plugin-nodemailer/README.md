@@ -15,7 +15,7 @@ npm install @lucidcms/plugin-nodemailer
 ```typescript
 import LucidNodemailer from "@lucidcms/plugin-nodemailer";
 
-export default lucidConfig({
+export default lucid.config({
   // ...other config
   plugins: [
     LucidNodemailer({
