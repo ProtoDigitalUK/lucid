@@ -5,7 +5,8 @@
 
 <hr/>
 
-> ❗ Lucid is still in Alpha and under heavy development so please avoid using this in any production setting.
+> [!IMPORTANT]  
+> Lucid is still in Alpha and under heavy development so please avoid using this in any production setting.
 
 <hr/>
 
@@ -13,7 +14,7 @@ A TypeScript-first, fully extensible headless CMS. Constructed using Fastify and
 
 Effortlessly configure Lucid to meet your content needs with our flexible configuration options, and an array of first-party plugins including LocalStorage, Resend, Nodemailer, S3, and more.
 
-## Features
+## ✨ Features
 
 - **Modern:** Powered by Fastify and SolidJS, rest assured this modern headless CMS will remain snappy while scaling to your content needs.
 - **Multiple Database Support:** Choose between PostgreSQL, LibSQL, and SQLite database adapters.
@@ -27,12 +28,12 @@ Effortlessly configure Lucid to meet your content needs with our flexible config
 - **Plugin Support:** Extend the Lucid config with full plugin support from the get-go.
 - **Hook Support:** Execute custom code through various hooks and extend Lucid to reach your requirements.
 
-## First Party Plugins
+## 🛠️ First Party Plugins
 
 - **[Nodemailer](https://github.com/ProtoDigitalUK/lucid/tree/master/packages/plugin-nodemailer):** Extend the email strategy to support Nodemailer by passing down a custom transport.
 - **[S3](https://github.com/ProtoDigitalUK/lucid/tree/master/packages/plugin-s3):** Extend the media strategy to support using any S3 compatible storage solution.
 - **[Local Storage](https://github.com/ProtoDigitalUK/lucid/tree/master/packages/plugin-local-storage):** Extends the media strategy to support uploading media to your file system.
 
-## Getting Started
+## 🏁 Getting Started
 
 To get started you can follow the [Getting Started](https://lucidcms.io/getting-started/) guide from our documentation. Lucid is super easy to get up and running and with the SQLite DB adapter along with the [Local Storage](https://lucidcms.io/plugins/local-storage/) plugin, you can get set up without needing any third party services.
