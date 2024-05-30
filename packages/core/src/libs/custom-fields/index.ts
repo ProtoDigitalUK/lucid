@@ -1,6 +1,10 @@
 import type { CustomFieldData, FieldTypes } from "./types.js";
 
-export default abstract class CustomField<T extends FieldTypes> {
+export interface CustomField<T extends FieldTypes> {
+	data: CustomFieldData<T>;
+}
+
+export default abstract class CustomFieldBase<T extends FieldTypes> {
 	abstract get data(): CustomFieldData<T>;
 	protected keyToTitle(key: string): string {
 		if (typeof key !== "string") return key;

@@ -1,7 +1,10 @@
-import CustomField from "./index.js";
-import type { CustomFieldData, CustomFieldConfig } from "./types.js";
+import CustomFieldBase, { type CustomField } from "../index.js";
+import type { CustomFieldData, CustomFieldConfig } from "../types.js";
 
-export default class TextCustomField extends CustomField<"text"> {
+export default class TextCustomField
+	extends CustomFieldBase<"text">
+	implements CustomField<"text">
+{
 	key: string;
 	config?: CustomFieldConfig<"text">;
 	constructor(key: string, config?: CustomFieldConfig<"text">) {
