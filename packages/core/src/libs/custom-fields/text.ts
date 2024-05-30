@@ -1,16 +1,30 @@
-import CustomFieldCreator, { type CustomFieldInstance } from "./index.js";
-import type { CustomFieldData } from "./types.js";
+import CustomField from "./index.js";
+import type { CustomFieldData, CustomFieldConfig } from "./types.js";
 
-class TextCustomField implements CustomFieldInstance {
-	public data(): CustomFieldData<"text"> {
-		return {
-			key: "temp",
-		};
+export default class TextCustomField extends CustomField<"text"> {
+	key: string;
+	config?: CustomFieldConfig<"text">;
+	constructor(key: string, config?: CustomFieldConfig<"text">) {
+		super();
+		this.key = key;
+		this.config = config;
 	}
-}
 
-export default class TextCustomFieldCreator extends CustomFieldCreator<"text"> {
-	public factoryMethod(): CustomFieldInstance {
-		return new TextCustomField();
+	// Getters
+	get data(): CustomFieldData<"text"> {
+		return {
+			key: this.key,
+			type: "text",
+			labels: {
+				title: this.config?.labels?.title ?? super.keyToTitle(this.key),
+				description: this.config?.labels?.description,
+				placeholder: this.config?.labels?.placeholder,
+			},
+			translations: this.config?.translations ?? true,
+			default: this.config?.default ?? "",
+			hidden: this.config?.hidden,
+			disabled: this.config?.disabled,
+			validation: this.config?.validation,
+		};
 	}
 }

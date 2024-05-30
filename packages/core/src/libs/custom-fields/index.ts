@@ -1,16 +1,16 @@
 import type { CustomFieldData, FieldTypes } from "./types.js";
 
-export interface CustomFieldInstance {
-	data<T extends FieldTypes>(): CustomFieldData<T>;
-}
+export default abstract class CustomField<T extends FieldTypes> {
+	abstract get data(): CustomFieldData<T>;
+	protected keyToTitle(key: string): string {
+		if (typeof key !== "string") return key;
 
-export default abstract class CustomFieldCreator<T extends FieldTypes> {
-	public abstract factoryMethod(): CustomFieldInstance;
+		const title = key
+			.split(/[-_]/g)
+			.map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+			.join(" ");
 
-	public data(): CustomFieldData<T> {
-		const customField = this.factoryMethod();
-
-		return customField.data();
+		return title;
 	}
-	public validate() {}
+	static validate() {}
 }

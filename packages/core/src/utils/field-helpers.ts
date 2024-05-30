@@ -15,6 +15,7 @@ import type { FieldFilters } from "../libs/builders/collection-builder/index.js"
 import Formatter from "../libs/formatters/index.js";
 import mediaHelpers from "./media-helpers.js";
 
+// TODO: move this into individual custom field classes
 export const fieldTypeValueKey = (type: FieldTypes, columns?: boolean) => {
 	switch (type) {
 		case "text":
@@ -59,6 +60,7 @@ export const fieldTypeValueKey = (type: FieldTypes, columns?: boolean) => {
 	}
 };
 
+// TODO: move this into individual custom field classes
 export const fieldColumnValueMap = (field: FieldInsertItem) => {
 	switch (field.type) {
 		case "link": {
@@ -130,6 +132,7 @@ interface FieldResponseValueFormat {
 	field: FieldProp;
 	host: string;
 }
+// TODO: move this into individual custom field classes
 export const fieldResponseValueFormat = (props: FieldResponseValueFormat) => {
 	let value: FieldResponseValue = null;
 	let meta: FieldResponseMeta = null;
