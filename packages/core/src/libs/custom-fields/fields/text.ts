@@ -1,33 +1,82 @@
-import CustomFieldBase, { type CustomField } from "../index.js";
-import type { CustomFieldData, CustomFieldConfig } from "../types.js";
+import CustomFieldConfig from "../custom-field-config.js";
+import CustomFieldService from "../custom-field-service.js";
+import CustomFieldResult from "../custom-field-result.js";
+import type {
+	CustomFieldConfigT,
+	CustomFieldPropsT,
+	CustomFieldInsertItem,
+} from "../types.js";
+import type { FieldInsertItem } from "../../../services/collection-document-bricks/helpers/flatten-fields.js";
 
-export default class TextCustomField
-	extends CustomFieldBase<"text">
-	implements CustomField<"text">
-{
+// Text CF Config
+class TextCustomFieldConfig extends CustomFieldConfig<"text"> {
 	key: string;
-	config?: CustomFieldConfig<"text">;
-	constructor(key: string, config?: CustomFieldConfig<"text">) {
+	props?: CustomFieldPropsT<"text">;
+	column = "text_value" as const;
+	constructor(key: string, props?: CustomFieldPropsT<"text">) {
 		super();
 		this.key = key;
-		this.config = config;
+		this.props = props;
 	}
-
+	// Methods
 	// Getters
-	get data(): CustomFieldData<"text"> {
+	get config() {
 		return {
 			key: this.key,
 			type: "text",
 			labels: {
-				title: this.config?.labels?.title ?? super.keyToTitle(this.key),
-				description: this.config?.labels?.description,
-				placeholder: this.config?.labels?.placeholder,
+				title: this.props?.labels?.title ?? super.keyToTitle(this.key),
+				description: this.props?.labels?.description,
+				placeholder: this.props?.labels?.placeholder,
 			},
-			translations: this.config?.translations ?? true,
-			default: this.config?.default ?? "",
-			hidden: this.config?.hidden,
-			disabled: this.config?.disabled,
-			validation: this.config?.validation,
-		};
+			translations: this.props?.translations ?? true,
+			default: this.props?.default ?? "",
+			hidden: this.props?.hidden,
+			disabled: this.props?.disabled,
+			validation: this.props?.validation,
+		} satisfies CustomFieldConfigT<"text">;
 	}
 }
+
+// Text CF Service
+class TextCustomFieldService extends CustomFieldService<"text"> {
+	cf: TextCustomFieldConfig;
+	item: FieldInsertItem;
+
+	constructor(cf: TextCustomFieldConfig, item: FieldInsertItem) {
+		super();
+		this.cf = cf;
+		this.item = item;
+	}
+	// Getters
+	get getInsertField() {
+		if (this.brickId === null) throw new Error("Brick ID is not set");
+
+		return {
+			key: this.cf.key,
+			type: this.cf.config.type,
+			localeCode: this.item.localeCode,
+			collectionBrickId: this.brickId,
+			groupId: this.groupId,
+			textValue: this.item.value,
+			intValue: null,
+			boolValue: null,
+			jsonValue: null,
+			mediaId: null,
+			userId: null,
+		} satisfies CustomFieldInsertItem<"text">;
+	}
+}
+
+// Text CF Result
+class TextCustomFieldResult extends CustomFieldResult<"text"> {}
+
+// -----------------------------------------------
+// Export
+const TextCustomField = {
+	Config: TextCustomFieldConfig,
+	Service: TextCustomFieldService,
+	Result: TextCustomFieldResult,
+};
+
+export default TextCustomField;

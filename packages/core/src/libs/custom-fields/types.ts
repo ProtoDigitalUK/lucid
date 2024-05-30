@@ -1,5 +1,6 @@
 import type { ZodType } from "zod";
 import type { MediaType } from "../../types/response.js";
+import type { BooleanInt } from "../db/types.js";
 
 // -----------------------------------------------
 // Shared
@@ -9,68 +10,98 @@ export type TranslationValue = Record<string, string> | string;
 // Custom Field
 export type CustomFieldMap = {
 	tab: {
+		props: TabFieldProps;
 		config: TabFieldConfig;
-		data: TabFieldData;
+		column: null;
 	};
 	text: {
+		props: TextFieldProps;
 		config: TextFieldConfig;
-		data: TextFieldData;
+		column: "text_value";
 	};
 	wysiwyg: {
+		props: WysiwygFieldProps;
 		config: WysiwygFieldConfig;
-		data: WysiwygFieldData;
+		column: "text_value";
 	};
 	media: {
+		props: MediaFieldProps;
 		config: MediaFieldConfig;
-		data: MediaFieldData;
+		column: "media_id";
 	};
 	repeater: {
+		props: RepeaterFieldProps;
 		config: RepeaterFieldConfig;
-		data: RepeaterFieldData;
+		column: null;
 	};
 	number: {
+		props: NumberFieldProps;
 		config: NumberFieldConfig;
-		data: NumberFieldData;
+		column: "int_value";
 	};
 	checkbox: {
+		props: CheckboxFieldProps;
 		config: CheckboxFieldConfig;
-		data: CheckboxFieldData;
+		column: "bool_value";
 	};
 	select: {
+		props: SelectFieldProps;
 		config: SelectFieldConfig;
-		data: SelectFieldData;
+		column: "text_value";
 	};
 	textarea: {
+		props: TextareaFieldProps;
 		config: TextareaFieldConfig;
-		data: TextareaFieldData;
+		column: "text_value";
 	};
 	json: {
+		props: JsonFieldProps;
 		config: JsonFieldConfig;
-		data: JsonFieldData;
+		column: "json_value";
 	};
 	colour: {
+		props: ColourFieldProps;
 		config: ColourFieldConfig;
-		data: ColourFieldData;
+		column: "text_value";
 	};
 	datetime: {
+		props: DatetimeFieldProps;
 		config: DatetimeFieldConfig;
-		data: DatetimeFieldData;
+		column: "text_value";
 	};
 	link: {
+		props: LinkFieldProps;
 		config: LinkFieldConfig;
-		data: LinkFieldData;
+		column: "text_value";
 	};
 	user: {
+		props: UserFieldProps;
 		config: UserFieldConfig;
-		data: UserFieldData;
+		column: "user_id";
 	};
 };
 export type FieldTypes = keyof CustomFieldMap;
+export type FieldColumns =
+	| "text_value"
+	| "media_id"
+	| "int_value"
+	| "bool_value"
+	| "json_value"
+	| "user_id";
 
 // -----------------------------------------------
-// Custom Field Data
+// Generic Types
+export type CustomFieldConfigT<T extends FieldTypes> =
+	CustomFieldMap[T]["config"];
+export type CustomFieldPropsT<T extends FieldTypes> =
+	CustomFieldMap[T]["props"];
+export type CustomFieldColumnT<T extends FieldTypes> =
+	CustomFieldMap[T]["column"];
 
-export type SharedFieldData = {
+// -----------------------------------------------
+// Custom Field Config
+
+export type SharedFieldConfig = {
 	key: string;
 	type: FieldTypes;
 
@@ -79,9 +110,8 @@ export type SharedFieldData = {
 		description?: TranslationValue;
 	};
 };
-export type CustomFieldData<T extends FieldTypes> = CustomFieldMap[T]["data"];
 
-export interface TabFieldData extends SharedFieldData {
+export interface TabFieldConfig extends SharedFieldConfig {
 	type: "tab";
 
 	labels: {
@@ -89,7 +119,7 @@ export interface TabFieldData extends SharedFieldData {
 		description?: TranslationValue;
 	};
 }
-export interface TextFieldData extends SharedFieldData {
+export interface TextFieldConfig extends SharedFieldConfig {
 	type: "text";
 
 	labels: {
@@ -108,7 +138,7 @@ export interface TextFieldData extends SharedFieldData {
 		zod?: ZodType<unknown> | undefined;
 	};
 }
-export interface WysiwygFieldData extends SharedFieldData {
+export interface WysiwygFieldConfig extends SharedFieldConfig {
 	type: "wysiwyg";
 
 	labels: {
@@ -127,7 +157,7 @@ export interface WysiwygFieldData extends SharedFieldData {
 		zod?: ZodType<unknown> | undefined;
 	};
 }
-export interface MediaFieldData extends SharedFieldData {
+export interface MediaFieldConfig extends SharedFieldConfig {
 	type: "media";
 
 	labels: {
@@ -153,14 +183,14 @@ export interface MediaFieldData extends SharedFieldData {
 		};
 	};
 }
-export interface RepeaterFieldData extends SharedFieldData {
+export interface RepeaterFieldConfig extends SharedFieldConfig {
 	type: "repeater";
 
 	validation?: {
 		maxGroups?: number;
 	};
 }
-export interface NumberFieldData extends SharedFieldData {
+export interface NumberFieldConfig extends SharedFieldConfig {
 	type: "number";
 
 	labels: {
@@ -179,7 +209,7 @@ export interface NumberFieldData extends SharedFieldData {
 		zod?: ZodType<unknown>;
 	};
 }
-export interface CheckboxFieldData extends SharedFieldData {
+export interface CheckboxFieldConfig extends SharedFieldConfig {
 	type: "checkbox";
 
 	labels: {
@@ -198,7 +228,7 @@ export interface CheckboxFieldData extends SharedFieldData {
 		required?: boolean;
 	};
 }
-export interface SelectFieldData extends SharedFieldData {
+export interface SelectFieldConfig extends SharedFieldConfig {
 	type: "select";
 
 	labels: {
@@ -217,7 +247,7 @@ export interface SelectFieldData extends SharedFieldData {
 		required?: boolean;
 	};
 }
-export interface TextareaFieldData extends SharedFieldData {
+export interface TextareaFieldConfig extends SharedFieldConfig {
 	type: "textarea";
 
 	labels: {
@@ -236,7 +266,7 @@ export interface TextareaFieldData extends SharedFieldData {
 		zod?: ZodType<unknown>;
 	};
 }
-export interface JsonFieldData extends SharedFieldData {
+export interface JsonFieldConfig extends SharedFieldConfig {
 	type: "json";
 
 	labels: {
@@ -255,7 +285,7 @@ export interface JsonFieldData extends SharedFieldData {
 		zod?: ZodType<unknown>;
 	};
 }
-export interface ColourFieldData extends SharedFieldData {
+export interface ColourFieldConfig extends SharedFieldConfig {
 	type: "colour";
 
 	labels: {
@@ -273,7 +303,7 @@ export interface ColourFieldData extends SharedFieldData {
 		required?: boolean;
 	};
 }
-export interface DatetimeFieldData extends SharedFieldData {
+export interface DatetimeFieldConfig extends SharedFieldConfig {
 	type: "datetime";
 
 	labels: {
@@ -292,7 +322,7 @@ export interface DatetimeFieldData extends SharedFieldData {
 		zod?: ZodType<unknown>;
 	};
 }
-export interface LinkFieldData extends SharedFieldData {
+export interface LinkFieldConfig extends SharedFieldConfig {
 	type: "link";
 
 	labels: {
@@ -310,7 +340,7 @@ export interface LinkFieldData extends SharedFieldData {
 		required?: boolean;
 	};
 }
-export interface UserFieldData extends SharedFieldData {
+export interface UserFieldConfig extends SharedFieldConfig {
 	type: "user";
 
 	labels: {
@@ -328,22 +358,36 @@ export interface UserFieldData extends SharedFieldData {
 }
 
 // -----------------------------------------------
-// Custom Field Config
+// Custom Field Props
 
-export type CustomFieldConfig<T extends FieldTypes> =
-	CustomFieldMap[T]["config"];
+export type TabFieldProps = Partial<Omit<TabFieldConfig, "type">>;
+export type TextFieldProps = Partial<Omit<TextFieldConfig, "type">>;
+export type WysiwygFieldProps = Partial<Omit<WysiwygFieldConfig, "type">>;
+export type MediaFieldProps = Partial<Omit<MediaFieldConfig, "type">>;
+export type RepeaterFieldProps = Partial<Omit<RepeaterFieldConfig, "type">>;
+export type NumberFieldProps = Partial<Omit<NumberFieldConfig, "type">>;
+export type CheckboxFieldProps = Partial<Omit<CheckboxFieldConfig, "type">>;
+export type SelectFieldProps = Partial<Omit<SelectFieldConfig, "type">>;
+export type TextareaFieldProps = Partial<Omit<TextareaFieldConfig, "type">>;
+export type JsonFieldProps = Partial<Omit<JsonFieldConfig, "type">>;
+export type ColourFieldProps = Partial<Omit<ColourFieldConfig, "type">>;
+export type DatetimeFieldProps = Partial<Omit<DatetimeFieldConfig, "type">>;
+export type LinkFieldProps = Partial<Omit<LinkFieldConfig, "type">>;
+export type UserFieldProps = Partial<Omit<UserFieldConfig, "type">>;
 
-export type TabFieldConfig = Partial<Omit<TabFieldData, "type">>;
-export type TextFieldConfig = Partial<Omit<TextFieldData, "type">>;
-export type WysiwygFieldConfig = Partial<Omit<WysiwygFieldData, "type">>;
-export type MediaFieldConfig = Partial<Omit<MediaFieldData, "type">>;
-export type RepeaterFieldConfig = Partial<Omit<RepeaterFieldData, "type">>;
-export type NumberFieldConfig = Partial<Omit<NumberFieldData, "type">>;
-export type CheckboxFieldConfig = Partial<Omit<CheckboxFieldData, "type">>;
-export type SelectFieldConfig = Partial<Omit<SelectFieldData, "type">>;
-export type TextareaFieldConfig = Partial<Omit<TextareaFieldData, "type">>;
-export type JsonFieldConfig = Partial<Omit<JsonFieldData, "type">>;
-export type ColourFieldConfig = Partial<Omit<ColourFieldData, "type">>;
-export type DatetimeFieldConfig = Partial<Omit<DatetimeFieldData, "type">>;
-export type LinkFieldConfig = Partial<Omit<LinkFieldData, "type">>;
-export type UserFieldConfig = Partial<Omit<UserFieldData, "type">>;
+// -----------------------------------------------
+// Data
+
+export type CustomFieldInsertItem<T extends FieldTypes> = {
+	localeCode: string;
+	collectionBrickId: number;
+	key: string;
+	type: T;
+	groupId: number | null;
+	textValue: string | null;
+	intValue: number | null;
+	boolValue: BooleanInt | null;
+	jsonValue: string | null;
+	mediaId: number | null;
+	userId: number | null;
+};
