@@ -1,4 +1,4 @@
-import type CustomFieldConfig from "./custom-field-config.js";
+import type CustomFieldConfig from "./cf-config.js";
 import type { FieldTypes, CustomFieldInsertItem } from "./types.js";
 import type { FieldInsertItem } from "../../services/collection-document-bricks/helpers/flatten-fields.js";
 

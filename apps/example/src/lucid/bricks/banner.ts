@@ -6,39 +6,44 @@ const BannerBrick = new BrickBuilder("banner", {
 		image: "https://headless-dev.up.railway.app/public/banner-brick.png",
 	},
 })
-	.addTab({
-		title: "Content",
-		key: "content_tab",
+	.addTab("content_tab", {
+		labels: {
+			title: "Content",
+		},
 	})
-	.addText({
-		key: "title",
-		description: "The title of the banner. This is displayed as an H1 tag.",
+	.addText("title", {
+		labels: {
+			description:
+				"The title of the banner. This is displayed as an H1 tag.",
+		},
 		validation: {
 			required: true,
 		},
 	})
-	.addWysiwyg({
-		key: "intro",
-	})
-	.addRepeater({
-		key: "call_to_actions",
-		title: "Call to Actions",
+	.addWysiwyg("intro")
+	.addRepeater("call_to_actions", {
+		labels: {
+			title: "Call to Actions",
+		},
 		validation: {
 			maxGroups: 3,
 		},
 	})
-	.addLink({
-		key: "link",
-		title: "Link",
+	.addLink("link", {
+		labels: {
+			title: "Link",
+		},
 	})
 	.endRepeater()
-	.addTab({
-		title: "Config",
-		key: "config_tab",
+	.addTab("config_tab", {
+		labels: {
+			title: "Config",
+		},
 	})
-	.addCheckbox({
-		key: "fullwidth",
-		description: "Make the banner fullwidth",
+	.addCheckbox("full_width", {
+		labels: {
+			description: "Make the banner fullwidth",
+		},
 	});
 
 export default BannerBrick;

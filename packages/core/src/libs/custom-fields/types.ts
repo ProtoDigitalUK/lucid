@@ -13,71 +13,127 @@ export type CustomFieldMap = {
 		props: TabFieldProps;
 		config: TabFieldConfig;
 		column: null;
+		response: {
+			value: TabResValue;
+			meta: TabResMeta;
+		};
 	};
 	text: {
 		props: TextFieldProps;
 		config: TextFieldConfig;
 		column: "text_value";
+		response: {
+			value: TextResValue;
+			meta: TextResMeta;
+		};
 	};
 	wysiwyg: {
 		props: WysiwygFieldProps;
 		config: WysiwygFieldConfig;
 		column: "text_value";
+		response: {
+			value: WysiwygResValue;
+			meta: WysiwygResMeta;
+		};
 	};
 	media: {
 		props: MediaFieldProps;
 		config: MediaFieldConfig;
 		column: "media_id";
+		response: {
+			value: MediaResValue;
+			meta: MediaResMeta;
+		};
 	};
 	repeater: {
 		props: RepeaterFieldProps;
 		config: RepeaterFieldConfig;
 		column: null;
+		response: {
+			value: RepeaterResValue;
+			meta: RepeaterResMeta;
+		};
 	};
 	number: {
 		props: NumberFieldProps;
 		config: NumberFieldConfig;
 		column: "int_value";
+		response: {
+			value: NumberResValue;
+			meta: NumberResMeta;
+		};
 	};
 	checkbox: {
 		props: CheckboxFieldProps;
 		config: CheckboxFieldConfig;
 		column: "bool_value";
+		response: {
+			value: CheckboxResValue;
+			meta: CheckboxResMeta;
+		};
 	};
 	select: {
 		props: SelectFieldProps;
 		config: SelectFieldConfig;
 		column: "text_value";
+		response: {
+			value: SelectReValue;
+			meta: SelectResMeta;
+		};
 	};
 	textarea: {
 		props: TextareaFieldProps;
 		config: TextareaFieldConfig;
 		column: "text_value";
+		response: {
+			value: TextareaResValue;
+			meta: TextareaResMeta;
+		};
 	};
 	json: {
 		props: JsonFieldProps;
 		config: JsonFieldConfig;
 		column: "json_value";
+		response: {
+			value: JsonResValue;
+			meta: JsonResMeta;
+		};
 	};
 	colour: {
 		props: ColourFieldProps;
 		config: ColourFieldConfig;
 		column: "text_value";
+		response: {
+			value: ColourResValue;
+			meta: ColourResMeta;
+		};
 	};
 	datetime: {
 		props: DatetimeFieldProps;
 		config: DatetimeFieldConfig;
 		column: "text_value";
+		response: {
+			value: DatetimeResValue;
+			meta: DatetimeResMeta;
+		};
 	};
 	link: {
 		props: LinkFieldProps;
 		config: LinkFieldConfig;
 		column: "text_value";
+		response: {
+			value: LinkResValue;
+			meta: LinkResMeta;
+		};
 	};
 	user: {
 		props: UserFieldProps;
 		config: UserFieldConfig;
 		column: "user_id";
+		response: {
+			value: UserResValue;
+			meta: UserResMeta;
+		};
 	};
 };
 export type FieldTypes = keyof CustomFieldMap;
@@ -97,6 +153,8 @@ export type CustomFieldPropsT<T extends FieldTypes> =
 	CustomFieldMap[T]["props"];
 export type CustomFieldColumnT<T extends FieldTypes> =
 	CustomFieldMap[T]["column"];
+export type CustomFieldResponseT<T extends FieldTypes> =
+	CustomFieldMap[T]["response"];
 
 // -----------------------------------------------
 // Custom Field Config
@@ -106,7 +164,7 @@ export type SharedFieldConfig = {
 	type: FieldTypes;
 
 	labels: {
-		title: TranslationValue;
+		title?: TranslationValue;
 		description?: TranslationValue;
 	};
 };
@@ -115,7 +173,7 @@ export interface TabFieldConfig extends SharedFieldConfig {
 	type: "tab";
 
 	labels: {
-		title: TranslationValue;
+		title?: TranslationValue;
 		description?: TranslationValue;
 	};
 }
@@ -123,7 +181,7 @@ export interface TextFieldConfig extends SharedFieldConfig {
 	type: "text";
 
 	labels: {
-		title: TranslationValue;
+		title?: TranslationValue;
 		description?: TranslationValue;
 		placeholder?: TranslationValue;
 	};
@@ -142,7 +200,7 @@ export interface WysiwygFieldConfig extends SharedFieldConfig {
 	type: "wysiwyg";
 
 	labels: {
-		title: TranslationValue;
+		title?: TranslationValue;
 		description?: TranslationValue;
 		placeholder?: TranslationValue;
 	};
@@ -161,8 +219,8 @@ export interface MediaFieldConfig extends SharedFieldConfig {
 	type: "media";
 
 	labels: {
-		title: TranslationValue;
-		description: TranslationValue | undefined;
+		title?: TranslationValue;
+		description?: TranslationValue;
 	};
 
 	translations: boolean;
@@ -194,7 +252,7 @@ export interface NumberFieldConfig extends SharedFieldConfig {
 	type: "number";
 
 	labels: {
-		title: TranslationValue;
+		title?: TranslationValue;
 		description?: TranslationValue;
 		placeholder?: TranslationValue;
 	};
@@ -213,7 +271,7 @@ export interface CheckboxFieldConfig extends SharedFieldConfig {
 	type: "checkbox";
 
 	labels: {
-		title: TranslationValue;
+		title?: TranslationValue;
 		description?: TranslationValue;
 		true?: TranslationValue;
 		false?: TranslationValue;
@@ -222,7 +280,7 @@ export interface CheckboxFieldConfig extends SharedFieldConfig {
 	translations: boolean;
 	hidden?: boolean;
 	disabled?: boolean;
-	default?: boolean;
+	default?: BooleanInt;
 
 	validation?: {
 		required?: boolean;
@@ -232,7 +290,7 @@ export interface SelectFieldConfig extends SharedFieldConfig {
 	type: "select";
 
 	labels: {
-		title: TranslationValue;
+		title?: TranslationValue;
 		description?: TranslationValue;
 		placeholder?: TranslationValue;
 	};
@@ -251,7 +309,7 @@ export interface TextareaFieldConfig extends SharedFieldConfig {
 	type: "textarea";
 
 	labels: {
-		title: TranslationValue;
+		title?: TranslationValue;
 		description?: TranslationValue;
 		placeholder?: TranslationValue;
 	};
@@ -270,7 +328,7 @@ export interface JsonFieldConfig extends SharedFieldConfig {
 	type: "json";
 
 	labels: {
-		title: TranslationValue;
+		title?: TranslationValue;
 		description?: TranslationValue;
 		placeholder?: TranslationValue;
 	};
@@ -289,7 +347,7 @@ export interface ColourFieldConfig extends SharedFieldConfig {
 	type: "colour";
 
 	labels: {
-		title: TranslationValue;
+		title?: TranslationValue;
 		description?: TranslationValue;
 	};
 	presets: string[];
@@ -307,7 +365,7 @@ export interface DatetimeFieldConfig extends SharedFieldConfig {
 	type: "datetime";
 
 	labels: {
-		title: TranslationValue;
+		title?: TranslationValue;
 		description?: TranslationValue;
 		placeholder?: TranslationValue;
 	};
@@ -326,7 +384,7 @@ export interface LinkFieldConfig extends SharedFieldConfig {
 	type: "link";
 
 	labels: {
-		title: TranslationValue;
+		title?: TranslationValue;
 		description?: TranslationValue;
 		placeholder?: TranslationValue;
 	};
@@ -344,7 +402,7 @@ export interface UserFieldConfig extends SharedFieldConfig {
 	type: "user";
 
 	labels: {
-		title: TranslationValue;
+		title?: TranslationValue;
 		description?: TranslationValue;
 	};
 
@@ -364,7 +422,9 @@ export type TabFieldProps = Partial<Omit<TabFieldConfig, "type">>;
 export type TextFieldProps = Partial<Omit<TextFieldConfig, "type">>;
 export type WysiwygFieldProps = Partial<Omit<WysiwygFieldConfig, "type">>;
 export type MediaFieldProps = Partial<Omit<MediaFieldConfig, "type">>;
-export type RepeaterFieldProps = Partial<Omit<RepeaterFieldConfig, "type">>;
+export type RepeaterFieldProps = Partial<
+	Omit<RepeaterFieldConfig, "type" | "fields">
+>;
 export type NumberFieldProps = Partial<Omit<NumberFieldConfig, "type">>;
 export type CheckboxFieldProps = Partial<Omit<CheckboxFieldConfig, "type">>;
 export type SelectFieldProps = Partial<Omit<SelectFieldConfig, "type">>;
@@ -391,3 +451,67 @@ export type CustomFieldInsertItem<T extends FieldTypes> = {
 	mediaId: number | null;
 	userId: number | null;
 };
+
+// -----------------------------------------------
+// Response Values
+
+export type TabResValue = null;
+export type TextResValue = string | null;
+export type WysiwygResValue = string | null;
+export type MediaResValue = number | null;
+export type RepeaterResValue = null;
+export type NumberResValue = number | null;
+export type CheckboxResValue = BooleanInt | null;
+export type SelectReValue = string | null;
+export type TextareaResValue = string | null;
+export type JsonResValue = Record<string, unknown> | null;
+export type ColourResValue = string | null;
+export type DatetimeResValue = string | null;
+// TODO: this should be moved to the meta field
+export type LinkResValue = {
+	url: string | null;
+	target: string | null;
+	label: string | null;
+} | null;
+export type UserResValue = number | null;
+
+// -----------------------------------------------
+// Response Meta
+
+export type TabResMeta = null;
+export type TextResMeta = null;
+export type WysiwygResMeta = null;
+export type MediaResMeta = {
+	id: number | null;
+	url: string | null;
+	key: string | null;
+	mimeType: string | null;
+	fileExtension: string | null;
+	fileSize: number | null;
+	width: number | null;
+	height: number | null;
+	titleTranslations?: Array<{
+		value: string | null;
+		localeCode: string | null;
+	}>;
+	altTranslations?: Array<{
+		value: string | null;
+		localeCode: string | null;
+	}>;
+	type: MediaType | null;
+} | null;
+export type RepeaterResMeta = null;
+export type NumberResMeta = null;
+export type CheckboxResMeta = null;
+export type SelectResMeta = null;
+export type TextareaResMeta = null;
+export type JsonResMeta = null;
+export type ColourResMeta = null;
+export type DatetimeResMeta = null;
+export type LinkResMeta = null;
+export type UserResMeta = {
+	username: string | null;
+	email: string | null;
+	firstName: string | null;
+	lastName: string | null;
+} | null;

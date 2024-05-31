@@ -5,51 +5,40 @@ const TestingBrick = new BrickBuilder("testing", {
 		image: "https://usersnap.com/blog/wp-content/uploads/2021/03/7-Common-Types-of-Software-Testing@1x-1280x720.png",
 	},
 })
-	.addTab({
-		title: "Content",
-		key: "content_tab",
+	.addTab("content_tab", {
+		labels: {
+			title: "Content",
+		},
 	})
-	.addText({
-		key: "text-key",
-		description: "Testing title",
-		placeholder: "Testing title",
+	.addText("text-key", {
+		labels: {
+			title: "Text",
+			description: "Testing title",
+			placeholder: "Testing title",
+		},
 	})
-	.addWysiwyg({
-		key: "wysiwyg-key",
-	})
-	.addMedia({
-		key: "media-key",
+	.addWysiwyg("wysiwyg-key")
+	.addMedia("media-key", {
 		validation: {
 			extensions: ["png"],
 			type: "image",
 		},
 	})
-	.addRepeater({
-		key: "repeater-key",
-	})
-	.addText({
-		key: "repeater-title",
-	})
-	.addRepeater({
-		key: "repeater-key-nested",
-	})
-	.addText({
-		key: "repeater-title-nested",
-	})
+	.addRepeater("repeater-key")
+	.addText("repeater-title")
+	.addRepeater("repeater-key-nested")
+	.addText("repeater-title-nested")
 	.endRepeater()
 	.endRepeater()
-	.addNumber({
-		key: "number-key",
-	})
-	.addCheckbox({
-		key: "checkbox-key",
-		copy: {
+	.addNumber("number-key")
+	.addCheckbox("checkbox-key", {
+		labels: {
+			title: "Checkbox",
 			true: "Show",
 			false: "Hide",
 		},
 	})
-	.addSelect({
-		key: "select-key",
+	.addSelect("select-key", {
 		options: [
 			{
 				label: "Option 1",
@@ -68,27 +57,23 @@ const TestingBrick = new BrickBuilder("testing", {
 			required: true,
 		},
 	})
-	.addTextarea({
-		key: "textarea-key",
-		placeholder: "Testing textarea",
-		description: "Testing textarea",
+	.addTextarea("textarea-key", {
+		labels: {
+			title: "Textarea",
+			placeholder: "Testing textarea",
+			description: "Testing textarea",
+		},
 	})
-	.addTab({
-		title: "Advanced",
-		key: "advanced_tab",
+	.addTab("advanced_tab", {
+		labels: {
+			title: "Advanced",
+		},
 	})
-	.addJSON({
-		key: "json-key",
-	})
-	.addColour({
-		key: "colour-key",
+	.addJSON("json-key")
+	.addColour("colour-key", {
 		presets: ["#000000", "#ffffff"],
 	})
-	.addDateTime({
-		key: "datetime-key",
-	})
-	.addLink({
-		key: "link-key",
-	});
+	.addDateTime("datetime-key")
+	.addLink("link-key");
 
 export default TestingBrick;

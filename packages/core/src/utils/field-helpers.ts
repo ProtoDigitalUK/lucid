@@ -106,6 +106,7 @@ export interface CollectionFiltersResponse {
 	value: string | string[];
 	column: string;
 }
+// TODO: Should be moved to collection-builder?
 export const collectionDocFilters = (
 	allowedFilters: FieldFilters,
 	filters: RequestQueryParsed["filter"],

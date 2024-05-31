@@ -1,6 +1,7 @@
 import z from "zod";
 import FieldBuilder from "../field-builder/index.js";
-import type { TabConfig } from "../field-builder/index.js";
+import TabCF from "../../custom-fields/fields/tab.js";
+import type { CustomFieldPropsT } from "../../custom-fields/types.js";
 
 export interface BrickConfigPropsT {
 	title?: string;
@@ -24,7 +25,7 @@ class BrickBuilder extends FieldBuilder {
 		super();
 		this.key = key;
 		this.config = {
-			title: config?.title || super.keyToTitle(key),
+			title: config?.title || key,
 			description: config?.description,
 			preview: config?.preview || {},
 		};
@@ -38,8 +39,8 @@ class BrickBuilder extends FieldBuilder {
 		}
 		return this;
 	}
-	public addTab(config: TabConfig) {
-		this.addToFields("tab", config);
+	public addTab(key: string, props?: CustomFieldPropsT<"tab">) {
+		this.fields.set(key, new TabCF.Config(key, props));
 		return this;
 	}
 }

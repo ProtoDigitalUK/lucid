@@ -1,18 +1,21 @@
-import CustomFieldConfig from "../custom-field-config.js";
-import CustomFieldService from "../custom-field-service.js";
-import CustomFieldResult from "../custom-field-result.js";
+import CustomFieldConfig from "../cf-config.js";
+import CustomFieldService from "../cf-service.js";
+import CustomFieldResult from "../cf-result.js";
 import type {
 	CustomFieldConfigT,
 	CustomFieldPropsT,
 	CustomFieldInsertItem,
+	CustomFieldResponseT,
 } from "../types.js";
+// TODO: move these
+import type { FieldProp } from "../../formatters/collection-document-fields.js";
 import type { FieldInsertItem } from "../../../services/collection-document-bricks/helpers/flatten-fields.js";
 
-// Text CF Config
-class TextCustomFieldConfig extends CustomFieldConfig<"text"> {
-	key: string;
-	props?: CustomFieldPropsT<"text">;
+class Config extends CustomFieldConfig<"text"> {
+	type = "text" as const;
 	column = "text_value" as const;
+	key;
+	props;
 	constructor(key: string, props?: CustomFieldPropsT<"text">) {
 		super();
 		this.key = key;
@@ -23,7 +26,7 @@ class TextCustomFieldConfig extends CustomFieldConfig<"text"> {
 	get config() {
 		return {
 			key: this.key,
-			type: "text",
+			type: this.type,
 			labels: {
 				title: this.props?.labels?.title ?? super.keyToTitle(this.key),
 				description: this.props?.labels?.description,
@@ -38,12 +41,11 @@ class TextCustomFieldConfig extends CustomFieldConfig<"text"> {
 	}
 }
 
-// Text CF Service
-class TextCustomFieldService extends CustomFieldService<"text"> {
-	cf: TextCustomFieldConfig;
+class Service extends CustomFieldService<"text"> {
+	cf: Config;
 	item: FieldInsertItem;
 
-	constructor(cf: TextCustomFieldConfig, item: FieldInsertItem) {
+	constructor(cf: Config, item: FieldInsertItem) {
 		super();
 		this.cf = cf;
 		this.item = item;
@@ -68,15 +70,29 @@ class TextCustomFieldService extends CustomFieldService<"text"> {
 	}
 }
 
-// Text CF Result
-class TextCustomFieldResult extends CustomFieldResult<"text"> {}
+class Result extends CustomFieldResult<"text"> {
+	cf: Config;
+	field: FieldProp;
+	constructor(cf: Config, field: FieldProp) {
+		super();
+		this.cf = cf;
+		this.field = field;
+	}
+	// Getters
+	get responseValueFormat() {
+		return {
+			value: this.field.text_value ?? this.cf.config.default,
+			meta: null,
+		} satisfies CustomFieldResponseT<"text">;
+	}
+}
 
 // -----------------------------------------------
 // Export
-const TextCustomField = {
-	Config: TextCustomFieldConfig,
-	Service: TextCustomFieldService,
-	Result: TextCustomFieldResult,
+const TextCF = {
+	Config: Config,
+	Service: Service,
+	Result: Result,
 };
 
-export default TextCustomField;
+export default TextCF;

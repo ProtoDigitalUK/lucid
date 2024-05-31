@@ -2,10 +2,16 @@ import type {
 	CustomFieldConfigT,
 	FieldTypes,
 	CustomFieldColumnT,
+	CustomFieldPropsT,
 } from "./types.js";
 
 abstract class CustomFieldConfig<T extends FieldTypes> {
+	fields: CustomFieldConfig<FieldTypes>[] = [];
+
+	abstract type: T;
 	abstract column: CustomFieldColumnT<T>;
+	abstract key: string;
+	abstract props?: CustomFieldPropsT<T>;
 	abstract get config(): CustomFieldConfigT<T>;
 
 	// Methods

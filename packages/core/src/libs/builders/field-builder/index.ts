@@ -1,24 +1,29 @@
 import T from "../../../translations/index.js";
 import z from "zod";
 import sanitizeHtml from "sanitize-html";
+
+import type CustomFieldConfig from "../../custom-fields/cf-config.js";
+import CheckboxCF from "../../custom-fields/fields/checkbox.js";
+import ColourCF from "../../custom-fields/fields/colour.js";
+import DateTimeCF from "../../custom-fields/fields/datetime.js";
+import JSONCF from "../../custom-fields/fields/json.js";
+import LinkCF from "../../custom-fields/fields/link.js";
+import MediaCF from "../../custom-fields/fields/media.js";
+import NumberCF from "../../custom-fields/fields/number.js";
+import RepeaterCF from "../../custom-fields/fields/repeater.js";
+import SelectCF from "../../custom-fields/fields/select.js";
+import TextCF from "../../custom-fields/fields/text.js";
+import TextareaCF from "../../custom-fields/fields/textarea.js";
+import UserCF from "../../custom-fields/fields/user.js";
+import WysiwygCF from "../../custom-fields/fields/wysiwyg.js";
+import type {
+	FieldTypes,
+	CustomFieldPropsT,
+} from "../../custom-fields/types.js";
+
+// TODO: most if not all can be removed
 import type {
 	CustomField,
-	FieldTypes,
-	CheckboxConfig,
-	ColourConfig,
-	DateTimeConfig,
-	JSONConfig,
-	LinkConfig,
-	UserConfig,
-	MediaConfig,
-	NumberConfig,
-	SelectConfig,
-	TextConfig,
-	TextareaConfig,
-	WysiwygConfig,
-	RepeaterConfig,
-	CustomFieldConfigs,
-	DefaultFieldValues,
 	FieldBuilderMeta,
 	ValidationProps,
 	MediaReferenceData,
@@ -28,7 +33,7 @@ import type {
 } from "./types.js";
 
 class FieldBuilder {
-	fields: Map<string, CustomField> = new Map();
+	fields: Map<string, CustomFieldConfig<FieldTypes>> = new Map();
 	repeaterStack: string[] = [];
 	meta: FieldBuilderMeta = {
 		fieldKeys: [],
@@ -56,90 +61,91 @@ class FieldBuilder {
 
 		if (!repeaterKey) return this;
 
-		const fieldsAfterSelectedRepeater = fields.slice(
+		const fieldsAfter = fields.slice(
 			selectedRepeaterIndex + 1,
-		);
+		) as CustomFieldConfig<FieldTypes>[];
+
 		const repeater = this.fields.get(repeaterKey);
+
 		if (repeater) {
 			// filter out tab fields
-			repeater.fields = fieldsAfterSelectedRepeater.filter(
+			repeater.fields = fieldsAfter.filter(
 				(field) => field.type !== "tab",
 			);
-			fieldsAfterSelectedRepeater.map((field) => {
+			fieldsAfter.map((field) => {
 				this.fields.delete(field.key);
 			});
 		}
 
 		return this;
 	}
-	public addRepeater(config: RepeaterConfig) {
-		this.meta.repeaterDepth[config.key] = this.repeaterStack.length;
-
-		this.addToFields("repeater", config);
-		this.repeaterStack.push(config.key);
+	public addRepeater(key: string, props?: CustomFieldPropsT<"repeater">) {
+		this.meta.repeaterDepth[key] = this.repeaterStack.length;
+		this.fields.set(key, new RepeaterCF.Config(key, props));
+		this.repeaterStack.push(key);
 		return this;
 	}
-	public addText(config: TextConfig) {
-		this.addToFields("text", config);
+	public addText(key: string, props?: CustomFieldPropsT<"text">) {
+		this.fields.set(key, new TextCF.Config(key, props));
 		return this;
 	}
-	public addWysiwyg(config: WysiwygConfig) {
-		this.addToFields("wysiwyg", config);
+	public addWysiwyg(key: string, props?: CustomFieldPropsT<"wysiwyg">) {
+		this.fields.set(key, new WysiwygCF.Config(key, props));
 		return this;
 	}
-	public addMedia(config: MediaConfig) {
-		this.addToFields("media", config);
+	public addMedia(key: string, props?: CustomFieldPropsT<"media">) {
+		this.fields.set(key, new MediaCF.Config(key, props));
 		return this;
 	}
-	public addNumber(config: NumberConfig) {
-		this.addToFields("number", config);
+	public addNumber(key: string, props?: CustomFieldPropsT<"number">) {
+		this.fields.set(key, new NumberCF.Config(key, props));
 		return this;
 	}
-	public addCheckbox(config: CheckboxConfig) {
-		this.addToFields("checkbox", config);
+	public addCheckbox(key: string, props?: CustomFieldPropsT<"checkbox">) {
+		this.fields.set(key, new CheckboxCF.Config(key, props));
 		return this;
 	}
-	public addSelect(config: SelectConfig) {
-		this.addToFields("select", config);
+	public addSelect(key: string, props?: CustomFieldPropsT<"select">) {
+		this.fields.set(key, new SelectCF.Config(key, props));
 		return this;
 	}
-	public addTextarea(config: TextareaConfig) {
-		this.addToFields("textarea", config);
+	public addTextarea(key: string, props?: CustomFieldPropsT<"textarea">) {
+		this.fields.set(key, new TextareaCF.Config(key, props));
 		return this;
 	}
-	public addJSON(config: JSONConfig) {
-		this.addToFields("json", config);
+	public addJSON(key: string, props?: CustomFieldPropsT<"json">) {
+		this.fields.set(key, new JSONCF.Config(key, props));
 		return this;
 	}
-	public addColour(config: ColourConfig) {
-		this.addToFields("colour", config);
+	public addColour(key: string, props?: CustomFieldPropsT<"colour">) {
+		this.fields.set(key, new ColourCF.Config(key, props));
 		return this;
 	}
-	public addDateTime(config: DateTimeConfig) {
-		this.addToFields("datetime", config);
+	public addDateTime(key: string, props?: CustomFieldPropsT<"datetime">) {
+		this.fields.set(key, new DateTimeCF.Config(key, props));
 		return this;
 	}
-	public addLink(config: LinkConfig) {
-		this.addToFields("link", config);
+	public addLink(key: string, props?: CustomFieldPropsT<"link">) {
+		this.fields.set(key, new LinkCF.Config(key, props));
 		return this;
 	}
-	public addUser(config: UserConfig) {
-		this.addToFields("user", config);
+	public addUser(key: string, props?: CustomFieldPropsT<"user">) {
+		this.fields.set(key, new UserCF.Config(key, props));
 		return this;
 	}
 	// Getters
-	get fieldTree(): CustomField[] {
+	get fieldTree(): CustomFieldConfig<FieldTypes>[] {
 		const fields = Array.from(this.fields.values());
 
-		const result: Array<CustomField> = [];
-		let currentTab: CustomField | null = null;
+		const result: CustomFieldConfig<FieldTypes>[] = [];
+		let currentTab: CustomFieldConfig<FieldTypes> | null = null;
 
 		for (const item of fields) {
 			if (item.type === "tab") {
 				if (currentTab) {
 					result.push(currentTab);
 				}
-				currentTab = { ...item, fields: [] };
+				currentTab = item;
 			} else if (currentTab) {
 				if (!currentTab.fields) currentTab.fields = [];
 				currentTab.fields.push(item);
@@ -154,11 +160,11 @@ class FieldBuilder {
 
 		return result;
 	}
-	get flatFields(): CustomField[] {
-		const fields: CustomField[] = [];
+	get flatFields(): CustomFieldConfig<FieldTypes>[] {
+		const fields: CustomFieldConfig<FieldTypes>[] = [];
 
 		const fieldArray = Array.from(this.fields.values());
-		const getFields = (field: CustomField) => {
+		const getFields = (field: CustomFieldConfig<FieldTypes>) => {
 			fields.push(field);
 			if (field.type === "repeater") {
 				for (const item of field.fields || []) {
@@ -182,123 +188,8 @@ class FieldBuilder {
 		}
 		return fieldArray;
 	}
-	//
-	protected addToFields(type: FieldTypes, config: CustomFieldConfigs) {
-		this.meta.fieldKeys.push(config.key);
 
-		// TODO: return to this, probably need a better solution to setting default configs for each custom field.
-		this.fields.set(config.key, {
-			...config,
-			type: type,
-			title: config.title || this.keyToTitle(config.key),
-			default: this.#fieldDefaults(type, config),
-			translations: this.#fieldTranslations(type, config),
-		});
-	}
-	protected keyToTitle(key: string) {
-		if (typeof key !== "string") return key;
-
-		const title = key
-			.split(/[-_]/g)
-			.map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-			.join(" ");
-
-		return title;
-	}
-	// TODO: remove this
-	#fieldDefaults(
-		type: FieldTypes,
-		config: CustomFieldConfigs,
-	): DefaultFieldValues {
-		switch (type) {
-			case "tab": {
-				break;
-			}
-			case "text": {
-				return (config as TextConfig).default || "";
-			}
-			case "wysiwyg": {
-				return (config as WysiwygConfig).default || "";
-			}
-			case "media": {
-				return undefined;
-			}
-			case "number": {
-				return (config as NumberConfig).default || null;
-			}
-			case "checkbox": {
-				return (config as CheckboxConfig).default || false;
-			}
-			case "select": {
-				return (config as SelectConfig).default || "";
-			}
-			case "textarea": {
-				return (config as TextareaConfig).default || "";
-			}
-			case "json": {
-				return (config as JSONConfig).default || {};
-			}
-			case "colour": {
-				return (config as ColourConfig).default || "";
-			}
-			case "datetime": {
-				return (config as DateTimeConfig).default || "";
-			}
-			case "user": {
-				return undefined;
-			}
-			case "link": {
-				return undefined;
-			}
-		}
-	}
-	#fieldTranslations(
-		type: FieldTypes,
-		config: CustomFieldConfigs,
-	): boolean | undefined {
-		switch (type) {
-			case "tab": {
-				return undefined;
-			}
-			case "text": {
-				return (config as TextConfig).translations || true;
-			}
-			case "wysiwyg": {
-				return (config as WysiwygConfig).translations || true;
-			}
-			case "media": {
-				return (config as MediaConfig).translations || false;
-			}
-			case "number": {
-				return (config as NumberConfig).translations || false;
-			}
-			case "checkbox": {
-				return (config as CheckboxConfig).translations || false;
-			}
-			case "select": {
-				return (config as SelectConfig).translations || false;
-			}
-			case "textarea": {
-				return (config as TextareaConfig).translations || true;
-			}
-			case "json": {
-				return (config as JSONConfig).translations || false;
-			}
-			case "colour": {
-				return (config as ColourConfig).translations || false;
-			}
-			case "datetime": {
-				return (config as DateTimeConfig).translations || false;
-			}
-			case "user": {
-				return (config as UserConfig).translations || false;
-			}
-			case "link": {
-				return (config as LinkConfig).translations || false;
-			}
-		}
-	}
-
+	// TODO: move bellow in cf-config class and individual custom field classes
 	// -----------------------------------------
 	// Validation
 	// ------------------------------------
@@ -605,12 +496,17 @@ class FieldBuilder {
 	};
 }
 
+// TODO: move to cf-config class
 export const FieldsSchema = z.object({
 	type: z.string(),
 	key: z.string(),
-	title: z.string(),
-	description: z.string().optional(),
-	placeholder: z.string().optional(),
+	labels: z
+		.object({
+			title: z.string().optional(),
+			description: z.string().optional(),
+			placeholder: z.string().optional(),
+		})
+		.optional(),
 	default: z
 		.union([
 			z.boolean(),
@@ -622,6 +518,14 @@ export const FieldsSchema = z.object({
 		])
 		.optional(),
 	options: z
+		.array(
+			z.object({
+				label: z.string(),
+				value: z.string(),
+			}),
+		)
+		.optional(),
+	presets: z
 		.array(
 			z.object({
 				label: z.string(),
