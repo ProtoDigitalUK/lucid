@@ -6,12 +6,8 @@ const collection = new CollectionBuilder("page", {
 	title: "Pages",
 	singular: "Page",
 })
-	.addText({
-		key: "title",
-	})
-	.addText({
-		key: "title",
-	});
+	.addText("title")
+	.addText("title");
 
 export default lucid.config({
 	host: "http://localhost:8393",
