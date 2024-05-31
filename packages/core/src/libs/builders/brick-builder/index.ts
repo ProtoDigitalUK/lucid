@@ -41,6 +41,7 @@ class BrickBuilder extends FieldBuilder {
 	}
 	public addTab(key: string, props?: CustomFieldPropsT<"tab">) {
 		this.fields.set(key, new TabCF.Config(key, props));
+		this.meta.fieldKeys.push(key);
 		return this;
 	}
 }
