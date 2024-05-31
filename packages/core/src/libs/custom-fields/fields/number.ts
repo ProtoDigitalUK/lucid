@@ -1,12 +1,12 @@
 import CustomFieldConfig from "../cf-config.js";
-import type { CustomFieldConfigT, CustomFieldPropsT } from "../types.js";
+import type { CFConfig, CFProps } from "../types.js";
 
 class Config extends CustomFieldConfig<"number"> {
 	type = "number" as const;
 	column = "int_value" as const;
 	key;
 	props;
-	constructor(key: string, props?: CustomFieldPropsT<"number">) {
+	constructor(key: string, props?: CFProps<"number">) {
 		super();
 		this.key = key;
 		this.props = props;
@@ -27,7 +27,7 @@ class Config extends CustomFieldConfig<"number"> {
 			hidden: this.props?.hidden,
 			disabled: this.props?.disabled,
 			validation: this.props?.validation,
-		} satisfies CustomFieldConfigT<"number">;
+		} satisfies CFConfig<"number">;
 	}
 }
 

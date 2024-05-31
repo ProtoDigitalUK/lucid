@@ -1,12 +1,12 @@
 import CustomFieldConfig from "../cf-config.js";
-import type { CustomFieldConfigT, CustomFieldPropsT } from "../types.js";
+import type { CFConfig, CFProps } from "../types.js";
 
 class Config extends CustomFieldConfig<"colour"> {
 	type = "colour" as const;
 	column = "text_value" as const;
 	key;
 	props;
-	constructor(key: string, props?: CustomFieldPropsT<"colour">) {
+	constructor(key: string, props?: CFProps<"colour">) {
 		super();
 		this.key = key;
 		this.props = props;
@@ -27,7 +27,7 @@ class Config extends CustomFieldConfig<"colour"> {
 			hidden: this.props?.hidden,
 			disabled: this.props?.disabled,
 			validation: this.props?.validation,
-		} satisfies CustomFieldConfigT<"colour">;
+		} satisfies CFConfig<"colour">;
 	}
 }
 

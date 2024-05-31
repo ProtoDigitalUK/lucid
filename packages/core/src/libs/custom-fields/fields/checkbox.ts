@@ -1,12 +1,12 @@
 import CustomFieldConfig from "../cf-config.js";
-import type { CustomFieldConfigT, CustomFieldPropsT } from "../types.js";
+import type { CFConfig, CFProps } from "../types.js";
 
 class Config extends CustomFieldConfig<"checkbox"> {
 	type = "checkbox" as const;
 	column = "bool_value" as const;
 	key;
 	props;
-	constructor(key: string, props?: CustomFieldPropsT<"checkbox">) {
+	constructor(key: string, props?: CFProps<"checkbox">) {
 		super();
 		this.key = key;
 		this.props = props;
@@ -26,7 +26,7 @@ class Config extends CustomFieldConfig<"checkbox"> {
 			hidden: this.props?.hidden,
 			disabled: this.props?.disabled,
 			validation: this.props?.validation,
-		} satisfies CustomFieldConfigT<"checkbox">;
+		} satisfies CFConfig<"checkbox">;
 	}
 }
 

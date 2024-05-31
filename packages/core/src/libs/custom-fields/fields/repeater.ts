@@ -1,12 +1,12 @@
 import CustomFieldConfig from "../cf-config.js";
-import type { CustomFieldConfigT, CustomFieldPropsT } from "../types.js";
+import type { CFConfig, CFProps } from "../types.js";
 
 class Config extends CustomFieldConfig<"repeater"> {
 	type = "repeater" as const;
 	column = null;
 	key;
 	props;
-	constructor(key: string, props?: CustomFieldPropsT<"repeater">) {
+	constructor(key: string, props?: CFProps<"repeater">) {
 		super();
 		this.key = key;
 		this.props = props;
@@ -21,8 +21,9 @@ class Config extends CustomFieldConfig<"repeater"> {
 				title: this.props?.labels?.title ?? super.keyToTitle(this.key),
 				description: this.props?.labels?.description,
 			},
+			fields: [],
 			validation: this.props?.validation,
-		} satisfies CustomFieldConfigT<"repeater">;
+		} satisfies CFConfig<"repeater">;
 	}
 }
 

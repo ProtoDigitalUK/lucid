@@ -147,14 +147,10 @@ export type FieldColumns =
 
 // -----------------------------------------------
 // Generic Types
-export type CustomFieldConfigT<T extends FieldTypes> =
-	CustomFieldMap[T]["config"];
-export type CustomFieldPropsT<T extends FieldTypes> =
-	CustomFieldMap[T]["props"];
-export type CustomFieldColumnT<T extends FieldTypes> =
-	CustomFieldMap[T]["column"];
-export type CustomFieldResponseT<T extends FieldTypes> =
-	CustomFieldMap[T]["response"];
+export type CFConfig<T extends FieldTypes> = CustomFieldMap[T]["config"];
+export type CFProps<T extends FieldTypes> = CustomFieldMap[T]["props"];
+export type CFColumn<T extends FieldTypes> = CustomFieldMap[T]["column"];
+export type CFResponse<T extends FieldTypes> = CustomFieldMap[T]["response"];
 
 // -----------------------------------------------
 // Custom Field Config
@@ -176,6 +172,7 @@ export interface TabFieldConfig extends SharedFieldConfig {
 		title?: TranslationValue;
 		description?: TranslationValue;
 	};
+	fields: CFConfig<FieldTypes>[];
 }
 export interface TextFieldConfig extends SharedFieldConfig {
 	type: "text";
@@ -243,7 +240,11 @@ export interface MediaFieldConfig extends SharedFieldConfig {
 }
 export interface RepeaterFieldConfig extends SharedFieldConfig {
 	type: "repeater";
-
+	fields: CFConfig<FieldTypes>[];
+	labels: {
+		title?: TranslationValue;
+		description?: TranslationValue;
+	};
 	validation?: {
 		maxGroups?: number;
 	};
@@ -418,7 +419,7 @@ export interface UserFieldConfig extends SharedFieldConfig {
 // -----------------------------------------------
 // Custom Field Props
 
-export type TabFieldProps = Partial<Omit<TabFieldConfig, "type">>;
+export type TabFieldProps = Partial<Omit<TabFieldConfig, "type" | "fields">>;
 export type TextFieldProps = Partial<Omit<TextFieldConfig, "type">>;
 export type WysiwygFieldProps = Partial<Omit<WysiwygFieldConfig, "type">>;
 export type MediaFieldProps = Partial<Omit<MediaFieldConfig, "type">>;

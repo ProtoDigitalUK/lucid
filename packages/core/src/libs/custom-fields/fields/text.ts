@@ -2,10 +2,10 @@ import CustomFieldConfig from "../cf-config.js";
 import CustomFieldService from "../cf-service.js";
 import CustomFieldResult from "../cf-result.js";
 import type {
-	CustomFieldConfigT,
-	CustomFieldPropsT,
+	CFConfig,
+	CFProps,
 	CustomFieldInsertItem,
-	CustomFieldResponseT,
+	CFResponse,
 } from "../types.js";
 // TODO: move these
 import type { FieldProp } from "../../formatters/collection-document-fields.js";
@@ -16,7 +16,7 @@ class Config extends CustomFieldConfig<"text"> {
 	column = "text_value" as const;
 	key;
 	props;
-	constructor(key: string, props?: CustomFieldPropsT<"text">) {
+	constructor(key: string, props?: CFProps<"text">) {
 		super();
 		this.key = key;
 		this.props = props;
@@ -37,7 +37,7 @@ class Config extends CustomFieldConfig<"text"> {
 			hidden: this.props?.hidden,
 			disabled: this.props?.disabled,
 			validation: this.props?.validation,
-		} satisfies CustomFieldConfigT<"text">;
+		} satisfies CFConfig<"text">;
 	}
 }
 
@@ -83,7 +83,7 @@ class Result extends CustomFieldResult<"text"> {
 		return {
 			value: this.field.text_value ?? this.cf.config.default,
 			meta: null,
-		} satisfies CustomFieldResponseT<"text">;
+		} satisfies CFResponse<"text">;
 	}
 }
 

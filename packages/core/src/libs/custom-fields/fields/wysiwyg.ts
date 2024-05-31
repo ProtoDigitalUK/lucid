@@ -1,12 +1,12 @@
 import CustomFieldConfig from "../cf-config.js";
-import type { CustomFieldConfigT, CustomFieldPropsT } from "../types.js";
+import type { CFConfig, CFProps } from "../types.js";
 
 class Config extends CustomFieldConfig<"wysiwyg"> {
 	type = "wysiwyg" as const;
 	column = "text_value" as const;
 	key;
 	props;
-	constructor(key: string, props?: CustomFieldPropsT<"wysiwyg">) {
+	constructor(key: string, props?: CFProps<"wysiwyg">) {
 		super();
 		this.key = key;
 		this.props = props;
@@ -27,7 +27,7 @@ class Config extends CustomFieldConfig<"wysiwyg"> {
 			hidden: this.props?.hidden,
 			disabled: this.props?.disabled,
 			validation: this.props?.validation,
-		} satisfies CustomFieldConfigT<"wysiwyg">;
+		} satisfies CFConfig<"wysiwyg">;
 	}
 }
 

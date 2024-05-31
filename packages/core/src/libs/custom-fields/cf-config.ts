@@ -1,18 +1,13 @@
-import type {
-	CustomFieldConfigT,
-	FieldTypes,
-	CustomFieldColumnT,
-	CustomFieldPropsT,
-} from "./types.js";
+import type { CFConfig, FieldTypes, CFColumn, CFProps } from "./types.js";
 
 abstract class CustomFieldConfig<T extends FieldTypes> {
-	fields: CustomFieldConfig<FieldTypes>[] = [];
+	repeater: string | null = null;
 
 	abstract type: T;
-	abstract column: CustomFieldColumnT<T>;
+	abstract column: CFColumn<T>;
 	abstract key: string;
-	abstract props?: CustomFieldPropsT<T>;
-	abstract get config(): CustomFieldConfigT<T>;
+	abstract props?: CFProps<T>;
+	abstract get config(): CFConfig<T>;
 
 	// Methods
 	protected keyToTitle(key: string): string {

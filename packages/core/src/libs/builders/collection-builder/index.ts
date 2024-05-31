@@ -1,10 +1,7 @@
 import z from "zod";
 import FieldBuilder from "../field-builder/index.js";
 import type BrickBuilder from "../brick-builder/index.js";
-import type {
-	FieldTypes,
-	CustomFieldPropsT,
-} from "../../custom-fields/types.js";
+import type { FieldTypes, CFProps } from "../../custom-fields/types.js";
 import type CustomFieldConfig from "../../custom-fields/cf-config.js";
 import type { CollectionDocumentBuilderHooks } from "../../../types/hooks.js";
 
@@ -33,7 +30,7 @@ export default class CollectionBuilder extends FieldBuilder {
 	// Builder Methods
 	addText(
 		key: string,
-		props?: CustomFieldPropsT<"text">,
+		props?: CFProps<"text">,
 		collection?: FieldCollectionConfig,
 	) {
 		this.#fieldCollectionHelper(key, "text", collection);
@@ -42,7 +39,7 @@ export default class CollectionBuilder extends FieldBuilder {
 	}
 	addNumber(
 		key: string,
-		props?: CustomFieldPropsT<"number">,
+		props?: CFProps<"number">,
 		collection?: FieldCollectionConfig,
 	) {
 		this.#fieldCollectionHelper(key, "number", collection);
@@ -51,7 +48,7 @@ export default class CollectionBuilder extends FieldBuilder {
 	}
 	addCheckbox(
 		key: string,
-		props?: CustomFieldPropsT<"checkbox">,
+		props?: CFProps<"checkbox">,
 		collection?: FieldCollectionConfig,
 	) {
 		this.#fieldCollectionHelper(key, "checkbox", collection);
@@ -60,7 +57,7 @@ export default class CollectionBuilder extends FieldBuilder {
 	}
 	addSelect(
 		key: string,
-		props?: CustomFieldPropsT<"select">,
+		props?: CFProps<"select">,
 		collection?: FieldCollectionConfig,
 	) {
 		this.#fieldCollectionHelper(key, "select", collection);
@@ -69,7 +66,7 @@ export default class CollectionBuilder extends FieldBuilder {
 	}
 	addTextarea(
 		key: string,
-		props?: CustomFieldPropsT<"textarea">,
+		props?: CFProps<"textarea">,
 		collection?: FieldCollectionConfig,
 	) {
 		this.#fieldCollectionHelper(key, "textarea", collection);
@@ -78,7 +75,7 @@ export default class CollectionBuilder extends FieldBuilder {
 	}
 	addDateTime(
 		key: string,
-		props?: CustomFieldPropsT<"datetime">,
+		props?: CFProps<"datetime">,
 		collection?: FieldCollectionConfig,
 	) {
 		this.#fieldCollectionHelper(key, "datetime", collection);
@@ -87,7 +84,7 @@ export default class CollectionBuilder extends FieldBuilder {
 	}
 	addUser(
 		key: string,
-		props?: CustomFieldPropsT<"user">,
+		props?: CFProps<"user">,
 		collection?: FieldCollectionConfig,
 	) {
 		this.#fieldCollectionHelper(key, "user", collection);
@@ -96,7 +93,7 @@ export default class CollectionBuilder extends FieldBuilder {
 	}
 	addMedia(
 		key: string,
-		props?: CustomFieldPropsT<"media">,
+		props?: CFProps<"media">,
 		collection?: FieldCollectionConfig,
 	) {
 		this.#fieldCollectionHelper(key, "media", collection);

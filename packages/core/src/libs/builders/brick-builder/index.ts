@@ -1,7 +1,7 @@
 import z from "zod";
 import FieldBuilder from "../field-builder/index.js";
 import TabCF from "../../custom-fields/fields/tab.js";
-import type { CustomFieldPropsT } from "../../custom-fields/types.js";
+import type { CFProps } from "../../custom-fields/types.js";
 
 export interface BrickConfigPropsT {
 	title?: string;
@@ -39,7 +39,7 @@ class BrickBuilder extends FieldBuilder {
 		}
 		return this;
 	}
-	public addTab(key: string, props?: CustomFieldPropsT<"tab">) {
+	public addTab(key: string, props?: CFProps<"tab">) {
 		this.fields.set(key, new TabCF.Config(key, props));
 		this.meta.fieldKeys.push(key);
 		return this;

@@ -18,7 +18,8 @@ import UserCF from "../../custom-fields/fields/user.js";
 import WysiwygCF from "../../custom-fields/fields/wysiwyg.js";
 import type {
 	FieldTypes,
-	CustomFieldPropsT,
+	CFProps,
+	CFConfig,
 } from "../../custom-fields/types.js";
 
 // TODO: most if not all can be removed
@@ -40,6 +41,72 @@ class FieldBuilder {
 		repeaterDepth: {},
 	};
 	// Custom Fields
+	public addRepeater(key: string, props?: CFProps<"repeater">) {
+		this.meta.repeaterDepth[key] = this.repeaterStack.length;
+		this.fields.set(key, new RepeaterCF.Config(key, props));
+		this.repeaterStack.push(key);
+		return this;
+	}
+	public addText(key: string, props?: CFProps<"text">) {
+		this.fields.set(key, new TextCF.Config(key, props));
+		this.meta.fieldKeys.push(key);
+		return this;
+	}
+	public addWysiwyg(key: string, props?: CFProps<"wysiwyg">) {
+		this.fields.set(key, new WysiwygCF.Config(key, props));
+		this.meta.fieldKeys.push(key);
+		return this;
+	}
+	public addMedia(key: string, props?: CFProps<"media">) {
+		this.fields.set(key, new MediaCF.Config(key, props));
+		this.meta.fieldKeys.push(key);
+		return this;
+	}
+	public addNumber(key: string, props?: CFProps<"number">) {
+		this.fields.set(key, new NumberCF.Config(key, props));
+		this.meta.fieldKeys.push(key);
+		return this;
+	}
+	public addCheckbox(key: string, props?: CFProps<"checkbox">) {
+		this.fields.set(key, new CheckboxCF.Config(key, props));
+		this.meta.fieldKeys.push(key);
+		return this;
+	}
+	public addSelect(key: string, props?: CFProps<"select">) {
+		this.fields.set(key, new SelectCF.Config(key, props));
+		this.meta.fieldKeys.push(key);
+		return this;
+	}
+	public addTextarea(key: string, props?: CFProps<"textarea">) {
+		this.fields.set(key, new TextareaCF.Config(key, props));
+		this.meta.fieldKeys.push(key);
+		return this;
+	}
+	public addJSON(key: string, props?: CFProps<"json">) {
+		this.fields.set(key, new JSONCF.Config(key, props));
+		this.meta.fieldKeys.push(key);
+		return this;
+	}
+	public addColour(key: string, props?: CFProps<"colour">) {
+		this.fields.set(key, new ColourCF.Config(key, props));
+		this.meta.fieldKeys.push(key);
+		return this;
+	}
+	public addDateTime(key: string, props?: CFProps<"datetime">) {
+		this.fields.set(key, new DateTimeCF.Config(key, props));
+		this.meta.fieldKeys.push(key);
+		return this;
+	}
+	public addLink(key: string, props?: CFProps<"link">) {
+		this.fields.set(key, new LinkCF.Config(key, props));
+		this.meta.fieldKeys.push(key);
+		return this;
+	}
+	public addUser(key: string, props?: CFProps<"user">) {
+		this.fields.set(key, new UserCF.Config(key, props));
+		this.meta.fieldKeys.push(key);
+		return this;
+	}
 	public endRepeater() {
 		const key = this.repeaterStack.pop();
 		if (!key) return this;
@@ -68,84 +135,48 @@ class FieldBuilder {
 		const repeater = this.fields.get(repeaterKey);
 
 		if (repeater) {
-			// filter out tab fields
-			repeater.fields = fieldsAfter.filter(
-				(field) => field.type !== "tab",
-			);
-			fieldsAfter.map((field) => {
-				this.fields.delete(field.key);
-			});
+			for (const field of fieldsAfter) {
+				if (field.type === "tab") continue;
+				field.repeater = repeater.key;
+			}
 		}
 
 		return this;
 	}
-	public addRepeater(key: string, props?: CustomFieldPropsT<"repeater">) {
-		this.meta.repeaterDepth[key] = this.repeaterStack.length;
-		this.fields.set(key, new RepeaterCF.Config(key, props));
-		this.repeaterStack.push(key);
-		return this;
-	}
-	public addText(key: string, props?: CustomFieldPropsT<"text">) {
-		this.fields.set(key, new TextCF.Config(key, props));
-		this.meta.fieldKeys.push(key);
-		return this;
-	}
-	public addWysiwyg(key: string, props?: CustomFieldPropsT<"wysiwyg">) {
-		this.fields.set(key, new WysiwygCF.Config(key, props));
-		this.meta.fieldKeys.push(key);
-		return this;
-	}
-	public addMedia(key: string, props?: CustomFieldPropsT<"media">) {
-		this.fields.set(key, new MediaCF.Config(key, props));
-		this.meta.fieldKeys.push(key);
-		return this;
-	}
-	public addNumber(key: string, props?: CustomFieldPropsT<"number">) {
-		this.fields.set(key, new NumberCF.Config(key, props));
-		this.meta.fieldKeys.push(key);
-		return this;
-	}
-	public addCheckbox(key: string, props?: CustomFieldPropsT<"checkbox">) {
-		this.fields.set(key, new CheckboxCF.Config(key, props));
-		this.meta.fieldKeys.push(key);
-		return this;
-	}
-	public addSelect(key: string, props?: CustomFieldPropsT<"select">) {
-		this.fields.set(key, new SelectCF.Config(key, props));
-		this.meta.fieldKeys.push(key);
-		return this;
-	}
-	public addTextarea(key: string, props?: CustomFieldPropsT<"textarea">) {
-		this.fields.set(key, new TextareaCF.Config(key, props));
-		this.meta.fieldKeys.push(key);
-		return this;
-	}
-	public addJSON(key: string, props?: CustomFieldPropsT<"json">) {
-		this.fields.set(key, new JSONCF.Config(key, props));
-		this.meta.fieldKeys.push(key);
-		return this;
-	}
-	public addColour(key: string, props?: CustomFieldPropsT<"colour">) {
-		this.fields.set(key, new ColourCF.Config(key, props));
-		this.meta.fieldKeys.push(key);
-		return this;
-	}
-	public addDateTime(key: string, props?: CustomFieldPropsT<"datetime">) {
-		this.fields.set(key, new DateTimeCF.Config(key, props));
-		this.meta.fieldKeys.push(key);
-		return this;
-	}
-	public addLink(key: string, props?: CustomFieldPropsT<"link">) {
-		this.fields.set(key, new LinkCF.Config(key, props));
-		this.meta.fieldKeys.push(key);
-		return this;
-	}
-	public addUser(key: string, props?: CustomFieldPropsT<"user">) {
-		this.fields.set(key, new UserCF.Config(key, props));
-		this.meta.fieldKeys.push(key);
-		return this;
+	// Private Methods
+	private nestFields(excludeTabs: boolean): CFConfig<FieldTypes>[] {
+		const fields = Array.from(this.fields.values()).filter((field) => {
+			if (excludeTabs) {
+				return field.type !== "tab";
+			}
+			return true;
+		});
+
+		const result: CFConfig<FieldTypes>[] = [];
+		let currentTab: CFConfig<"tab"> | null = null;
+		const repeaters: Map<string, CFConfig<FieldTypes>> = new Map();
+
+		for (const field of fields) {
+			if (field.type === "tab") {
+				// add current tab when we encounter a new tab
+				if (currentTab) {
+					result.push(currentTab);
+				}
+				// new tab
+				currentTab = field.config as CFConfig<"tab">;
+			} else if (field.repeater && field.repeater !== null) {
+				// repeater fields
+			} else {
+				// standard
+			}
+		}
+
+		if (currentTab) result.push(currentTab);
+
+		return result;
 	}
 	// Getters
+	// TODO: REPLACE
 	get fieldTree(): CustomFieldConfig<FieldTypes>[] {
 		const fields = Array.from(this.fields.values());
 
@@ -159,7 +190,9 @@ class FieldBuilder {
 				}
 				currentTab = item;
 			} else if (currentTab) {
+				// @ts-ignore
 				if (!currentTab.fields) currentTab.fields = [];
+				// @ts-ignore
 				currentTab.fields.push(item);
 			} else {
 				result.push(item);
@@ -179,6 +212,7 @@ class FieldBuilder {
 		const getFields = (field: CustomFieldConfig<FieldTypes>) => {
 			fields.push(field);
 			if (field.type === "repeater") {
+				// @ts-ignore
 				for (const item of field.fields || []) {
 					getFields(item);
 				}
@@ -199,6 +233,21 @@ class FieldBuilder {
 			}
 		}
 		return fieldArray;
+	}
+
+	get fieldTree2(): CFConfig<FieldTypes>[] {
+		return this.nestFields(true);
+	}
+	get fieldTreeNoTab2(): CFConfig<FieldTypes>[] {
+		return this.nestFields(false);
+	}
+	get flatFields2(): CFConfig<FieldTypes>[] {
+		const config: CFConfig<FieldTypes>[] = [];
+		for (const [_, value] of this.fields) {
+			console.log(value.key, value.repeater);
+			config.push(value.config);
+		}
+		return config;
 	}
 
 	// TODO: move bellow in cf-config class and individual custom field classes

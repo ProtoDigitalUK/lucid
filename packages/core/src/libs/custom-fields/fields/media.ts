@@ -1,12 +1,12 @@
 import CustomFieldConfig from "../cf-config.js";
-import type { CustomFieldConfigT, CustomFieldPropsT } from "../types.js";
+import type { CFConfig, CFProps } from "../types.js";
 
 class Config extends CustomFieldConfig<"media"> {
 	type = "media" as const;
 	column = "media_id" as const;
 	key;
 	props;
-	constructor(key: string, props?: CustomFieldPropsT<"media">) {
+	constructor(key: string, props?: CFProps<"media">) {
 		super();
 		this.key = key;
 		this.props = props;
@@ -25,7 +25,7 @@ class Config extends CustomFieldConfig<"media"> {
 			hidden: this.props?.hidden,
 			disabled: this.props?.disabled,
 			validation: this.props?.validation,
-		} satisfies CustomFieldConfigT<"media">;
+		} satisfies CFConfig<"media">;
 	}
 }
 

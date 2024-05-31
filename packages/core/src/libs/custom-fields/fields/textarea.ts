@@ -1,12 +1,12 @@
 import CustomFieldConfig from "../cf-config.js";
-import type { CustomFieldConfigT, CustomFieldPropsT } from "../types.js";
+import type { CFConfig, CFProps } from "../types.js";
 
 class Config extends CustomFieldConfig<"textarea"> {
 	type = "textarea" as const;
 	column = "text_value" as const;
 	key;
 	props;
-	constructor(key: string, props?: CustomFieldPropsT<"textarea">) {
+	constructor(key: string, props?: CFProps<"textarea">) {
 		super();
 		this.key = key;
 		this.props = props;
@@ -27,7 +27,7 @@ class Config extends CustomFieldConfig<"textarea"> {
 			hidden: this.props?.hidden,
 			disabled: this.props?.disabled,
 			validation: this.props?.validation,
-		} satisfies CustomFieldConfigT<"textarea">;
+		} satisfies CFConfig<"textarea">;
 	}
 }
 

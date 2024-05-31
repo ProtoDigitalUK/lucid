@@ -1,12 +1,12 @@
 import CustomFieldConfig from "../cf-config.js";
-import type { CustomFieldConfigT, CustomFieldPropsT } from "../types.js";
+import type { CFConfig, CFProps } from "../types.js";
 
 class Config extends CustomFieldConfig<"tab"> {
 	type = "tab" as const;
 	column = null;
 	key: string;
-	props?: CustomFieldPropsT<"tab">;
-	constructor(key: string, props?: CustomFieldPropsT<"tab">) {
+	props?: CFProps<"tab">;
+	constructor(key: string, props?: CFProps<"tab">) {
 		super();
 		this.key = key;
 		this.props = props;
@@ -21,7 +21,8 @@ class Config extends CustomFieldConfig<"tab"> {
 				title: this.props?.labels?.title ?? super.keyToTitle(this.key),
 				description: this.props?.labels?.description,
 			},
-		} satisfies CustomFieldConfigT<"tab">;
+			fields: [],
+		} satisfies CFConfig<"tab">;
 	}
 }
 
