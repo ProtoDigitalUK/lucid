@@ -111,34 +111,25 @@ class FieldBuilder {
 		const key = this.repeaterStack.pop();
 		if (!key) return this;
 
+		// Get all fields as an array
 		const fields = Array.from(this.fields.values());
-		let selectedRepeaterIndex = 0;
-		let repeaterKey = "";
 
-		// find the selected repeater
-		for (let i = 0; i < fields.length; i++) {
-			const field = fields[i];
-			if (!field) continue;
-			if (field.type === "repeater" && field.key === key) {
-				selectedRepeaterIndex = i;
-				repeaterKey = field.key;
-				break;
+		// Find the index of the repeater that is being closed
+		const selectedRepeaterIndex = fields.findIndex(
+			(field) => field.type === "repeater" && field.key === key,
+		);
+		if (selectedRepeaterIndex === -1) return this; // Repeater not found
+
+		// Track only fields after this repeater
+		const fieldsAfter = fields.slice(selectedRepeaterIndex + 1);
+
+		// Update fields in the current nesting level
+		for (const field of fieldsAfter) {
+			if (field.type === "tab" || field.repeater) {
+				// If the field is under a tab or already has a repeater, do not modify
+				continue;
 			}
-		}
-
-		if (!repeaterKey) return this;
-
-		const fieldsAfter = fields.slice(
-			selectedRepeaterIndex + 1,
-		) as CustomFieldConfig<FieldTypes>[];
-
-		const repeater = this.fields.get(repeaterKey);
-
-		if (repeater) {
-			for (const field of fieldsAfter) {
-				if (field.type === "tab") continue;
-				field.repeater = repeater.key;
-			}
+			field.repeater = key;
 		}
 
 		return this;
@@ -154,20 +145,28 @@ class FieldBuilder {
 
 		const result: CFConfig<FieldTypes>[] = [];
 		let currentTab: CFConfig<"tab"> | null = null;
-		const repeaters: Map<string, CFConfig<FieldTypes>> = new Map();
+		const repeaterStack: Map<string, CFConfig<"repeater">> = new Map();
 
 		for (const field of fields) {
+			const config = field.config;
+
 			if (field.type === "tab") {
-				// add current tab when we encounter a new tab
-				if (currentTab) {
-					result.push(currentTab);
-				}
-				// new tab
+				if (currentTab) result.push(currentTab);
 				currentTab = field.config as CFConfig<"tab">;
-			} else if (field.repeater && field.repeater !== null) {
-				// repeater fields
+				continue;
+			}
+
+			// add repeater to the stack
+			if (field.type === "repeater")
+				repeaterStack.set(field.key, config as CFConfig<"repeater">);
+
+			const targetPush = currentTab ? currentTab.fields : result;
+
+			if (field.repeater) {
+				const repeater = repeaterStack.get(field.repeater);
+				if (repeater) repeater.fields.push(config);
 			} else {
-				// standard
+				targetPush.push(config);
 			}
 		}
 
@@ -176,75 +175,15 @@ class FieldBuilder {
 		return result;
 	}
 	// Getters
-	// TODO: REPLACE
-	get fieldTree(): CustomFieldConfig<FieldTypes>[] {
-		const fields = Array.from(this.fields.values());
-
-		const result: CustomFieldConfig<FieldTypes>[] = [];
-		let currentTab: CustomFieldConfig<FieldTypes> | null = null;
-
-		for (const item of fields) {
-			if (item.type === "tab") {
-				if (currentTab) {
-					result.push(currentTab);
-				}
-				currentTab = item;
-			} else if (currentTab) {
-				// @ts-ignore
-				if (!currentTab.fields) currentTab.fields = [];
-				// @ts-ignore
-				currentTab.fields.push(item);
-			} else {
-				result.push(item);
-			}
-		}
-
-		if (currentTab) {
-			result.push(currentTab);
-		}
-
-		return result;
-	}
-	get flatFields(): CustomFieldConfig<FieldTypes>[] {
-		const fields: CustomFieldConfig<FieldTypes>[] = [];
-
-		const fieldArray = Array.from(this.fields.values());
-		const getFields = (field: CustomFieldConfig<FieldTypes>) => {
-			fields.push(field);
-			if (field.type === "repeater") {
-				// @ts-ignore
-				for (const item of field.fields || []) {
-					getFields(item);
-				}
-			}
-		};
-
-		for (const field of fieldArray) {
-			getFields(field);
-		}
-
-		return fields;
-	}
-	get fieldTreeNoTab() {
-		const fieldArray = Array.from(this.fields.values());
-		for (const field of fieldArray) {
-			if (field.type === "tab") {
-				fieldArray.splice(fieldArray.indexOf(field), 1);
-			}
-		}
-		return fieldArray;
-	}
-
-	get fieldTree2(): CFConfig<FieldTypes>[] {
-		return this.nestFields(true);
-	}
-	get fieldTreeNoTab2(): CFConfig<FieldTypes>[] {
+	get fieldTree(): CFConfig<FieldTypes>[] {
 		return this.nestFields(false);
 	}
-	get flatFields2(): CFConfig<FieldTypes>[] {
+	get fieldTreeNoTab(): CFConfig<FieldTypes>[] {
+		return this.nestFields(true);
+	}
+	get flatFields(): CFConfig<FieldTypes>[] {
 		const config: CFConfig<FieldTypes>[] = [];
 		for (const [_, value] of this.fields) {
-			console.log(value.key, value.repeater);
 			config.push(value.config);
 		}
 		return config;
