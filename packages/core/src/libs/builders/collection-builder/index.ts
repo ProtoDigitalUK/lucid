@@ -1,7 +1,11 @@
 import z from "zod";
 import FieldBuilder from "../field-builder/index.js";
 import type BrickBuilder from "../brick-builder/index.js";
-import type { FieldTypes, CFProps } from "../../custom-fields/types.js";
+import type {
+	FieldTypes,
+	CFProps,
+	CFConfig,
+} from "../../custom-fields/types.js";
 import type CustomFieldConfig from "../../custom-fields/cf-config.js";
 import type { CollectionDocumentBuilderHooks } from "../../../types/hooks.js";
 
@@ -236,5 +240,5 @@ export interface CollectionBrickConfig {
 	title: BrickBuilder["config"]["title"];
 	description: BrickBuilder["config"]["description"];
 	preview: BrickBuilder["config"]["preview"];
-	fields: CustomFieldConfig<FieldTypes>[];
+	fields: CFConfig<FieldTypes>[];
 }

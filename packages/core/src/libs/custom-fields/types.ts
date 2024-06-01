@@ -172,7 +172,7 @@ export interface TabFieldConfig extends SharedFieldConfig {
 		title?: TranslationValue;
 		description?: TranslationValue;
 	};
-	fields: CFConfig<FieldTypes>[];
+	fields: Exclude<CFConfig<FieldTypes>, TabFieldConfig>[];
 }
 export interface TextFieldConfig extends SharedFieldConfig {
 	type: "text";
@@ -240,7 +240,7 @@ export interface MediaFieldConfig extends SharedFieldConfig {
 }
 export interface RepeaterFieldConfig extends SharedFieldConfig {
 	type: "repeater";
-	fields: CFConfig<FieldTypes>[];
+	fields: Exclude<CFConfig<FieldTypes>, TabFieldConfig>[];
 	labels: {
 		title?: TranslationValue;
 		description?: TranslationValue;

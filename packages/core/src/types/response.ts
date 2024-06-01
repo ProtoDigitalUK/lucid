@@ -1,10 +1,7 @@
 import type { BooleanInt } from "../libs/db/types.js";
-import type {
-	CustomField,
-	FieldTypes,
-} from "../libs/builders/field-builder/types.js";
 import type { CollectionBrickConfig } from "../libs/builders/collection-builder/index.js";
 import type { ErrorResult } from "./errors.js";
+import type { CFConfig, FieldTypes } from "../libs/custom-fields/types.js";
 
 export interface UserResponse {
 	id: number;
@@ -154,7 +151,7 @@ export interface CollectionResponse {
 	translations: boolean;
 	fixedBricks: Array<CollectionBrickConfig>;
 	builderBricks: Array<CollectionBrickConfig>;
-	fields: Array<CustomField>;
+	fields: CFConfig<FieldTypes>[];
 }
 
 export interface BrickResponse {

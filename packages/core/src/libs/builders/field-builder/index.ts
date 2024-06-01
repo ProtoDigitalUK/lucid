@@ -20,6 +20,7 @@ import type {
 	FieldTypes,
 	CFProps,
 	CFConfig,
+	TabFieldConfig,
 } from "../../custom-fields/types.js";
 
 // TODO: most if not all can be removed
@@ -164,7 +165,10 @@ class FieldBuilder {
 
 			if (field.repeater) {
 				const repeater = repeaterStack.get(field.repeater);
-				if (repeater) repeater.fields.push(config);
+				if (repeater)
+					repeater.fields.push(
+						config as Exclude<CFConfig<FieldTypes>, TabFieldConfig>,
+					);
 			} else {
 				targetPush.push(config);
 			}
@@ -178,8 +182,11 @@ class FieldBuilder {
 	get fieldTree(): CFConfig<FieldTypes>[] {
 		return this.nestFields(false);
 	}
-	get fieldTreeNoTab(): CFConfig<FieldTypes>[] {
-		return this.nestFields(true);
+	get fieldTreeNoTab(): Exclude<CFConfig<FieldTypes>, TabFieldConfig>[] {
+		return this.nestFields(true) as Exclude<
+			CFConfig<FieldTypes>,
+			TabFieldConfig
+		>[];
 	}
 	get flatFields(): CFConfig<FieldTypes>[] {
 		const config: CFConfig<FieldTypes>[] = [];
