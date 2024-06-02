@@ -1,5 +1,5 @@
 import CustomFieldConfig from "../cf-config.js";
-import type { CFConfig, CFProps } from "../types.js";
+import type { CFConfig, CFProps, CFResponse } from "../types.js";
 
 class Config extends CustomFieldConfig<"tab"> {
 	type = "tab" as const;
@@ -23,6 +23,12 @@ class Config extends CustomFieldConfig<"tab"> {
 			},
 			fields: [],
 		} satisfies CFConfig<"tab">;
+	}
+	static responseValueFormat() {
+		return {
+			value: null,
+			meta: null,
+		} satisfies CFResponse<"tab">;
 	}
 }
 

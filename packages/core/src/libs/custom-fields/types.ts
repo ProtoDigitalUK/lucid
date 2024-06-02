@@ -223,6 +223,7 @@ export interface MediaFieldConfig extends SharedFieldConfig {
 	translations: boolean;
 	hidden?: boolean;
 	disabled?: boolean;
+	default?: number;
 
 	validation?: {
 		required?: boolean;
@@ -406,6 +407,7 @@ export interface UserFieldConfig extends SharedFieldConfig {
 		title?: TranslationValue;
 		description?: TranslationValue;
 	};
+	default?: number;
 
 	translations: boolean;
 	hidden?: boolean;
@@ -422,7 +424,9 @@ export interface UserFieldConfig extends SharedFieldConfig {
 export type TabFieldProps = Partial<Omit<TabFieldConfig, "type" | "fields">>;
 export type TextFieldProps = Partial<Omit<TextFieldConfig, "type">>;
 export type WysiwygFieldProps = Partial<Omit<WysiwygFieldConfig, "type">>;
-export type MediaFieldProps = Partial<Omit<MediaFieldConfig, "type">>;
+export type MediaFieldProps = Partial<
+	Omit<MediaFieldConfig, "type" | "default">
+>;
 export type RepeaterFieldProps = Partial<
 	Omit<RepeaterFieldConfig, "type" | "fields">
 >;
@@ -434,7 +438,7 @@ export type JsonFieldProps = Partial<Omit<JsonFieldConfig, "type">>;
 export type ColourFieldProps = Partial<Omit<ColourFieldConfig, "type">>;
 export type DatetimeFieldProps = Partial<Omit<DatetimeFieldConfig, "type">>;
 export type LinkFieldProps = Partial<Omit<LinkFieldConfig, "type">>;
-export type UserFieldProps = Partial<Omit<UserFieldConfig, "type">>;
+export type UserFieldProps = Partial<Omit<UserFieldConfig, "type" | "default">>;
 
 // -----------------------------------------------
 // Data
@@ -476,6 +480,22 @@ export type LinkResValue = {
 } | null;
 export type UserResValue = number | null;
 
+export type FieldResponseValue =
+	| TabResValue
+	| TextResValue
+	| WysiwygResValue
+	| MediaResValue
+	| RepeaterResValue
+	| NumberResValue
+	| CheckboxResValue
+	| SelectReValue
+	| TextareaResValue
+	| JsonResValue
+	| ColourResValue
+	| DatetimeResValue
+	| LinkResValue
+	| UserResValue;
+
 // -----------------------------------------------
 // Response Meta
 
@@ -516,3 +536,19 @@ export type UserResMeta = {
 	firstName: string | null;
 	lastName: string | null;
 } | null;
+
+export type FieldResponseMeta =
+	| TabResMeta
+	| TextResMeta
+	| WysiwygResMeta
+	| MediaResMeta
+	| RepeaterResMeta
+	| NumberResMeta
+	| CheckboxResMeta
+	| SelectResMeta
+	| TextareaResMeta
+	| JsonResMeta
+	| ColourResMeta
+	| DatetimeResMeta
+	| LinkResMeta
+	| UserResMeta;

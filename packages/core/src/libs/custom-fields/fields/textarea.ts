@@ -1,5 +1,6 @@
 import CustomFieldConfig from "../cf-config.js";
-import type { CFConfig, CFProps } from "../types.js";
+import type { CFConfig, CFProps, CFResponse } from "../types.js";
+import type { FieldProp } from "../../formatters/collection-document-fields.js";
 
 class Config extends CustomFieldConfig<"textarea"> {
 	type = "textarea" as const;
@@ -28,6 +29,12 @@ class Config extends CustomFieldConfig<"textarea"> {
 			disabled: this.props?.disabled,
 			validation: this.props?.validation,
 		} satisfies CFConfig<"textarea">;
+	}
+	static responseValueFormat(config: CFConfig<"textarea">, data: FieldProp) {
+		return {
+			value: data.text_value ?? config.default ?? null,
+			meta: null,
+		} satisfies CFResponse<"textarea">;
 	}
 }
 

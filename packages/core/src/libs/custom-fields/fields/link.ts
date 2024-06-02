@@ -1,5 +1,8 @@
 import CustomFieldConfig from "../cf-config.js";
-import type { CFConfig, CFProps } from "../types.js";
+import Formatter from "../../formatters/index.js";
+import type { LinkValue } from "../../../types.js";
+import type { CFConfig, CFProps, CFResponse } from "../types.js";
+import type { FieldProp } from "../../formatters/collection-document-fields.js";
 
 class Config extends CustomFieldConfig<"link"> {
 	type = "link" as const;
@@ -28,6 +31,17 @@ class Config extends CustomFieldConfig<"link"> {
 			disabled: this.props?.disabled,
 			validation: this.props?.validation,
 		} satisfies CFConfig<"link">;
+	}
+	static responseValueFormat(config: CFConfig<"link">, data: FieldProp) {
+		const linkVal = Formatter.parseJSON<LinkValue>(data.json_value);
+		return {
+			value: {
+				url: linkVal?.url ?? config.default ?? null,
+				label: linkVal?.label ?? null,
+				target: linkVal?.target ?? null,
+			},
+			meta: null,
+		} satisfies CFResponse<"link">;
 	}
 }
 

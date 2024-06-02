@@ -33,19 +33,23 @@ const getMultiple = async (serviceConfig: ServiceConfig, data: ServiceData) => {
 			bricks: bricks,
 			collection: collection,
 			host: serviceConfig.config.host,
-			defaultLocaleCode: serviceConfig.config.localisation.defaultLocale,
-			locales: serviceConfig.config.localisation.locales.map(
-				(l) => l.code,
-			),
+			localisation: {
+				locales: serviceConfig.config.localisation.locales.map(
+					(l) => l.code,
+				),
+				default: serviceConfig.config.localisation.defaultLocale,
+			},
 		}),
-		fields: CollectionDocumentBricksFormatter.formatCollectionSudoBrick({
+		fields: CollectionDocumentBricksFormatter.formatCollectionPseudoBrick({
 			bricks: bricks,
 			collection: collection,
 			host: serviceConfig.config.host,
-			defaultLocaleCode: serviceConfig.config.localisation.defaultLocale,
-			locales: serviceConfig.config.localisation.locales.map(
-				(l) => l.code,
-			),
+			localisation: {
+				locales: serviceConfig.config.localisation.locales.map(
+					(l) => l.code,
+				),
+				default: serviceConfig.config.localisation.defaultLocale,
+			},
 		}),
 	};
 };

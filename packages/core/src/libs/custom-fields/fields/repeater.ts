@@ -1,5 +1,5 @@
 import CustomFieldConfig from "../cf-config.js";
-import type { CFConfig, CFProps } from "../types.js";
+import type { CFConfig, CFProps, CFResponse } from "../types.js";
 
 class Config extends CustomFieldConfig<"repeater"> {
 	type = "repeater" as const;
@@ -24,6 +24,12 @@ class Config extends CustomFieldConfig<"repeater"> {
 			fields: [],
 			validation: this.props?.validation,
 		} satisfies CFConfig<"repeater">;
+	}
+	static responseValueFormat() {
+		return {
+			value: null,
+			meta: null,
+		} satisfies CFResponse<"repeater">;
 	}
 }
 

@@ -1,13 +1,11 @@
 import CustomFieldConfig from "../cf-config.js";
 import CustomFieldService from "../cf-service.js";
-import CustomFieldResult from "../cf-result.js";
 import type {
 	CFConfig,
 	CFProps,
 	CustomFieldInsertItem,
 	CFResponse,
 } from "../types.js";
-// TODO: move these
 import type { FieldProp } from "../../formatters/collection-document-fields.js";
 import type { FieldInsertItem } from "../../../services/collection-document-bricks/helpers/flatten-fields.js";
 
@@ -38,6 +36,12 @@ class Config extends CustomFieldConfig<"text"> {
 			disabled: this.props?.disabled,
 			validation: this.props?.validation,
 		} satisfies CFConfig<"text">;
+	}
+	static responseValueFormat(config: CFConfig<"text">, data: FieldProp) {
+		return {
+			value: data.text_value ?? config.default,
+			meta: null,
+		} satisfies CFResponse<"text">;
 	}
 }
 
@@ -70,29 +74,11 @@ class Service extends CustomFieldService<"text"> {
 	}
 }
 
-class Result extends CustomFieldResult<"text"> {
-	cf: Config;
-	field: FieldProp;
-	constructor(cf: Config, field: FieldProp) {
-		super();
-		this.cf = cf;
-		this.field = field;
-	}
-	// Getters
-	get responseValueFormat() {
-		return {
-			value: this.field.text_value ?? this.cf.config.default,
-			meta: null,
-		} satisfies CFResponse<"text">;
-	}
-}
-
 // -----------------------------------------------
 // Export
 const TextCF = {
 	Config: Config,
 	Service: Service,
-	Result: Result,
 };
 
 export default TextCF;

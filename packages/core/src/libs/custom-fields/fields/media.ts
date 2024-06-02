@@ -1,5 +1,8 @@
 import CustomFieldConfig from "../cf-config.js";
-import type { CFConfig, CFProps } from "../types.js";
+import mediaHelpers from "../../../utils/media-helpers.js";
+import type { MediaType } from "../../../types.js";
+import type { CFConfig, CFProps, CFResponse } from "../types.js";
+import type { FieldProp } from "../../formatters/collection-document-fields.js";
 
 class Config extends CustomFieldConfig<"media"> {
 	type = "media" as const;
@@ -26,6 +29,30 @@ class Config extends CustomFieldConfig<"media"> {
 			disabled: this.props?.disabled,
 			validation: this.props?.validation,
 		} satisfies CFConfig<"media">;
+	}
+	static responseValueFormat(data: FieldProp, host: string) {
+		return {
+			value: data?.media_id ?? null,
+			meta: {
+				id: data?.media_id ?? null,
+				url: mediaHelpers.createURL(host, data?.media_key ?? ""),
+				key: data?.media_key ?? null,
+				mimeType: data?.media_mime_type ?? null,
+				fileExtension: data?.media_file_extension ?? null,
+				fileSize: data?.media_file_size ?? null,
+				width: data?.media_width ?? null,
+				height: data?.media_height ?? null,
+				titleTranslations: data?.media_title_translations?.map((t) => ({
+					value: t.value,
+					localeCode: t.locale_code,
+				})),
+				altTranslations: data?.media_alt_translations?.map((t) => ({
+					value: t.value,
+					localeCode: t.locale_code,
+				})),
+				type: (data?.media_type as MediaType) ?? null,
+			},
+		} satisfies CFResponse<"media">;
 	}
 }
 

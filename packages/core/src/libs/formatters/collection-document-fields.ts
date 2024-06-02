@@ -1,16 +1,19 @@
+import fieldUtils from "../custom-fields/utils/index.js";
 import type {
 	FieldResponse,
 	FieldGroupResponse,
-	FieldResponseMeta,
-	FieldResponseValue,
 } from "../../types/response.js";
 import type { JSONString } from "../db/types.js";
 import type CollectionBuilder from "../builders/collection-builder/index.js";
 import type BrickBuilder from "../builders/brick-builder/index.js";
-import type { FieldTypes } from "../builders/field-builder/index.js";
 import type { BrickPropT } from "./collection-document-bricks.js";
-import type { CustomField } from "../builders/field-builder/index.js";
-import { fieldResponseValueFormat } from "../../utils/field-helpers.js";
+import type {
+	CFConfig,
+	FieldTypes,
+	FieldResponseMeta,
+	FieldResponseValue,
+} from "../custom-fields/types.js";
+import type { RepeaterConfig, TabConfig } from "../../types.js";
 
 export interface FieldProp {
 	fields_id: number;
@@ -48,46 +51,62 @@ export interface FieldProp {
 }
 
 export default class CollectionDocumentFieldsFormatter {
-	formatMultiple = (props: {
-		fields: FieldProp[];
-		groups: BrickPropT["groups"];
-		host: string;
-		builder: BrickBuilder | CollectionBuilder;
-		defaultLocaleCode: string | undefined;
-		locales: string[];
-		collectionTranslations: boolean;
-	}): FieldResponse[] => {
-		const fieldTree = props.builder.fieldTreeNoTab;
-		const sortedGroups = props.groups.sort(
+	formatMultiple = (
+		data: {
+			fields: FieldProp[];
+			groups: BrickPropT["groups"];
+		},
+		meta: {
+			builder: BrickBuilder | CollectionBuilder;
+			host: string;
+			collectionTranslations: boolean;
+			localisation: {
+				locales: string[];
+				default: string;
+			};
+		},
+	): FieldResponse[] => {
+		const fieldConfigTree = meta.builder.fieldTreeNoTab;
+		const sortedGroups = data.groups.sort(
 			(a, b) => a.group_order - b.group_order,
 		);
-		return this.buildFields({
-			fields: props.fields,
-			groups: sortedGroups,
-			host: props.host,
-			customFields: fieldTree,
-			groupId: null,
-			parentGroupId: null,
-			defaultLocaleCode: props.defaultLocaleCode,
-			locales: props.locales,
-			collectionTranslations: props.collectionTranslations,
-		});
-	};
-	formatMultipleFlat = (props: {
-		fields: FieldProp[];
-		host: string;
-		builder: BrickBuilder | CollectionBuilder;
-		defaultLocaleCode: string | undefined;
-		locales: string[];
-		collectionTranslations: boolean;
-	}): FieldResponse[] => {
-		if (props.fields.length === 0) return [];
-		const fieldsRes: FieldResponse[] = [];
-		const flatFields = props.builder.flatFields;
 
-		for (const cf of flatFields) {
-			const fieldData = props.fields
-				.filter((f) => f.key === cf.key)
+		return this.buildFieldTree(
+			{
+				fields: data.fields,
+				groups: sortedGroups,
+			},
+			{
+				fieldConfig: fieldConfigTree,
+				host: meta.host,
+				localisation: meta.localisation,
+				collectionTranslations: meta.collectionTranslations,
+				groupId: null,
+				parentGroupId: null,
+			},
+		);
+	};
+	formatMultipleFlat = (
+		data: {
+			fields: FieldProp[];
+		},
+		meta: {
+			builder: BrickBuilder | CollectionBuilder;
+			host: string;
+			collectionTranslations: boolean;
+			localisation: {
+				locales: string[];
+				default: string;
+			};
+		},
+	): FieldResponse[] => {
+		if (data.fields.length === 0) return [];
+		const fieldsRes: FieldResponse[] = [];
+		const flatFields = meta.builder.flatFields;
+
+		for (const fieldConfig of flatFields) {
+			const fieldData = data.fields
+				.filter((f) => f.key === fieldConfig.key)
 				.filter((f) => {
 					if (f.type === "repeater") return false;
 					if (f.type === "tab") return false;
@@ -96,91 +115,169 @@ export default class CollectionDocumentFieldsFormatter {
 
 			if (fieldData.length === 0) continue;
 
-			const field = this.handleFieldLocales({
-				fields: fieldData,
-				cf: cf,
-				host: props.host,
-				includeGroupId: true,
-				defaultLocaleCode: props.defaultLocaleCode,
-				locales: props.locales,
-				collectionTranslations: props.collectionTranslations,
-			});
+			const field = this.buildField(
+				{
+					fields: fieldData,
+				},
+				{
+					fieldConfig: fieldConfig,
+					host: meta.host,
+					includeGroupId: true,
+					collectionTranslations: meta.collectionTranslations,
+					localisation: meta.localisation,
+				},
+			);
 			if (field) fieldsRes.push(field);
 		}
 
 		return fieldsRes;
 	};
-	private buildFields = (props: {
-		fields: FieldProp[];
-		groups: BrickPropT["groups"];
-		host: string;
-		customFields: CustomField[];
-		groupId: number | null;
-		parentGroupId: number | null;
-		defaultLocaleCode: string | undefined;
-		locales: string[];
-		collectionTranslations: boolean;
-	}): FieldResponse[] => {
+
+	// Private methods
+	private buildFieldTree = (
+		data: {
+			fields: FieldProp[];
+			groups: BrickPropT["groups"];
+		},
+		meta: {
+			fieldConfig: CFConfig<FieldTypes>[];
+			host: string;
+			groupId: number | null;
+			parentGroupId: number | null;
+			collectionTranslations: boolean;
+			localisation: {
+				locales: string[];
+				default: string;
+			};
+		},
+	): FieldResponse[] => {
 		const fieldsRes: FieldResponse[] = [];
-		for (const cf of props.customFields) {
-			// if the field is a repeater, call buildFieldTree recursively on its fields
-			if (cf.type === "repeater") {
+
+		for (const config of meta.fieldConfig) {
+			// recursively build repeater groups
+			if (config.type === "repeater") {
 				fieldsRes.push({
-					key: cf.key,
-					type: cf.type,
-					groups: this.buildGroups({
-						repeater: cf,
-						fields: props.fields,
-						groups: props.groups,
-						host: props.host,
-						parentGroupId: props.groupId,
-						defaultLocaleCode: props.defaultLocaleCode,
-						locales: props.locales,
-						collectionTranslations: props.collectionTranslations,
-					}),
+					key: config.key,
+					type: config.type,
+					groups: this.buildGroups(
+						{
+							fields: data.fields,
+							groups: data.groups,
+						},
+						{
+							repeaterConfig: config,
+							host: meta.host,
+							parentGroupId: meta.groupId,
+							localisation: meta.localisation,
+							collectionTranslations: meta.collectionTranslations,
+						},
+					),
 				});
 				continue;
 			}
 
-			const fields = props.fields.filter(
-				(f) => f.key === cf.key && f.group_id === props.groupId,
+			// get all fields of that exist in config and the current group level
+			const fields = data.fields.filter(
+				(f) => f.key === config.key && f.group_id === meta.groupId,
 			);
 			if (!fields) continue;
 			if (fields.length === 0) continue;
 
-			const field = this.handleFieldLocales({
-				fields: fields,
-				cf: cf,
-				host: props.host,
-				includeGroupId: true,
-				defaultLocaleCode: props.defaultLocaleCode,
-				locales: props.locales,
-				collectionTranslations: props.collectionTranslations,
-			});
+			const field = this.buildField(
+				{
+					fields: fields,
+				},
+				{
+					fieldConfig: config,
+					host: meta.host,
+					includeGroupId: true,
+					localisation: meta.localisation,
+					collectionTranslations: meta.collectionTranslations,
+				},
+			);
 			if (field) fieldsRes.push(field);
 		}
 
 		return fieldsRes;
 	};
-	private buildGroups = (props: {
-		fields: FieldProp[];
-		repeater: CustomField;
-		groups: BrickPropT["groups"];
-		host: string;
-		parentGroupId: number | null;
-		defaultLocaleCode: string | undefined;
-		locales: string[];
-		collectionTranslations: boolean;
-	}): FieldGroupResponse[] => {
+	private buildField = (
+		data: {
+			fields: FieldProp[];
+		},
+		meta: {
+			fieldConfig: CFConfig<FieldTypes>;
+			host: string;
+			includeGroupId: boolean;
+			collectionTranslations: boolean;
+			localisation: {
+				locales: string[];
+				default: string;
+			};
+		},
+	): FieldResponse | null => {
+		if (
+			meta.fieldConfig.type !== "repeater" &&
+			meta.fieldConfig.type !== "tab" &&
+			meta.fieldConfig.translations === true &&
+			meta.collectionTranslations === true
+		) {
+			// reduce same fields with different languages into 1 field
+			// add missing locales with default value to it
+			return this.addEmptyLocales(
+				{ field: this.reduceFieldLocales(data, meta) },
+				{
+					fieldConfig: meta.fieldConfig,
+					host: meta.host,
+					localisation: meta.localisation,
+				},
+			);
+		}
+
+		// get the default locale for that field
+		// - if a field doesnt support translations we always use the default locale
+		const defaultField = data.fields.find(
+			(f) => f.locale_code === meta.localisation.default,
+		);
+		if (!defaultField) return null;
+
+		return {
+			key: meta.fieldConfig.key,
+			type: meta.fieldConfig.type as FieldTypes,
+			groupId: meta.includeGroupId
+				? defaultField.group_id ?? undefined
+				: undefined,
+			...fieldUtils.fieldResponseValueMeta({
+				field: defaultField,
+				config: meta.fieldConfig,
+				host: meta.host,
+			}),
+		};
+	};
+	private buildGroups = (
+		data: {
+			fields: FieldProp[];
+			groups: BrickPropT["groups"];
+		},
+		meta: {
+			repeaterConfig: CFConfig<"repeater">;
+			host: string;
+			parentGroupId: number | null;
+			collectionTranslations: boolean;
+			localisation: {
+				locales: string[];
+				default: string;
+			};
+		},
+	): FieldGroupResponse[] => {
 		const groups: FieldGroupResponse[] = [];
 
-		const repeaterFields = props.repeater.fields;
+		const repeaterFields = meta.repeaterConfig.fields;
 		if (!repeaterFields) return groups;
 
-		const repeaterGroups = props.groups.filter(
+		const repeaterGroups = data.groups.filter(
 			(g) =>
-				g.repeater_key === props.repeater.key &&
-				g.parent_group_id === props.parentGroupId,
+				g.repeater_key === meta.repeaterConfig.key &&
+				g.parent_group_id === meta.parentGroupId,
 		);
 
 		for (const group of repeaterGroups) {
@@ -188,127 +285,98 @@ export default class CollectionDocumentFieldsFormatter {
 				id: group.group_id,
 				order: group.group_order,
 				open: group.group_open,
-				fields: this.buildFields({
-					fields: props.fields,
-					groups: props.groups,
-					host: props.host,
-					customFields: repeaterFields,
-					groupId: group.group_id,
-					parentGroupId: group.parent_group_id,
-					defaultLocaleCode: props.defaultLocaleCode,
-					locales: props.locales,
-					collectionTranslations: props.collectionTranslations,
-				}),
+				fields: this.buildFieldTree(
+					{
+						fields: data.fields,
+						groups: data.groups,
+					},
+					{
+						fieldConfig: repeaterFields,
+						host: meta.host,
+						groupId: group.group_id,
+						parentGroupId: group.parent_group_id,
+						collectionTranslations: meta.collectionTranslations,
+						localisation: meta.localisation,
+					},
+				),
 			});
 		}
 
 		return groups;
 	};
-	private handleFieldLocales = (props: {
-		fields: FieldProp[];
-		cf: CustomField;
-		host: string;
-		includeGroupId?: boolean;
-		defaultLocaleCode?: string;
-		locales: string[];
-		collectionTranslations: boolean;
-	}): FieldResponse | null => {
-		if (props.cf.translations === true && props.collectionTranslations) {
-			return this.addEmptyLocales({
-				field: this.reduceFieldLocales({
-					fields: props.fields,
-					cf: props.cf,
-					host: props.host,
-					includeGroupId: props.includeGroupId,
-				}),
-				cf: props.cf,
-				host: props.host,
-				locales: props.locales,
-			});
-		}
-		const defaultField = props.fields.find(
-			(f) => f.locale_code === props.defaultLocaleCode,
-		);
-		if (!defaultField) return null;
-
-		const { value, meta } = fieldResponseValueFormat({
-			type: props.cf.type,
-			customField: props.cf,
-			field: defaultField,
-			host: props.host,
-		});
-		return {
-			key: props.cf.key,
-			type: props.cf.type as FieldTypes,
-			groupId: props.includeGroupId
-				? defaultField.group_id ?? undefined
-				: undefined,
-			value: value,
-			meta: meta,
-		};
-	};
-	private reduceFieldLocales = (props: {
-		fields: FieldProp[];
-		cf: CustomField;
-		host: string;
-		includeGroupId?: boolean;
-	}): FieldResponse => {
-		// ** Reduce same fields into one entry with translations object containing values for each locale
-		return props.fields.reduce<FieldResponse>(
+	private reduceFieldLocales = (
+		data: {
+			fields: FieldProp[];
+		},
+		meta: {
+			fieldConfig: CFConfig<FieldTypes>;
+			host: string;
+			includeGroupId?: boolean;
+		},
+	): FieldResponse => {
+		return data.fields.reduce<FieldResponse>(
 			(acc, field) => {
 				if (acc.translations === undefined) acc.translations = {};
 				if (acc.meta === undefined || acc.meta === null) acc.meta = {};
 
-				if (props.includeGroupId)
+				if (meta.includeGroupId)
 					acc.groupId = field.group_id ?? undefined;
 
-				const { value, meta } = fieldResponseValueFormat({
-					type: props.cf.type,
-					customField: props.cf,
+				const fieldRes = fieldUtils.fieldResponseValueMeta({
 					field: field,
-					host: props.host,
+					config: meta.fieldConfig,
+					host: meta.host,
 				});
 
-				acc.translations[field.locale_code] = value;
+				acc.translations[field.locale_code] = fieldRes.value;
 				(acc.meta as Record<string, FieldResponseMeta>)[
 					field.locale_code
-				] = meta;
+				] = fieldRes.meta;
 
 				return acc;
 			},
 			{
-				key: props.cf.key,
-				type: props.cf.type as FieldTypes,
+				key: meta.fieldConfig.key,
+				type: meta.fieldConfig.type,
 			},
 		);
 	};
-	private addEmptyLocales = (props: {
-		field: FieldResponse;
-		cf: CustomField;
-		host: string;
-		locales: string[];
-	}): FieldResponse => {
-		if (props.field.translations === undefined)
-			props.field.translations = {};
-		if (props.field.meta === undefined) props.field.meta = {};
+	private addEmptyLocales = (
+		data: {
+			field: FieldResponse;
+		},
+		meta: {
+			fieldConfig: Exclude<
+				CFConfig<FieldTypes>,
+				RepeaterConfig | TabConfig
+			>;
+			host: string;
+			localisation: {
+				locales: string[];
+				default: string;
+			};
+		},
+	): FieldResponse => {
+		if (data.field.translations === undefined) data.field.translations = {};
+		if (data.field.meta === undefined) data.field.meta = {};
 
-		const emptyLocales = props.locales.filter(
+		const emptyLocales = meta.localisation.locales.filter(
 			(l) =>
 				!(
-					props.field.translations as Record<
+					data.field.translations as Record<
 						string,
 						FieldResponseValue
 					>
 				)[l],
 		);
 		for (const locale of emptyLocales) {
-			(props.field.translations as Record<string, FieldResponseValue>)[
+			(data.field.translations as Record<string, FieldResponseValue>)[
 				locale
-			] = props.cf.default ?? null;
-			(props.field.meta as Record<string, FieldResponseMeta>)[locale] =
+			] = meta.fieldConfig.default ?? null;
+			(data.field.meta as Record<string, FieldResponseMeta>)[locale] =
 				null;
 		}
-		return props.field;
+		return data.field;
 	};
 	static swagger = {
 		type: "object",

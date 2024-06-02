@@ -1,5 +1,7 @@
 import CustomFieldConfig from "../cf-config.js";
-import type { CFConfig, CFProps } from "../types.js";
+import Formatter from "../../formatters/index.js";
+import type { CFConfig, CFProps, CFResponse } from "../types.js";
+import type { FieldProp } from "../../formatters/collection-document-fields.js";
 
 class Config extends CustomFieldConfig<"json"> {
 	type = "json" as const;
@@ -28,6 +30,15 @@ class Config extends CustomFieldConfig<"json"> {
 			disabled: this.props?.disabled,
 			validation: this.props?.validation,
 		} satisfies CFConfig<"json">;
+	}
+	static responseValueFormat(config: CFConfig<"json">, data: FieldProp) {
+		return {
+			value:
+				Formatter.parseJSON<Record<string, unknown>>(data.json_value) ??
+				config.default ??
+				null,
+			meta: null,
+		} satisfies CFResponse<"json">;
 	}
 }
 

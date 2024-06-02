@@ -1,5 +1,6 @@
 import CustomFieldConfig from "../cf-config.js";
-import type { CFConfig, CFProps } from "../types.js";
+import type { CFConfig, CFProps, CFResponse } from "../types.js";
+import type { FieldProp } from "../../formatters/collection-document-fields.js";
 
 class Config extends CustomFieldConfig<"number"> {
 	type = "number" as const;
@@ -28,6 +29,12 @@ class Config extends CustomFieldConfig<"number"> {
 			disabled: this.props?.disabled,
 			validation: this.props?.validation,
 		} satisfies CFConfig<"number">;
+	}
+	static responseValueFormat(config: CFConfig<"number">, data: FieldProp) {
+		return {
+			value: data.int_value ?? config.default ?? null,
+			meta: null,
+		} satisfies CFResponse<"number">;
 	}
 }
 

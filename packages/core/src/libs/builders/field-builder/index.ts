@@ -112,24 +112,19 @@ class FieldBuilder {
 		const key = this.repeaterStack.pop();
 		if (!key) return this;
 
-		// Get all fields as an array
 		const fields = Array.from(this.fields.values());
 
-		// Find the index of the repeater that is being closed
+		// index of repeater that is being closed
 		const selectedRepeaterIndex = fields.findIndex(
 			(field) => field.type === "repeater" && field.key === key,
 		);
 		if (selectedRepeaterIndex === -1) return this; // Repeater not found
 
-		// Track only fields after this repeater
+		// only fields after this repeater
 		const fieldsAfter = fields.slice(selectedRepeaterIndex + 1);
 
-		// Update fields in the current nesting level
 		for (const field of fieldsAfter) {
-			if (field.type === "tab" || field.repeater) {
-				// If the field is under a tab or already has a repeater, do not modify
-				continue;
-			}
+			if (field.type === "tab" || field.repeater) continue;
 			field.repeater = key;
 		}
 

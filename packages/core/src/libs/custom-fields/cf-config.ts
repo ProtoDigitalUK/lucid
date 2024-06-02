@@ -1,4 +1,11 @@
-import type { CFConfig, FieldTypes, CFColumn, CFProps } from "./types.js";
+import type {
+	CFConfig,
+	FieldTypes,
+	CFColumn,
+	CFProps,
+	CFResponse,
+} from "./types.js";
+import type { FieldProp } from "../formatters/collection-document-fields.js";
 
 abstract class CustomFieldConfig<T extends FieldTypes> {
 	repeater: string | null = null;
@@ -8,6 +15,10 @@ abstract class CustomFieldConfig<T extends FieldTypes> {
 	abstract key: string;
 	abstract props?: CFProps<T>;
 	abstract get config(): CFConfig<T>;
+	responseValueFormat?: <T extends FieldTypes>(
+		config: CFConfig<T>,
+		data: FieldProp,
+	) => CFResponse<T>;
 
 	// Methods
 	protected keyToTitle(key: string): string {

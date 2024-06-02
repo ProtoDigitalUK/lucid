@@ -1,5 +1,6 @@
 import CustomFieldConfig from "../cf-config.js";
-import type { CFConfig, CFProps } from "../types.js";
+import type { CFConfig, CFProps, CFResponse } from "../types.js";
+import type { FieldProp } from "../../formatters/collection-document-fields.js";
 
 class Config extends CustomFieldConfig<"user"> {
 	type = "user" as const;
@@ -26,6 +27,17 @@ class Config extends CustomFieldConfig<"user"> {
 			disabled: this.props?.disabled,
 			validation: this.props?.validation,
 		} satisfies CFConfig<"user">;
+	}
+	static responseValueFormat(data: FieldProp) {
+		return {
+			value: data.user_id ?? null,
+			meta: {
+				email: data?.user_email ?? null,
+				username: data?.user_username ?? null,
+				firstName: data?.user_first_name ?? null,
+				lastName: data?.user_last_name ?? null,
+			},
+		} satisfies CFResponse<"user">;
 	}
 }
 

@@ -3,7 +3,7 @@ import type {
 	FieldResponse,
 	CollectionDocumentResponse,
 } from "../../types/response.js";
-import CollectionDocumentFieldsFormatter, {
+import CollectionDocumentFieldsFormatterClass, {
 	type FieldProp,
 } from "./collection-document-fields.js";
 import type CollectionBuilder from "../builders/collection-builder/index.js";
@@ -38,16 +38,17 @@ export default class CollectionDocumentsFormatter {
 		documents: DocumentPropT[];
 		collection: CollectionBuilder;
 		host: string;
-		defaultLocaleCode?: string;
-		locales: string[];
+		localisation: {
+			locales: string[];
+			default: string;
+		};
 	}) => {
 		return props.documents.map((d) =>
 			this.formatSingle({
 				document: d,
 				collection: props.collection,
 				host: props.host,
-				defaultLocaleCode: props.defaultLocaleCode,
-				locales: props.locales,
+				localisation: props.localisation,
 			}),
 		);
 	};
@@ -57,8 +58,10 @@ export default class CollectionDocumentsFormatter {
 		bricks?: BrickResponse[];
 		fields?: FieldResponse[] | null;
 		host: string;
-		defaultLocaleCode?: string;
-		locales: string[];
+		localisation: {
+			locales: string[];
+			default: string;
+		};
 	}): CollectionDocumentResponse => {
 		let fields: FieldResponse[] | null = null;
 
@@ -67,15 +70,20 @@ export default class CollectionDocumentsFormatter {
 		} else if (props.document.fields) {
 			// ** This is only used on get multiple documents, in this case we dont request groups and so should
 			// ** return fields in a flat format instead of nesting them if repeaters are present
-			fields = new CollectionDocumentFieldsFormatter().formatMultipleFlat(
+			const CollectionDocumentFieldsFormatter = Formatter.get(
+				"collection-document-fields",
+			);
+
+			fields = CollectionDocumentFieldsFormatter.formatMultipleFlat(
 				{
 					fields: props.document.fields,
+				},
+				{
 					host: props.host,
 					builder: props.collection,
-					defaultLocaleCode: props.defaultLocaleCode,
-					locales: props.locales,
 					collectionTranslations:
 						props.collection.data.config.translations,
+					localisation: props.localisation,
 				},
 			);
 		}
@@ -127,7 +135,7 @@ export default class CollectionDocumentsFormatter {
 			fields: {
 				type: "array",
 				nullable: true,
-				items: CollectionDocumentFieldsFormatter.swagger,
+				items: CollectionDocumentFieldsFormatterClass.swagger,
 			},
 			createdBy: {
 				type: "object",

@@ -35,10 +35,12 @@ const getMultiple = async (serviceConfig: ServiceConfig, data: ServiceData) => {
 			documents: documents,
 			collection: collectionInstance,
 			host: serviceConfig.config.host,
-			defaultLocaleCode: serviceConfig.config.localisation.defaultLocale,
-			locales: serviceConfig.config.localisation.locales.map(
-				(l) => l.code,
-			),
+			localisation: {
+				locales: serviceConfig.config.localisation.locales.map(
+					(l) => l.code,
+				),
+				default: serviceConfig.config.localisation.defaultLocale,
+			},
 		}),
 		count: Formatter.parseCount(documentCount?.count),
 	};
