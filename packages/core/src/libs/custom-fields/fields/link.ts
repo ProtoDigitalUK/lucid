@@ -1,10 +1,10 @@
-import CustomFieldConfig from "../cf-config.js";
+import CustomField from "../custom-field.js";
 import Formatter from "../../formatters/index.js";
 import type { LinkValue } from "../../../types.js";
 import type { CFConfig, CFProps, CFResponse } from "../types.js";
 import type { FieldProp } from "../../formatters/collection-document-fields.js";
 
-class Config extends CustomFieldConfig<"link"> {
+class LinkCustomField extends CustomField<"link"> {
 	type = "link" as const;
 	column = "text_value" as const;
 	key;
@@ -15,6 +15,20 @@ class Config extends CustomFieldConfig<"link"> {
 		this.props = props;
 	}
 	// Methods
+	responseValueFormat(props: {
+		config: CFConfig<"link">;
+		data: FieldProp;
+	}) {
+		const linkVal = Formatter.parseJSON<LinkValue>(props.data.json_value);
+		return {
+			value: {
+				url: linkVal?.url ?? props.config.default ?? null,
+				label: linkVal?.label ?? null,
+				target: linkVal?.target ?? null,
+			},
+			meta: null,
+		} satisfies CFResponse<"link">;
+	}
 	// Getters
 	get config() {
 		return {
@@ -32,25 +46,6 @@ class Config extends CustomFieldConfig<"link"> {
 			validation: this.props?.validation,
 		} satisfies CFConfig<"link">;
 	}
-	static responseValueFormat(config: CFConfig<"link">, data: FieldProp) {
-		const linkVal = Formatter.parseJSON<LinkValue>(data.json_value);
-		return {
-			value: {
-				url: linkVal?.url ?? config.default ?? null,
-				label: linkVal?.label ?? null,
-				target: linkVal?.target ?? null,
-			},
-			meta: null,
-		} satisfies CFResponse<"link">;
-	}
 }
 
-// -----------------------------------------------
-// Export
-const LinkCF = {
-	Config: Config,
-	Service: undefined,
-	Result: undefined,
-};
-
-export default LinkCF;
+export default LinkCustomField;

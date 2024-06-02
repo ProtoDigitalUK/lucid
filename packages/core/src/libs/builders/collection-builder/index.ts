@@ -6,7 +6,6 @@ import type {
 	CFProps,
 	CFConfig,
 } from "../../custom-fields/types.js";
-import type CustomFieldConfig from "../../custom-fields/cf-config.js";
 import type { CollectionDocumentBuilderHooks } from "../../../types/hooks.js";
 
 export default class CollectionBuilder extends FieldBuilder {

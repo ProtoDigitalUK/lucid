@@ -2,20 +2,20 @@ import T from "../../../translations/index.js";
 import z from "zod";
 import sanitizeHtml from "sanitize-html";
 
-import type CustomFieldConfig from "../../custom-fields/cf-config.js";
-import CheckboxCF from "../../custom-fields/fields/checkbox.js";
-import ColourCF from "../../custom-fields/fields/colour.js";
+import type CustomField from "../../custom-fields/custom-field.js";
+import CheckboxCustomField from "../../custom-fields/fields/checkbox.js";
+import ColourCustomField from "../../custom-fields/fields/colour.js";
 import DateTimeCF from "../../custom-fields/fields/datetime.js";
 import JSONCF from "../../custom-fields/fields/json.js";
-import LinkCF from "../../custom-fields/fields/link.js";
-import MediaCF from "../../custom-fields/fields/media.js";
-import NumberCF from "../../custom-fields/fields/number.js";
-import RepeaterCF from "../../custom-fields/fields/repeater.js";
-import SelectCF from "../../custom-fields/fields/select.js";
-import TextCF from "../../custom-fields/fields/text.js";
-import TextareaCF from "../../custom-fields/fields/textarea.js";
-import UserCF from "../../custom-fields/fields/user.js";
-import WysiwygCF from "../../custom-fields/fields/wysiwyg.js";
+import LinkCustomField from "../../custom-fields/fields/link.js";
+import MediaCustomField from "../../custom-fields/fields/media.js";
+import NumberCustomField from "../../custom-fields/fields/number.js";
+import RepeaterCustomField from "../../custom-fields/fields/repeater.js";
+import SelectCustomField from "../../custom-fields/fields/select.js";
+import TextCustomField from "../../custom-fields/fields/text.js";
+import TextareaCustomField from "../../custom-fields/fields/textarea.js";
+import UserCustomField from "../../custom-fields/fields/user.js";
+import WysiwygCustomField from "../../custom-fields/fields/wysiwyg.js";
 import type {
 	FieldTypes,
 	CFProps,
@@ -25,7 +25,7 @@ import type {
 
 // TODO: most if not all can be removed
 import type {
-	CustomField,
+	CustomField as CF,
 	FieldBuilderMeta,
 	ValidationProps,
 	MediaReferenceData,
@@ -35,7 +35,7 @@ import type {
 } from "./types.js";
 
 class FieldBuilder {
-	fields: Map<string, CustomFieldConfig<FieldTypes>> = new Map();
+	fields: Map<string, CustomField<FieldTypes>> = new Map();
 	repeaterStack: string[] = [];
 	meta: FieldBuilderMeta = {
 		fieldKeys: [],
@@ -44,67 +44,67 @@ class FieldBuilder {
 	// Custom Fields
 	public addRepeater(key: string, props?: CFProps<"repeater">) {
 		this.meta.repeaterDepth[key] = this.repeaterStack.length;
-		this.fields.set(key, new RepeaterCF.Config(key, props));
+		this.fields.set(key, new RepeaterCustomField(key, props));
 		this.repeaterStack.push(key);
 		return this;
 	}
 	public addText(key: string, props?: CFProps<"text">) {
-		this.fields.set(key, new TextCF.Config(key, props));
+		this.fields.set(key, new TextCustomField(key, props));
 		this.meta.fieldKeys.push(key);
 		return this;
 	}
 	public addWysiwyg(key: string, props?: CFProps<"wysiwyg">) {
-		this.fields.set(key, new WysiwygCF.Config(key, props));
+		this.fields.set(key, new WysiwygCustomField(key, props));
 		this.meta.fieldKeys.push(key);
 		return this;
 	}
 	public addMedia(key: string, props?: CFProps<"media">) {
-		this.fields.set(key, new MediaCF.Config(key, props));
+		this.fields.set(key, new MediaCustomField(key, props));
 		this.meta.fieldKeys.push(key);
 		return this;
 	}
 	public addNumber(key: string, props?: CFProps<"number">) {
-		this.fields.set(key, new NumberCF.Config(key, props));
+		this.fields.set(key, new NumberCustomField(key, props));
 		this.meta.fieldKeys.push(key);
 		return this;
 	}
 	public addCheckbox(key: string, props?: CFProps<"checkbox">) {
-		this.fields.set(key, new CheckboxCF.Config(key, props));
+		this.fields.set(key, new CheckboxCustomField(key, props));
 		this.meta.fieldKeys.push(key);
 		return this;
 	}
 	public addSelect(key: string, props?: CFProps<"select">) {
-		this.fields.set(key, new SelectCF.Config(key, props));
+		this.fields.set(key, new SelectCustomField(key, props));
 		this.meta.fieldKeys.push(key);
 		return this;
 	}
 	public addTextarea(key: string, props?: CFProps<"textarea">) {
-		this.fields.set(key, new TextareaCF.Config(key, props));
+		this.fields.set(key, new TextareaCustomField(key, props));
 		this.meta.fieldKeys.push(key);
 		return this;
 	}
 	public addJSON(key: string, props?: CFProps<"json">) {
-		this.fields.set(key, new JSONCF.Config(key, props));
+		this.fields.set(key, new JSONCF(key, props));
 		this.meta.fieldKeys.push(key);
 		return this;
 	}
 	public addColour(key: string, props?: CFProps<"colour">) {
-		this.fields.set(key, new ColourCF.Config(key, props));
+		this.fields.set(key, new ColourCustomField(key, props));
 		this.meta.fieldKeys.push(key);
 		return this;
 	}
 	public addDateTime(key: string, props?: CFProps<"datetime">) {
-		this.fields.set(key, new DateTimeCF.Config(key, props));
+		this.fields.set(key, new DateTimeCF(key, props));
 		this.meta.fieldKeys.push(key);
 		return this;
 	}
 	public addLink(key: string, props?: CFProps<"link">) {
-		this.fields.set(key, new LinkCF.Config(key, props));
+		this.fields.set(key, new LinkCustomField(key, props));
 		this.meta.fieldKeys.push(key);
 		return this;
 	}
 	public addUser(key: string, props?: CFProps<"user">) {
-		this.fields.set(key, new UserCF.Config(key, props));
+		this.fields.set(key, new UserCustomField(key, props));
 		this.meta.fieldKeys.push(key);
 		return this;
 	}
@@ -301,7 +301,7 @@ class FieldBuilder {
 			};
 		}
 	}
-	#validateSelectType(field: CustomField, value: string) {
+	#validateSelectType(field: CF, value: string) {
 		if (field.validation?.required !== true && !value) return;
 		if (field.options) {
 			const optionValues = field.options.map((option) => option.value);
@@ -310,7 +310,7 @@ class FieldBuilder {
 			}
 		}
 	}
-	#validateWysiwygType(field: CustomField, value: string) {
+	#validateWysiwygType(field: CF, value: string) {
 		const sanitizedValue = sanitizeHtml(value, {
 			allowedTags: [],
 			allowedAttributes: {},
@@ -322,7 +322,7 @@ class FieldBuilder {
 		}
 	}
 	#validateUserType(
-		field: CustomField,
+		field: CF,
 		referenceData: UserReferenceData,
 		value: number | null,
 	) {
@@ -333,7 +333,7 @@ class FieldBuilder {
 		}
 	}
 	#validateMediaType(
-		field: CustomField,
+		field: CF,
 		referenceData: MediaReferenceData,
 		value: number | null = null,
 	) {

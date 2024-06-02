@@ -1,8 +1,8 @@
-import CustomFieldConfig from "../cf-config.js";
+import CustomField from "../custom-field.js";
 import type { CFConfig, CFProps, CFResponse } from "../types.js";
 import type { FieldProp } from "../../formatters/collection-document-fields.js";
 
-class Config extends CustomFieldConfig<"wysiwyg"> {
+class WysiwygCustomField extends CustomField<"wysiwyg"> {
 	type = "wysiwyg" as const;
 	column = "text_value" as const;
 	key;
@@ -13,6 +13,15 @@ class Config extends CustomFieldConfig<"wysiwyg"> {
 		this.props = props;
 	}
 	// Methods
+	responseValueFormat(props: {
+		config: CFConfig<"wysiwyg">;
+		data: FieldProp;
+	}) {
+		return {
+			value: props.data.text_value ?? props.config.default ?? null,
+			meta: null,
+		} satisfies CFResponse<"wysiwyg">;
+	}
 	// Getters
 	get config() {
 		return {
@@ -30,20 +39,6 @@ class Config extends CustomFieldConfig<"wysiwyg"> {
 			validation: this.props?.validation,
 		} satisfies CFConfig<"wysiwyg">;
 	}
-	static responseValueFormat(config: CFConfig<"wysiwyg">, data: FieldProp) {
-		return {
-			value: data.text_value ?? config.default ?? null,
-			meta: null,
-		} satisfies CFResponse<"wysiwyg">;
-	}
 }
 
-// -----------------------------------------------
-// Export
-const WysiwygCF = {
-	Config: Config,
-	Service: undefined,
-	Result: undefined,
-};
-
-export default WysiwygCF;
+export default WysiwygCustomField;

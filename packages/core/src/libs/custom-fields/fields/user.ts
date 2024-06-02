@@ -1,8 +1,8 @@
-import CustomFieldConfig from "../cf-config.js";
+import CustomField from "../custom-field.js";
 import type { CFConfig, CFProps, CFResponse } from "../types.js";
 import type { FieldProp } from "../../formatters/collection-document-fields.js";
 
-class Config extends CustomFieldConfig<"user"> {
+class UserCustomField extends CustomField<"user"> {
 	type = "user" as const;
 	column = "user_id" as const;
 	key;
@@ -13,6 +13,20 @@ class Config extends CustomFieldConfig<"user"> {
 		this.props = props;
 	}
 	// Methods
+	responseValueFormat(props: {
+		config: CFConfig<"user">;
+		data: FieldProp;
+	}) {
+		return {
+			value: props.data.user_id ?? null,
+			meta: {
+				email: props.data?.user_email ?? null,
+				username: props.data?.user_username ?? null,
+				firstName: props.data?.user_first_name ?? null,
+				lastName: props.data?.user_last_name ?? null,
+			},
+		} satisfies CFResponse<"user">;
+	}
 	// Getters
 	get config() {
 		return {
@@ -28,25 +42,6 @@ class Config extends CustomFieldConfig<"user"> {
 			validation: this.props?.validation,
 		} satisfies CFConfig<"user">;
 	}
-	static responseValueFormat(data: FieldProp) {
-		return {
-			value: data.user_id ?? null,
-			meta: {
-				email: data?.user_email ?? null,
-				username: data?.user_username ?? null,
-				firstName: data?.user_first_name ?? null,
-				lastName: data?.user_last_name ?? null,
-			},
-		} satisfies CFResponse<"user">;
-	}
 }
 
-// -----------------------------------------------
-// Export
-const UserCF = {
-	Config: Config,
-	Service: undefined,
-	Result: undefined,
-};
-
-export default UserCF;
+export default UserCustomField;

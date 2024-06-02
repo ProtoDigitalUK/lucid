@@ -1,4 +1,3 @@
-import fieldUtils from "../custom-fields/utils/index.js";
 import type {
 	FieldResponse,
 	FieldGroupResponse,
@@ -77,6 +76,7 @@ export default class CollectionDocumentFieldsFormatter {
 				groups: sortedGroups,
 			},
 			{
+				builder: meta.builder,
 				fieldConfig: fieldConfigTree,
 				host: meta.host,
 				localisation: meta.localisation,
@@ -120,6 +120,7 @@ export default class CollectionDocumentFieldsFormatter {
 					fields: fieldData,
 				},
 				{
+					builder: meta.builder,
 					fieldConfig: fieldConfig,
 					host: meta.host,
 					includeGroupId: true,
@@ -140,6 +141,7 @@ export default class CollectionDocumentFieldsFormatter {
 			groups: BrickPropT["groups"];
 		},
 		meta: {
+			builder: BrickBuilder | CollectionBuilder;
 			fieldConfig: CFConfig<FieldTypes>[];
 			host: string;
 			groupId: number | null;
@@ -165,6 +167,7 @@ export default class CollectionDocumentFieldsFormatter {
 							groups: data.groups,
 						},
 						{
+							builder: meta.builder,
 							repeaterConfig: config,
 							host: meta.host,
 							parentGroupId: meta.groupId,
@@ -188,6 +191,7 @@ export default class CollectionDocumentFieldsFormatter {
 					fields: fields,
 				},
 				{
+					builder: meta.builder,
 					fieldConfig: config,
 					host: meta.host,
 					includeGroupId: true,
@@ -205,6 +209,7 @@ export default class CollectionDocumentFieldsFormatter {
 			fields: FieldProp[];
 		},
 		meta: {
+			builder: BrickBuilder | CollectionBuilder;
 			fieldConfig: CFConfig<FieldTypes>;
 			host: string;
 			includeGroupId: boolean;
@@ -240,15 +245,18 @@ export default class CollectionDocumentFieldsFormatter {
 		);
 		if (!defaultField) return null;
 
+		const cfInstance = meta.builder.fields.get(meta.fieldConfig.key);
+		if (!cfInstance) return null;
+
 		return {
 			key: meta.fieldConfig.key,
 			type: meta.fieldConfig.type as FieldTypes,
 			groupId: meta.includeGroupId
 				? defaultField.group_id ?? undefined
 				: undefined,
-			...fieldUtils.fieldResponseValueMeta({
-				field: defaultField,
+			...cfInstance.responseValueFormat({
 				config: meta.fieldConfig,
+				data: defaultField,
 				host: meta.host,
 			}),
 		};
@@ -259,6 +267,7 @@ export default class CollectionDocumentFieldsFormatter {
 			groups: BrickPropT["groups"];
 		},
 		meta: {
+			builder: BrickBuilder | CollectionBuilder;
 			repeaterConfig: CFConfig<"repeater">;
 			host: string;
 			parentGroupId: number | null;
@@ -291,6 +300,7 @@ export default class CollectionDocumentFieldsFormatter {
 						groups: data.groups,
 					},
 					{
+						builder: meta.builder,
 						fieldConfig: repeaterFields,
 						host: meta.host,
 						groupId: group.group_id,
@@ -309,6 +319,7 @@ export default class CollectionDocumentFieldsFormatter {
 			fields: FieldProp[];
 		},
 		meta: {
+			builder: BrickBuilder | CollectionBuilder;
 			fieldConfig: CFConfig<FieldTypes>;
 			host: string;
 			includeGroupId?: boolean;
@@ -316,15 +327,20 @@ export default class CollectionDocumentFieldsFormatter {
 	): FieldResponse => {
 		return data.fields.reduce<FieldResponse>(
 			(acc, field) => {
+				const cfInstance = meta.builder.fields.get(
+					meta.fieldConfig.key,
+				);
+				if (!cfInstance) return acc;
+
 				if (acc.translations === undefined) acc.translations = {};
 				if (acc.meta === undefined || acc.meta === null) acc.meta = {};
 
 				if (meta.includeGroupId)
 					acc.groupId = field.group_id ?? undefined;
 
-				const fieldRes = fieldUtils.fieldResponseValueMeta({
-					field: field,
+				const fieldRes = cfInstance.responseValueFormat({
 					config: meta.fieldConfig,
+					data: field,
 					host: meta.host,
 				});
 

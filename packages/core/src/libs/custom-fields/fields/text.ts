@@ -1,5 +1,4 @@
-import CustomFieldConfig from "../cf-config.js";
-import CustomFieldService from "../cf-service.js";
+import CustomField from "../custom-field.js";
 import type {
 	CFConfig,
 	CFProps,
@@ -9,7 +8,7 @@ import type {
 import type { FieldProp } from "../../formatters/collection-document-fields.js";
 import type { FieldInsertItem } from "../../../services/collection-document-bricks/helpers/flatten-fields.js";
 
-class Config extends CustomFieldConfig<"text"> {
+class TextCustomField extends CustomField<"text"> {
 	type = "text" as const;
 	column = "text_value" as const;
 	key;
@@ -20,6 +19,35 @@ class Config extends CustomFieldConfig<"text"> {
 		this.props = props;
 	}
 	// Methods
+	responseValueFormat(props: {
+		config: CFConfig<"text">;
+		data: FieldProp;
+	}) {
+		return {
+			value: props.data.text_value ?? props.config.default,
+			meta: null,
+		} satisfies CFResponse<"text">;
+	}
+	getInsertField(props: {
+		config: CFConfig<"text">;
+		item: FieldInsertItem;
+		brickId: number;
+		groupId: number;
+	}) {
+		return {
+			key: props.config.key,
+			type: props.config.type,
+			localeCode: props.item.localeCode,
+			collectionBrickId: props.brickId,
+			groupId: props.groupId,
+			textValue: props.item.value,
+			intValue: null,
+			boolValue: null,
+			jsonValue: null,
+			mediaId: null,
+			userId: null,
+		} satisfies CustomFieldInsertItem<"text">;
+	}
 	// Getters
 	get config() {
 		return {
@@ -37,48 +65,6 @@ class Config extends CustomFieldConfig<"text"> {
 			validation: this.props?.validation,
 		} satisfies CFConfig<"text">;
 	}
-	static responseValueFormat(config: CFConfig<"text">, data: FieldProp) {
-		return {
-			value: data.text_value ?? config.default,
-			meta: null,
-		} satisfies CFResponse<"text">;
-	}
 }
 
-class Service extends CustomFieldService<"text"> {
-	cf: Config;
-	item: FieldInsertItem;
-
-	constructor(cf: Config, item: FieldInsertItem) {
-		super();
-		this.cf = cf;
-		this.item = item;
-	}
-	// Getters
-	get getInsertField() {
-		if (this.brickId === null) throw new Error("Brick ID is not set");
-
-		return {
-			key: this.cf.key,
-			type: this.cf.config.type,
-			localeCode: this.item.localeCode,
-			collectionBrickId: this.brickId,
-			groupId: this.groupId,
-			textValue: this.item.value,
-			intValue: null,
-			boolValue: null,
-			jsonValue: null,
-			mediaId: null,
-			userId: null,
-		} satisfies CustomFieldInsertItem<"text">;
-	}
-}
-
-// -----------------------------------------------
-// Export
-const TextCF = {
-	Config: Config,
-	Service: Service,
-};
-
-export default TextCF;
+export default TextCustomField;

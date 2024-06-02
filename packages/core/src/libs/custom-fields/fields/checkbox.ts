@@ -1,8 +1,8 @@
-import CustomFieldConfig from "../cf-config.js";
+import CustomField from "../custom-field.js";
 import type { CFConfig, CFProps, CFResponse } from "../types.js";
 import type { FieldProp } from "../../formatters/collection-document-fields.js";
 
-class Config extends CustomFieldConfig<"checkbox"> {
+class CheckboxCustomField extends CustomField<"checkbox"> {
 	type = "checkbox" as const;
 	column = "bool_value" as const;
 	key;
@@ -13,6 +13,15 @@ class Config extends CustomFieldConfig<"checkbox"> {
 		this.props = props;
 	}
 	// Methods
+	responseValueFormat(props: {
+		config: CFConfig<"checkbox">;
+		data: FieldProp;
+	}) {
+		return {
+			value: props.data.bool_value ?? props.config.default ?? null,
+			meta: null,
+		} satisfies CFResponse<"checkbox">;
+	}
 	// Getters
 	get config() {
 		return {
@@ -29,20 +38,6 @@ class Config extends CustomFieldConfig<"checkbox"> {
 			validation: this.props?.validation,
 		} satisfies CFConfig<"checkbox">;
 	}
-	static responseValueFormat(config: CFConfig<"checkbox">, data: FieldProp) {
-		return {
-			value: data.bool_value ?? config.default ?? null,
-			meta: null,
-		} satisfies CFResponse<"checkbox">;
-	}
 }
 
-// -----------------------------------------------
-// Export
-const CheckboxCF = {
-	Config: Config,
-	Service: undefined,
-	Result: undefined,
-};
-
-export default CheckboxCF;
+export default CheckboxCustomField;

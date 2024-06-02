@@ -1,8 +1,8 @@
-import CustomFieldConfig from "../cf-config.js";
+import CustomField from "../custom-field.js";
 import type { CFConfig, CFProps, CFResponse } from "../types.js";
 import type { FieldProp } from "../../formatters/collection-document-fields.js";
 
-class Config extends CustomFieldConfig<"number"> {
+class NumberCustomField extends CustomField<"number"> {
 	type = "number" as const;
 	column = "int_value" as const;
 	key;
@@ -13,6 +13,15 @@ class Config extends CustomFieldConfig<"number"> {
 		this.props = props;
 	}
 	// Methods
+	responseValueFormat(props: {
+		config: CFConfig<"number">;
+		data: FieldProp;
+	}) {
+		return {
+			value: props.data.int_value ?? props.config.default ?? null,
+			meta: null,
+		} satisfies CFResponse<"number">;
+	}
 	// Getters
 	get config() {
 		return {
@@ -30,20 +39,6 @@ class Config extends CustomFieldConfig<"number"> {
 			validation: this.props?.validation,
 		} satisfies CFConfig<"number">;
 	}
-	static responseValueFormat(config: CFConfig<"number">, data: FieldProp) {
-		return {
-			value: data.int_value ?? config.default ?? null,
-			meta: null,
-		} satisfies CFResponse<"number">;
-	}
 }
 
-// -----------------------------------------------
-// Export
-const NumberCF = {
-	Config: Config,
-	Service: undefined,
-	Result: undefined,
-};
-
-export default NumberCF;
+export default NumberCustomField;

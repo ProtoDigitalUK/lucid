@@ -1,9 +1,9 @@
-import CustomFieldConfig from "../cf-config.js";
+import CustomField from "../custom-field.js";
 import Formatter from "../../formatters/index.js";
 import type { CFConfig, CFProps, CFResponse } from "../types.js";
 import type { FieldProp } from "../../formatters/collection-document-fields.js";
 
-class Config extends CustomFieldConfig<"json"> {
+class JsonCustomField extends CustomField<"json"> {
 	type = "json" as const;
 	column = "json_value" as const;
 	key;
@@ -14,6 +14,20 @@ class Config extends CustomFieldConfig<"json"> {
 		this.props = props;
 	}
 	// Methods
+	responseValueFormat(props: {
+		config: CFConfig<"json">;
+		data: FieldProp;
+	}) {
+		return {
+			value:
+				Formatter.parseJSON<Record<string, unknown>>(
+					props.data.json_value,
+				) ??
+				props.config.default ??
+				null,
+			meta: null,
+		} satisfies CFResponse<"json">;
+	}
 	// Getters
 	get config() {
 		return {
@@ -31,23 +45,6 @@ class Config extends CustomFieldConfig<"json"> {
 			validation: this.props?.validation,
 		} satisfies CFConfig<"json">;
 	}
-	static responseValueFormat(config: CFConfig<"json">, data: FieldProp) {
-		return {
-			value:
-				Formatter.parseJSON<Record<string, unknown>>(data.json_value) ??
-				config.default ??
-				null,
-			meta: null,
-		} satisfies CFResponse<"json">;
-	}
 }
 
-// -----------------------------------------------
-// Export
-const JsonCF = {
-	Config: Config,
-	Service: undefined,
-	Result: undefined,
-};
-
-export default JsonCF;
+export default JsonCustomField;

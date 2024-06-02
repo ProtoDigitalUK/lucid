@@ -1,8 +1,8 @@
-import CustomFieldConfig from "../cf-config.js";
+import CustomField from "../custom-field.js";
 import type { CFConfig, CFProps, CFResponse } from "../types.js";
 import type { FieldProp } from "../../formatters/collection-document-fields.js";
 
-class Config extends CustomFieldConfig<"select"> {
+class SelectCustomField extends CustomField<"select"> {
 	type = "select" as const;
 	column = "text_value" as const;
 	key;
@@ -13,6 +13,15 @@ class Config extends CustomFieldConfig<"select"> {
 		this.props = props;
 	}
 	// Methods
+	responseValueFormat(props: {
+		config: CFConfig<"select">;
+		data: FieldProp;
+	}) {
+		return {
+			value: props.data.text_value ?? props.config.default ?? null,
+			meta: null,
+		} satisfies CFResponse<"select">;
+	}
 	// Getters
 	get config() {
 		return {
@@ -31,20 +40,6 @@ class Config extends CustomFieldConfig<"select"> {
 			validation: this.props?.validation,
 		} satisfies CFConfig<"select">;
 	}
-	static responseValueFormat(config: CFConfig<"select">, data: FieldProp) {
-		return {
-			value: data.text_value ?? config.default ?? null,
-			meta: null,
-		} satisfies CFResponse<"select">;
-	}
 }
 
-// -----------------------------------------------
-// Export
-const SelectCF = {
-	Config: Config,
-	Service: undefined,
-	Result: undefined,
-};
-
-export default SelectCF;
+export default SelectCustomField;

@@ -1,7 +1,7 @@
-import CustomFieldConfig from "../cf-config.js";
+import CustomField from "../custom-field.js";
 import type { CFConfig, CFProps, CFResponse } from "../types.js";
 
-class Config extends CustomFieldConfig<"tab"> {
+class TabCustomField extends CustomField<"tab"> {
 	type = "tab" as const;
 	column = null;
 	key: string;
@@ -12,6 +12,12 @@ class Config extends CustomFieldConfig<"tab"> {
 		this.props = props;
 	}
 	// Methods
+	responseValueFormat() {
+		return {
+			value: null,
+			meta: null,
+		} satisfies CFResponse<"tab">;
+	}
 	// Getters
 	get config() {
 		return {
@@ -24,20 +30,6 @@ class Config extends CustomFieldConfig<"tab"> {
 			fields: [],
 		} satisfies CFConfig<"tab">;
 	}
-	static responseValueFormat() {
-		return {
-			value: null,
-			meta: null,
-		} satisfies CFResponse<"tab">;
-	}
 }
 
-// -----------------------------------------------
-// Export
-const TabCF = {
-	Config: Config,
-	Service: undefined,
-	Result: undefined,
-};
-
-export default TabCF;
+export default TabCustomField;

@@ -1,8 +1,8 @@
-import CustomFieldConfig from "../cf-config.js";
+import CustomField from "../custom-field.js";
 import type { CFConfig, CFProps, CFResponse } from "../types.js";
 import type { FieldProp } from "../../formatters/collection-document-fields.js";
 
-class Config extends CustomFieldConfig<"textarea"> {
+class TextareaCustomField extends CustomField<"textarea"> {
 	type = "textarea" as const;
 	column = "text_value" as const;
 	key;
@@ -13,6 +13,15 @@ class Config extends CustomFieldConfig<"textarea"> {
 		this.props = props;
 	}
 	// Methods
+	responseValueFormat(props: {
+		config: CFConfig<"textarea">;
+		data: FieldProp;
+	}) {
+		return {
+			value: props.data.text_value ?? props.config.default ?? null,
+			meta: null,
+		} satisfies CFResponse<"textarea">;
+	}
 	// Getters
 	get config() {
 		return {
@@ -30,20 +39,6 @@ class Config extends CustomFieldConfig<"textarea"> {
 			validation: this.props?.validation,
 		} satisfies CFConfig<"textarea">;
 	}
-	static responseValueFormat(config: CFConfig<"textarea">, data: FieldProp) {
-		return {
-			value: data.text_value ?? config.default ?? null,
-			meta: null,
-		} satisfies CFResponse<"textarea">;
-	}
 }
 
-// -----------------------------------------------
-// Export
-const TextareaCF = {
-	Config: Config,
-	Service: undefined,
-	Result: undefined,
-};
-
-export default TextareaCF;
+export default TextareaCustomField;
