@@ -1,8 +1,9 @@
 import CustomField from "../custom-field.js";
 import Formatter from "../../formatters/index.js";
 import type { LinkValue } from "../../../types.js";
-import type { CFConfig, CFProps, CFResponse } from "../types.js";
+import type { CFConfig, CFProps, CFResponse, CFInsertItem } from "../types.js";
 import type { FieldProp } from "../../formatters/collection-document-fields.js";
+import type { FieldInsertItem } from "../../../services/collection-document-bricks/helpers/flatten-fields.js";
 
 class LinkCustomField extends CustomField<"link"> {
 	type = "link" as const;
@@ -33,6 +34,7 @@ class LinkCustomField extends CustomField<"link"> {
 	responseValueFormat(props: {
 		data: FieldProp;
 	}) {
+		// TODO: move type
 		const linkVal = Formatter.parseJSON<LinkValue>(props.data.json_value);
 		return {
 			value: {
@@ -42,6 +44,38 @@ class LinkCustomField extends CustomField<"link"> {
 			},
 			meta: null,
 		} satisfies CFResponse<"link">;
+	}
+	getInsertField(props: {
+		item: FieldInsertItem;
+		brickId: number;
+		groupId: number;
+	}) {
+		// TODO: move type
+		const value = props.item.value as LinkValue | undefined;
+
+		return {
+			key: this.config.key,
+			type: this.config.type,
+			localeCode: props.item.localeCode,
+			collectionBrickId: props.brickId,
+			groupId: props.groupId,
+			textValue: value ? value.url : null,
+			intValue: null,
+			boolValue: null,
+			jsonValue: value
+				? Formatter.stringifyJSON({
+						target: value.target,
+						label: value.label,
+					})
+				: null,
+			mediaId: null,
+			userId: null,
+		} satisfies CFInsertItem<"link">;
+	}
+	typeValidation() {
+		return {
+			valid: true,
+		};
 	}
 }
 

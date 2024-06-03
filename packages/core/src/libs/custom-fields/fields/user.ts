@@ -1,6 +1,7 @@
 import CustomField from "../custom-field.js";
-import type { CFConfig, CFProps, CFResponse } from "../types.js";
+import type { CFConfig, CFProps, CFResponse, CFInsertItem } from "../types.js";
 import type { FieldProp } from "../../formatters/collection-document-fields.js";
+import type { FieldInsertItem } from "../../../services/collection-document-bricks/helpers/flatten-fields.js";
 
 class UserCustomField extends CustomField<"user"> {
 	type = "user" as const;
@@ -38,6 +39,30 @@ class UserCustomField extends CustomField<"user"> {
 				lastName: props.data?.user_last_name ?? null,
 			},
 		} satisfies CFResponse<"user">;
+	}
+	getInsertField(props: {
+		item: FieldInsertItem;
+		brickId: number;
+		groupId: number;
+	}) {
+		return {
+			key: this.config.key,
+			type: this.config.type,
+			localeCode: props.item.localeCode,
+			collectionBrickId: props.brickId,
+			groupId: props.groupId,
+			textValue: null,
+			intValue: null,
+			boolValue: null,
+			jsonValue: null,
+			mediaId: null,
+			userId: props.item.value,
+		} satisfies CFInsertItem<"user">;
+	}
+	typeValidation() {
+		return {
+			valid: true,
+		};
 	}
 }
 

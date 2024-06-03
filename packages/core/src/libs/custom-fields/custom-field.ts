@@ -4,13 +4,10 @@ import type {
 	CFColumn,
 	CFProps,
 	CFResponse,
-	CustomFieldInsertItem,
+	CFInsertItem,
 } from "./types.js";
 import type { FieldProp } from "../formatters/collection-document-fields.js";
 import type { FieldInsertItem } from "../../services/collection-document-bricks/helpers/flatten-fields.js";
-
-// TODO: think about children instances storing config, then responseValueFormat and getInsertField can use it directly
-// - will need field builder changes
 
 abstract class CustomField<T extends FieldTypes> {
 	repeater: string | null = null;
@@ -24,13 +21,18 @@ abstract class CustomField<T extends FieldTypes> {
 		data?: FieldProp;
 		host?: string;
 	}): CFResponse<T>;
-	// TODO: add back
-	// abstract getInsertField(props: {
-	// 	config: CFConfig<T>;
-	// 	item: FieldInsertItem;
-	// 	brickId: number;
-	// 	groupId: number;
-	// }): CustomFieldInsertItem<T>;
+	abstract typeValidation(
+		value: unknown,
+		relationData?: unknown,
+	): {
+		valid: boolean;
+		message?: string;
+	};
+	abstract getInsertField(props: {
+		item: FieldInsertItem;
+		brickId: number;
+		groupId: number;
+	}): CFInsertItem<T> | null;
 
 	// Methods
 	protected keyToTitle(key: string): string {
@@ -42,6 +44,20 @@ abstract class CustomField<T extends FieldTypes> {
 			.join(" ");
 
 		return title;
+	}
+	protected validate(
+		value: unknown,
+		relationData?: unknown,
+	): {
+		valid: boolean;
+		message?: string;
+	} {
+		// required
+		// zod
+		// value type
+		this.typeValidation(value, relationData);
+
+		return { valid: true };
 	}
 }
 

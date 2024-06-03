@@ -1,8 +1,9 @@
 import CustomField from "../custom-field.js";
 import mediaHelpers from "../../../utils/media-helpers.js";
 import type { MediaType } from "../../../types.js";
-import type { CFConfig, CFProps, CFResponse } from "../types.js";
+import type { CFConfig, CFProps, CFResponse, CFInsertItem } from "../types.js";
 import type { FieldProp } from "../../formatters/collection-document-fields.js";
+import type { FieldInsertItem } from "../../../services/collection-document-bricks/helpers/flatten-fields.js";
 
 class MediaCustomField extends CustomField<"media"> {
 	type = "media" as const;
@@ -61,6 +62,30 @@ class MediaCustomField extends CustomField<"media"> {
 				type: (props.data?.media_type as MediaType) ?? null,
 			},
 		} satisfies CFResponse<"media">;
+	}
+	getInsertField(props: {
+		item: FieldInsertItem;
+		brickId: number;
+		groupId: number;
+	}) {
+		return {
+			key: this.config.key,
+			type: this.config.type,
+			localeCode: props.item.localeCode,
+			collectionBrickId: props.brickId,
+			groupId: props.groupId,
+			textValue: null,
+			intValue: null,
+			boolValue: null,
+			jsonValue: null,
+			mediaId: props.item.value,
+			userId: null,
+		} satisfies CFInsertItem<"media">;
+	}
+	typeValidation() {
+		return {
+			valid: true,
+		};
 	}
 }
 

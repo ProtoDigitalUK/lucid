@@ -443,18 +443,18 @@ export type UserFieldProps = Partial<Omit<UserFieldConfig, "type" | "default">>;
 // -----------------------------------------------
 // Data
 
-export type CustomFieldInsertItem<T extends FieldTypes> = {
+export type CFInsertItem<T extends FieldTypes> = {
 	localeCode: string;
 	collectionBrickId: number;
 	key: string;
 	type: T;
-	groupId: number | null;
-	textValue: string | null;
-	intValue: number | null;
-	boolValue: BooleanInt | null;
-	jsonValue: string | null;
-	mediaId: number | null;
-	userId: number | null;
+	groupId?: number | null;
+	textValue?: string | null;
+	intValue?: number | null;
+	boolValue?: BooleanInt | null;
+	jsonValue?: string | null;
+	mediaId?: number | null;
+	userId?: number | null;
 };
 
 // -----------------------------------------------

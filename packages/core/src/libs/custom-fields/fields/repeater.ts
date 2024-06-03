@@ -1,5 +1,6 @@
 import CustomField from "../custom-field.js";
 import type { CFConfig, CFProps, CFResponse } from "../types.js";
+import type { FieldInsertItem } from "../../../services/collection-document-bricks/helpers/flatten-fields.js";
 
 class RepeaterCustomField extends CustomField<"repeater"> {
 	type = "repeater" as const;
@@ -28,6 +29,14 @@ class RepeaterCustomField extends CustomField<"repeater"> {
 			value: null,
 			meta: null,
 		} satisfies CFResponse<"repeater">;
+	}
+	getInsertField() {
+		return null;
+	}
+	typeValidation() {
+		return {
+			valid: true,
+		};
 	}
 }
 

@@ -1,5 +1,6 @@
 import CustomField from "../custom-field.js";
-import type { CFConfig, CFProps, CFResponse } from "../types.js";
+import type { CFConfig, CFProps, CFResponse, CFInsertItem } from "../types.js";
+import type { FieldInsertItem } from "../../../services/collection-document-bricks/helpers/flatten-fields.js";
 
 class TabCustomField extends CustomField<"tab"> {
 	type = "tab" as const;
@@ -27,6 +28,14 @@ class TabCustomField extends CustomField<"tab"> {
 			value: null,
 			meta: null,
 		} satisfies CFResponse<"tab">;
+	}
+	getInsertField() {
+		return null;
+	}
+	typeValidation() {
+		return {
+			valid: true,
+		};
 	}
 }
 

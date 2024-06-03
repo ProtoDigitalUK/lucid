@@ -1,7 +1,8 @@
 import CustomField from "../custom-field.js";
 import Formatter from "../../formatters/index.js";
-import type { CFConfig, CFProps, CFResponse } from "../types.js";
+import type { CFConfig, CFProps, CFResponse, CFInsertItem } from "../types.js";
 import type { FieldProp } from "../../formatters/collection-document-fields.js";
+import type { FieldInsertItem } from "../../../services/collection-document-bricks/helpers/flatten-fields.js";
 
 class JsonCustomField extends CustomField<"json"> {
 	type = "json" as const;
@@ -41,6 +42,30 @@ class JsonCustomField extends CustomField<"json"> {
 				null,
 			meta: null,
 		} satisfies CFResponse<"json">;
+	}
+	getInsertField(props: {
+		item: FieldInsertItem;
+		brickId: number;
+		groupId: number;
+	}) {
+		return {
+			key: this.config.key,
+			type: this.config.type,
+			localeCode: props.item.localeCode,
+			collectionBrickId: props.brickId,
+			groupId: props.groupId,
+			textValue: null,
+			intValue: null,
+			boolValue: null,
+			jsonValue: Formatter.stringifyJSON(props.item.value),
+			mediaId: null,
+			userId: null,
+		} satisfies CFInsertItem<"json">;
+	}
+	typeValidation() {
+		return {
+			valid: true,
+		};
 	}
 }
 

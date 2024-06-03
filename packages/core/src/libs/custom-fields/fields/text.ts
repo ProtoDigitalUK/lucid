@@ -1,10 +1,5 @@
 import CustomField from "../custom-field.js";
-import type {
-	CFConfig,
-	CFProps,
-	CustomFieldInsertItem,
-	CFResponse,
-} from "../types.js";
+import type { CFConfig, CFProps, CFInsertItem, CFResponse } from "../types.js";
 import type { FieldProp } from "../../formatters/collection-document-fields.js";
 import type { FieldInsertItem } from "../../../services/collection-document-bricks/helpers/flatten-fields.js";
 
@@ -59,7 +54,12 @@ class TextCustomField extends CustomField<"text"> {
 			jsonValue: null,
 			mediaId: null,
 			userId: null,
-		} satisfies CustomFieldInsertItem<"text">;
+		} satisfies CFInsertItem<"text">;
+	}
+	typeValidation() {
+		return {
+			valid: true,
+		};
 	}
 }
 
