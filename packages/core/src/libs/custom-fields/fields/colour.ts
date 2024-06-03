@@ -5,26 +5,14 @@ import type { FieldProp } from "../../formatters/collection-document-fields.js";
 class ColourCustomField extends CustomField<"colour"> {
 	type = "colour" as const;
 	column = "text_value" as const;
+	config;
 	key;
 	props;
 	constructor(key: string, props?: CFProps<"colour">) {
 		super();
 		this.key = key;
 		this.props = props;
-	}
-	// Methods
-	responseValueFormat(props: {
-		config: CFConfig<"colour">;
-		data: FieldProp;
-	}) {
-		return {
-			value: props.data.text_value ?? props.config.default ?? null,
-			meta: null,
-		} satisfies CFResponse<"colour">;
-	}
-	// Getters
-	get config() {
-		return {
+		this.config = {
 			key: this.key,
 			type: this.type,
 			labels: {
@@ -38,6 +26,15 @@ class ColourCustomField extends CustomField<"colour"> {
 			disabled: this.props?.disabled,
 			validation: this.props?.validation,
 		} satisfies CFConfig<"colour">;
+	}
+	// Methods
+	responseValueFormat(props: {
+		data: FieldProp;
+	}) {
+		return {
+			value: props.data.text_value ?? this.config.default ?? null,
+			meta: null,
+		} satisfies CFResponse<"colour">;
 	}
 }
 

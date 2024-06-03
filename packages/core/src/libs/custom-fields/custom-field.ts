@@ -19,9 +19,8 @@ abstract class CustomField<T extends FieldTypes> {
 	abstract column: CFColumn<T>;
 	abstract key: string;
 	abstract props?: CFProps<T>;
-	abstract get config(): CFConfig<T>;
+	abstract config: CFConfig<T>;
 	abstract responseValueFormat(props?: {
-		config?: CFConfig<T>;
 		data?: FieldProp;
 		host?: string;
 	}): CFResponse<T>;

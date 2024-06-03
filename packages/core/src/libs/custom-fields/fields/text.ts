@@ -11,46 +11,14 @@ import type { FieldInsertItem } from "../../../services/collection-document-bric
 class TextCustomField extends CustomField<"text"> {
 	type = "text" as const;
 	column = "text_value" as const;
+	config;
 	key;
 	props;
 	constructor(key: string, props?: CFProps<"text">) {
 		super();
 		this.key = key;
 		this.props = props;
-	}
-	// Methods
-	responseValueFormat(props: {
-		config: CFConfig<"text">;
-		data: FieldProp;
-	}) {
-		return {
-			value: props.data.text_value ?? props.config.default,
-			meta: null,
-		} satisfies CFResponse<"text">;
-	}
-	getInsertField(props: {
-		config: CFConfig<"text">;
-		item: FieldInsertItem;
-		brickId: number;
-		groupId: number;
-	}) {
-		return {
-			key: props.config.key,
-			type: props.config.type,
-			localeCode: props.item.localeCode,
-			collectionBrickId: props.brickId,
-			groupId: props.groupId,
-			textValue: props.item.value,
-			intValue: null,
-			boolValue: null,
-			jsonValue: null,
-			mediaId: null,
-			userId: null,
-		} satisfies CustomFieldInsertItem<"text">;
-	}
-	// Getters
-	get config() {
-		return {
+		this.config = {
 			key: this.key,
 			type: this.type,
 			labels: {
@@ -64,6 +32,34 @@ class TextCustomField extends CustomField<"text"> {
 			disabled: this.props?.disabled,
 			validation: this.props?.validation,
 		} satisfies CFConfig<"text">;
+	}
+	// Methods
+	responseValueFormat(props: {
+		data: FieldProp;
+	}) {
+		return {
+			value: props.data.text_value ?? this.config.default,
+			meta: null,
+		} satisfies CFResponse<"text">;
+	}
+	getInsertField(props: {
+		item: FieldInsertItem;
+		brickId: number;
+		groupId: number;
+	}) {
+		return {
+			key: this.config.key,
+			type: this.config.type,
+			localeCode: props.item.localeCode,
+			collectionBrickId: props.brickId,
+			groupId: props.groupId,
+			textValue: props.item.value,
+			intValue: null,
+			boolValue: null,
+			jsonValue: null,
+			mediaId: null,
+			userId: null,
+		} satisfies CustomFieldInsertItem<"text">;
 	}
 }
 

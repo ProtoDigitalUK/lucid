@@ -4,23 +4,14 @@ import type { CFConfig, CFProps, CFResponse } from "../types.js";
 class TabCustomField extends CustomField<"tab"> {
 	type = "tab" as const;
 	column = null;
+	config;
 	key: string;
 	props?: CFProps<"tab">;
 	constructor(key: string, props?: CFProps<"tab">) {
 		super();
 		this.key = key;
 		this.props = props;
-	}
-	// Methods
-	responseValueFormat() {
-		return {
-			value: null,
-			meta: null,
-		} satisfies CFResponse<"tab">;
-	}
-	// Getters
-	get config() {
-		return {
+		this.config = {
 			key: this.key,
 			type: this.type,
 			labels: {
@@ -29,6 +20,13 @@ class TabCustomField extends CustomField<"tab"> {
 			},
 			fields: [],
 		} satisfies CFConfig<"tab">;
+	}
+	// Methods
+	responseValueFormat() {
+		return {
+			value: null,
+			meta: null,
+		} satisfies CFResponse<"tab">;
 	}
 }
 

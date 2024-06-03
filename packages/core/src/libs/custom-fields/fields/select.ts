@@ -5,26 +5,14 @@ import type { FieldProp } from "../../formatters/collection-document-fields.js";
 class SelectCustomField extends CustomField<"select"> {
 	type = "select" as const;
 	column = "text_value" as const;
+	config;
 	key;
 	props;
 	constructor(key: string, props?: CFProps<"select">) {
 		super();
 		this.key = key;
 		this.props = props;
-	}
-	// Methods
-	responseValueFormat(props: {
-		config: CFConfig<"select">;
-		data: FieldProp;
-	}) {
-		return {
-			value: props.data.text_value ?? props.config.default ?? null,
-			meta: null,
-		} satisfies CFResponse<"select">;
-	}
-	// Getters
-	get config() {
-		return {
+		this.config = {
 			key: this.key,
 			type: this.type,
 			labels: {
@@ -39,6 +27,15 @@ class SelectCustomField extends CustomField<"select"> {
 			disabled: this.props?.disabled,
 			validation: this.props?.validation,
 		} satisfies CFConfig<"select">;
+	}
+	// Methods
+	responseValueFormat(props: {
+		data: FieldProp;
+	}) {
+		return {
+			value: props.data.text_value ?? this.config.default ?? null,
+			meta: null,
+		} satisfies CFResponse<"select">;
 	}
 }
 

@@ -144,11 +144,11 @@ class FieldBuilder {
 		const repeaterStack: Map<string, CFConfig<"repeater">> = new Map();
 
 		for (const field of fields) {
-			const config = field.config;
+			const config = structuredClone(field.config);
 
 			if (field.type === "tab") {
 				if (currentTab) result.push(currentTab);
-				currentTab = field.config as CFConfig<"tab">;
+				currentTab = config as CFConfig<"tab">;
 				continue;
 			}
 

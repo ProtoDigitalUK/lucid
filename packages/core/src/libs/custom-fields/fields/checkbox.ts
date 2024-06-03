@@ -5,26 +5,14 @@ import type { FieldProp } from "../../formatters/collection-document-fields.js";
 class CheckboxCustomField extends CustomField<"checkbox"> {
 	type = "checkbox" as const;
 	column = "bool_value" as const;
+	config;
 	key;
 	props;
 	constructor(key: string, props?: CFProps<"checkbox">) {
 		super();
 		this.key = key;
 		this.props = props;
-	}
-	// Methods
-	responseValueFormat(props: {
-		config: CFConfig<"checkbox">;
-		data: FieldProp;
-	}) {
-		return {
-			value: props.data.bool_value ?? props.config.default ?? null,
-			meta: null,
-		} satisfies CFResponse<"checkbox">;
-	}
-	// Getters
-	get config() {
-		return {
+		this.config = {
 			key: this.key,
 			type: this.type,
 			labels: {
@@ -37,6 +25,15 @@ class CheckboxCustomField extends CustomField<"checkbox"> {
 			disabled: this.props?.disabled,
 			validation: this.props?.validation,
 		} satisfies CFConfig<"checkbox">;
+	}
+	// Methods
+	responseValueFormat(props: {
+		data: FieldProp;
+	}) {
+		return {
+			value: props.data.bool_value ?? this.config.default ?? null,
+			meta: null,
+		} satisfies CFResponse<"checkbox">;
 	}
 }
 

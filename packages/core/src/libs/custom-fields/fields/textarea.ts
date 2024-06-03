@@ -5,26 +5,14 @@ import type { FieldProp } from "../../formatters/collection-document-fields.js";
 class TextareaCustomField extends CustomField<"textarea"> {
 	type = "textarea" as const;
 	column = "text_value" as const;
+	config;
 	key;
 	props;
 	constructor(key: string, props?: CFProps<"textarea">) {
 		super();
 		this.key = key;
 		this.props = props;
-	}
-	// Methods
-	responseValueFormat(props: {
-		config: CFConfig<"textarea">;
-		data: FieldProp;
-	}) {
-		return {
-			value: props.data.text_value ?? props.config.default ?? null,
-			meta: null,
-		} satisfies CFResponse<"textarea">;
-	}
-	// Getters
-	get config() {
-		return {
+		this.config = {
 			key: this.key,
 			type: this.type,
 			labels: {
@@ -38,6 +26,15 @@ class TextareaCustomField extends CustomField<"textarea"> {
 			disabled: this.props?.disabled,
 			validation: this.props?.validation,
 		} satisfies CFConfig<"textarea">;
+	}
+	// Methods
+	responseValueFormat(props: {
+		data: FieldProp;
+	}) {
+		return {
+			value: props.data.text_value ?? this.config.default ?? null,
+			meta: null,
+		} satisfies CFResponse<"textarea">;
 	}
 }
 

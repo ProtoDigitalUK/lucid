@@ -4,23 +4,14 @@ import type { CFConfig, CFProps, CFResponse } from "../types.js";
 class RepeaterCustomField extends CustomField<"repeater"> {
 	type = "repeater" as const;
 	column = null;
+	config;
 	key;
 	props;
 	constructor(key: string, props?: CFProps<"repeater">) {
 		super();
 		this.key = key;
 		this.props = props;
-	}
-	// Methods
-	responseValueFormat() {
-		return {
-			value: null,
-			meta: null,
-		} satisfies CFResponse<"repeater">;
-	}
-	// Getters
-	get config() {
-		return {
+		this.config = {
 			key: this.key,
 			type: this.type,
 			labels: {
@@ -30,6 +21,13 @@ class RepeaterCustomField extends CustomField<"repeater"> {
 			fields: [],
 			validation: this.props?.validation,
 		} satisfies CFConfig<"repeater">;
+	}
+	// Methods
+	responseValueFormat() {
+		return {
+			value: null,
+			meta: null,
+		} satisfies CFResponse<"repeater">;
 	}
 }
 

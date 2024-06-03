@@ -5,26 +5,14 @@ import type { FieldProp } from "../../formatters/collection-document-fields.js";
 class NumberCustomField extends CustomField<"number"> {
 	type = "number" as const;
 	column = "int_value" as const;
+	config;
 	key;
 	props;
 	constructor(key: string, props?: CFProps<"number">) {
 		super();
 		this.key = key;
 		this.props = props;
-	}
-	// Methods
-	responseValueFormat(props: {
-		config: CFConfig<"number">;
-		data: FieldProp;
-	}) {
-		return {
-			value: props.data.int_value ?? props.config.default ?? null,
-			meta: null,
-		} satisfies CFResponse<"number">;
-	}
-	// Getters
-	get config() {
-		return {
+		this.config = {
 			key: this.key,
 			type: this.type,
 			labels: {
@@ -38,6 +26,15 @@ class NumberCustomField extends CustomField<"number"> {
 			disabled: this.props?.disabled,
 			validation: this.props?.validation,
 		} satisfies CFConfig<"number">;
+	}
+	// Methods
+	responseValueFormat(props: {
+		data: FieldProp;
+	}) {
+		return {
+			value: props.data.int_value ?? this.config.default ?? null,
+			meta: null,
+		} satisfies CFResponse<"number">;
 	}
 }
 

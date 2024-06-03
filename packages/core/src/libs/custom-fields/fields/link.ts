@@ -7,31 +7,14 @@ import type { FieldProp } from "../../formatters/collection-document-fields.js";
 class LinkCustomField extends CustomField<"link"> {
 	type = "link" as const;
 	column = "text_value" as const;
+	config;
 	key;
 	props;
 	constructor(key: string, props?: CFProps<"link">) {
 		super();
 		this.key = key;
 		this.props = props;
-	}
-	// Methods
-	responseValueFormat(props: {
-		config: CFConfig<"link">;
-		data: FieldProp;
-	}) {
-		const linkVal = Formatter.parseJSON<LinkValue>(props.data.json_value);
-		return {
-			value: {
-				url: linkVal?.url ?? props.config.default ?? null,
-				label: linkVal?.label ?? null,
-				target: linkVal?.target ?? null,
-			},
-			meta: null,
-		} satisfies CFResponse<"link">;
-	}
-	// Getters
-	get config() {
-		return {
+		this.config = {
 			key: this.key,
 			type: this.type,
 			labels: {
@@ -45,6 +28,20 @@ class LinkCustomField extends CustomField<"link"> {
 			disabled: this.props?.disabled,
 			validation: this.props?.validation,
 		} satisfies CFConfig<"link">;
+	}
+	// Methods
+	responseValueFormat(props: {
+		data: FieldProp;
+	}) {
+		const linkVal = Formatter.parseJSON<LinkValue>(props.data.json_value);
+		return {
+			value: {
+				url: linkVal?.url ?? this.config.default ?? null,
+				label: linkVal?.label ?? null,
+				target: linkVal?.target ?? null,
+			},
+			meta: null,
+		} satisfies CFResponse<"link">;
 	}
 }
 

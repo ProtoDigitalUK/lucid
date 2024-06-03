@@ -255,7 +255,6 @@ export default class CollectionDocumentFieldsFormatter {
 				? defaultField.group_id ?? undefined
 				: undefined,
 			...cfInstance.responseValueFormat({
-				config: meta.fieldConfig,
 				data: defaultField,
 				host: meta.host,
 			}),
@@ -339,7 +338,6 @@ export default class CollectionDocumentFieldsFormatter {
 					acc.groupId = field.group_id ?? undefined;
 
 				const fieldRes = cfInstance.responseValueFormat({
-					config: meta.fieldConfig,
 					data: field,
 					host: meta.host,
 				});

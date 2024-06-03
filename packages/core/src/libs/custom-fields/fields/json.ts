@@ -6,31 +6,14 @@ import type { FieldProp } from "../../formatters/collection-document-fields.js";
 class JsonCustomField extends CustomField<"json"> {
 	type = "json" as const;
 	column = "json_value" as const;
+	config;
 	key;
 	props;
 	constructor(key: string, props?: CFProps<"json">) {
 		super();
 		this.key = key;
 		this.props = props;
-	}
-	// Methods
-	responseValueFormat(props: {
-		config: CFConfig<"json">;
-		data: FieldProp;
-	}) {
-		return {
-			value:
-				Formatter.parseJSON<Record<string, unknown>>(
-					props.data.json_value,
-				) ??
-				props.config.default ??
-				null,
-			meta: null,
-		} satisfies CFResponse<"json">;
-	}
-	// Getters
-	get config() {
-		return {
+		this.config = {
 			key: this.key,
 			type: this.type,
 			labels: {
@@ -44,6 +27,20 @@ class JsonCustomField extends CustomField<"json"> {
 			disabled: this.props?.disabled,
 			validation: this.props?.validation,
 		} satisfies CFConfig<"json">;
+	}
+	// Methods
+	responseValueFormat(props: {
+		data: FieldProp;
+	}) {
+		return {
+			value:
+				Formatter.parseJSON<Record<string, unknown>>(
+					props.data.json_value,
+				) ??
+				this.config.default ??
+				null,
+			meta: null,
+		} satisfies CFResponse<"json">;
 	}
 }
 

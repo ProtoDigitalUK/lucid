@@ -5,31 +5,14 @@ import type { FieldProp } from "../../formatters/collection-document-fields.js";
 class UserCustomField extends CustomField<"user"> {
 	type = "user" as const;
 	column = "user_id" as const;
+	config;
 	key;
 	props;
 	constructor(key: string, props?: CFProps<"user">) {
 		super();
 		this.key = key;
 		this.props = props;
-	}
-	// Methods
-	responseValueFormat(props: {
-		config: CFConfig<"user">;
-		data: FieldProp;
-	}) {
-		return {
-			value: props.data.user_id ?? null,
-			meta: {
-				email: props.data?.user_email ?? null,
-				username: props.data?.user_username ?? null,
-				firstName: props.data?.user_first_name ?? null,
-				lastName: props.data?.user_last_name ?? null,
-			},
-		} satisfies CFResponse<"user">;
-	}
-	// Getters
-	get config() {
-		return {
+		this.config = {
 			key: this.key,
 			type: this.type,
 			labels: {
@@ -41,6 +24,20 @@ class UserCustomField extends CustomField<"user"> {
 			disabled: this.props?.disabled,
 			validation: this.props?.validation,
 		} satisfies CFConfig<"user">;
+	}
+	// Methods
+	responseValueFormat(props: {
+		data: FieldProp;
+	}) {
+		return {
+			value: props.data.user_id ?? null,
+			meta: {
+				email: props.data?.user_email ?? null,
+				username: props.data?.user_username ?? null,
+				firstName: props.data?.user_first_name ?? null,
+				lastName: props.data?.user_last_name ?? null,
+			},
+		} satisfies CFResponse<"user">;
 	}
 }
 
