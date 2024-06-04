@@ -1,3 +1,4 @@
+import T from "../../translations/index.js";
 import type {
 	CFConfig,
 	FieldTypes,
@@ -52,12 +53,27 @@ abstract class CustomField<T extends FieldTypes> {
 		valid: boolean;
 		message?: string;
 	} {
+		if (this.config.type === "tab") return { valid: true };
+		// TODO: add support for repeater max/min group count
+		if (this.config.type === "repeater") return { valid: true };
+
 		// required
+		if (this.config.validation?.required === true) {
+			if (value === undefined || value === null || value === "") {
+				return { valid: false, message: this.errors.required };
+			}
+		}
 		// zod
 		// value type
-		this.typeValidation(value, relationData);
-
-		return { valid: true };
+		return this.typeValidation(value, relationData);
+	}
+	// Getters
+	get errors(): {
+		required: string;
+	} {
+		return {
+			required: T("generic_field_required"),
+		};
 	}
 }
 

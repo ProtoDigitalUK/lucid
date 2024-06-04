@@ -1,3 +1,4 @@
+import T from "../../../translations/index.js";
 import CustomField from "../custom-field.js";
 import type { CFConfig, CFProps, CFResponse, CFInsertItem } from "../types.js";
 import type { FieldProp } from "../../formatters/collection-document-fields.js";
@@ -60,6 +61,15 @@ class SelectCustomField extends CustomField<"select"> {
 	typeValidation() {
 		return {
 			valid: true,
+		};
+	}
+	// Getters
+	get errors(): {
+		required: string;
+	} {
+		return {
+			...super.errors,
+			required: T("select_field_required"),
 		};
 	}
 }
