@@ -552,3 +552,17 @@ export type FieldResponseMeta =
 	| DatetimeResMeta
 	| LinkResMeta
 	| UserResMeta;
+
+// -----------------------------------------------
+// Alt
+export type CustomFieldErrorGetter = {
+	required: CustomFieldErrorItem;
+};
+export type CustomFieldErrorItem = {
+	condition?: (value: unknown) => boolean;
+	message: string;
+};
+export type CustomFieldValidateResponse = {
+	valid: boolean;
+	message?: string;
+};

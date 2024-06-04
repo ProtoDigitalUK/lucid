@@ -139,5 +139,6 @@
 	"please_provide_current_password": "Please provide your current password.",
 	"generic_field_required": "Please enter a value for this field.",
 	"checkbox_field_required": "Please ensure the switch is checked.",
-	"select_field_required": "Please select an option."
+	"select_field_required": "Please select an option.",
+	"generic_field_invalid": "Please enter a valid value for this field."
 }

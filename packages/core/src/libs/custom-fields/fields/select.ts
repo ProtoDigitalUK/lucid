@@ -1,5 +1,6 @@
 import T from "../../../translations/index.js";
 import CustomField from "../custom-field.js";
+import merge from "lodash.merge";
 import type { CFConfig, CFProps, CFResponse, CFInsertItem } from "../types.js";
 import type { FieldProp } from "../../formatters/collection-document-fields.js";
 import type { FieldInsertItem } from "../../../services/collection-document-bricks/helpers/flatten-fields.js";
@@ -64,13 +65,12 @@ class SelectCustomField extends CustomField<"select"> {
 		};
 	}
 	// Getters
-	get errors(): {
-		required: string;
-	} {
-		return {
-			...super.errors,
-			required: T("select_field_required"),
-		};
+	get errors() {
+		return merge(super.errors, {
+			required: {
+				message: T("select_field_required"),
+			},
+		});
 	}
 }
 
