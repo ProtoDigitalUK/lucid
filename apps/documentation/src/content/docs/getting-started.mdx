@@ -46,6 +46,7 @@ Here is the minimum required file to get Lucid up and running:
 
 ```ts title="lucid.config.ts"
 import lucid, { SQLiteAdapter } from "@lucidcms/core";
+import Database from "better-sqlite3";
 
 export default lucid.config({
   mode: "development",
