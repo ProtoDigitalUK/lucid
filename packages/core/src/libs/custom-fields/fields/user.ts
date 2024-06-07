@@ -2,6 +2,7 @@ import CustomField from "../custom-field.js";
 import type { CFConfig, CFProps, CFResponse, CFInsertItem } from "../types.js";
 import type { FieldProp } from "../../formatters/collection-document-fields.js";
 import type { FieldInsertItem } from "../../../services/collection-document-bricks/helpers/flatten-fields.js";
+import type { UserReferenceData } from "../../../types.js";
 
 class UserCustomField extends CustomField<"user"> {
 	type = "user" as const;
@@ -59,10 +60,18 @@ class UserCustomField extends CustomField<"user"> {
 			userId: props.item.value,
 		} satisfies CFInsertItem<"user">;
 	}
-	typeValidation() {
-		return {
-			valid: true,
-		};
+	typeValidation(value: number | null, relationData: UserReferenceData) {
+		if (this.config.validation?.required !== true && !value)
+			return { valid: true };
+
+		if (relationData === undefined) {
+			return {
+				valid: false,
+				message: "We couldn't find the user you selected.",
+			};
+		}
+
+		return { valid: true };
 	}
 }
 

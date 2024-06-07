@@ -59,10 +59,24 @@ class SelectCustomField extends CustomField<"select"> {
 			userId: null,
 		} satisfies CFInsertItem<"select">;
 	}
-	typeValidation() {
-		return {
-			valid: true,
-		};
+	typeValidation(value: string) {
+		if (this.config.validation?.required !== true && !value) {
+			return { valid: true };
+		}
+
+		if (this.config.options) {
+			const optionValues = this.config.options.map(
+				(option) => option.value,
+			);
+			if (!optionValues.includes(value)) {
+				return {
+					valid: false,
+					message: T("please_ensure_a_valid_option_is_selected"),
+				};
+			}
+		}
+
+		return { valid: true };
 	}
 	// Getters
 	get errors() {

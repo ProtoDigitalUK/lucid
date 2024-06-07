@@ -4,6 +4,7 @@ import type { MediaType } from "../../../types.js";
 import type { CFConfig, CFProps, CFResponse, CFInsertItem } from "../types.js";
 import type { FieldProp } from "../../formatters/collection-document-fields.js";
 import type { FieldInsertItem } from "../../../services/collection-document-bricks/helpers/flatten-fields.js";
+import type { MediaReferenceData } from "../../../types.js";
 
 class MediaCustomField extends CustomField<"media"> {
 	type = "media" as const;
@@ -82,10 +83,110 @@ class MediaCustomField extends CustomField<"media"> {
 			userId: null,
 		} satisfies CFInsertItem<"media">;
 	}
-	typeValidation() {
-		return {
-			valid: true,
-		};
+	typeValidation(value: number | null, relationData: MediaReferenceData) {
+		if (this.config.validation?.required !== true && !value) {
+			return { valid: true };
+		}
+
+		if (relationData === undefined) {
+			return {
+				valid: false,
+				message: "We couldn't find the media you selected.",
+			};
+		}
+
+		// Check if value is in the options
+		if (this.config.validation?.extensions?.length) {
+			const extension = relationData.extension;
+			if (!this.config.validation.extensions.includes(extension)) {
+				return {
+					valid: false,
+					message: `Media must be one of the following extensions: ${this.config.validation.extensions.join(
+						", ",
+					)}`,
+				};
+			}
+		}
+
+		// Check type
+		if (this.config.validation?.type) {
+			const type = relationData.type;
+			if (!type) {
+				return {
+					valid: false,
+					message: "This media does not have a type.",
+				};
+			}
+
+			if (this.config.validation.type !== type) {
+				return {
+					valid: false,
+					message: `Media must be of type "${this.config.validation.type}".`,
+				};
+			}
+		}
+
+		// Check width
+		if (this.config.validation?.width) {
+			const width = relationData.width;
+			if (!width) {
+				return {
+					valid: false,
+					message: "This media does not have a width.",
+				};
+			}
+
+			if (
+				this.config.validation.width.min &&
+				width < this.config.validation.width.min
+			) {
+				return {
+					valid: false,
+					message: `Media width must be greater than ${this.config.validation.width.min}px.`,
+				};
+			}
+			if (
+				this.config.validation.width.max &&
+				width > this.config.validation.width.max
+			) {
+				return {
+					valid: false,
+					message: `Media width must be less than ${this.config.validation.width.max}px.`,
+				};
+			}
+		}
+
+		// Check height
+		if (this.config.validation?.height) {
+			const height = relationData.height;
+			if (!height) {
+				return {
+					valid: false,
+					message: "This media does not have a height.",
+				};
+			}
+
+			if (
+				this.config.validation.height.min &&
+				height < this.config.validation.height.min
+			) {
+				return {
+					valid: false,
+					message: `Media height must be greater than ${this.config.validation.height.min}px.`,
+				};
+			}
+			if (
+				this.config.validation.height.max &&
+				height > this.config.validation.height.max
+			) {
+				return {
+					valid: false,
+					message: `Media height must be less than ${this.config.validation.height.max}px.`,
+				};
+			}
+		}
+
+		return { valid: true };
 	}
 }
 

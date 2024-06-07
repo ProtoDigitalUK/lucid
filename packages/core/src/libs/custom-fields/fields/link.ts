@@ -4,6 +4,7 @@ import type { LinkValue } from "../../../types.js";
 import type { CFConfig, CFProps, CFResponse, CFInsertItem } from "../types.js";
 import type { FieldProp } from "../../formatters/collection-document-fields.js";
 import type { FieldInsertItem } from "../../../services/collection-document-bricks/helpers/flatten-fields.js";
+import type { LinkReferenceData } from "../../../types.js";
 
 class LinkCustomField extends CustomField<"link"> {
 	type = "link" as const;
@@ -72,7 +73,21 @@ class LinkCustomField extends CustomField<"link"> {
 			userId: null,
 		} satisfies CFInsertItem<"link">;
 	}
-	typeValidation() {
+	typeValidation(value: string, relationData: LinkReferenceData) {
+		if (!relationData) return { valid: true };
+		if (!relationData.target) return { valid: true };
+
+		const allowedValues = ["_self", "_blank"];
+
+		if (!allowedValues.includes(relationData.target)) {
+			return {
+				valid: false,
+				message: `Please set the target to one of the following: ${allowedValues.join(
+					", ",
+				)}.`,
+			};
+		}
+
 		return {
 			valid: true,
 		};

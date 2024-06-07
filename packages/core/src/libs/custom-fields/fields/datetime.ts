@@ -56,7 +56,20 @@ class DatetimeCustomField extends CustomField<"datetime"> {
 			userId: null,
 		} satisfies CFInsertItem<"datetime">;
 	}
-	typeValidation() {
+	typeValidation(value: string) {
+		if (this.config.validation?.required !== true && !value) {
+			return { valid: true };
+		}
+
+		const date = new Date(value);
+
+		if (Number.isNaN(date.getTime())) {
+			return {
+				valid: false,
+				message: "Please ensure the date is valid.",
+			};
+		}
+
 		return {
 			valid: true,
 		};

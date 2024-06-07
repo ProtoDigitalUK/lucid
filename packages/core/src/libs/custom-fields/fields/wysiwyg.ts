@@ -1,4 +1,5 @@
 import CustomField from "../custom-field.js";
+import sanitizeHtml from "sanitize-html";
 import type { CFConfig, CFProps, CFResponse, CFInsertItem } from "../types.js";
 import type { FieldProp } from "../../formatters/collection-document-fields.js";
 import type { FieldInsertItem } from "../../../services/collection-document-bricks/helpers/flatten-fields.js";
@@ -56,10 +57,26 @@ class WysiwygCustomField extends CustomField<"wysiwyg"> {
 			userId: null,
 		} satisfies CFInsertItem<"wysiwyg">;
 	}
-	typeValidation() {
-		return {
-			valid: true,
-		};
+	typeValidation(value: string) {
+		const sanitizedValue = sanitizeHtml(value, {
+			allowedTags: [],
+			allowedAttributes: {},
+		});
+
+		if (this.config.validation?.zod) {
+			const response =
+				this.config.validation?.zod?.safeParse(sanitizedValue);
+			if (response?.success) {
+				return { valid: true };
+			}
+
+			return {
+				valid: false,
+				message: response?.error.message,
+			};
+		}
+
+		return { valid: true };
 	}
 }
 
