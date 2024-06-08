@@ -39,10 +39,13 @@ const createMultiple = async (
 	// -------------------------------------------------------------------------------
 	// validation
 	collectionBricksServices.checks.checkDuplicateOrder(bricks);
-	await collectionBricksServices.checks.checkValidateBricks(serviceConfig, {
-		collection: data.collection,
-		bricks: bricks,
-	});
+	await collectionBricksServices.checks.checkValidateBricksFields(
+		serviceConfig,
+		{
+			collection: data.collection,
+			bricks: bricks,
+		},
+	);
 
 	// -------------------------------------------------------------------------------
 	// delete all bricks

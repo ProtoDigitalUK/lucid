@@ -48,7 +48,7 @@ abstract class CustomField<T extends FieldTypes> {
 
 		return title;
 	}
-	protected validate(
+	public validate(
 		value: unknown,
 		relationData?: unknown,
 	): CustomFieldValidateResponse {
