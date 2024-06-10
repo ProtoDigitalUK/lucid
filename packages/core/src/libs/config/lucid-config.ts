@@ -7,8 +7,8 @@ import mergeConfig from "./merge-config.js";
 import defaultConfig from "./default-config.js";
 import { CollectionConfigSchema } from "../builders/collection-builder/index.js";
 import { BrickSchema } from "../builders/brick-builder/index.js";
-import { FieldsSchema } from "../builders/field-builder/index.js";
 import { LucidError } from "../../utils/error-handler.js";
+import CustomFieldSchema from "../custom-fields/schema.js";
 import lucidLogger, { LoggerScopes } from "../logging/index.js";
 
 const lucidConfig = async (config: LucidConfig) => {
@@ -66,7 +66,8 @@ const lucidConfig = async (config: LucidConfig) => {
 
 			for (const brick of collection.brickInstances) {
 				BrickSchema.parse(brick.config);
-				for (const field of brick.flatFields) FieldsSchema.parse(field);
+				for (const field of brick.flatFields)
+					CustomFieldSchema.parse(field);
 				checks.checkDuplicateFieldKeys(
 					"brick",
 					brick.key,

@@ -1,14 +1,12 @@
 import T from "../../../translations/index.js";
 import { LucidAPIError } from "../../../utils/error-handler.js";
 import type { FieldErrors } from "../../../types/errors.js";
-import collectionsServices from "../../collections/index.js";
 import type {
-	ValidationProps,
+	FieldTypes,
 	MediaReferenceData,
 	LinkReferenceData,
 	UserReferenceData,
-	FieldTypes,
-} from "../../../libs/builders/field-builder/index.js";
+} from "../../../libs/custom-fields/types.js";
 import type { FieldInsertItem } from "../helpers/flatten-fields.js";
 import type { LinkValue } from "../../../types/response.js";
 import type BrickBuilder from "../../../libs/builders/brick-builder/index.js";

@@ -1,6 +1,6 @@
 import type { Kysely } from "kysely";
 import type { Migration, Generated, ColumnType } from "kysely";
-import type { FieldTypes } from "../builders/field-builder/types.js";
+import type { FieldTypes } from "../custom-fields/types.js";
 import type { OptionName } from "../../types/response.js";
 
 export type KyselyDB = Kysely<LucidDB>;

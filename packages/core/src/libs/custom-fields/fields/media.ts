@@ -1,10 +1,15 @@
 import CustomField from "../custom-field.js";
 import mediaHelpers from "../../../utils/media-helpers.js";
 import type { MediaType } from "../../../types.js";
-import type { CFConfig, CFProps, CFResponse, CFInsertItem } from "../types.js";
+import type {
+	CFConfig,
+	CFProps,
+	CFResponse,
+	CFInsertItem,
+	MediaReferenceData,
+} from "../types.js";
 import type { FieldProp } from "../../formatters/collection-document-fields.js";
 import type { FieldInsertItem } from "../../../services/collection-document-bricks/helpers/flatten-fields.js";
-import type { MediaReferenceData } from "../../../types.js";
 
 class MediaCustomField extends CustomField<"media"> {
 	type = "media" as const;

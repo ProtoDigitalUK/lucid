@@ -1,6 +1,6 @@
 import type { BooleanInt, KyselyDB } from "../db/types.js";
 import { deleteQB, type QueryBuilderWhereT } from "../db/query-builder.js";
-import type { FieldTypes } from "../builders/field-builder/index.js";
+import type { FieldTypes } from "../custom-fields/types.js";
 
 export default class CollectionDocumentFieldsRepo {
 	constructor(private db: KyselyDB) {}

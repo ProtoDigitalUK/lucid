@@ -566,3 +566,20 @@ export type CustomFieldValidateResponse = {
 	valid: boolean;
 	message?: string;
 };
+
+export interface MediaReferenceData {
+	extension: string;
+	width: number | null;
+	height: number | null;
+	type: string;
+}
+export interface UserReferenceData {
+	username: string;
+	firstName: string | null;
+	lastName: string | null;
+	email: string;
+}
+export interface LinkReferenceData {
+	target?: string | null;
+	label?: string | null;
+}
