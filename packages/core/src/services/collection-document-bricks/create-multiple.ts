@@ -99,6 +99,7 @@ const createMultiple = async (
 					groups: groups,
 					brickId: b.id,
 					fields: b.fields,
+					collection: data.collection,
 				}),
 			),
 		},

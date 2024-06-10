@@ -40,7 +40,7 @@ class TextareaCustomField extends CustomField<"textarea"> {
 	getInsertField(props: {
 		item: FieldInsertItem;
 		brickId: number;
-		groupId: number;
+		groupId: number | null;
 	}) {
 		return {
 			key: this.config.key,

@@ -40,7 +40,7 @@ class DatetimeCustomField extends CustomField<"datetime"> {
 	getInsertField(props: {
 		item: FieldInsertItem;
 		brickId: number;
-		groupId: number;
+		groupId: number | null;
 	}) {
 		return {
 			key: this.config.key,

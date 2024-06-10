@@ -13,8 +13,8 @@ import queryBuilder, {
 	updateQB,
 	type QueryBuilderWhereT,
 } from "../db/query-builder.js";
+import type CollectionBuilder from "../builders/collection-builder/index.js";
 import type collectionDocumentsSchema from "../../schemas/collection-documents.js";
-import { collectionDocFilters } from "../../utils/field-helpers.js";
 import type { FieldFilters } from "../builders/collection-builder/index.js";
 
 export default class CollectionDocumentsRepo {
@@ -96,9 +96,7 @@ export default class CollectionDocumentsRepo {
 	};
 	selectMultipleFiltered = async (props: {
 		query: z.infer<typeof collectionDocumentsSchema.getMultiple.query>;
-		collectionKey: string;
-		allowedFieldFilters: FieldFilters;
-		allowedFieldIncludes: Array<string>;
+		collection: CollectionBuilder;
 		config: Config;
 	}) => {
 		let pagesQuery = this.db
@@ -120,7 +118,7 @@ export default class CollectionDocumentsRepo {
 			.where(
 				"lucid_collection_documents.collection_key",
 				"=",
-				props.collectionKey,
+				props.collection.key,
 			)
 			.groupBy(["lucid_collection_documents.id", "lucid_users.id"]);
 
@@ -135,16 +133,15 @@ export default class CollectionDocumentsRepo {
 			.where(
 				"lucid_collection_documents.collection_key",
 				"=",
-				props.collectionKey,
+				props.collection.key,
 			)
 			.where("lucid_collection_documents.is_deleted", "=", 0);
 
-		const collectionDocFiltersRes = collectionDocFilters(
-			props.allowedFieldFilters,
+		const collectionDocFiltersRes = props.collection.documentFilters(
 			props.query.filter,
 		);
 
-		if (props.allowedFieldIncludes.length > 0) {
+		if (props.collection.data.config.fields.include.length > 0) {
 			pagesQuery = pagesQuery
 				.select((eb) => [
 					props.config.db
@@ -246,7 +243,7 @@ export default class CollectionDocumentsRepo {
 								.where(
 									"lucid_collection_document_fields.key",
 									"in",
-									props.allowedFieldIncludes,
+									props.collection.data.config.fields.include,
 								),
 						)
 						.as("fields"),
@@ -286,7 +283,7 @@ export default class CollectionDocumentsRepo {
 					page: props.query.page,
 					perPage: props.query.perPage,
 				},
-				collectionDocumentFilters: collectionDocFiltersRes,
+				documentFilters: collectionDocFiltersRes,
 				meta: {
 					filters: [],
 					sorts: [

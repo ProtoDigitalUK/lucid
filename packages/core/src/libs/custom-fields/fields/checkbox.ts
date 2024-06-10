@@ -42,7 +42,7 @@ class CheckboxCustomField extends CustomField<"checkbox"> {
 	getInsertField(props: {
 		item: FieldInsertItem;
 		brickId: number;
-		groupId: number;
+		groupId: number | null;
 	}) {
 		let value: BooleanInt | undefined = props.item.value;
 		if (typeof value === "string") {

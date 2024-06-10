@@ -40,7 +40,7 @@ class ColourCustomField extends CustomField<"colour"> {
 	getInsertField(props: {
 		item: FieldInsertItem;
 		brickId: number;
-		groupId: number;
+		groupId: number | null;
 	}) {
 		return {
 			key: this.config.key,

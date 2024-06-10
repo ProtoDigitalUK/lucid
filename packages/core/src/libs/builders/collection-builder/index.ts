@@ -7,6 +7,8 @@ import type {
 	CFConfig,
 } from "../../custom-fields/types.js";
 import type { CollectionDocumentBuilderHooks } from "../../../types/hooks.js";
+import type { RequestQueryParsed } from "../../../middleware/validate-query.js";
+import type { CFColumn } from "../../custom-fields/types.js";
 
 export default class CollectionBuilder extends FieldBuilder {
 	key: string;
@@ -102,6 +104,32 @@ export default class CollectionBuilder extends FieldBuilder {
 		this.#fieldCollectionHelper(key, "media", collection);
 		super.addMedia(key, props);
 		return this;
+	}
+	// ------------------------------------
+	// Public Methods
+	documentFilters(
+		filters: RequestQueryParsed["filter"],
+	): DocumentFiltersResponse[] {
+		if (!filters) return [];
+
+		return this.filterableFieldKeys.reduce<DocumentFiltersResponse[]>(
+			(acc, field) => {
+				const filterValue = filters[field.key];
+				if (filterValue === undefined) return acc;
+
+				const fieldInstance = this.fields.get(field.key);
+				if (!fieldInstance) return acc;
+
+				acc.push({
+					key: field.key,
+					value: filterValue,
+					column: fieldInstance.column,
+				});
+
+				return acc;
+			},
+			[],
+		);
 	}
 	// ------------------------------------
 	// Private Methods
@@ -240,4 +268,10 @@ export interface CollectionBrickConfig {
 	description: BrickBuilder["config"]["description"];
 	preview: BrickBuilder["config"]["preview"];
 	fields: CFConfig<FieldTypes>[];
+}
+
+export interface DocumentFiltersResponse {
+	key: string;
+	value: string | string[];
+	column: CFColumn<FieldTypes>;
 }

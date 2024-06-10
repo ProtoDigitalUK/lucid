@@ -49,7 +49,7 @@ class LinkCustomField extends CustomField<"link"> {
 	getInsertField(props: {
 		item: FieldInsertItem;
 		brickId: number;
-		groupId: number;
+		groupId: number | null;
 	}) {
 		// TODO: move type
 		const value = props.item.value as LinkValue | undefined;

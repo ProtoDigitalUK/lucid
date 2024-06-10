@@ -34,7 +34,7 @@ abstract class CustomField<T extends FieldTypes> {
 	abstract getInsertField(props: {
 		item: FieldInsertItem;
 		brickId: number;
-		groupId: number;
+		groupId: number | null;
 	}): CFInsertItem<T> | null;
 
 	// Methods
