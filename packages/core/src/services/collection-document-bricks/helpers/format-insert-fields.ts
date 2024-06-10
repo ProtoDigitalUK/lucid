@@ -1,6 +1,10 @@
 import type createMultipleGroups from "../create-multiple-groups.js";
 import type { FieldInsertItem } from "./flatten-fields.js";
 import type CollectionBuilder from "../../../libs/builders/collection-builder/index.js";
+import type {
+	CFInsertItem,
+	FieldTypes,
+} from "../../../libs/custom-fields/types.js";
 
 const formatInsertFields = (props: {
 	brickId: number;
@@ -23,7 +27,7 @@ const formatInsertFields = (props: {
 				groupId: targetGroup?.group_id ?? null,
 			});
 		})
-		.filter((f) => f !== null);
+		.filter((f) => f !== null) as CFInsertItem<FieldTypes>[];
 };
 
 export default formatInsertFields;
