@@ -11,8 +11,9 @@ import type {
 	FieldTypes,
 	FieldResponseMeta,
 	FieldResponseValue,
+	RepeaterFieldConfig,
+	TabFieldConfig,
 } from "../custom-fields/types.js";
-import type { RepeaterConfig, TabConfig } from "../../types.js";
 
 export interface FieldProp {
 	fields_id: number;
@@ -362,7 +363,7 @@ export default class CollectionDocumentFieldsFormatter {
 		meta: {
 			fieldConfig: Exclude<
 				CFConfig<FieldTypes>,
-				RepeaterConfig | TabConfig
+				RepeaterFieldConfig | TabFieldConfig
 			>;
 			host: string;
 			localisation: {
