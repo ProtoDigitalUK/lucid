@@ -470,7 +470,6 @@ export type TextareaResValue = string | null;
 export type JsonResValue = Record<string, unknown> | null;
 export type ColourResValue = string | null;
 export type DatetimeResValue = string | null;
-// TODO: this should be moved to the meta field
 export type LinkResValue = {
 	url: string | null;
 	target: string | null;

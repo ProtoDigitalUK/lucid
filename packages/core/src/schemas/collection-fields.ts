@@ -6,11 +6,6 @@ const FieldValueSchema = z
 		z.string(),
 		z.number(),
 		z.object({
-			id: z.number().nullable(),
-			target: z.string().nullable().optional(),
-			label: z.string().nullable().optional(),
-		}),
-		z.object({
 			url: z.string().nullable(),
 			target: z.string().nullable().optional(),
 			label: z.string().nullable().optional(),
