@@ -39,6 +39,13 @@ const PageCollection = new CollectionBuilder("page", {
 		{
 			hidden: false,
 			disabled: false,
+			labels: {
+				title: {
+					en: "Page title",
+					fr: "Titre de la page",
+				},
+				description: "The title of the page.",
+			},
 		},
 		{
 			list: true,

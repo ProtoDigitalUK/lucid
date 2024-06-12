@@ -1,6 +1,7 @@
 import { BrickBuilder } from "@lucidcms/core";
 
 const BannerBrick = new BrickBuilder("banner", {
+	title: "Banner",
 	description: "A banner with a title and intro text",
 	preview: {
 		image: "https://headless-dev.up.railway.app/public/banner-brick.png",

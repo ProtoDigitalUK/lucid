@@ -69,7 +69,7 @@ export const SelectField: Component<SelectFieldProps> = (props) => {
 							brickHelpers.getFieldLabel({
 								value: o.label,
 								locale: props.state.contentLocale,
-							}) ||
+							}) ??
 							T()("option_label", {
 								count: i,
 							}),

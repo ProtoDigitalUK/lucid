@@ -8,7 +8,9 @@ import type {
 } from "@lucidcms/core/types";
 import api from "@/services/api";
 import userStore from "@/store/userStore";
+import brickHelpers from "@/utils/brick-helpers";
 import useSearchParams, { type FilterSchema } from "@/hooks/useSearchParams";
+import contentLocaleStore from "@/store/contentLocaleStore";
 import Layout from "@/components/Groups/Layout";
 import DocumentsTable from "@/components/Tables/DocumentsTable";
 import Query from "@/components/Groups/Query";
@@ -25,6 +27,9 @@ const CollectionsDocumentsListRoute: Component = () => {
 	// ----------------------------------
 	// Memos
 	const collectionKey = createMemo(() => params.collectionKey);
+	const contentLocale = createMemo(
+		() => contentLocaleStore.get.contentLocale ?? "",
+	);
 
 	// ----------------------------------
 	// Queries
@@ -39,7 +44,6 @@ const CollectionsDocumentsListRoute: Component = () => {
 
 	// ----------------------------------
 	// Memos
-	// TODO: return to this, collection should return new include fields array
 	const collectionFieldInclude = createMemo(() => {
 		const fieldsRes: CFConfig<FieldTypes>[] = [];
 
@@ -50,16 +54,15 @@ const CollectionsDocumentsListRoute: Component = () => {
 					fieldRecursive(field.fields);
 					return;
 				}
-				if (field.collection?.list !== true) return;
-
-				fieldsRes.push(field);
+				if (collection.data?.data.fieldIncludes.includes(field.key)) {
+					fieldsRes.push(field);
+				}
 			}
 		};
 		fieldRecursive(collection.data?.data.fields);
 
 		return fieldsRes;
 	});
-	// TODO: return to this, collection should return new filter fields array
 	const collectionFieldFilter = createMemo(() => {
 		const fieldsRes: CFConfig<FieldTypes>[] = [];
 
@@ -70,9 +73,9 @@ const CollectionsDocumentsListRoute: Component = () => {
 					fieldRecursive(field.fields);
 					return;
 				}
-				if (field.collection?.filterable !== true) return;
-
-				fieldsRes.push(field);
+				if (collection.data?.data.fieldFilters.includes(field.key)) {
+					fieldsRes.push(field);
+				}
 			}
 		};
 		fieldRecursive(collection.data?.data.fields);
@@ -150,25 +153,46 @@ const CollectionsDocumentsListRoute: Component = () => {
 						switch (field.type) {
 							case "checkbox": {
 								return {
-									label: field.title || field.key,
+									label:
+										brickHelpers.getFieldLabel({
+											value: field.labels.title,
+											locale: contentLocale(),
+										}) ?? field.key,
 									key: field.key,
 									type: "boolean",
 								};
 							}
 							case "select": {
 								return {
-									label: field.title || field.key,
+									label:
+										brickHelpers.getFieldLabel({
+											value: field.labels.title,
+											locale: contentLocale(),
+										}) ?? field.key,
 									key: field.key,
 									type: "select",
-									options: field.options?.map((option) => ({
-										value: option.value,
-										label: option.label,
-									})),
+									options: field.options?.map(
+										(option, i) => ({
+											value: option.value,
+											label:
+												brickHelpers.getFieldLabel({
+													value: option.label,
+													locale: contentLocale(),
+												}) ??
+												T()("option_label", {
+													count: i,
+												}),
+										}),
+									),
 								};
 							}
 							default: {
 								return {
-									label: field.title || field.key,
+									label:
+										brickHelpers.getFieldLabel({
+											value: field.labels.title,
+											locale: contentLocale(),
+										}) ?? field.key,
 									key: field.key,
 									type: "text",
 								};
