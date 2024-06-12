@@ -246,6 +246,7 @@ export interface RepeaterFieldConfig extends SharedFieldConfig {
 		title?: TranslationValue;
 		description?: TranslationValue;
 	};
+	disabled?: boolean;
 	validation?: {
 		maxGroups?: number;
 	};
@@ -494,7 +495,8 @@ export type FieldResponseValue =
 	| ColourResValue
 	| DatetimeResValue
 	| LinkResValue
-	| UserResValue;
+	| UserResValue
+	| undefined;
 
 // -----------------------------------------------
 // Response Meta
@@ -551,7 +553,8 @@ export type FieldResponseMeta =
 	| ColourResMeta
 	| DatetimeResMeta
 	| LinkResMeta
-	| UserResMeta;
+	| UserResMeta
+	| undefined;
 
 // -----------------------------------------------
 // Alt

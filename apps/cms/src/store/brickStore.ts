@@ -8,8 +8,9 @@ import type {
 	CollectionResponse,
 	FieldResponseValue,
 	FieldResponseMeta,
-	CustomField,
+	CFConfig,
 	CollectionBrickConfig,
+	FieldTypes,
 } from "@lucidcms/core/types";
 
 export interface BrickData {
@@ -54,7 +55,7 @@ type BrickStoreT = {
 	setFieldValue: (params: {
 		brickIndex: number;
 		key: string;
-		fieldConfig: CustomField;
+		fieldConfig: CFConfig<Exclude<FieldTypes, "repeater" | "tab">>;
 		repeaterKey?: string;
 		groupId?: number | string;
 		value: FieldResponseValue;
@@ -63,14 +64,14 @@ type BrickStoreT = {
 	}) => void;
 	addField: (params: {
 		brickIndex: number;
-		fieldConfig: CustomField;
+		fieldConfig: CFConfig<Exclude<FieldTypes, "tab">>;
 		groupId?: number | string;
 		repeaterKey?: string;
 		locales: string[];
 	}) => FieldResponse;
 	addRepeaterGroup: (params: {
 		brickIndex: number;
-		fieldConfig: CustomField[];
+		fieldConfig: CFConfig<Exclude<FieldTypes, "tab">>[];
 		key: string;
 		groupId?: number | string;
 		parentRepeaterKey?: string;
@@ -247,17 +248,19 @@ const [get, set] = createStore<BrickStoreT>({
 			type: params.fieldConfig.type,
 		};
 
-		if (
-			params.fieldConfig.translations === true &&
-			get.collectionTranslations === true
-		) {
-			for (const locale of params.locales) {
-				newField.translations = {
-					[locale]: params.fieldConfig.default,
-				};
+		if (params.fieldConfig.type !== "repeater") {
+			if (
+				params.fieldConfig.translations === true &&
+				get.collectionTranslations === true
+			) {
+				for (const locale of params.locales) {
+					newField.translations = {
+						[locale]: params.fieldConfig.default,
+					};
+				}
+			} else {
+				newField.value = params.fieldConfig.default;
 			}
-		} else {
-			newField.value = params.fieldConfig.default;
 		}
 
 		brickStore.set(
@@ -316,17 +319,19 @@ const [get, set] = createStore<BrickStoreT>({
 						type: field.type,
 					};
 
-					if (
-						field.translations === true &&
-						get.collectionTranslations === true
-					) {
-						for (const locale of params.locales) {
-							newField.translations = {
-								[locale]: field.default,
-							};
+					if (field.type !== "repeater") {
+						if (
+							field.translations === true &&
+							get.collectionTranslations === true
+						) {
+							for (const locale of params.locales) {
+								newField.translations = {
+									[locale]: field.default,
+								};
+							}
+						} else {
+							newField.value = field.default;
 						}
-					} else {
-						newField.value = field.default;
 					}
 
 					groupFields.push(newField);

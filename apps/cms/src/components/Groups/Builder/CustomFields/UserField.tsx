@@ -6,7 +6,7 @@ import {
 	createEffect,
 } from "solid-js";
 import type {
-	CustomField,
+	CFConfig,
 	FieldResponse,
 	FieldErrors,
 } from "@lucidcms/core/types";
@@ -17,7 +17,7 @@ import UserSearchSelect from "@/components/Partials/SearchSelects/UserSearchSele
 interface UserFieldProps {
 	state: {
 		brickIndex: number;
-		fieldConfig: CustomField;
+		fieldConfig: CFConfig<"user">;
 		fieldData?: FieldResponse;
 		groupId?: number | string;
 		repeaterKey?: string;
@@ -69,15 +69,21 @@ export const UserField: Component<UserFieldProps> = (props) => {
 						key: props.state.fieldConfig.key,
 						groupId: props.state.groupId,
 						repeaterKey: props.state.repeaterKey,
-						value: value, // Number(value),
+						value: Number(value),
 						contentLocale: props.state.contentLocale,
 					});
 					setValue(value as number);
 				});
 			}}
 			copy={{
-				label: props.state.fieldConfig.title,
-				describedBy: props.state.fieldConfig.description,
+				label: brickHelpers.getFieldLabel({
+					value: props.state.fieldConfig.labels.title,
+					locale: props.state.contentLocale,
+				}),
+				describedBy: brickHelpers.getFieldLabel({
+					value: props.state.fieldConfig.labels.description,
+					locale: props.state.contentLocale,
+				}),
 			}}
 			name={props.state.fieldConfig.key}
 			errors={props.state.fieldError}

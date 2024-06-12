@@ -1,6 +1,6 @@
 import { type Component, Show } from "solid-js";
-import brickStore from "@/store/brickStore";
 import type { CollectionBrickConfig } from "@lucidcms/core/types";
+import brickStore from "@/store/brickStore";
 import { FaSolidEye } from "solid-icons/fa";
 
 interface BrickImagePreviewButtonProps {

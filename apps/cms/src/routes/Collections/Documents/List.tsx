@@ -1,7 +1,11 @@
 import T from "@/translations";
 import { useParams, useNavigate } from "@solidjs/router";
 import { type Component, createMemo, createEffect } from "solid-js";
-import type { CollectionResponse, CustomField } from "@lucidcms/core/types";
+import type {
+	CollectionResponse,
+	CFConfig,
+	FieldTypes,
+} from "@lucidcms/core/types";
 import api from "@/services/api";
 import userStore from "@/store/userStore";
 import useSearchParams, { type FilterSchema } from "@/hooks/useSearchParams";
@@ -35,10 +39,11 @@ const CollectionsDocumentsListRoute: Component = () => {
 
 	// ----------------------------------
 	// Memos
+	// TODO: return to this, collection should return new include fields array
 	const collectionFieldInclude = createMemo(() => {
-		const fieldsRes: CustomField[] = [];
+		const fieldsRes: CFConfig<FieldTypes>[] = [];
 
-		const fieldRecursive = (fields?: CustomField[]) => {
+		const fieldRecursive = (fields?: CFConfig<FieldTypes>[]) => {
 			if (!fields) return;
 			for (const field of fields) {
 				if (field.type === "repeater" && field.fields) {
@@ -54,10 +59,11 @@ const CollectionsDocumentsListRoute: Component = () => {
 
 		return fieldsRes;
 	});
+	// TODO: return to this, collection should return new filter fields array
 	const collectionFieldFilter = createMemo(() => {
-		const fieldsRes: CustomField[] = [];
+		const fieldsRes: CFConfig<FieldTypes>[] = [];
 
-		const fieldRecursive = (fields?: CustomField[]) => {
+		const fieldRecursive = (fields?: CFConfig<FieldTypes>[]) => {
 			if (!fields) return;
 			for (const field of fields) {
 				if (field.type === "repeater" && field.fields) {

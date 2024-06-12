@@ -1,6 +1,8 @@
 import brickStore from "@/store/brickStore";
 import type {
-	CustomField,
+	CFConfig,
+	FieldTypes,
+	TranslationValue,
 	FieldResponse,
 	FieldResponseMeta,
 } from "@lucidcms/core/types";
@@ -91,7 +93,7 @@ const customFieldId = (props: {
 };
 
 const getFieldValue = <T>(props: {
-	fieldConfig: CustomField;
+	fieldConfig: CFConfig<Exclude<FieldTypes, "repeater" | "tab">>;
 	fieldData?: FieldResponse;
 	contentLocale: string;
 	collectionTranslations?: boolean;
@@ -111,7 +113,7 @@ const getFieldValue = <T>(props: {
 };
 
 const getFieldMeta = <T extends FieldResponseMeta>(props: {
-	fieldConfig: CustomField;
+	fieldConfig: CFConfig<Exclude<FieldTypes, "repeater" | "tab">>;
 	fieldData?: FieldResponse;
 	contentLocale: string;
 	collectionTranslations?: boolean;
@@ -132,6 +134,15 @@ const getFieldMeta = <T extends FieldResponseMeta>(props: {
 	return props.fieldData.meta as T;
 };
 
+const getFieldLabel = (props: {
+	value: TranslationValue | undefined;
+	locale: string;
+}) => {
+	if (props.value === undefined) return undefined;
+	if (typeof props.value === "string") return props.value;
+	return props.value[props.locale] ?? undefined;
+};
+
 // ---------------------------------------------
 // Exports
 const brickHelpers = {
@@ -141,6 +152,7 @@ const brickHelpers = {
 	customFieldId,
 	getFieldValue,
 	getFieldMeta,
+	getFieldLabel,
 };
 
 export default brickHelpers;

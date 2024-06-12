@@ -6,7 +6,7 @@ import {
 	createEffect,
 } from "solid-js";
 import type {
-	CustomField,
+	CFConfig,
 	MediaMeta,
 	FieldResponse,
 	FieldErrors,
@@ -18,7 +18,7 @@ import Form from "@/components/Groups/Form";
 interface MediaFieldProps {
 	state: {
 		brickIndex: number;
-		fieldConfig: CustomField;
+		fieldConfig: CFConfig<"media">;
 		fieldData?: FieldResponse;
 		groupId?: number | string;
 		repeaterKey?: string;
@@ -90,8 +90,14 @@ export const MediaField: Component<MediaFieldProps> = (props) => {
 					});
 				}}
 				copy={{
-					label: props.state.fieldConfig.title,
-					describedBy: props.state.fieldConfig.description,
+					label: brickHelpers.getFieldLabel({
+						value: props.state.fieldConfig.labels.title,
+						locale: props.state.contentLocale,
+					}),
+					describedBy: brickHelpers.getFieldLabel({
+						value: props.state.fieldConfig.labels.description,
+						locale: props.state.contentLocale,
+					}),
 				}}
 				altLocaleHasError={props.state.altLocaleHasError}
 				disabled={props.state.fieldConfig.disabled}

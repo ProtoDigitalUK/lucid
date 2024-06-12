@@ -2,7 +2,11 @@ import T from "@/translations";
 import { type Component, type Accessor, Index, createMemo } from "solid-js";
 import { FaSolidT, FaSolidCalendar, FaSolidUser } from "solid-icons/fa";
 import { useParams, useNavigate } from "@solidjs/router";
-import type { CollectionResponse, CustomField } from "@lucidcms/core/types";
+import type {
+	CollectionResponse,
+	CFConfig,
+	FieldTypes,
+} from "@lucidcms/core/types";
 import type useSearchParams from "@/hooks/useSearchParams";
 import useRowTarget from "@/hooks/useRowTarget";
 import api from "@/services/api";
@@ -10,10 +14,11 @@ import contentLocaleStore from "@/store/contentLocaleStore";
 import Table from "@/components/Groups/Table";
 import DocumentRow from "@/components/Tables/Rows/DocumentRow";
 import DeleteDocument from "@/components/Modals/Documents/DeleteDocument";
+import brickHelpers from "@/utils/brick-helpers";
 
 interface DocumentsTableProps {
 	collection: CollectionResponse;
-	fieldIncludes: Accessor<CustomField[]>;
+	fieldIncludes: Accessor<CFConfig<FieldTypes>[]>;
 	searchParams: ReturnType<typeof useSearchParams>;
 }
 
@@ -32,20 +37,28 @@ const DocumentsTable: Component<DocumentsTableProps> = (props) => {
 	// Memos
 	const collectionKey = createMemo(() => params.collectionKey);
 	const contentLocale = createMemo(
-		() => contentLocaleStore.get.contentLocale,
+		() => contentLocaleStore.get.contentLocale ?? "",
 	);
 	const tableHeadColumns = createMemo(() => {
 		return props.fieldIncludes().map((field) => {
 			switch (field.type) {
 				case "user":
 					return {
-						label: field.title || field.key,
+						label:
+							brickHelpers.getFieldLabel({
+								value: field.labels.title,
+								locale: contentLocale(),
+							}) ?? field.key,
 						key: field.key,
 						icon: <FaSolidUser />,
 					};
 				default: {
 					return {
-						label: field.title || field.key,
+						label:
+							brickHelpers.getFieldLabel({
+								value: field.labels.title,
+								locale: contentLocale(),
+							}) ?? field.key,
 						key: field.key,
 						icon: <FaSolidT />,
 					};

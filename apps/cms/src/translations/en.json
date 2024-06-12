@@ -401,5 +401,6 @@
 	"unauthorised": "Unauthorised",
 	"this_filed_has_errors_in_other_locales": "This field has errors in other locales",
 	"no_emails": "No Emails Found",
-	"no_emails_description": "We cannot find any emails. It doesn't look like any emails have been sent yet."
+	"no_emails_description": "We cannot find any emails. It doesn't look like any emails have been sent yet.",
+	"option_label": "Option {{count}}"
 }

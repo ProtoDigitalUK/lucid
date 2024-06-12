@@ -1,10 +1,10 @@
 import { type Component, createMemo, Show } from "solid-js";
-import type { CustomField } from "@lucidcms/core/types";
+import type { CFConfig, FieldTypes } from "@lucidcms/core/types";
 import brickStore, { type BrickData } from "@/store/brickStore";
 import Builder from "@/components/Groups/Builder";
 
 interface CollectionSudoBrickProps {
-	fields: CustomField[];
+	fields: CFConfig<FieldTypes>[];
 }
 
 export const CollectionSudoBrick: Component<CollectionSudoBrickProps> = (

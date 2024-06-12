@@ -1,3 +1,4 @@
+import T from "@/translations";
 import {
 	type Component,
 	createSignal,
@@ -6,7 +7,7 @@ import {
 	createEffect,
 } from "solid-js";
 import type {
-	CustomField,
+	CFConfig,
 	FieldResponse,
 	FieldErrors,
 } from "@lucidcms/core/types";
@@ -17,7 +18,7 @@ import Form from "@/components/Groups/Form";
 interface SelectFieldProps {
 	state: {
 		brickIndex: number;
-		fieldConfig: CustomField;
+		fieldConfig: CFConfig<"select">;
 		fieldData?: FieldResponse;
 		groupId?: number | string;
 		repeaterKey?: string;
@@ -61,7 +62,21 @@ export const SelectField: Component<SelectFieldProps> = (props) => {
 				groupId: props.state.groupId,
 			})}
 			value={getValue() || undefined}
-			options={props.state.fieldConfig.options || []}
+			options={
+				props.state.fieldConfig.options.map((o, i) => {
+					return {
+						label:
+							brickHelpers.getFieldLabel({
+								value: o.label,
+								locale: props.state.contentLocale,
+							}) ||
+							T()("option_label", {
+								count: i,
+							}),
+						value: o.value,
+					};
+				}) || []
+			}
 			onChange={(value) => {
 				batch(() => {
 					brickStore.get.setFieldValue({
@@ -78,8 +93,14 @@ export const SelectField: Component<SelectFieldProps> = (props) => {
 			}}
 			name={props.state.fieldConfig.key}
 			copy={{
-				label: props.state.fieldConfig.title,
-				describedBy: props.state.fieldConfig.description,
+				label: brickHelpers.getFieldLabel({
+					value: props.state.fieldConfig.labels.title,
+					locale: props.state.contentLocale,
+				}),
+				describedBy: brickHelpers.getFieldLabel({
+					value: props.state.fieldConfig.labels.description,
+					locale: props.state.contentLocale,
+				}),
 			}}
 			altLocaleHasError={props.state.altLocaleHasError}
 			noClear={props.state.fieldConfig.validation?.required || false}

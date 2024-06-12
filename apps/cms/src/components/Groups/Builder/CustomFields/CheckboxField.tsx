@@ -6,7 +6,7 @@ import {
 	createEffect,
 } from "solid-js";
 import type {
-	CustomField,
+	CFConfig,
 	FieldResponse,
 	FieldErrors,
 } from "@lucidcms/core/types";
@@ -17,7 +17,7 @@ import Form from "@/components/Groups/Form";
 interface CheckboxFieldProps {
 	state: {
 		brickIndex: number;
-		fieldConfig: CustomField;
+		fieldConfig: CFConfig<"checkbox">;
 		fieldData?: FieldResponse;
 		groupId?: number | string;
 		repeaterKey?: string;
@@ -77,10 +77,22 @@ export const CheckboxField: Component<CheckboxFieldProps> = (props) => {
 			}}
 			name={props.state.fieldConfig.key}
 			copy={{
-				label: props.state.fieldConfig.title,
-				describedBy: props.state.fieldConfig.description,
-				true: props.state.fieldConfig?.copy?.true,
-				false: props.state.fieldConfig?.copy?.false,
+				label: brickHelpers.getFieldLabel({
+					value: props.state.fieldConfig.labels.title,
+					locale: props.state.contentLocale,
+				}),
+				describedBy: brickHelpers.getFieldLabel({
+					value: props.state.fieldConfig.labels.description,
+					locale: props.state.contentLocale,
+				}),
+				true: brickHelpers.getFieldLabel({
+					value: props.state.fieldConfig.labels.true,
+					locale: props.state.contentLocale,
+				}),
+				false: brickHelpers.getFieldLabel({
+					value: props.state.fieldConfig.labels.false,
+					locale: props.state.contentLocale,
+				}),
 			}}
 			altLocaleHasError={props.state.altLocaleHasError}
 			disabled={props.state.fieldConfig.disabled}

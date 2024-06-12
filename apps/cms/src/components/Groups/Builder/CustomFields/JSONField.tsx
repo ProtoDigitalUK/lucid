@@ -1,13 +1,12 @@
 import {
 	type Component,
-	type Accessor,
 	createSignal,
 	createEffect,
 	createMemo,
 	batch,
 } from "solid-js";
 import type {
-	CustomField,
+	CFConfig,
 	FieldResponse,
 	FieldErrors,
 } from "@lucidcms/core/types";
@@ -18,7 +17,7 @@ import Form from "@/components/Groups/Form";
 interface JSONFieldProps {
 	state: {
 		brickIndex: number;
-		fieldConfig: CustomField;
+		fieldConfig: CFConfig<"json">;
 		fieldData?: FieldResponse;
 		groupId?: number | string;
 		repeaterKey?: string;
@@ -78,9 +77,18 @@ export const JSONField: Component<JSONFieldProps> = (props) => {
 			}}
 			name={props.state.fieldConfig.key}
 			copy={{
-				label: props.state.fieldConfig.title,
-				placeholder: props.state.fieldConfig.placeholder,
-				describedBy: props.state.fieldConfig.description,
+				label: brickHelpers.getFieldLabel({
+					value: props.state.fieldConfig.labels.title,
+					locale: props.state.contentLocale,
+				}),
+				describedBy: brickHelpers.getFieldLabel({
+					value: props.state.fieldConfig.labels.description,
+					locale: props.state.contentLocale,
+				}),
+				placeholder: brickHelpers.getFieldLabel({
+					value: props.state.fieldConfig.labels.placeholder,
+					locale: props.state.contentLocale,
+				}),
 			}}
 			altLocaleHasError={props.state.altLocaleHasError}
 			disabled={props.state.fieldConfig.disabled}
