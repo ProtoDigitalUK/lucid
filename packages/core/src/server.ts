@@ -11,7 +11,7 @@ const start = async () => {
 	fastify.listen(
 		{
 			port: Number(process.env.PORT) || 8393,
-			host: "0.0.0.0",
+			host: process.env.HOST || "localhost",
 		},
 		(err, address) => {
 			if (err) {

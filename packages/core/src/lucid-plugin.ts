@@ -1,6 +1,7 @@
 import("dotenv/config.js");
 import type { FastifyInstance } from "fastify";
 import type { Config } from "./types/config.js";
+import packageJson from "../package.json" assert { type: "json" };
 import path from "node:path";
 import T from "./translations/index.js";
 import fp from "fastify-plugin";
@@ -33,9 +34,9 @@ const lucidPlugin = async (fastify: FastifyInstance) => {
 		fastify.register(fastifySwagger, {
 			swagger: {
 				info: {
-					title: "Lucid CMS API",
-					description: "Lucid CMS API",
-					version: "0.0.1",
+					title: "Lucid CMS",
+					description: "Lucid CMS",
+					version: packageJson.version,
 				},
 				host: config.host
 					.replace("http://", "")
@@ -50,11 +51,14 @@ const lucidPlugin = async (fastify: FastifyInstance) => {
 				routePrefix: "/documentation",
 			});
 		}
+		fastify.setValidatorCompiler(() => {
+			return () => ({ value: false });
+		});
 
 		// ------------------------------------
 		// Server wide middleware
 		fastify.register(cors, {
-			origin: "http://localhost:3000", // update
+			origin: [config.host, "http://localhost:3000"],
 			methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
 			allowedHeaders: [
 				"Content-Type",
