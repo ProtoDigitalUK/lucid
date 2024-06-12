@@ -12,6 +12,7 @@ import type {
 } from "@lucidcms/core/types";
 import brickStore from "@/store/brickStore";
 import brickHelpers from "@/utils/brick-helpers";
+import helpers from "@/utils/helpers";
 import Form from "@/components/Groups/Form";
 
 interface CheckboxFieldProps {
@@ -77,19 +78,19 @@ export const CheckboxField: Component<CheckboxFieldProps> = (props) => {
 			}}
 			name={props.state.fieldConfig.key}
 			copy={{
-				label: brickHelpers.getFieldLabel({
+				label: helpers.getLocaleValue({
 					value: props.state.fieldConfig.labels.title,
 					locale: props.state.contentLocale,
 				}),
-				describedBy: brickHelpers.getFieldLabel({
+				describedBy: helpers.getLocaleValue({
 					value: props.state.fieldConfig.labels.description,
 					locale: props.state.contentLocale,
 				}),
-				true: brickHelpers.getFieldLabel({
+				true: helpers.getLocaleValue({
 					value: props.state.fieldConfig.labels.true,
 					locale: props.state.contentLocale,
 				}),
-				false: brickHelpers.getFieldLabel({
+				false: helpers.getLocaleValue({
 					value: props.state.fieldConfig.labels.false,
 					locale: props.state.contentLocale,
 				}),

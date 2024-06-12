@@ -1,10 +1,7 @@
 import type { ZodType } from "zod";
 import type { MediaType } from "../../types/response.js";
 import type { BooleanInt } from "../db/types.js";
-
-// -----------------------------------------------
-// Shared
-export type TranslationValue = Record<string, string> | string;
+import type { LocaleValue } from "../../types/shared.js";
 
 // -----------------------------------------------
 // Custom Field
@@ -160,8 +157,8 @@ export type SharedFieldConfig = {
 	type: FieldTypes;
 
 	labels: {
-		title?: TranslationValue;
-		description?: TranslationValue;
+		title?: LocaleValue;
+		description?: LocaleValue;
 	};
 };
 
@@ -169,8 +166,8 @@ export interface TabFieldConfig extends SharedFieldConfig {
 	type: "tab";
 
 	labels: {
-		title?: TranslationValue;
-		description?: TranslationValue;
+		title?: LocaleValue;
+		description?: LocaleValue;
 	};
 	fields: Exclude<CFConfig<FieldTypes>, TabFieldConfig>[];
 }
@@ -178,9 +175,9 @@ export interface TextFieldConfig extends SharedFieldConfig {
 	type: "text";
 
 	labels: {
-		title?: TranslationValue;
-		description?: TranslationValue;
-		placeholder?: TranslationValue;
+		title?: LocaleValue;
+		description?: LocaleValue;
+		placeholder?: LocaleValue;
 	};
 
 	translations: boolean;
@@ -197,9 +194,9 @@ export interface WysiwygFieldConfig extends SharedFieldConfig {
 	type: "wysiwyg";
 
 	labels: {
-		title?: TranslationValue;
-		description?: TranslationValue;
-		placeholder?: TranslationValue;
+		title?: LocaleValue;
+		description?: LocaleValue;
+		placeholder?: LocaleValue;
 	};
 
 	translations: boolean;
@@ -216,8 +213,8 @@ export interface MediaFieldConfig extends SharedFieldConfig {
 	type: "media";
 
 	labels: {
-		title?: TranslationValue;
-		description?: TranslationValue;
+		title?: LocaleValue;
+		description?: LocaleValue;
 	};
 
 	translations: boolean;
@@ -243,8 +240,8 @@ export interface RepeaterFieldConfig extends SharedFieldConfig {
 	type: "repeater";
 	fields: Exclude<CFConfig<FieldTypes>, TabFieldConfig>[];
 	labels: {
-		title?: TranslationValue;
-		description?: TranslationValue;
+		title?: LocaleValue;
+		description?: LocaleValue;
 	};
 	disabled?: boolean;
 	validation?: {
@@ -255,9 +252,9 @@ export interface NumberFieldConfig extends SharedFieldConfig {
 	type: "number";
 
 	labels: {
-		title?: TranslationValue;
-		description?: TranslationValue;
-		placeholder?: TranslationValue;
+		title?: LocaleValue;
+		description?: LocaleValue;
+		placeholder?: LocaleValue;
 	};
 
 	translations: boolean;
@@ -274,10 +271,10 @@ export interface CheckboxFieldConfig extends SharedFieldConfig {
 	type: "checkbox";
 
 	labels: {
-		title?: TranslationValue;
-		description?: TranslationValue;
-		true?: TranslationValue;
-		false?: TranslationValue;
+		title?: LocaleValue;
+		description?: LocaleValue;
+		true?: LocaleValue;
+		false?: LocaleValue;
 	};
 
 	translations: boolean;
@@ -293,11 +290,11 @@ export interface SelectFieldConfig extends SharedFieldConfig {
 	type: "select";
 
 	labels: {
-		title?: TranslationValue;
-		description?: TranslationValue;
-		placeholder?: TranslationValue;
+		title?: LocaleValue;
+		description?: LocaleValue;
+		placeholder?: LocaleValue;
 	};
-	options: Array<{ label: TranslationValue; value: string }>;
+	options: Array<{ label: LocaleValue; value: string }>;
 
 	translations: boolean;
 	hidden?: boolean;
@@ -312,9 +309,9 @@ export interface TextareaFieldConfig extends SharedFieldConfig {
 	type: "textarea";
 
 	labels: {
-		title?: TranslationValue;
-		description?: TranslationValue;
-		placeholder?: TranslationValue;
+		title?: LocaleValue;
+		description?: LocaleValue;
+		placeholder?: LocaleValue;
 	};
 
 	translations: boolean;
@@ -331,9 +328,9 @@ export interface JsonFieldConfig extends SharedFieldConfig {
 	type: "json";
 
 	labels: {
-		title?: TranslationValue;
-		description?: TranslationValue;
-		placeholder?: TranslationValue;
+		title?: LocaleValue;
+		description?: LocaleValue;
+		placeholder?: LocaleValue;
 	};
 
 	translations: boolean;
@@ -350,8 +347,8 @@ export interface ColourFieldConfig extends SharedFieldConfig {
 	type: "colour";
 
 	labels: {
-		title?: TranslationValue;
-		description?: TranslationValue;
+		title?: LocaleValue;
+		description?: LocaleValue;
 	};
 	presets: string[];
 
@@ -368,9 +365,9 @@ export interface DatetimeFieldConfig extends SharedFieldConfig {
 	type: "datetime";
 
 	labels: {
-		title?: TranslationValue;
-		description?: TranslationValue;
-		placeholder?: TranslationValue;
+		title?: LocaleValue;
+		description?: LocaleValue;
+		placeholder?: LocaleValue;
 	};
 
 	translations: boolean;
@@ -387,9 +384,9 @@ export interface LinkFieldConfig extends SharedFieldConfig {
 	type: "link";
 
 	labels: {
-		title?: TranslationValue;
-		description?: TranslationValue;
-		placeholder?: TranslationValue;
+		title?: LocaleValue;
+		description?: LocaleValue;
+		placeholder?: LocaleValue;
 	};
 
 	translations: boolean;
@@ -405,8 +402,8 @@ export interface UserFieldConfig extends SharedFieldConfig {
 	type: "user";
 
 	labels: {
-		title?: TranslationValue;
-		description?: TranslationValue;
+		title?: LocaleValue;
+		description?: LocaleValue;
 	};
 	default?: number;
 

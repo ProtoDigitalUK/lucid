@@ -13,6 +13,7 @@ import type {
 } from "@lucidcms/core/types";
 import brickStore from "@/store/brickStore";
 import brickHelpers from "@/utils/brick-helpers";
+import helpers from "@/utils/helpers";
 import Form from "@/components/Groups/Form";
 
 interface MediaFieldProps {
@@ -90,11 +91,11 @@ export const MediaField: Component<MediaFieldProps> = (props) => {
 					});
 				}}
 				copy={{
-					label: brickHelpers.getFieldLabel({
+					label: helpers.getLocaleValue({
 						value: props.state.fieldConfig.labels.title,
 						locale: props.state.contentLocale,
 					}),
-					describedBy: brickHelpers.getFieldLabel({
+					describedBy: helpers.getLocaleValue({
 						value: props.state.fieldConfig.labels.description,
 						locale: props.state.contentLocale,
 					}),

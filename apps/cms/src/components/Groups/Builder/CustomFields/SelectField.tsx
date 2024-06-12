@@ -13,6 +13,7 @@ import type {
 } from "@lucidcms/core/types";
 import brickStore from "@/store/brickStore";
 import brickHelpers from "@/utils/brick-helpers";
+import helpers from "@/utils/helpers";
 import Form from "@/components/Groups/Form";
 
 interface SelectFieldProps {
@@ -65,14 +66,13 @@ export const SelectField: Component<SelectFieldProps> = (props) => {
 			options={
 				props.state.fieldConfig.options.map((o, i) => {
 					return {
-						label:
-							brickHelpers.getFieldLabel({
-								value: o.label,
-								locale: props.state.contentLocale,
-							}) ??
-							T()("option_label", {
+						label: helpers.getLocaleValue({
+							value: o.label,
+							locale: props.state.contentLocale,
+							fallback: T()("option_label", {
 								count: i,
 							}),
+						}),
 						value: o.value,
 					};
 				}) || []
@@ -93,11 +93,11 @@ export const SelectField: Component<SelectFieldProps> = (props) => {
 			}}
 			name={props.state.fieldConfig.key}
 			copy={{
-				label: brickHelpers.getFieldLabel({
+				label: helpers.getLocaleValue({
 					value: props.state.fieldConfig.labels.title,
 					locale: props.state.contentLocale,
 				}),
-				describedBy: brickHelpers.getFieldLabel({
+				describedBy: helpers.getLocaleValue({
 					value: props.state.fieldConfig.labels.description,
 					locale: props.state.contentLocale,
 				}),

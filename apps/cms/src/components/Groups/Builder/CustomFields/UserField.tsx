@@ -12,6 +12,7 @@ import type {
 } from "@lucidcms/core/types";
 import brickStore from "@/store/brickStore";
 import brickHelpers from "@/utils/brick-helpers";
+import helpers from "@/utils/helpers";
 import UserSearchSelect from "@/components/Partials/SearchSelects/UserSearchSelect";
 
 interface UserFieldProps {
@@ -76,11 +77,11 @@ export const UserField: Component<UserFieldProps> = (props) => {
 				});
 			}}
 			copy={{
-				label: brickHelpers.getFieldLabel({
+				label: helpers.getLocaleValue({
 					value: props.state.fieldConfig.labels.title,
 					locale: props.state.contentLocale,
 				}),
-				describedBy: brickHelpers.getFieldLabel({
+				describedBy: helpers.getLocaleValue({
 					value: props.state.fieldConfig.labels.description,
 					locale: props.state.contentLocale,
 				}),

@@ -123,8 +123,8 @@ const [get, set] = createStore<BrickStoreT>({
 			produce((draft) => {
 				// Set with data from document respponse
 				draft.push({
-					id: "collection-sudo-brick",
-					key: "collection-sudo-brick",
+					id: "collection-pseudo-brick",
+					key: "collection-pseudo-brick",
 					order: -1,
 					type: "collection-fields",
 					open: 0,

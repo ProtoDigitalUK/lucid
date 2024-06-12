@@ -10,7 +10,7 @@ import type { CFConfig, FieldTypes } from "@lucidcms/core/types";
 import type { BrickData } from "@/store/brickStore";
 import classNames from "classnames";
 import CustomFields from "@/components/Groups/Builder/CustomFields";
-import brickHelpers from "@/utils/brick-helpers";
+import helpers from "@/utils/helpers";
 import contentLocaleStore from "@/store/contentLocaleStore";
 
 interface BrickProps {
@@ -88,7 +88,7 @@ export const BrickBody: Component<BrickProps> = (props) => {
 									onClick={() => setActiveTab(tab.key)}
 									type="button"
 								>
-									{brickHelpers.getFieldLabel({
+									{helpers.getLocaleValue({
 										value: tab.labels?.title,
 										locale: contentLocale(),
 									})}

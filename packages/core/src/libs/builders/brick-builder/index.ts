@@ -2,17 +2,18 @@ import z from "zod";
 import FieldBuilder from "../field-builder/index.js";
 import TabCustomField from "../../custom-fields/fields/tab.js";
 import type { CFProps } from "../../custom-fields/types.js";
+import type { LocaleValue } from "../../../types/shared.js";
 
 export interface BrickConfigPropsT {
-	title?: string;
-	description?: string;
+	title?: LocaleValue;
+	description?: LocaleValue;
 	preview?: {
 		image?: string;
 	};
 }
 export interface BrickConfigT {
-	title: string;
-	description?: string;
+	title: LocaleValue;
+	description?: LocaleValue;
 	preview?: {
 		image?: string;
 	};
@@ -47,8 +48,10 @@ class BrickBuilder extends FieldBuilder {
 }
 
 export const BrickSchema = z.object({
-	title: z.string(),
-	description: z.string().optional(),
+	title: z.union([z.string(), z.record(z.string(), z.string())]),
+	description: z
+		.union([z.string(), z.record(z.string(), z.string())])
+		.optional(),
 	preview: z
 		.object({
 			image: z.string().optional(),

@@ -141,7 +141,7 @@ const CollectionsDocumentsEditRoute: Component<
 			body: {
 				documentId: documentId(),
 				bricks: brickHelpers.getUpsertBricks(),
-				fields: brickHelpers.getCollectionSudoBrickFields(),
+				fields: brickHelpers.getCollectionPseudoBrickFields(),
 			},
 		});
 		brickStore.set("documentMutated", false);
@@ -264,7 +264,7 @@ const CollectionsDocumentsEditRoute: Component<
 									</Show>
 								</div>
 							</header>
-							<Document.CollectionSudoBrick
+							<Document.CollectionPseudoBrick
 								fields={collection.data?.data.fields || []}
 							/>
 						</div>

@@ -7,7 +7,7 @@ import { FaSolidGripLines, FaSolidCircleChevronUp } from "solid-icons/fa";
 import brickStore from "@/store/brickStore";
 import CustomFields from "@/components/Groups/Builder/CustomFields";
 import DeleteDebounceButton from "@/components/Partials/DeleteDebounceButton";
-import brickHelpers from "@/utils/brick-helpers";
+import helpers from "@/utils/helpers";
 import contentLocaleStore from "@/store/contentLocaleStore";
 
 interface GroupBodyProps {
@@ -134,7 +134,7 @@ export const GroupBody: Component<GroupBodyProps> = (props) => {
 						<FaSolidGripLines class="w-4" />
 					</button>
 					<h3 class="text-sm text-body">
-						{brickHelpers.getFieldLabel({
+						{helpers.getLocaleValue({
 							value: props.state.fieldConfig.labels?.title,
 							locale: contentLocale(),
 						})}

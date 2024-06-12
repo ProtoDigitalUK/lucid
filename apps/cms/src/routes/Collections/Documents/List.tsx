@@ -8,7 +8,7 @@ import type {
 } from "@lucidcms/core/types";
 import api from "@/services/api";
 import userStore from "@/store/userStore";
-import brickHelpers from "@/utils/brick-helpers";
+import helpers from "@/utils/helpers";
 import useSearchParams, { type FilterSchema } from "@/hooks/useSearchParams";
 import contentLocaleStore from "@/store/contentLocaleStore";
 import Layout from "@/components/Groups/Layout";
@@ -153,46 +153,45 @@ const CollectionsDocumentsListRoute: Component = () => {
 						switch (field.type) {
 							case "checkbox": {
 								return {
-									label:
-										brickHelpers.getFieldLabel({
-											value: field.labels.title,
-											locale: contentLocale(),
-										}) ?? field.key,
+									label: helpers.getLocaleValue({
+										value: field.labels.title,
+										locale: contentLocale(),
+										fallback: field.key,
+									}),
 									key: field.key,
 									type: "boolean",
 								};
 							}
 							case "select": {
 								return {
-									label:
-										brickHelpers.getFieldLabel({
-											value: field.labels.title,
-											locale: contentLocale(),
-										}) ?? field.key,
+									label: helpers.getLocaleValue({
+										value: field.labels.title,
+										locale: contentLocale(),
+										fallback: field.key,
+									}),
 									key: field.key,
 									type: "select",
 									options: field.options?.map(
 										(option, i) => ({
 											value: option.value,
-											label:
-												brickHelpers.getFieldLabel({
-													value: option.label,
-													locale: contentLocale(),
-												}) ??
-												T()("option_label", {
+											label: helpers.getLocaleValue({
+												value: option.label,
+												locale: contentLocale(),
+												fallback: T()("option_label", {
 													count: i,
 												}),
+											}),
 										}),
 									),
 								};
 							}
 							default: {
 								return {
-									label:
-										brickHelpers.getFieldLabel({
-											value: field.labels.title,
-											locale: contentLocale(),
-										}) ?? field.key,
+									label: helpers.getLocaleValue({
+										value: field.labels.title,
+										locale: contentLocale(),
+										fallback: field.key,
+									}),
 									key: field.key,
 									type: "text",
 								};

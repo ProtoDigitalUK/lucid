@@ -5,9 +5,15 @@ const CustomFieldSchema = z.object({
 	key: z.string(),
 	labels: z
 		.object({
-			title: z.string().optional(),
-			description: z.string().optional(),
-			placeholder: z.string().optional(),
+			title: z
+				.union([z.string(), z.record(z.string(), z.string())])
+				.optional(),
+			description: z
+				.union([z.string(), z.record(z.string(), z.string())])
+				.optional(),
+			placeholder: z
+				.union([z.string(), z.record(z.string(), z.string())])
+				.optional(),
 		})
 		.optional(),
 	default: z

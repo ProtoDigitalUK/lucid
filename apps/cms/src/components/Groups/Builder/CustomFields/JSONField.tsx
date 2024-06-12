@@ -12,6 +12,7 @@ import type {
 } from "@lucidcms/core/types";
 import brickStore from "@/store/brickStore";
 import brickHelpers from "@/utils/brick-helpers";
+import helpers from "@/utils/helpers";
 import Form from "@/components/Groups/Form";
 
 interface JSONFieldProps {
@@ -77,15 +78,15 @@ export const JSONField: Component<JSONFieldProps> = (props) => {
 			}}
 			name={props.state.fieldConfig.key}
 			copy={{
-				label: brickHelpers.getFieldLabel({
+				label: helpers.getLocaleValue({
 					value: props.state.fieldConfig.labels.title,
 					locale: props.state.contentLocale,
 				}),
-				describedBy: brickHelpers.getFieldLabel({
+				describedBy: helpers.getLocaleValue({
 					value: props.state.fieldConfig.labels.description,
 					locale: props.state.contentLocale,
 				}),
-				placeholder: brickHelpers.getFieldLabel({
+				placeholder: helpers.getLocaleValue({
 					value: props.state.fieldConfig.labels.placeholder,
 					locale: props.state.contentLocale,
 				}),

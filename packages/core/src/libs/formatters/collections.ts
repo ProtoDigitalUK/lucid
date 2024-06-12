@@ -83,13 +83,33 @@ export default class CollectionsFormatter {
 			type: {
 				type: "string",
 			},
-			title: {
-				type: "string",
+			labels: {
+				type: "object",
+				additionalProperties: true,
+				properties: {
+					title: {
+						type: ["object", "string"],
+						additionalProperties: true,
+					},
+					description: {
+						type: ["object", "string"],
+						additionalProperties: true,
+					},
+					placeholder: {
+						type: ["object", "string"],
+						additionalProperties: true,
+					},
+					true: {
+						type: ["object", "string"],
+						additionalProperties: true,
+					},
+					false: {
+						type: ["object", "string"],
+						additionalProperties: true,
+					},
+				},
 			},
 			key: {
-				type: "string",
-			},
-			description: {
 				type: "string",
 			},
 			hidden: {
@@ -121,10 +141,12 @@ export default class CollectionsFormatter {
 				type: "string",
 			},
 			title: {
-				type: "string",
+				type: ["object", "string"],
+				additionalProperties: true,
 			},
 			description: {
-				type: "string",
+				type: ["object", "string"],
+				additionalProperties: true,
 				nullable: true,
 			},
 			preview: {

@@ -14,7 +14,7 @@ import contentLocaleStore from "@/store/contentLocaleStore";
 import Table from "@/components/Groups/Table";
 import DocumentRow from "@/components/Tables/Rows/DocumentRow";
 import DeleteDocument from "@/components/Modals/Documents/DeleteDocument";
-import brickHelpers from "@/utils/brick-helpers";
+import helpers from "@/utils/helpers";
 
 interface DocumentsTableProps {
 	collection: CollectionResponse;
@@ -44,21 +44,21 @@ const DocumentsTable: Component<DocumentsTableProps> = (props) => {
 			switch (field.type) {
 				case "user":
 					return {
-						label:
-							brickHelpers.getFieldLabel({
-								value: field.labels.title,
-								locale: contentLocale(),
-							}) ?? field.key,
+						label: helpers.getLocaleValue({
+							value: field.labels.title,
+							locale: contentLocale(),
+							fallback: field.key,
+						}),
 						key: field.key,
 						icon: <FaSolidUser />,
 					};
 				default: {
 					return {
-						label:
-							brickHelpers.getFieldLabel({
-								value: field.labels.title,
-								locale: contentLocale(),
-							}) ?? field.key,
+						label: helpers.getLocaleValue({
+							value: field.labels.title,
+							locale: contentLocale(),
+							fallback: field.key,
+						}),
 						key: field.key,
 						icon: <FaSolidT />,
 					};

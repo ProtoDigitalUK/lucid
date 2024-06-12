@@ -3,16 +3,16 @@ import type { CFConfig, FieldTypes } from "@lucidcms/core/types";
 import brickStore, { type BrickData } from "@/store/brickStore";
 import Builder from "@/components/Groups/Builder";
 
-interface CollectionSudoBrickProps {
+interface CollectionPseudoBrickProps {
 	fields: CFConfig<FieldTypes>[];
 }
 
-export const CollectionSudoBrick: Component<CollectionSudoBrickProps> = (
+export const CollectionPseudoBrick: Component<CollectionPseudoBrickProps> = (
 	props,
 ) => {
 	// ------------------------------
 	// Memos
-	const collectionSudoBrick = createMemo(() => {
+	const collectionPseudoBrick = createMemo(() => {
 		const bricks = brickStore.get.bricks.filter(
 			(b) => b.type === "collection-fields",
 		);
@@ -20,19 +20,19 @@ export const CollectionSudoBrick: Component<CollectionSudoBrickProps> = (
 	});
 	const brickIndex = createMemo(() => {
 		return brickStore.get.bricks.findIndex(
-			(brick) => brick.id === collectionSudoBrick()?.id,
+			(brick) => brick.id === collectionPseudoBrick()?.id,
 		);
 	});
 
 	// ----------------------------------
 	// Render
 	return (
-		<Show when={collectionSudoBrick() !== undefined}>
+		<Show when={collectionPseudoBrick() !== undefined}>
 			<div class="px-15 md:px-30 pb-15 md:pb-30">
 				<Builder.BrickBody
 					state={{
 						open: true,
-						brick: collectionSudoBrick() as BrickData,
+						brick: collectionPseudoBrick() as BrickData,
 						brickIndex: brickIndex(),
 						configFields: props.fields,
 					}}

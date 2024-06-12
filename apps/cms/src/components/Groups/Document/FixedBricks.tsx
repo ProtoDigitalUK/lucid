@@ -3,7 +3,9 @@ import type { CollectionBrickConfig } from "@lucidcms/core/types";
 import classNames from "classnames";
 import { FaSolidCircleChevronUp } from "solid-icons/fa";
 import brickStore, { type BrickData } from "@/store/brickStore";
+import contentLocaleStore from "@/store/contentLocaleStore";
 import Builder from "@/components/Groups/Builder";
+import helpers from "@/utils/helpers";
 
 interface FixedBricksProps {
 	brickConfig: CollectionBrickConfig[];
@@ -49,6 +51,9 @@ const FixedBrickRow: Component<FixedBrickRowProps> = (props) => {
 	const config = createMemo(() => {
 		return props.brickConfig.find((brick) => brick.key === props.brick.key);
 	});
+	const contentLocale = createMemo(
+		() => contentLocaleStore.get.contentLocale ?? "",
+	);
 	const brickIndex = createMemo(() => {
 		return brickStore.get.bricks.findIndex(
 			(brick) => brick.id === props.brick.id,
@@ -85,7 +90,13 @@ const FixedBrickRow: Component<FixedBrickRowProps> = (props) => {
 				role="button"
 				tabIndex="0"
 			>
-				<h2>{config()?.title}</h2>
+				<h2>
+					{helpers.getLocaleValue({
+						value: config()?.title,
+						locale: contentLocale(),
+						fallback: config()?.key,
+					})}
+				</h2>
 				<div class="flex gap-2">
 					<Builder.BrickImagePreviewButton brickConfig={config()} />
 					<button
