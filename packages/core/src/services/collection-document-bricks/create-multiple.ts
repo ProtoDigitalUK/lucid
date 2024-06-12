@@ -94,7 +94,6 @@ const createMultiple = async (
 		{
 			documentId: data.documentId,
 			fields: postInsertBricks.flatMap((b) =>
-				// TODO: replace with CF instance
 				formatInsertFields({
 					groups: groups,
 					brickId: b.id,
