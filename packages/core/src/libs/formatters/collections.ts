@@ -57,6 +57,10 @@ export default class CollectionsFormatter {
 			fields: props.include?.fields
 				? props.collection.fieldTree ?? []
 				: [],
+			fieldIncludes: props.collection.includeFieldKeys,
+			fieldFilters: props.collection.filterableFieldKeys.map(
+				(f) => f.key,
+			),
 		};
 	};
 	private getDocumentId = (
@@ -163,6 +167,18 @@ export default class CollectionsFormatter {
 			fields: {
 				type: "array",
 				items: this.swaggerFieldsConfig,
+			},
+			fieldIncludes: {
+				type: "array",
+				items: {
+					type: "string",
+				},
+			},
+			fieldFilters: {
+				type: "array",
+				items: {
+					type: "string",
+				},
 			},
 		},
 	};

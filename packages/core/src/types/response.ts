@@ -1,5 +1,8 @@
 import type { BooleanInt } from "../libs/db/types.js";
-import type { CollectionBrickConfig } from "../libs/builders/collection-builder/index.js";
+import type {
+	CollectionBrickConfig,
+	FieldFilters,
+} from "../libs/builders/collection-builder/index.js";
 import type { ErrorResult } from "./errors.js";
 import type {
 	CFConfig,
@@ -157,6 +160,8 @@ export interface CollectionResponse {
 	fixedBricks: Array<CollectionBrickConfig>;
 	builderBricks: Array<CollectionBrickConfig>;
 	fields: CFConfig<FieldTypes>[];
+	fieldIncludes: string[];
+	fieldFilters: string[];
 }
 
 export interface BrickResponse {
