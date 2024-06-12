@@ -1,5 +1,15 @@
 # @lucidcms/core
 
+## v0.5.0-alpha.2
+
+### Features:
+
+- Bricks and Custom Fields now support locales on labels in config, so optionally users can provide translations for the users selected locale. ([f9d5e5a](https://github.com/ProtoDigitalUK/lucid/commit/f9d5e5aadfaf76fcadb909299dc4dac91351fe4b))
+
+### Breaking changes:
+
+- Custom fields config changed for FieldBuilder and subsequently BrickBuilder and CollectionBuilder. ([786e74a](https://github.com/ProtoDigitalUK/lucid/commit/786e74a0f0224d43c77f6caf61e35f4e1835afaf))
+
 ## v0.5.0-alpha.1
 
 ### Bug Fixes:
