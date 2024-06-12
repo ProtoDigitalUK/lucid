@@ -52,14 +52,8 @@ const PageCollection = new CollectionBuilder("page", {
 			filterable: true,
 		},
 	)
-	.addUser(
-		"author",
-		{
-			key: "",
-		},
-		{
-			list: true,
-		},
-	);
+	.addUser("author", undefined, {
+		list: true,
+	});
 
 export default PageCollection;

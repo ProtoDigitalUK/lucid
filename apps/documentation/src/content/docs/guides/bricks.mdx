@@ -13,46 +13,58 @@ To create a brick, simply import the `BrickBuilder` class and create a new insta
 import { BrickBuilder } from "@lucidcms/core";
 
 const Banner = new BrickBuilder("banner", {
-  description: "A banner with a title and intro text",
-  preview: {
-    image: "https://placehold.co/600x400",
-  },
+	title: {
+		en: "Banner",
+		fr: "Bannière",
+	},
+	description: "A banner with a title and intro text",
+	preview: {
+		image: "https://placehold.co/600x400",
+	},
 })
-  .addTab({
-    title: "Content",
-    key: "content_tab",
-  })
-  .addText({
-    key: "title",
-    description: "The title of the banner",
-    validation: {
-      required: true,
-    },
-  })
-  .addWysiwyg({
-    key: "intro",
-  })
-  .addRepeater({
-    key: "cta",
-    validation: {
-      maxGroups: 3,
-    },
-  })
-  .addText({
-    key: "cta_title",
-  })
-  .addText({
-    key: "cta_url",
-  })
-  .endRepeater()
-  .addTab({
-    title: "Config",
-    key: "config_tab",
-  })
-  .addCheckbox({
-    key: "fullwidth",
-    description: "Make the banner full-width",
-  });
+	.addTab("content_tab", {
+		labels: {
+			title: "Content",
+		},
+	})
+	.addText("title", {
+		labels: {
+			description: "The title of the banner. This is displayed as an H1 tag.",
+		},
+		validation: {
+			required: true,
+		},
+	})
+	.addWysiwyg("intro")
+	.addRepeater("call_to_actions", {
+		labels: {
+			title: "Call to Actions",
+		},
+		validation: {
+			maxGroups: 3,
+		},
+	})
+	.addText("cta_title", {
+		labels: {
+			title: "Title",
+		},
+	})
+    .addText("cta_url", {
+		labels: {
+			title: "URL",
+		},
+	})
+	.endRepeater()
+	.addTab("config_tab", {
+		labels: {
+			title: "Config",
+		},
+	})
+	.addCheckbox("full_width", {
+		labels: {
+			description: "Make the banner full-width",
+		},
+	});
 
 export default Banner;
 ```
