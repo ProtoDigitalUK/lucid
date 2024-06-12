@@ -170,6 +170,7 @@ const lucidPlugin = async (fastify: FastifyInstance) => {
 			reply.status(status ?? 500).send(response);
 		});
 	} catch (error) {
+		// TODO: improve error handling, return message to user
 		lucidLogger("error", {
 			message:
 				"An error occurred during the initialisation of the lucid server",

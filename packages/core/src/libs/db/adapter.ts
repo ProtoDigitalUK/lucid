@@ -64,6 +64,7 @@ export default class DatabaseAdapter {
 		}
 
 		if (error) {
+			// TODO: improve error handling, return message to user
 			throw new LucidError({
 				message: T("db_migration_failed"),
 				kill: true,

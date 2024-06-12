@@ -1,4 +1,8 @@
-import lucid, { SQLiteAdapter } from "@lucidcms/core";
+import lucid, {
+	SQLiteAdapter,
+	PostgresAdapter,
+	LibSQLAdapter,
+} from "@lucidcms/core";
 import Database from "better-sqlite3";
 import transporter from "./src/services/email-transporter.js";
 // Plugins
@@ -15,6 +19,13 @@ export default lucid.config({
 	db: new SQLiteAdapter({
 		database: async () => new Database("db.sqlite"),
 	}),
+	// db: new PostgresAdapter({
+	// 	connectionString: process.env.DATABASE_URL as string,
+	// }),
+	// db: new LibSQLAdapter({
+	// 	url: "libsql://lucid-willyallop.turso.io",
+	// 	authToken: process.env.TURSO_AUTH_TOKEN as string,
+	// }),
 	keys: {
 		cookieSecret: process.env.LUCID_COOKIE_SECRET as string,
 		refreshTokenSecret: process.env.LUCID_REFRESH_TOKEN_SECRET as string,
