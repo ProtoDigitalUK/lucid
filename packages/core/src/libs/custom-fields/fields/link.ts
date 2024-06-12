@@ -40,7 +40,6 @@ class LinkCustomField extends CustomField<"link"> {
 	responseValueFormat(props: {
 		data: FieldProp;
 	}) {
-		// TODO: move type
 		const linkVal = Formatter.parseJSON<LinkValue>(props.data.json_value);
 		return {
 			value: {

@@ -7,7 +7,6 @@ const publicPagesRoutes = async (fastify: FastifyInstance) => {
 		method: "get",
 		url: "/:slug",
 		middleware: {
-			// TODO: integration authentication instead of authenticate
 			authenticate: true,
 		},
 		swaggerSchema: publicPages.getSingle.swaggerSchema,

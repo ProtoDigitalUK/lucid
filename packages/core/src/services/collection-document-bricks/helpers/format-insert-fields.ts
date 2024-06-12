@@ -12,22 +12,25 @@ const formatInsertFields = (props: {
 	fields: FieldInsertItem[];
 	collection: CollectionBuilder;
 }) => {
-	return props.fields
-		.map((field) => {
-			const fieldInstance = props.collection.fields.get(field.key);
-			if (!fieldInstance) return null;
+	return (
+		props.fields
+			.map((field) => {
+				const fieldInstance = props.collection.fields.get(field.key);
+				if (!fieldInstance) return null;
 
-			const targetGroup = props.groups.find(
-				(g) => g.ref === field.groupRef,
-			);
+				const targetGroup = props.groups.find(
+					(g) => g.ref === field.groupRef,
+				);
 
-			return fieldInstance.getInsertField({
-				item: field,
-				brickId: props.brickId,
-				groupId: targetGroup?.group_id ?? null,
-			});
-		})
-		.filter((f) => f !== null) as CFInsertItem<FieldTypes>[];
+				return fieldInstance.getInsertField({
+					item: field,
+					brickId: props.brickId,
+					groupId: targetGroup?.group_id ?? null,
+				});
+			})
+			// TODO: remove as when Typescript 5.5 is released
+			.filter((f) => f !== null) as CFInsertItem<FieldTypes>[]
+	);
 };
 
 export default formatInsertFields;
