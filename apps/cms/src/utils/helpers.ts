@@ -5,6 +5,7 @@ import type {
 	MediaResponse,
 	LocaleValue,
 } from "@lucidcms/core/types";
+import { getLocale } from "@/translations";
 
 // biome-ignore lint/suspicious/noExplicitAny: <explanation>
 type GenericObject = Record<string, any>;
@@ -209,12 +210,11 @@ const getTranslation = (
 // Content Locale Value
 const getLocaleValue = (props: {
 	value: LocaleValue | undefined;
-	locale: string;
 	fallback?: string;
 }) => {
 	if (props.value === undefined) return props.fallback ?? "";
 	if (typeof props.value === "string") return props.value;
-	return props.value[props.locale] ?? props.fallback ?? "";
+	return props.value[getLocale()] ?? props.fallback ?? "";
 };
 
 // ---------------------------------------------

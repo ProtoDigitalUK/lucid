@@ -46,7 +46,6 @@ const DocumentsTable: Component<DocumentsTableProps> = (props) => {
 					return {
 						label: helpers.getLocaleValue({
 							value: field.labels.title,
-							locale: contentLocale(),
 							fallback: field.key,
 						}),
 						key: field.key,
@@ -56,7 +55,6 @@ const DocumentsTable: Component<DocumentsTableProps> = (props) => {
 					return {
 						label: helpers.getLocaleValue({
 							value: field.labels.title,
-							locale: contentLocale(),
 							fallback: field.key,
 						}),
 						key: field.key,

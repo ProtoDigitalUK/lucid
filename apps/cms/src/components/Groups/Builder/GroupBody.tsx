@@ -8,7 +8,6 @@ import brickStore from "@/store/brickStore";
 import CustomFields from "@/components/Groups/Builder/CustomFields";
 import DeleteDebounceButton from "@/components/Partials/DeleteDebounceButton";
 import helpers from "@/utils/helpers";
-import contentLocaleStore from "@/store/contentLocaleStore";
 
 interface GroupBodyProps {
 	state: {
@@ -34,9 +33,6 @@ export const GroupBody: Component<GroupBodyProps> = (props) => {
 
 	// -------------------------------
 	// Memos
-	const contentLocale = createMemo(
-		() => contentLocaleStore.get.contentLocale ?? "",
-	);
 	const groupId = createMemo(() => props.state.groupId);
 	const brickIndex = createMemo(() => props.state.brickIndex);
 	const parentGroupId = createMemo(() => props.state.parentGroupId);
@@ -136,7 +132,6 @@ export const GroupBody: Component<GroupBodyProps> = (props) => {
 					<h3 class="text-sm text-body">
 						{helpers.getLocaleValue({
 							value: props.state.fieldConfig.labels?.title,
-							locale: contentLocale(),
 						})}
 						-{props.state.groupIndex + 1}
 					</h3>

@@ -11,7 +11,6 @@ import type { BrickData } from "@/store/brickStore";
 import classNames from "classnames";
 import CustomFields from "@/components/Groups/Builder/CustomFields";
 import helpers from "@/utils/helpers";
-import contentLocaleStore from "@/store/contentLocaleStore";
 
 interface BrickProps {
 	state: {
@@ -34,9 +33,6 @@ export const BrickBody: Component<BrickProps> = (props) => {
 
 	// ----------------------------------
 	// Memos
-	const contentLocale = createMemo(
-		() => contentLocaleStore.get.contentLocale ?? "",
-	);
 	const allTabs = createMemo(
 		() =>
 			props.state.configFields?.filter((field) => field.type === "tab") ||
@@ -90,7 +86,6 @@ export const BrickBody: Component<BrickProps> = (props) => {
 								>
 									{helpers.getLocaleValue({
 										value: tab.labels?.title,
-										locale: contentLocale(),
 									})}
 								</button>
 							)}

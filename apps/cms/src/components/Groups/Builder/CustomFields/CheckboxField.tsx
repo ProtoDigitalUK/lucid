@@ -80,19 +80,15 @@ export const CheckboxField: Component<CheckboxFieldProps> = (props) => {
 			copy={{
 				label: helpers.getLocaleValue({
 					value: props.state.fieldConfig.labels.title,
-					locale: props.state.contentLocale,
 				}),
 				describedBy: helpers.getLocaleValue({
 					value: props.state.fieldConfig.labels.description,
-					locale: props.state.contentLocale,
 				}),
 				true: helpers.getLocaleValue({
 					value: props.state.fieldConfig.labels.true,
-					locale: props.state.contentLocale,
 				}),
 				false: helpers.getLocaleValue({
 					value: props.state.fieldConfig.labels.false,
-					locale: props.state.contentLocale,
 				}),
 			}}
 			altLocaleHasError={props.state.altLocaleHasError}

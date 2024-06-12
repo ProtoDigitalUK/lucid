@@ -10,7 +10,6 @@ import api from "@/services/api";
 import userStore from "@/store/userStore";
 import helpers from "@/utils/helpers";
 import useSearchParams, { type FilterSchema } from "@/hooks/useSearchParams";
-import contentLocaleStore from "@/store/contentLocaleStore";
 import Layout from "@/components/Groups/Layout";
 import DocumentsTable from "@/components/Tables/DocumentsTable";
 import Query from "@/components/Groups/Query";
@@ -27,9 +26,6 @@ const CollectionsDocumentsListRoute: Component = () => {
 	// ----------------------------------
 	// Memos
 	const collectionKey = createMemo(() => params.collectionKey);
-	const contentLocale = createMemo(
-		() => contentLocaleStore.get.contentLocale ?? "",
-	);
 
 	// ----------------------------------
 	// Queries
@@ -155,7 +151,6 @@ const CollectionsDocumentsListRoute: Component = () => {
 								return {
 									label: helpers.getLocaleValue({
 										value: field.labels.title,
-										locale: contentLocale(),
 										fallback: field.key,
 									}),
 									key: field.key,
@@ -166,7 +161,6 @@ const CollectionsDocumentsListRoute: Component = () => {
 								return {
 									label: helpers.getLocaleValue({
 										value: field.labels.title,
-										locale: contentLocale(),
 										fallback: field.key,
 									}),
 									key: field.key,
@@ -176,7 +170,6 @@ const CollectionsDocumentsListRoute: Component = () => {
 											value: option.value,
 											label: helpers.getLocaleValue({
 												value: option.label,
-												locale: contentLocale(),
 												fallback: T()("option_label", {
 													count: i,
 												}),
@@ -189,7 +182,6 @@ const CollectionsDocumentsListRoute: Component = () => {
 								return {
 									label: helpers.getLocaleValue({
 										value: field.labels.title,
-										locale: contentLocale(),
 										fallback: field.key,
 									}),
 									key: field.key,

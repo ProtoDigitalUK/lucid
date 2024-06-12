@@ -42,7 +42,6 @@ const PageCollection = new CollectionBuilder("page", {
 			labels: {
 				title: {
 					en: "Page title",
-					fr: "Titre de la page",
 				},
 				description: "The title of the page.",
 			},

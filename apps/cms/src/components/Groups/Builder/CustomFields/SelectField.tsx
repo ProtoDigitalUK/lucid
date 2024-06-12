@@ -68,7 +68,6 @@ export const SelectField: Component<SelectFieldProps> = (props) => {
 					return {
 						label: helpers.getLocaleValue({
 							value: o.label,
-							locale: props.state.contentLocale,
 							fallback: T()("option_label", {
 								count: i,
 							}),
@@ -95,11 +94,9 @@ export const SelectField: Component<SelectFieldProps> = (props) => {
 			copy={{
 				label: helpers.getLocaleValue({
 					value: props.state.fieldConfig.labels.title,
-					locale: props.state.contentLocale,
 				}),
 				describedBy: helpers.getLocaleValue({
 					value: props.state.fieldConfig.labels.description,
-					locale: props.state.contentLocale,
 				}),
 			}}
 			altLocaleHasError={props.state.altLocaleHasError}

@@ -26,9 +26,6 @@ export const RepeaterField: Component<RepeaterFieldProps> = (props) => {
 	const contentLocales = createMemo(
 		() => contentLocaleStore.get.locales.map((locale) => locale.code) || [],
 	);
-	const contentLocale = createMemo(
-		() => contentLocaleStore.get.contentLocale ?? "",
-	);
 	const fieldConfig = createMemo(() => props.state.fieldConfig);
 	const brickIndex = createMemo(() => props.state.brickIndex);
 	const groups = createMemo(() => props.state.fieldData?.groups || []);
@@ -71,7 +68,6 @@ export const RepeaterField: Component<RepeaterFieldProps> = (props) => {
 			>
 				{helpers.getLocaleValue({
 					value: fieldConfig().labels?.title,
-					locale: contentLocale(),
 				})}
 			</p>
 			{/* Repeater Body */}

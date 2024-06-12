@@ -4,7 +4,6 @@ import type { CollectionBrickConfig } from "@lucidcms/core/types";
 import { FaSolidCircleChevronUp, FaSolidGripLines } from "solid-icons/fa";
 import classNames from "classnames";
 import brickStore, { type BrickData } from "@/store/brickStore";
-import contentLocaleStore from "@/store/contentLocaleStore";
 import Builder from "@/components/Groups/Builder";
 import Button from "@/components/Partials/Button";
 import AddBrick from "@/components/Modals/Bricks/AddBrick";
@@ -102,9 +101,6 @@ const BuilderBrickRow: Component<BuilderBrickRowProps> = (props) => {
 	const config = createMemo(() => {
 		return props.brickConfig.find((brick) => brick.key === props.brick.key);
 	});
-	const contentLocale = createMemo(
-		() => contentLocaleStore.get.contentLocale ?? "",
-	);
 	const brickIndex = createMemo(() => {
 		return brickStore.get.bricks.findIndex(
 			(brick) => brick.id === props.brick.id,
@@ -191,7 +187,6 @@ const BuilderBrickRow: Component<BuilderBrickRowProps> = (props) => {
 					<h3>
 						{helpers.getLocaleValue({
 							value: config()?.title,
-							locale: contentLocale(),
 							fallback: config()?.key,
 						})}
 					</h3>

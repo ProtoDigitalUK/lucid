@@ -79,11 +79,9 @@ export const UserField: Component<UserFieldProps> = (props) => {
 			copy={{
 				label: helpers.getLocaleValue({
 					value: props.state.fieldConfig.labels.title,
-					locale: props.state.contentLocale,
 				}),
 				describedBy: helpers.getLocaleValue({
 					value: props.state.fieldConfig.labels.description,
-					locale: props.state.contentLocale,
 				}),
 			}}
 			name={props.state.fieldConfig.key}

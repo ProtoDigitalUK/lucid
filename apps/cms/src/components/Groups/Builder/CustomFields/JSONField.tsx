@@ -80,15 +80,12 @@ export const JSONField: Component<JSONFieldProps> = (props) => {
 			copy={{
 				label: helpers.getLocaleValue({
 					value: props.state.fieldConfig.labels.title,
-					locale: props.state.contentLocale,
 				}),
 				describedBy: helpers.getLocaleValue({
 					value: props.state.fieldConfig.labels.description,
-					locale: props.state.contentLocale,
 				}),
 				placeholder: helpers.getLocaleValue({
 					value: props.state.fieldConfig.labels.placeholder,
-					locale: props.state.contentLocale,
 				}),
 			}}
 			altLocaleHasError={props.state.altLocaleHasError}

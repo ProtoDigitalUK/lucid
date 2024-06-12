@@ -1,1 +1,2 @@
-export type LocaleValue = Record<string, string> | string;
+export type SupportedLocales = "en";
+export type LocaleValue = Record<SupportedLocales, string> | string;

@@ -3,7 +3,6 @@ import { BrickBuilder } from "@lucidcms/core";
 const BannerBrick = new BrickBuilder("banner", {
 	title: {
 		en: "Banner",
-		fr: "Bannière",
 	},
 	description: "A banner with a title and intro text",
 	preview: {
