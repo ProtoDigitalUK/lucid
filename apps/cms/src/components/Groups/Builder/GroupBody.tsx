@@ -1,18 +1,20 @@
 import T from "@/translations/index";
-import classNames from "classnames";
 import { type Component, For, createMemo, createSignal } from "solid-js";
 import type { DragDropCBT } from "@/components/Partials/DragDrop";
-import type { CustomField, FieldResponse } from "@lucidcms/core/types";
+import type { CFConfig, FieldResponse } from "@lucidcms/core/types";
+import classNames from "classnames";
 import { FaSolidGripLines, FaSolidCircleChevronUp } from "solid-icons/fa";
 import brickStore from "@/store/brickStore";
 import CustomFields from "@/components/Groups/Builder/CustomFields";
 import DeleteDebounceButton from "@/components/Partials/DeleteDebounceButton";
+import helpers from "@/utils/helpers";
+import contentLocaleStore from "@/store/contentLocaleStore";
 
 interface GroupBodyProps {
 	state: {
 		brickIndex: number;
 		fields: FieldResponse[];
-		fieldConfig: CustomField;
+		fieldConfig: CFConfig<"repeater">;
 		groupId: number | string;
 		groupOpen: 1 | 0 | null;
 		dragDrop: DragDropCBT;
@@ -32,6 +34,9 @@ export const GroupBody: Component<GroupBodyProps> = (props) => {
 
 	// -------------------------------
 	// Memos
+	const contentLocale = createMemo(
+		() => contentLocaleStore.get.contentLocale ?? "",
+	);
 	const groupId = createMemo(() => props.state.groupId);
 	const brickIndex = createMemo(() => props.state.brickIndex);
 	const parentGroupId = createMemo(() => props.state.parentGroupId);
@@ -129,8 +134,11 @@ export const GroupBody: Component<GroupBodyProps> = (props) => {
 						<FaSolidGripLines class="w-4" />
 					</button>
 					<h3 class="text-sm text-body">
-						{props.state.fieldConfig.title}-
-						{props.state.groupIndex + 1}
+						{helpers.getLocaleValue({
+							value: props.state.fieldConfig.labels?.title,
+							locale: contentLocale(),
+						})}
+						-{props.state.groupIndex + 1}
 					</h3>
 				</div>
 				<div class="flex gap-2">

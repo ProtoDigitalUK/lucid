@@ -39,10 +39,13 @@ const createMultiple = async (
 	// -------------------------------------------------------------------------------
 	// validation
 	collectionBricksServices.checks.checkDuplicateOrder(bricks);
-	await collectionBricksServices.checks.checkValidateBricks(serviceConfig, {
-		collection: data.collection,
-		bricks: bricks,
-	});
+	await collectionBricksServices.checks.checkValidateBricksFields(
+		serviceConfig,
+		{
+			collection: data.collection,
+			bricks: bricks,
+		},
+	);
 
 	// -------------------------------------------------------------------------------
 	// delete all bricks
@@ -91,10 +94,12 @@ const createMultiple = async (
 		{
 			documentId: data.documentId,
 			fields: postInsertBricks.flatMap((b) =>
+				// TODO: replace with CF instance
 				formatInsertFields({
 					groups: groups,
 					brickId: b.id,
 					fields: b.fields,
+					collection: data.collection,
 				}),
 			),
 		},

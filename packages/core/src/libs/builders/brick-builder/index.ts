@@ -1,17 +1,19 @@
 import z from "zod";
 import FieldBuilder from "../field-builder/index.js";
-import type { TabConfig } from "../field-builder/index.js";
+import TabCustomField from "../../custom-fields/fields/tab.js";
+import type { CFProps } from "../../custom-fields/types.js";
+import type { LocaleValue } from "../../../types/shared.js";
 
 export interface BrickConfigPropsT {
-	title?: string;
-	description?: string;
+	title?: LocaleValue;
+	description?: LocaleValue;
 	preview?: {
 		image?: string;
 	};
 }
 export interface BrickConfigT {
-	title: string;
-	description?: string;
+	title: LocaleValue;
+	description?: LocaleValue;
 	preview?: {
 		image?: string;
 	};
@@ -24,7 +26,7 @@ class BrickBuilder extends FieldBuilder {
 		super();
 		this.key = key;
 		this.config = {
-			title: config?.title || super.keyToTitle(key),
+			title: config?.title || key,
 			description: config?.description,
 			preview: config?.preview || {},
 		};
@@ -38,15 +40,18 @@ class BrickBuilder extends FieldBuilder {
 		}
 		return this;
 	}
-	public addTab(config: TabConfig) {
-		this.addToFields("tab", config);
+	public addTab(key: string, props?: CFProps<"tab">) {
+		this.fields.set(key, new TabCustomField(key, props));
+		this.meta.fieldKeys.push(key);
 		return this;
 	}
 }
 
 export const BrickSchema = z.object({
-	title: z.string(),
-	description: z.string().optional(),
+	title: z.union([z.string(), z.record(z.string(), z.string())]),
+	description: z
+		.union([z.string(), z.record(z.string(), z.string())])
+		.optional(),
 	preview: z
 		.object({
 			image: z.string().optional(),

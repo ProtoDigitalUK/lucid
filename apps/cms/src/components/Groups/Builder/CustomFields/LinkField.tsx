@@ -6,19 +6,20 @@ import {
 	createEffect,
 } from "solid-js";
 import type {
-	CustomField,
+	CFConfig,
 	LinkValue,
 	FieldResponse,
 	FieldErrors,
 } from "@lucidcms/core/types";
 import brickStore from "@/store/brickStore";
 import brickHelpers from "@/utils/brick-helpers";
+import helpers from "@/utils/helpers";
 import Form from "@/components/Groups/Form";
 
 interface LinkFieldProps {
 	state: {
 		brickIndex: number;
-		fieldConfig: CustomField;
+		fieldConfig: CFConfig<"link">;
 		fieldData?: FieldResponse;
 		groupId?: number | string;
 		repeaterKey?: string;
@@ -78,8 +79,14 @@ export const LinkField: Component<LinkFieldProps> = (props) => {
 					});
 				}}
 				copy={{
-					label: props.state.fieldConfig.title,
-					describedBy: props.state.fieldConfig.description,
+					label: helpers.getLocaleValue({
+						value: props.state.fieldConfig.labels.title,
+						locale: props.state.contentLocale,
+					}),
+					describedBy: helpers.getLocaleValue({
+						value: props.state.fieldConfig.labels.description,
+						locale: props.state.contentLocale,
+					}),
 				}}
 				altLocaleHasError={props.state.altLocaleHasError}
 				disabled={props.state.fieldConfig.disabled}

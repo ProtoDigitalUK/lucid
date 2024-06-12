@@ -6,18 +6,19 @@ import {
 	createEffect,
 } from "solid-js";
 import type {
-	CustomField,
+	CFConfig,
 	FieldResponse,
 	FieldErrors,
 } from "@lucidcms/core/types";
 import brickStore from "@/store/brickStore";
 import brickHelpers from "@/utils/brick-helpers";
+import helpers from "@/utils/helpers";
 import Form from "@/components/Groups/Form";
 
 interface WYSIWYGFieldProps {
 	state: {
 		brickIndex: number;
-		fieldConfig: CustomField;
+		fieldConfig: CFConfig<"wysiwyg">;
 		fieldData?: FieldResponse;
 		groupId?: number | string;
 		repeaterKey?: string;
@@ -76,9 +77,18 @@ export const WYSIWYGField: Component<WYSIWYGFieldProps> = (props) => {
 				});
 			}}
 			copy={{
-				label: props.state.fieldConfig.title,
-				placeholder: props.state.fieldConfig.placeholder,
-				describedBy: props.state.fieldConfig.description,
+				label: helpers.getLocaleValue({
+					value: props.state.fieldConfig.labels.title,
+					locale: props.state.contentLocale,
+				}),
+				describedBy: helpers.getLocaleValue({
+					value: props.state.fieldConfig.labels.description,
+					locale: props.state.contentLocale,
+				}),
+				placeholder: helpers.getLocaleValue({
+					value: props.state.fieldConfig.labels.placeholder,
+					locale: props.state.contentLocale,
+				}),
 			}}
 			altLocaleHasError={props.state.altLocaleHasError}
 			disabled={props.state.fieldConfig.disabled}

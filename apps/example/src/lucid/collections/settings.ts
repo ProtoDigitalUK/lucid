@@ -11,29 +11,34 @@ const SettingsCollection = new CollectionBuilder("settings", {
 		fixed: [SEOBrick],
 	},
 })
-	.addText({
-		key: "site_title",
-		title: "Site Title",
+	.addText("site_title", {
+		labels: {
+			title: "Site Title",
+		},
 	})
-	.addMedia({
-		key: "site_logo",
-		title: "Site Logo",
+	.addMedia("site_logo", {
+		labels: {
+			title: "Site Logo",
+		},
 	})
-	.addRepeater({
-		key: "social_links",
-		title: "Social Links",
+	.addRepeater("social_links", {
+		labels: {
+			title: "Social Links",
+		},
 	})
-	.addText({
-		key: "social_name",
-		title: "Name",
+	.addText("social_name", {
+		labels: {
+			title: "Name",
+		},
 		validation: {
 			zod: z.string(),
 			required: true,
 		},
 	})
-	.addText({
-		key: "social_url",
-		title: "URL",
+	.addText("social_url", {
+		labels: {
+			title: "URL",
+		},
 		validation: {
 			zod: z.string().url(),
 			required: true,

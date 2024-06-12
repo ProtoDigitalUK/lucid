@@ -34,20 +34,32 @@ const PageCollection = new CollectionBuilder("page", {
 		builder: [BannerBrick, IntroBrick],
 	},
 })
-	.addText({
-		key: "page_title",
-		hidden: false,
-		disabled: false,
-		collection: {
+	.addText(
+		"page_title",
+		{
+			hidden: false,
+			disabled: false,
+			labels: {
+				title: {
+					en: "Page title",
+					fr: "Titre de la page",
+				},
+				description: "The title of the page.",
+			},
+		},
+		{
 			list: true,
 			filterable: true,
 		},
-	})
-	.addUser({
-		key: "author",
-		collection: {
+	)
+	.addUser(
+		"author",
+		{
+			key: "",
+		},
+		{
 			list: true,
 		},
-	});
+	);
 
 export default PageCollection;

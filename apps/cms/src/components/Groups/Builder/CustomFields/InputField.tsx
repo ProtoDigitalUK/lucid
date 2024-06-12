@@ -4,22 +4,22 @@ import {
 	batch,
 	createMemo,
 	createEffect,
-	Show,
 } from "solid-js";
 import type {
-	CustomField,
+	CFConfig,
 	FieldResponse,
 	FieldErrors,
 } from "@lucidcms/core/types";
 import brickStore from "@/store/brickStore";
 import brickHelpers from "@/utils/brick-helpers";
+import helpers from "@/utils/helpers";
 import Form from "@/components/Groups/Form";
 
 interface InputFieldProps {
 	type: "number" | "text" | "datetime-local";
 	state: {
 		brickIndex: number;
-		fieldConfig: CustomField;
+		fieldConfig: CFConfig<"text" | "number" | "datetime">;
 		fieldData?: FieldResponse;
 		groupId?: number | string;
 		repeaterKey?: string;
@@ -90,9 +90,18 @@ export const InputField: Component<InputFieldProps> = (props) => {
 			name={props.state.fieldConfig.key}
 			type={props.type}
 			copy={{
-				label: props.state.fieldConfig.title,
-				placeholder: props.state.fieldConfig.placeholder,
-				describedBy: props.state.fieldConfig.description,
+				label: helpers.getLocaleValue({
+					value: props.state.fieldConfig.labels.title,
+					locale: props.state.contentLocale,
+				}),
+				describedBy: helpers.getLocaleValue({
+					value: props.state.fieldConfig.labels.description,
+					locale: props.state.contentLocale,
+				}),
+				placeholder: helpers.getLocaleValue({
+					value: props.state.fieldConfig.labels.placeholder,
+					locale: props.state.contentLocale,
+				}),
 			}}
 			errors={props.state.fieldError}
 			altLocaleHasError={props.state.altLocaleHasError}

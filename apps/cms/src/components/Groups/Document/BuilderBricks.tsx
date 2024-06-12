@@ -4,10 +4,12 @@ import type { CollectionBrickConfig } from "@lucidcms/core/types";
 import { FaSolidCircleChevronUp, FaSolidGripLines } from "solid-icons/fa";
 import classNames from "classnames";
 import brickStore, { type BrickData } from "@/store/brickStore";
+import contentLocaleStore from "@/store/contentLocaleStore";
 import Builder from "@/components/Groups/Builder";
 import Button from "@/components/Partials/Button";
 import AddBrick from "@/components/Modals/Bricks/AddBrick";
 import DeleteDebounceButton from "@/components/Partials/DeleteDebounceButton";
+import helpers from "@/utils/helpers";
 import DragDrop, { type DragDropCBT } from "@/components/Partials/DragDrop";
 
 interface BuilderBricksProps {
@@ -100,6 +102,9 @@ const BuilderBrickRow: Component<BuilderBrickRowProps> = (props) => {
 	const config = createMemo(() => {
 		return props.brickConfig.find((brick) => brick.key === props.brick.key);
 	});
+	const contentLocale = createMemo(
+		() => contentLocaleStore.get.contentLocale ?? "",
+	);
 	const brickIndex = createMemo(() => {
 		return brickStore.get.bricks.findIndex(
 			(brick) => brick.id === props.brick.id,
@@ -183,7 +188,13 @@ const BuilderBrickRow: Component<BuilderBrickRowProps> = (props) => {
 					>
 						<FaSolidGripLines class="w-4" />
 					</button>
-					<h3>{config()?.title}</h3>
+					<h3>
+						{helpers.getLocaleValue({
+							value: config()?.title,
+							locale: contentLocale(),
+							fallback: config()?.key,
+						})}
+					</h3>
 				</div>
 				<div class="flex gap-2">
 					<Builder.BrickImagePreviewButton brickConfig={config()} />

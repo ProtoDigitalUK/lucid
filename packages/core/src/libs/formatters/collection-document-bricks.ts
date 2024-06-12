@@ -2,6 +2,7 @@ import type { BrickResponse, FieldResponse } from "../../types/response.js";
 import type CollectionBuilder from "../builders/collection-builder/index.js";
 import type BrickBuilder from "../builders/brick-builder/index.js";
 import type { BooleanInt } from "../db/types.js";
+import Formatter from "./index.js";
 import CollectionDocumentFieldsFormatter, {
 	type FieldProp,
 } from "./collection-document-fields.js";
@@ -31,9 +32,15 @@ export default class CollectionDocumentBricksFormatter {
 		bricks: BrickPropT[];
 		collection: CollectionBuilder;
 		host: string;
-		defaultLocaleCode?: string;
-		locales: string[];
+		localisation: {
+			locales: string[];
+			default: string;
+		};
 	}): BrickResponse[] => {
+		const CollectionDocumentFieldsFormatter = Formatter.get(
+			"collection-document-fields",
+		);
+
 		return props.bricks
 			.filter((brick) => {
 				if (brick.brick_type === "collection-fields") return false;
@@ -56,14 +63,15 @@ export default class CollectionDocumentBricksFormatter {
 					order: brick.brick_order as number,
 					type: brick.brick_type as "builder" | "fixed",
 					open: brick.brick_open,
-					fields: new CollectionDocumentFieldsFormatter().formatMultiple(
+					fields: CollectionDocumentFieldsFormatter.formatMultiple(
 						{
 							fields: brick.fields,
 							groups: brick.groups,
+						},
+						{
 							host: props.host,
 							builder: builder,
-							defaultLocaleCode: props.defaultLocaleCode,
-							locales: props.locales,
+							localisation: props.localisation,
 							collectionTranslations:
 								props.collection.data.config.translations,
 						},
@@ -71,29 +79,38 @@ export default class CollectionDocumentBricksFormatter {
 				};
 			});
 	};
-	formatCollectionSudoBrick = (props: {
+	formatCollectionPseudoBrick = (props: {
 		bricks: BrickPropT[];
 		collection: CollectionBuilder;
 		host: string;
-		defaultLocaleCode?: string;
-		locales: string[];
+		localisation: {
+			locales: string[];
+			default: string;
+		};
 	}): FieldResponse[] => {
+		const CollectionDocumentFieldsFormatter = Formatter.get(
+			"collection-document-fields",
+		);
+
 		return props.bricks
 			.filter((brick) => {
 				if (brick.brick_type !== "collection-fields") return false;
 				return true;
 			})
 			.flatMap((brick) =>
-				new CollectionDocumentFieldsFormatter().formatMultiple({
-					fields: brick.fields,
-					groups: brick.groups,
-					host: props.host,
-					builder: props.collection,
-					defaultLocaleCode: props.defaultLocaleCode,
-					locales: props.locales,
-					collectionTranslations:
-						props.collection.data.config.translations,
-				}),
+				CollectionDocumentFieldsFormatter.formatMultiple(
+					{
+						fields: brick.fields,
+						groups: brick.groups,
+					},
+					{
+						host: props.host,
+						builder: props.collection,
+						collectionTranslations:
+							props.collection.data.config.translations,
+						localisation: props.localisation,
+					},
+				),
 			);
 	};
 	static swagger = {

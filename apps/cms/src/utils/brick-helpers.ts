@@ -1,6 +1,7 @@
 import brickStore from "@/store/brickStore";
 import type {
-	CustomField,
+	CFConfig,
+	FieldTypes,
 	FieldResponse,
 	FieldResponseMeta,
 } from "@lucidcms/core/types";
@@ -68,12 +69,12 @@ const findFieldRecursive = (props: {
 	return null;
 };
 
-const getCollectionSudoBrickFields = () => {
-	const sudoBrick = brickStore.get.bricks.find(
+const getCollectionPseudoBrickFields = () => {
+	const pseudoBrick = brickStore.get.bricks.find(
 		(b) => b.type === "collection-fields",
 	);
-	if (!sudoBrick) return [];
-	return sudoBrick.fields;
+	if (!pseudoBrick) return [];
+	return pseudoBrick.fields;
 };
 
 const getUpsertBricks = () =>
@@ -91,7 +92,7 @@ const customFieldId = (props: {
 };
 
 const getFieldValue = <T>(props: {
-	fieldConfig: CustomField;
+	fieldConfig: CFConfig<Exclude<FieldTypes, "repeater" | "tab">>;
 	fieldData?: FieldResponse;
 	contentLocale: string;
 	collectionTranslations?: boolean;
@@ -111,7 +112,7 @@ const getFieldValue = <T>(props: {
 };
 
 const getFieldMeta = <T extends FieldResponseMeta>(props: {
-	fieldConfig: CustomField;
+	fieldConfig: CFConfig<Exclude<FieldTypes, "repeater" | "tab">>;
 	fieldData?: FieldResponse;
 	contentLocale: string;
 	collectionTranslations?: boolean;
@@ -136,7 +137,7 @@ const getFieldMeta = <T extends FieldResponseMeta>(props: {
 // Exports
 const brickHelpers = {
 	findFieldRecursive,
-	getCollectionSudoBrickFields,
+	getCollectionPseudoBrickFields,
 	getUpsertBricks,
 	customFieldId,
 	getFieldValue,

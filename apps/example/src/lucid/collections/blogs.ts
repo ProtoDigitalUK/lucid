@@ -7,30 +7,24 @@ const BlogCollection = new CollectionBuilder("blog", {
 	description: "Manage your blogs.",
 	translations: true,
 })
-	.addText({
-		key: "page_title",
-		hidden: false,
-		disabled: false,
-		collection: {
+	.addText(
+		"page_title",
+		{
+			hidden: false,
+			disabled: false,
+		},
+		{
 			list: true,
 			filterable: true,
 		},
+	)
+	.addTextarea("page_excerpt", undefined, {
+		list: true,
+		filterable: true,
 	})
-	.addTextarea({
-		key: "page_excerpt",
-		collection: {
-			list: true,
-			filterable: true,
-		},
+	.addUser("author", undefined, {
+		list: true,
 	})
-	.addUser({
-		key: "author",
-		collection: {
-			list: true,
-		},
-	})
-	.addWysiwyg({
-		key: "content",
-	});
+	.addWysiwyg("content");
 
 export default BlogCollection;

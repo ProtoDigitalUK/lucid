@@ -1,9 +1,10 @@
 import T from "@/translations/index";
 import classNames from "classnames";
 import { type Component, For, createMemo, Show, Switch, Match } from "solid-js";
-import type { CustomField, FieldResponse } from "@lucidcms/core/types";
+import type { CFConfig, FieldResponse } from "@lucidcms/core/types";
 import contentLocaleStore from "@/store/contentLocaleStore";
 import brickStore from "@/store/brickStore";
+import helpers from "@/utils/helpers";
 import Builder from "@/components/Groups/Builder";
 import Button from "@/components/Partials/Button";
 import DragDrop from "@/components/Partials/DragDrop";
@@ -11,7 +12,7 @@ import DragDrop from "@/components/Partials/DragDrop";
 interface RepeaterFieldProps {
 	state: {
 		brickIndex: number;
-		fieldConfig: CustomField;
+		fieldConfig: CFConfig<"repeater">;
 		fieldData?: FieldResponse;
 		groupId?: number | string;
 		parentRepeaterKey?: string;
@@ -24,6 +25,9 @@ export const RepeaterField: Component<RepeaterFieldProps> = (props) => {
 	// Memos
 	const contentLocales = createMemo(
 		() => contentLocaleStore.get.locales.map((locale) => locale.code) || [],
+	);
+	const contentLocale = createMemo(
+		() => contentLocaleStore.get.contentLocale ?? "",
 	);
 	const fieldConfig = createMemo(() => props.state.fieldConfig);
 	const brickIndex = createMemo(() => props.state.brickIndex);
@@ -65,7 +69,10 @@ export const RepeaterField: Component<RepeaterFieldProps> = (props) => {
 					"block text-sm transition-colors duration-200 ease-in-out mb-2"
 				}
 			>
-				{fieldConfig().title}
+				{helpers.getLocaleValue({
+					value: fieldConfig().labels?.title,
+					locale: contentLocale(),
+				})}
 			</p>
 			{/* Repeater Body */}
 			<Switch>

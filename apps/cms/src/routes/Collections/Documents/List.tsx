@@ -1,10 +1,16 @@
 import T from "@/translations";
 import { useParams, useNavigate } from "@solidjs/router";
 import { type Component, createMemo, createEffect } from "solid-js";
-import type { CollectionResponse, CustomField } from "@lucidcms/core/types";
+import type {
+	CollectionResponse,
+	CFConfig,
+	FieldTypes,
+} from "@lucidcms/core/types";
 import api from "@/services/api";
 import userStore from "@/store/userStore";
+import helpers from "@/utils/helpers";
 import useSearchParams, { type FilterSchema } from "@/hooks/useSearchParams";
+import contentLocaleStore from "@/store/contentLocaleStore";
 import Layout from "@/components/Groups/Layout";
 import DocumentsTable from "@/components/Tables/DocumentsTable";
 import Query from "@/components/Groups/Query";
@@ -21,6 +27,9 @@ const CollectionsDocumentsListRoute: Component = () => {
 	// ----------------------------------
 	// Memos
 	const collectionKey = createMemo(() => params.collectionKey);
+	const contentLocale = createMemo(
+		() => contentLocaleStore.get.contentLocale ?? "",
+	);
 
 	// ----------------------------------
 	// Queries
@@ -36,18 +45,18 @@ const CollectionsDocumentsListRoute: Component = () => {
 	// ----------------------------------
 	// Memos
 	const collectionFieldInclude = createMemo(() => {
-		const fieldsRes: CustomField[] = [];
+		const fieldsRes: CFConfig<FieldTypes>[] = [];
 
-		const fieldRecursive = (fields?: CustomField[]) => {
+		const fieldRecursive = (fields?: CFConfig<FieldTypes>[]) => {
 			if (!fields) return;
 			for (const field of fields) {
 				if (field.type === "repeater" && field.fields) {
 					fieldRecursive(field.fields);
 					return;
 				}
-				if (field.collection?.list !== true) return;
-
-				fieldsRes.push(field);
+				if (collection.data?.data.fieldIncludes.includes(field.key)) {
+					fieldsRes.push(field);
+				}
 			}
 		};
 		fieldRecursive(collection.data?.data.fields);
@@ -55,18 +64,18 @@ const CollectionsDocumentsListRoute: Component = () => {
 		return fieldsRes;
 	});
 	const collectionFieldFilter = createMemo(() => {
-		const fieldsRes: CustomField[] = [];
+		const fieldsRes: CFConfig<FieldTypes>[] = [];
 
-		const fieldRecursive = (fields?: CustomField[]) => {
+		const fieldRecursive = (fields?: CFConfig<FieldTypes>[]) => {
 			if (!fields) return;
 			for (const field of fields) {
 				if (field.type === "repeater" && field.fields) {
 					fieldRecursive(field.fields);
 					return;
 				}
-				if (field.collection?.filterable !== true) return;
-
-				fieldsRes.push(field);
+				if (collection.data?.data.fieldFilters.includes(field.key)) {
+					fieldsRes.push(field);
+				}
 			}
 		};
 		fieldRecursive(collection.data?.data.fields);
@@ -144,25 +153,45 @@ const CollectionsDocumentsListRoute: Component = () => {
 						switch (field.type) {
 							case "checkbox": {
 								return {
-									label: field.title || field.key,
+									label: helpers.getLocaleValue({
+										value: field.labels.title,
+										locale: contentLocale(),
+										fallback: field.key,
+									}),
 									key: field.key,
 									type: "boolean",
 								};
 							}
 							case "select": {
 								return {
-									label: field.title || field.key,
+									label: helpers.getLocaleValue({
+										value: field.labels.title,
+										locale: contentLocale(),
+										fallback: field.key,
+									}),
 									key: field.key,
 									type: "select",
-									options: field.options?.map((option) => ({
-										value: option.value,
-										label: option.label,
-									})),
+									options: field.options?.map(
+										(option, i) => ({
+											value: option.value,
+											label: helpers.getLocaleValue({
+												value: option.label,
+												locale: contentLocale(),
+												fallback: T()("option_label", {
+													count: i,
+												}),
+											}),
+										}),
+									),
 								};
 							}
 							default: {
 								return {
-									label: field.title || field.key,
+									label: helpers.getLocaleValue({
+										value: field.labels.title,
+										locale: contentLocale(),
+										fallback: field.key,
+									}),
 									key: field.key,
 									type: "text",
 								};

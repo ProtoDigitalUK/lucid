@@ -6,17 +6,19 @@ import {
 	onMount,
 	Show,
 } from "solid-js";
-import classNames from "classnames";
-import type { CustomField } from "@lucidcms/core/types";
+import type { CFConfig, FieldTypes } from "@lucidcms/core/types";
 import type { BrickData } from "@/store/brickStore";
-import CustomFields from "./CustomFields";
+import classNames from "classnames";
+import CustomFields from "@/components/Groups/Builder/CustomFields";
+import helpers from "@/utils/helpers";
+import contentLocaleStore from "@/store/contentLocaleStore";
 
 interface BrickProps {
 	state: {
 		open: boolean;
 		brick: BrickData;
 		brickIndex: number;
-		configFields: CustomField[];
+		configFields: CFConfig<FieldTypes>[];
 		labelledby?: string;
 	};
 	options: {
@@ -32,7 +34,9 @@ export const BrickBody: Component<BrickProps> = (props) => {
 
 	// ----------------------------------
 	// Memos
-
+	const contentLocale = createMemo(
+		() => contentLocaleStore.get.contentLocale ?? "",
+	);
 	const allTabs = createMemo(
 		() =>
 			props.state.configFields?.filter((field) => field.type === "tab") ||
@@ -84,7 +88,10 @@ export const BrickBody: Component<BrickProps> = (props) => {
 									onClick={() => setActiveTab(tab.key)}
 									type="button"
 								>
-									{tab.title}
+									{helpers.getLocaleValue({
+										value: tab.labels?.title,
+										locale: contentLocale(),
+									})}
 								</button>
 							)}
 						</For>

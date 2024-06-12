@@ -1,15 +1,12 @@
 import { BrickBuilder } from "@lucidcms/core";
 
 const IntroBrick = new BrickBuilder("intro")
-	.addTab({
-		title: "Content",
-		key: "content_tab",
+	.addTab("content_tab", {
+		labels: {
+			title: "Content",
+		},
 	})
-	.addText({
-		key: "title",
-	})
-	.addWysiwyg({
-		key: "intro",
-	});
+	.addText("title")
+	.addWysiwyg("intro");
 
 export default IntroBrick;

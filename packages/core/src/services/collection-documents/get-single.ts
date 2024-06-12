@@ -58,10 +58,12 @@ const getSingle = async (serviceConfig: ServiceConfig, data: ServiceData) => {
 			bricks: bricksRes.bricks,
 			fields: bricksRes.fields,
 			host: serviceConfig.config.host,
-			defaultLocaleCode: serviceConfig.config.localisation.defaultLocale,
-			locales: serviceConfig.config.localisation.locales.map(
-				(l) => l.code,
-			),
+			localisation: {
+				locales: serviceConfig.config.localisation.locales.map(
+					(l) => l.code,
+				),
+				default: serviceConfig.config.localisation.defaultLocale,
+			},
 		});
 	}
 
@@ -71,8 +73,12 @@ const getSingle = async (serviceConfig: ServiceConfig, data: ServiceData) => {
 		bricks: [],
 		fields: [],
 		host: serviceConfig.config.host,
-		defaultLocaleCode: serviceConfig.config.localisation.defaultLocale,
-		locales: serviceConfig.config.localisation.locales.map((l) => l.code),
+		localisation: {
+			locales: serviceConfig.config.localisation.locales.map(
+				(l) => l.code,
+			),
+			default: serviceConfig.config.localisation.defaultLocale,
+		},
 	});
 };
 

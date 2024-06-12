@@ -5,8 +5,9 @@ import type { TableRowProps } from "@/types/components";
 import type {
 	CollectionDocumentResponse,
 	CollectionResponse,
-	CustomField,
+	CFConfig,
 	UserMeta,
+	FieldTypes,
 } from "@lucidcms/core/types";
 import brickHelpers from "@/utils/brick-helpers";
 import userStore from "@/store/userStore";
@@ -20,7 +21,7 @@ import PillCol from "../Columns/PillCol";
 interface DocumentRowProps extends TableRowProps {
 	document: CollectionDocumentResponse;
 	collection: CollectionResponse;
-	fieldInclude: CustomField[];
+	fieldInclude: CFConfig<FieldTypes>[];
 	include: boolean[];
 	rowTarget: ReturnType<typeof useRowTarget<"delete">>;
 	contentLocale?: string;
@@ -56,15 +57,22 @@ const DocumentRow: Component<DocumentRowProps> = (props) => {
 			]}
 		>
 			<For each={props.fieldInclude}>
-				{(field, i) => (
-					<DocumentDynamicColumns
-						field={field}
-						document={props.document}
-						include={props.include}
-						index={i()}
-						collectionTranslations={props.collection.translations}
-					/>
-				)}
+				{(field, i) => {
+					if (field.type === "tab") return null;
+					if (field.type === "repeater") return null;
+
+					return (
+						<DocumentDynamicColumns
+							field={field}
+							document={props.document}
+							include={props.include}
+							index={i()}
+							collectionTranslations={
+								props.collection.translations
+							}
+						/>
+					);
+				}}
 			</For>
 			<DateCol
 				date={props.document.updatedAt}
@@ -75,7 +83,7 @@ const DocumentRow: Component<DocumentRowProps> = (props) => {
 };
 
 const DocumentDynamicColumns: Component<{
-	field: CustomField;
+	field: CFConfig<Exclude<FieldTypes, "repeater" | "tab">>;
 	document: CollectionDocumentResponse;
 	include: boolean[];
 	index: number;

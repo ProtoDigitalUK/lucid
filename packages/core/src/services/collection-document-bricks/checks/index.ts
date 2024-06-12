@@ -1,7 +1,7 @@
-import checkValidateBricks from "./check-validate-bricks.js";
+import checkValidateBricksFields from "./check-validate-bricks-fields.js";
 import checkDuplicateOrder from "./check-duplicate-order.js";
 
 export default {
-	checkValidateBricks,
+	checkValidateBricksFields,
 	checkDuplicateOrder,
 };

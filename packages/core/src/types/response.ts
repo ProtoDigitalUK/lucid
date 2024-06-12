@@ -1,10 +1,15 @@
 import type { BooleanInt } from "../libs/db/types.js";
 import type {
-	CustomField,
-	FieldTypes,
-} from "../libs/builders/field-builder/types.js";
-import type { CollectionBrickConfig } from "../libs/builders/collection-builder/index.js";
+	CollectionBrickConfig,
+	FieldFilters,
+} from "../libs/builders/collection-builder/index.js";
 import type { ErrorResult } from "./errors.js";
+import type {
+	CFConfig,
+	FieldTypes,
+	FieldResponseMeta,
+	FieldResponseValue,
+} from "../libs/custom-fields/types.js";
 
 export interface UserResponse {
 	id: number;
@@ -154,7 +159,9 @@ export interface CollectionResponse {
 	translations: boolean;
 	fixedBricks: Array<CollectionBrickConfig>;
 	builderBricks: Array<CollectionBrickConfig>;
-	fields: Array<CustomField>;
+	fields: CFConfig<FieldTypes>[];
+	fieldIncludes: string[];
+	fieldFilters: string[];
 }
 
 export interface BrickResponse {
@@ -181,18 +188,6 @@ export interface FieldGroupResponse {
 	open: BooleanInt | null;
 	fields: Array<FieldResponse>;
 }
-
-export type FieldResponseValue =
-	| string
-	| number
-	| boolean
-	| null
-	| undefined
-	| Record<string, unknown>
-	| LinkValue
-	| MediaValue;
-
-export type FieldResponseMeta = null | undefined | MediaMeta | UserMeta;
 
 export interface LinkValue {
 	url: string | null;

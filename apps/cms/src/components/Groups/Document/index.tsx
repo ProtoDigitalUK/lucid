@@ -1,11 +1,11 @@
 import { FixedBricks } from "./FixedBricks";
 import { BuilderBricks } from "./BuilderBricks";
-import { CollectionSudoBrick } from "./CollectionSudoBrick";
+import { CollectionPseudoBrick } from "./CollectionPseudoBrick";
 
 const Document = {
 	FixedBricks,
 	BuilderBricks,
-	CollectionSudoBrick,
+	CollectionPseudoBrick: CollectionPseudoBrick,
 };
 
 export default Document;

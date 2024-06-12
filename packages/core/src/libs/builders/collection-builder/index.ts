@@ -1,21 +1,14 @@
 import z from "zod";
-import FieldBuilder, {
-	type FieldTypes,
-	type CustomField,
-} from "../field-builder/index.js";
+import FieldBuilder from "../field-builder/index.js";
 import type BrickBuilder from "../brick-builder/index.js";
 import type {
-	CollectionTextConfig,
-	FieldCollectionConfig,
-	CollectionNumberConfig,
-	CollectionCheckboxConfig,
-	CollectionSelectConfig,
-	CollectionTextareaConfig,
-	CollectionDateTimeConfig,
-	CollectionUserConfig,
-	CollectionMediaConfig,
-} from "./types.js";
+	FieldTypes,
+	CFProps,
+	CFConfig,
+} from "../../custom-fields/types.js";
 import type { CollectionDocumentBuilderHooks } from "../../../types/hooks.js";
+import type { RequestQueryParsed } from "../../../middleware/validate-query.js";
+import type { CFColumn } from "../../custom-fields/types.js";
 
 export default class CollectionBuilder extends FieldBuilder {
 	key: string;
@@ -40,45 +33,103 @@ export default class CollectionBuilder extends FieldBuilder {
 	}
 	// ------------------------------------
 	// Builder Methods
-	addText(config: CollectionTextConfig) {
-		this.#fieldCollectionHelper(config.key, "text", config.collection);
-		super.addText(config);
+	addText(
+		key: string,
+		props?: CFProps<"text">,
+		collection?: FieldCollectionConfig,
+	) {
+		this.#fieldCollectionHelper(key, "text", collection);
+		super.addText(key, props);
 		return this;
 	}
-	addNumber(config: CollectionNumberConfig) {
-		this.#fieldCollectionHelper(config.key, "number", config.collection);
-		super.addNumber(config);
+	addNumber(
+		key: string,
+		props?: CFProps<"number">,
+		collection?: FieldCollectionConfig,
+	) {
+		this.#fieldCollectionHelper(key, "number", collection);
+		super.addNumber(key, props);
 		return this;
 	}
-	addCheckbox(config: CollectionCheckboxConfig) {
-		this.#fieldCollectionHelper(config.key, "checkbox", config.collection);
-		super.addCheckbox(config);
+	addCheckbox(
+		key: string,
+		props?: CFProps<"checkbox">,
+		collection?: FieldCollectionConfig,
+	) {
+		this.#fieldCollectionHelper(key, "checkbox", collection);
+		super.addCheckbox(key, props);
 		return this;
 	}
-	addSelect(config: CollectionSelectConfig) {
-		this.#fieldCollectionHelper(config.key, "select", config.collection);
-		super.addSelect(config);
+	addSelect(
+		key: string,
+		props?: CFProps<"select">,
+		collection?: FieldCollectionConfig,
+	) {
+		this.#fieldCollectionHelper(key, "select", collection);
+		super.addSelect(key, props);
 		return this;
 	}
-	addTextarea(config: CollectionTextareaConfig) {
-		this.#fieldCollectionHelper(config.key, "textarea", config.collection);
-		super.addTextarea(config);
+	addTextarea(
+		key: string,
+		props?: CFProps<"textarea">,
+		collection?: FieldCollectionConfig,
+	) {
+		this.#fieldCollectionHelper(key, "textarea", collection);
+		super.addTextarea(key, props);
 		return this;
 	}
-	addDateTime(config: CollectionDateTimeConfig) {
-		this.#fieldCollectionHelper(config.key, "datetime", config.collection);
-		super.addDateTime(config);
+	addDateTime(
+		key: string,
+		props?: CFProps<"datetime">,
+		collection?: FieldCollectionConfig,
+	) {
+		this.#fieldCollectionHelper(key, "datetime", collection);
+		super.addDateTime(key, props);
 		return this;
 	}
-	addUser(config: CollectionUserConfig) {
-		this.#fieldCollectionHelper(config.key, "user", config.collection);
-		super.addUser(config);
+	addUser(
+		key: string,
+		props?: CFProps<"user">,
+		collection?: FieldCollectionConfig,
+	) {
+		this.#fieldCollectionHelper(key, "user", collection);
+		super.addUser(key, props);
 		return this;
 	}
-	addMedia(config: CollectionMediaConfig) {
-		this.#fieldCollectionHelper(config.key, "media", config.collection);
-		super.addMedia(config);
+	addMedia(
+		key: string,
+		props?: CFProps<"media">,
+		collection?: FieldCollectionConfig,
+	) {
+		this.#fieldCollectionHelper(key, "media", collection);
+		super.addMedia(key, props);
 		return this;
+	}
+	// ------------------------------------
+	// Public Methods
+	documentFilters(
+		filters: RequestQueryParsed["filter"],
+	): DocumentFiltersResponse[] {
+		if (!filters) return [];
+
+		return this.filterableFieldKeys.reduce<DocumentFiltersResponse[]>(
+			(acc, field) => {
+				const filterValue = filters[field.key];
+				if (filterValue === undefined) return acc;
+
+				const fieldInstance = this.fields.get(field.key);
+				if (!fieldInstance) return acc;
+
+				acc.push({
+					key: field.key,
+					value: filterValue,
+					column: fieldInstance.column,
+				});
+
+				return acc;
+			},
+			[],
+		);
 	}
 	// ------------------------------------
 	// Private Methods
@@ -90,6 +141,7 @@ export default class CollectionBuilder extends FieldBuilder {
 				bricks.findIndex((b) => b.key === brick.key) === index,
 		);
 	};
+	// TODO: this can be a getter and tallied up
 	#fieldCollectionHelper = (
 		key: string,
 		type: FieldTypes,
@@ -121,7 +173,7 @@ export default class CollectionBuilder extends FieldBuilder {
 			},
 		};
 	}
-	get fixedBricks(): Array<CollectionBrickConfig> {
+	get fixedBricks(): CollectionBrickConfig[] {
 		return (
 			this.config.bricks?.fixed?.map((brick) => ({
 				key: brick.key,
@@ -132,7 +184,7 @@ export default class CollectionBuilder extends FieldBuilder {
 			})) ?? []
 		);
 	}
-	get builderBricks(): Array<CollectionBrickConfig> {
+	get builderBricks(): CollectionBrickConfig[] {
 		return (
 			this.config.bricks?.builder?.map((brick) => ({
 				key: brick.key,
@@ -175,7 +227,12 @@ export const CollectionConfigSchema = z.object({
 		.optional(),
 });
 
-interface CollectionConfigSchemaT
+export interface FieldCollectionConfig {
+	list?: true;
+	filterable?: true;
+}
+
+export interface CollectionConfigSchemaT
 	extends z.infer<typeof CollectionConfigSchema> {
 	hooks?: CollectionDocumentBuilderHooks[];
 	bricks?: {
@@ -210,5 +267,11 @@ export interface CollectionBrickConfig {
 	title: BrickBuilder["config"]["title"];
 	description: BrickBuilder["config"]["description"];
 	preview: BrickBuilder["config"]["preview"];
-	fields: CustomField[];
+	fields: CFConfig<FieldTypes>[];
+}
+
+export interface DocumentFiltersResponse {
+	key: string;
+	value: string | string[];
+	column: CFColumn<FieldTypes>;
 }

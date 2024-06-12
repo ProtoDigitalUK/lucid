@@ -7,12 +7,12 @@ import type {
 	OperandValueExpressionOrList,
 	UpdateQueryBuilder,
 } from "kysely";
-import type { CollectionFiltersResponse } from "../../utils/field-helpers.js";
+import type { DocumentFiltersResponse } from "../builders/collection-builder/index.js";
 import type { LucidDB } from "./types.js";
 
 export interface QueryBuilderConfigT<DB, Table extends keyof DB> {
 	requestQuery: RequestQueryParsed;
-	collectionDocumentFilters?: CollectionFiltersResponse[];
+	documentFilters?: DocumentFiltersResponse[];
 	meta: {
 		filters: {
 			queryKey: string; // e.g. "filter[status]" - the object key for the specific filter
@@ -84,11 +84,8 @@ const queryBuilder = <DB, Table extends keyof DB, O, T>(
 	}
 
 	// collection filters
-	if (
-		config.collectionDocumentFilters &&
-		config.collectionDocumentFilters.length > 0
-	) {
-		for (const { key, value, column } of config.collectionDocumentFilters) {
+	if (config.documentFilters && config.documentFilters.length > 0) {
+		for (const { key, value, column } of config.documentFilters) {
 			mainQuery = mainQuery.where(({ eb, and }) =>
 				and([
 					// @ts-expect-error
