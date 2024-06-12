@@ -1,4 +1,3 @@
-import z from "zod";
 import FieldBuilder from "../field-builder/index.js";
 import type BrickBuilder from "../brick-builder/index.js";
 import type {
@@ -6,6 +5,8 @@ import type {
 	CFProps,
 	CFConfig,
 } from "../../custom-fields/types.js";
+import type z from "zod";
+import type CollectionConfigSchema from "./schema.js";
 import type { CollectionDocumentBuilderHooks } from "../../../types/hooks.js";
 import type { RequestQueryParsed } from "../../../middleware/validate-query.js";
 import type { CFColumn } from "../../custom-fields/types.js";
@@ -141,7 +142,6 @@ export default class CollectionBuilder extends FieldBuilder {
 				bricks.findIndex((b) => b.key === brick.key) === index,
 		);
 	};
-	// TODO: this can be a getter and tallied up
 	#fieldCollectionHelper = (
 		key: string,
 		type: FieldTypes,
@@ -154,6 +154,7 @@ export default class CollectionBuilder extends FieldBuilder {
 				type,
 			});
 	};
+
 	// ------------------------------------
 	// Getters
 	get data(): CollectionDataT {
@@ -202,30 +203,6 @@ export default class CollectionBuilder extends FieldBuilder {
 		];
 	}
 }
-
-export const CollectionConfigSchema = z.object({
-	mode: z.enum(["single", "multiple"]),
-
-	title: z.string(),
-	singular: z.string(),
-	description: z.string().optional(),
-	translations: z.boolean().default(false).optional(),
-	locked: z.boolean().default(false).optional(),
-	hooks: z
-		.array(
-			z.object({
-				event: z.string(),
-				handler: z.unknown(),
-			}),
-		)
-		.optional(),
-	bricks: z
-		.object({
-			fixed: z.array(z.unknown()).optional(),
-			builder: z.array(z.unknown()).optional(),
-		})
-		.optional(),
-});
 
 export interface FieldCollectionConfig {
 	list?: true;

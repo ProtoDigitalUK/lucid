@@ -5,8 +5,8 @@ import { ZodError } from "zod";
 import ConfigSchema from "./config-schema.js";
 import mergeConfig from "./merge-config.js";
 import defaultConfig from "./default-config.js";
-import { CollectionConfigSchema } from "../builders/collection-builder/index.js";
-import { BrickSchema } from "../builders/brick-builder/index.js";
+import CollectionConfigSchema from "../builders/collection-builder/schema.js";
+import BrickConfigSchema from "../builders/brick-builder/schema.js";
 import { LucidError } from "../../utils/error-handler.js";
 import CustomFieldSchema from "../custom-fields/schema.js";
 import lucidLogger, { LoggerScopes } from "../logging/index.js";
@@ -65,7 +65,7 @@ const lucidConfig = async (config: LucidConfig) => {
 			);
 
 			for (const brick of collection.brickInstances) {
-				BrickSchema.parse(brick.config);
+				BrickConfigSchema.parse(brick.config);
 				for (const field of brick.flatFields)
 					CustomFieldSchema.parse(field);
 				checks.checkDuplicateFieldKeys(

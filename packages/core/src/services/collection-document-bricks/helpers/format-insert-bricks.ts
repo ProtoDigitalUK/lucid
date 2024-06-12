@@ -1,5 +1,4 @@
 import type CollectionBuilder from "../../../libs/builders/collection-builder/index.js";
-import type { BooleanInt } from "../../../libs/db/types.js";
 import type { BrickSchema } from "../../../schemas/collection-bricks.js";
 import type { FieldSchemaType } from "../../../schemas/collection-fields.js";
 import type { Config } from "../../../types.js";

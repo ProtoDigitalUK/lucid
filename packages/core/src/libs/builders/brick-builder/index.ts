@@ -1,4 +1,3 @@
-import z from "zod";
 import FieldBuilder from "../field-builder/index.js";
 import TabCustomField from "../../custom-fields/fields/tab.js";
 import type { CFProps } from "../../custom-fields/types.js";
@@ -46,17 +45,5 @@ class BrickBuilder extends FieldBuilder {
 		return this;
 	}
 }
-
-export const BrickSchema = z.object({
-	title: z.union([z.string(), z.record(z.string(), z.string())]),
-	description: z
-		.union([z.string(), z.record(z.string(), z.string())])
-		.optional(),
-	preview: z
-		.object({
-			image: z.string().optional(),
-		})
-		.optional(),
-});
 
 export default BrickBuilder;
