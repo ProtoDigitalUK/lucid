@@ -198,7 +198,7 @@ export const swaggerQueryString = (config: SwaggerQueryStringConfig) => {
 			queryString.properties[`filter[${filter.key}]`] = {
 				type: "string",
 				enum: filter.enum,
-				// description: T("swagger_query_string_filter_description"),
+				description: T("swagger_query_string_filter_description"),
 			};
 		}
 	}
@@ -225,6 +225,5 @@ export const swaggerQueryString = (config: SwaggerQueryStringConfig) => {
 		};
 	}
 
-	// TODO: fix function, runs before validation middleware so query param format is wrong
-	return {};
+	return queryString;
 };
