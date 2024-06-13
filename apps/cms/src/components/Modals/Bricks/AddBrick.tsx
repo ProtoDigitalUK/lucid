@@ -4,6 +4,7 @@ import classNames from "classnames";
 import type { CollectionBrickConfig } from "@lucidcms/core/types";
 import brickIcon from "@/assets/svgs/default-brick-icon-white.svg";
 import brickStore from "@/store/brickStore";
+import helpers from "@/utils/helpers";
 import Modal from "@/components/Groups/Modal";
 import BrickPreview from "@/components/Partials/BrickPreview";
 import Tooltip from "@/components/Partials/Tooltip";
@@ -32,7 +33,11 @@ const AddBrick: Component<AddBrickProps> = (props) => {
 	const brickList = createMemo(() => {
 		return props.data.brickConfig.filter((brickConfig) => {
 			if (!getSearchQuery()) return true;
-			return brickConfig.title
+			return helpers
+				.getLocaleValue({
+					value: brickConfig.title,
+					fallback: brickConfig.key,
+				})
 				.toLowerCase()
 				.includes(getSearchQuery().toLowerCase());
 		});
@@ -122,11 +127,14 @@ const AddBrick: Component<AddBrickProps> = (props) => {
 									>
 										<img
 											src={brickIcon}
-											alt={brickConfig.title}
+											alt={brickConfig.key}
 											class="w-6 mr-2.5"
 											loading="lazy"
 										/>
-										{brickConfig.title}
+										{helpers.getLocaleValue({
+											value: brickConfig.title,
+											fallback: brickConfig.key,
+										})}
 									</button>
 								</li>
 							)}
@@ -140,7 +148,10 @@ const AddBrick: Component<AddBrickProps> = (props) => {
 							<BrickPreview
 								data={{
 									brick: {
-										title: highlightedBrick()?.title || "",
+										title: helpers.getLocaleValue({
+											value: highlightedBrick()?.title,
+											fallback: highlightedBrick()?.key,
+										}),
 										image: highlightedBrick()?.preview
 											?.image,
 									},
@@ -151,7 +162,12 @@ const AddBrick: Component<AddBrickProps> = (props) => {
 							/>
 						</div>
 						<Show when={highlightedBrick()?.description}>
-							<Tooltip copy={highlightedBrick()?.description} />
+							<Tooltip
+								copy={helpers.getLocaleValue({
+									value: highlightedBrick()?.description,
+									fallback: highlightedBrick()?.key,
+								})}
+							/>
 						</Show>
 					</div>
 				</div>
