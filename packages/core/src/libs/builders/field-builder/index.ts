@@ -1,5 +1,3 @@
-import z from "zod";
-
 import type CustomField from "../../custom-fields/custom-field.js";
 import CheckboxCustomField from "../../custom-fields/fields/checkbox.js";
 import ColourCustomField from "../../custom-fields/fields/colour.js";
