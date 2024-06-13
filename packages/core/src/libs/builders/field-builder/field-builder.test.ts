@@ -11,6 +11,7 @@ test("all fields should be added", async () => {
 		.addSelect("select_test")
 		.addJSON("json_test")
 		.addColour("colour_test")
+		.addMedia("media_test")
 		.addDateTime("datetime_test")
 		.addLink("link_test")
 		.addUser("user_test")
@@ -18,7 +19,7 @@ test("all fields should be added", async () => {
 		.addText("repeater_text_test")
 		.endRepeater();
 
-	expect(instance.fields.size).toBe(13);
+	expect(instance.fields.size).toBe(14);
 
 	expect(instance.fields.get("text_test")).toBeDefined();
 	expect(instance.fields.get("textarea_test")).toBeDefined();
@@ -28,6 +29,7 @@ test("all fields should be added", async () => {
 	expect(instance.fields.get("select_test")).toBeDefined();
 	expect(instance.fields.get("json_test")).toBeDefined();
 	expect(instance.fields.get("colour_test")).toBeDefined();
+	expect(instance.fields.get("media_test")).toBeDefined();
 	expect(instance.fields.get("datetime_test")).toBeDefined();
 	expect(instance.fields.get("link_test")).toBeDefined();
 	expect(instance.fields.get("user_test")).toBeDefined();
@@ -96,6 +98,7 @@ test("flat fields should return correct config", async () => {
 		.addSelect("select_test")
 		.addJSON("json_test")
 		.addColour("colour_test")
+		.addMedia("media_test")
 		.addDateTime("datetime_test")
 		.addLink("link_test")
 		.addUser("user_test")
@@ -103,7 +106,7 @@ test("flat fields should return correct config", async () => {
 		.addText("repeater_text_test")
 		.endRepeater();
 
-	expect(instance.flatFields.length).toBe(13);
+	expect(instance.flatFields.length).toBe(14);
 
 	expect(instance.flatFields).toEqual([
 		{
@@ -208,6 +211,15 @@ test("flat fields should return correct config", async () => {
 			presets: [],
 			translations: false,
 			default: "",
+			hidden: undefined,
+			disabled: undefined,
+			validation: undefined,
+		},
+		{
+			key: "media_test",
+			type: "media",
+			labels: { title: "Media Test", description: undefined },
+			translations: false,
 			hidden: undefined,
 			disabled: undefined,
 			validation: undefined,
