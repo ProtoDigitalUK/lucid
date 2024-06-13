@@ -110,7 +110,7 @@ const validateBrick = (props: {
 };
 const validateField = (props: {
 	field: FieldInsertItem;
-	brickId?: number;
+	brickId: number | string;
 	instance: CollectionBuilder | BrickBuilder;
 	media: Awaited<ReturnType<typeof getAllMedia>>;
 	users: Awaited<ReturnType<typeof getAllUsers>>;

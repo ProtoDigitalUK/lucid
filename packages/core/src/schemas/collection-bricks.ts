@@ -3,6 +3,7 @@ import { FieldSchema, swaggerFieldObj } from "./collection-fields.js";
 import type { BooleanInt } from "../libs/db/types.js";
 
 export const BrickSchema = z.object({
+	id: z.union([z.string(), z.number()]),
 	key: z.string(),
 	order: z.number(),
 	type: z.union([z.literal("builder"), z.literal("fixed")]),
@@ -10,7 +11,7 @@ export const BrickSchema = z.object({
 	fields: z.array(FieldSchema).optional(),
 });
 export interface BrickSchema {
-	id?: number | string;
+	id: number | string;
 	key?: string;
 	order?: number;
 	type: "builder" | "fixed" | "collection-fields";

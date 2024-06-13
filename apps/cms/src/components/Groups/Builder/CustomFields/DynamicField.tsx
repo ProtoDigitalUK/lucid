@@ -45,9 +45,13 @@ export const DynamicField: Component<DynamicFieldProps> = (props) => {
 		}
 		return field;
 	});
+	const brickId = createMemo(() => {
+		return brickStore.get.bricks[props.state.brickIndex].id;
+	});
 	const fieldError = createMemo(() => {
 		return brickStore.get.fieldsErrors.find((f) => {
 			return (
+				f.brickId === brickId() &&
 				f.key === props.state.fieldConfig.key &&
 				f.localeCode === contentLocale() &&
 				f.groupId === props.state.groupId
@@ -57,6 +61,7 @@ export const DynamicField: Component<DynamicFieldProps> = (props) => {
 	const altLocaleHasError = createMemo(() => {
 		return brickStore.get.fieldsErrors.some((f) => {
 			return (
+				f.brickId === brickId() &&
 				f.key === props.state.fieldConfig.key &&
 				f.localeCode !== contentLocale() &&
 				f.groupId === props.state.groupId
@@ -130,7 +135,8 @@ export const DynamicField: Component<DynamicFieldProps> = (props) => {
 								type="text"
 								state={{
 									brickIndex: props.state.brickIndex,
-									fieldConfig: fieldConfig(),
+									fieldConfig:
+										fieldConfig() as CFConfig<"text">,
 									fieldData: fieldData(),
 									groupId: props.state.groupId,
 									repeaterKey: props.state.repeaterKey,
@@ -160,7 +166,8 @@ export const DynamicField: Component<DynamicFieldProps> = (props) => {
 								type="number"
 								state={{
 									brickIndex: props.state.brickIndex,
-									fieldConfig: fieldConfig(),
+									fieldConfig:
+										fieldConfig() as CFConfig<"number">,
 									fieldData: fieldData(),
 									groupId: props.state.groupId,
 									repeaterKey: props.state.repeaterKey,
@@ -175,7 +182,8 @@ export const DynamicField: Component<DynamicFieldProps> = (props) => {
 								type="datetime-local"
 								state={{
 									brickIndex: props.state.brickIndex,
-									fieldConfig: fieldConfig(),
+									fieldConfig:
+										fieldConfig() as CFConfig<"datetime">,
 									fieldData: fieldData(),
 									groupId: props.state.groupId,
 									repeaterKey: props.state.repeaterKey,
@@ -189,7 +197,8 @@ export const DynamicField: Component<DynamicFieldProps> = (props) => {
 							<CustomFields.CheckboxField
 								state={{
 									brickIndex: props.state.brickIndex,
-									fieldConfig: fieldConfig(),
+									fieldConfig:
+										fieldConfig() as CFConfig<"checkbox">,
 									fieldData: fieldData(),
 									groupId: props.state.groupId,
 									repeaterKey: props.state.repeaterKey,
@@ -203,7 +212,8 @@ export const DynamicField: Component<DynamicFieldProps> = (props) => {
 							<CustomFields.ColourField
 								state={{
 									brickIndex: props.state.brickIndex,
-									fieldConfig: fieldConfig(),
+									fieldConfig:
+										fieldConfig() as CFConfig<"colour">,
 									fieldData: fieldData(),
 									groupId: props.state.groupId,
 									repeaterKey: props.state.repeaterKey,
@@ -217,7 +227,8 @@ export const DynamicField: Component<DynamicFieldProps> = (props) => {
 							<CustomFields.JSONField
 								state={{
 									brickIndex: props.state.brickIndex,
-									fieldConfig: fieldConfig(),
+									fieldConfig:
+										fieldConfig() as CFConfig<"json">,
 									fieldData: fieldData(),
 									groupId: props.state.groupId,
 									repeaterKey: props.state.repeaterKey,
@@ -231,7 +242,8 @@ export const DynamicField: Component<DynamicFieldProps> = (props) => {
 							<CustomFields.LinkField
 								state={{
 									brickIndex: props.state.brickIndex,
-									fieldConfig: fieldConfig(),
+									fieldConfig:
+										fieldConfig() as CFConfig<"link">,
 									fieldData: fieldData(),
 									groupId: props.state.groupId,
 									repeaterKey: props.state.repeaterKey,
@@ -245,7 +257,8 @@ export const DynamicField: Component<DynamicFieldProps> = (props) => {
 							<CustomFields.MediaField
 								state={{
 									brickIndex: props.state.brickIndex,
-									fieldConfig: fieldConfig(),
+									fieldConfig:
+										fieldConfig() as CFConfig<"media">,
 									fieldData: fieldData(),
 									groupId: props.state.groupId,
 									repeaterKey: props.state.repeaterKey,
@@ -259,7 +272,8 @@ export const DynamicField: Component<DynamicFieldProps> = (props) => {
 							<CustomFields.SelectField
 								state={{
 									brickIndex: props.state.brickIndex,
-									fieldConfig: fieldConfig(),
+									fieldConfig:
+										fieldConfig() as CFConfig<"select">,
 									fieldData: fieldData(),
 									groupId: props.state.groupId,
 									repeaterKey: props.state.repeaterKey,
@@ -273,7 +287,8 @@ export const DynamicField: Component<DynamicFieldProps> = (props) => {
 							<CustomFields.TextareaField
 								state={{
 									brickIndex: props.state.brickIndex,
-									fieldConfig: fieldConfig(),
+									fieldConfig:
+										fieldConfig() as CFConfig<"textarea">,
 									fieldData: fieldData(),
 									groupId: props.state.groupId,
 									repeaterKey: props.state.repeaterKey,
@@ -287,7 +302,8 @@ export const DynamicField: Component<DynamicFieldProps> = (props) => {
 							<CustomFields.WYSIWYGField
 								state={{
 									brickIndex: props.state.brickIndex,
-									fieldConfig: fieldConfig(),
+									fieldConfig:
+										fieldConfig() as CFConfig<"wysiwyg">,
 									fieldData: fieldData(),
 									groupId: props.state.groupId,
 									repeaterKey: props.state.repeaterKey,

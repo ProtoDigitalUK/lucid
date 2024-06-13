@@ -8,7 +8,7 @@ import flattenFields, {
 } from "./flatten-fields.js";
 
 export interface BrickInsertItem extends BrickSchema {
-	id?: number;
+	id: number | string;
 	fields: Array<FieldInsertItem>;
 	groups: Array<GroupInsertItem>;
 }
@@ -34,6 +34,7 @@ const formatInsertBricks = (props: {
 			);
 
 			bricksRes.push({
+				id: brick.id,
 				key: brick.key,
 				order: brick.order,
 				type: brick.type,
@@ -51,6 +52,7 @@ const formatInsertBricks = (props: {
 			props.collection,
 		);
 		bricksRes.push({
+			id: "collection-pseudo-brick",
 			type: "collection-fields",
 			fields: flat.fields,
 			groups: flat.groups,
