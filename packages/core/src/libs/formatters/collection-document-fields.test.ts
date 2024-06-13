@@ -350,3 +350,103 @@ test("document field formatter success with translation support", async () => {
 		},
 	]);
 });
+
+test("document field formatter success with translation disabled", async () => {
+	const formatter = new CollectionDocumentFieldsFormatter();
+	const resultEn = formatter.formatMultiple(
+		{
+			fields: fields,
+			groups: groups,
+		},
+		{
+			builder: BannerBrick,
+			host: "http://localhost:8393",
+			collectionTranslations: false,
+			localisation: {
+				locales: ["en", "fr"],
+				default: "en",
+			},
+		},
+	);
+
+	const resultFr = formatter.formatMultiple(
+		{
+			fields: fields,
+			groups: groups,
+		},
+		{
+			builder: BannerBrick,
+			host: "http://localhost:8393",
+			collectionTranslations: false,
+			localisation: {
+				locales: ["en", "fr"],
+				default: "fr",
+			},
+		},
+	);
+
+	expect(resultEn[0]).toEqual({
+		key: "title",
+		type: "text",
+		groupId: undefined,
+		value: "Test",
+		meta: null,
+	});
+
+	expect(resultFr[0]).toEqual({
+		key: "title",
+		type: "text",
+		groupId: undefined,
+		value: "Title FR",
+		meta: null,
+	});
+});
+
+test("document field flat formatter success with translation support", async () => {
+	const formatter = new CollectionDocumentFieldsFormatter();
+	const result = formatter.formatMultipleFlat(
+		{
+			fields: fields,
+		},
+		{
+			builder: BannerBrick,
+			host: "http://localhost:8393",
+			collectionTranslations: true,
+			localisation: {
+				locales: ["en", "fr"],
+				default: "en",
+			},
+		},
+	);
+
+	expect(result).toEqual([
+		{
+			key: "title",
+			type: "text",
+			translations: { fr: "Title FR", en: "Test" },
+			meta: { fr: null, en: null },
+			groupId: undefined,
+		},
+		{
+			key: "intro",
+			type: "wysiwyg",
+			translations: { fr: "", en: "<h1>Heading</h1><p>Body</p>" },
+			meta: { fr: null, en: null },
+			groupId: undefined,
+		},
+		{
+			key: "link",
+			type: "link",
+			groupId: 3,
+			value: { url: "", label: null, target: null },
+			meta: null,
+		},
+		{
+			key: "full_width",
+			type: "checkbox",
+			groupId: undefined,
+			value: 0,
+			meta: null,
+		},
+	]);
+});
