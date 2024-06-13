@@ -16,7 +16,7 @@ class BrickBuilder extends FieldBuilder {
 		};
 	}
 	// Builder methods
-	public addFields(Builder: BrickBuilder) {
+	public addFields(Builder: BrickBuilder | FieldBuilder) {
 		const fields = Array.from(Builder.fields.values());
 		for (const field of fields) {
 			this.fields.set(field.key, field);
