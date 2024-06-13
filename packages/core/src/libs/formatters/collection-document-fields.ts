@@ -5,7 +5,7 @@ import type {
 import type { JSONString } from "../db/types.js";
 import type CollectionBuilder from "../builders/collection-builder/index.js";
 import type BrickBuilder from "../builders/brick-builder/index.js";
-import type { BrickPropT } from "./collection-document-bricks.js";
+import type { BrickProp } from "./collection-document-bricks.js";
 import type {
 	CFConfig,
 	FieldTypes,
@@ -54,7 +54,7 @@ export default class CollectionDocumentFieldsFormatter {
 	formatMultiple = (
 		data: {
 			fields: FieldProp[];
-			groups: BrickPropT["groups"];
+			groups: BrickProp["groups"];
 		},
 		meta: {
 			builder: BrickBuilder | CollectionBuilder;
@@ -139,7 +139,7 @@ export default class CollectionDocumentFieldsFormatter {
 	private buildFieldTree = (
 		data: {
 			fields: FieldProp[];
-			groups: BrickPropT["groups"];
+			groups: BrickProp["groups"];
 		},
 		meta: {
 			builder: BrickBuilder | CollectionBuilder;
@@ -264,7 +264,7 @@ export default class CollectionDocumentFieldsFormatter {
 	private buildGroups = (
 		data: {
 			fields: FieldProp[];
-			groups: BrickPropT["groups"];
+			groups: BrickProp["groups"];
 		},
 		meta: {
 			builder: BrickBuilder | CollectionBuilder;

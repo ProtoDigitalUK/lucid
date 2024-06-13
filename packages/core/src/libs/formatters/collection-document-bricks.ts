@@ -7,7 +7,7 @@ import CollectionDocumentFieldsFormatter, {
 	type FieldProp,
 } from "./collection-document-fields.js";
 
-export interface BrickPropT {
+export interface BrickProp {
 	id: number;
 	brick_key: string | null;
 	brick_order: number | null;
@@ -29,7 +29,7 @@ export interface BrickPropT {
 
 export default class CollectionDocumentBricksFormatter {
 	formatMultiple = (props: {
-		bricks: BrickPropT[];
+		bricks: BrickProp[];
 		collection: CollectionBuilder;
 		host: string;
 		localisation: {
@@ -80,7 +80,7 @@ export default class CollectionDocumentBricksFormatter {
 			});
 	};
 	formatCollectionPseudoBrick = (props: {
-		bricks: BrickPropT[];
+		bricks: BrickProp[];
 		collection: CollectionBuilder;
 		host: string;
 		localisation: {
