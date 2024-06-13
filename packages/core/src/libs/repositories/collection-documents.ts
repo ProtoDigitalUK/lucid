@@ -15,7 +15,6 @@ import queryBuilder, {
 } from "../db/query-builder.js";
 import type CollectionBuilder from "../builders/collection-builder/index.js";
 import type collectionDocumentsSchema from "../../schemas/collection-documents.js";
-import type { FieldFilters } from "../builders/collection-builder/index.js";
 
 export default class CollectionDocumentsRepo {
 	constructor(private db: KyselyDB) {}

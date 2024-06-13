@@ -1,71 +1,71 @@
 import { expect, test } from "vitest";
 import CollectionBuilder from "./index.js";
 
-const pagesCollection = new CollectionBuilder("pages", {
-	mode: "multiple",
-	title: "Pages",
-	singular: "Page",
-	description: "Pages are used to create static content on your website.",
-	translations: true,
-	hooks: [
-		{
-			event: "beforeUpsert",
-			handler: async (props) => {},
-		},
-		{
-			event: "beforeDelete",
-			handler: async (props) => {},
-		},
-		{
-			event: "afterDelete",
-			handler: async (props) => {},
-		},
-		{
-			event: "afterUpsert",
-			handler: async (props) => {},
-		},
-	],
-})
-	.addText("text_test", undefined, {
-		list: true,
-		filterable: true,
-	})
-	.addTextarea("textarea_test", undefined, {
-		list: true,
-		filterable: true,
-	})
-	.addNumber("number_test", undefined, {
-		list: true,
-		filterable: true,
-	})
-	.addCheckbox("checkbox_test", undefined, {
-		list: true,
-		filterable: true,
-	})
-	.addSelect("select_test", undefined, {
-		list: true,
-		filterable: true,
-	})
-	.addDateTime("datetime_test", undefined, {
-		list: true,
-		filterable: true,
-	})
-	.addUser("user_test", undefined, {
-		list: true,
-	})
-	.addMedia("media_test", undefined, {
-		list: true,
-		filterable: true,
-	})
-	.addWysiwyg("wysiwyg_test")
-	.addLink("link_test")
-	.addJSON("json_test")
-	.addColour("colour_test")
-	.addRepeater("repeater_test")
-	.addText("repeater_text_test")
-	.endRepeater();
-
 test("collection config is correct along with field includes and filters", async () => {
+	const pagesCollection = new CollectionBuilder("pages", {
+		mode: "multiple",
+		title: "Pages",
+		singular: "Page",
+		description: "Pages are used to create static content on your website.",
+		translations: true,
+		hooks: [
+			{
+				event: "beforeUpsert",
+				handler: async (props) => {},
+			},
+			{
+				event: "beforeDelete",
+				handler: async (props) => {},
+			},
+			{
+				event: "afterDelete",
+				handler: async (props) => {},
+			},
+			{
+				event: "afterUpsert",
+				handler: async (props) => {},
+			},
+		],
+	})
+		.addText("text_test", undefined, {
+			list: true,
+			filterable: true,
+		})
+		.addTextarea("textarea_test", undefined, {
+			list: true,
+			filterable: true,
+		})
+		.addNumber("number_test", undefined, {
+			list: true,
+			filterable: true,
+		})
+		.addCheckbox("checkbox_test", undefined, {
+			list: true,
+			filterable: true,
+		})
+		.addSelect("select_test", undefined, {
+			list: true,
+			filterable: true,
+		})
+		.addDateTime("datetime_test", undefined, {
+			list: true,
+			filterable: true,
+		})
+		.addUser("user_test", undefined, {
+			list: true,
+		})
+		.addMedia("media_test", undefined, {
+			list: true,
+			filterable: true,
+		})
+		.addWysiwyg("wysiwyg_test")
+		.addLink("link_test")
+		.addJSON("json_test")
+		.addColour("colour_test")
+		.addRepeater("repeater_test")
+		.addText("repeater_text_test")
+		.endRepeater();
+
 	expect(pagesCollection.fields.size).toBe(14);
 
 	expect(pagesCollection.data).toEqual({

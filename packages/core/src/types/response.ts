@@ -1,8 +1,5 @@
 import type { BooleanInt } from "../libs/db/types.js";
-import type {
-	CollectionBrickConfig,
-	FieldFilters,
-} from "../libs/builders/collection-builder/index.js";
+import type { CollectionBrickConfig } from "../libs/builders/collection-builder/types.js";
 import type { ErrorResult } from "./errors.js";
 import type {
 	CFConfig,

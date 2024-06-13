@@ -18,6 +18,7 @@ import type {
 	CFConfig,
 	TabFieldConfig,
 } from "../../custom-fields/types.js";
+import type { FieldBuilderMeta } from "./types.js";
 
 class FieldBuilder {
 	fields: Map<string, CustomField<FieldTypes>> = new Map();
@@ -175,11 +176,6 @@ class FieldBuilder {
 		}
 		return config;
 	}
-}
-
-export interface FieldBuilderMeta {
-	fieldKeys: string[];
-	repeaterDepth: Record<string, number>;
 }
 
 export default FieldBuilder;

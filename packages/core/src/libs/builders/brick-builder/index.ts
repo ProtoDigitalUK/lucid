@@ -1,27 +1,12 @@
 import FieldBuilder from "../field-builder/index.js";
 import TabCustomField from "../../custom-fields/fields/tab.js";
 import type { CFProps } from "../../custom-fields/types.js";
-import type { LocaleValue } from "../../../types/shared.js";
-
-export interface BrickConfigPropsT {
-	title?: LocaleValue;
-	description?: LocaleValue;
-	preview?: {
-		image?: string;
-	};
-}
-export interface BrickConfigT {
-	title: LocaleValue;
-	description?: LocaleValue;
-	preview?: {
-		image?: string;
-	};
-}
+import type { BrickConfigProps, BrickConfig } from "./types.js";
 
 class BrickBuilder extends FieldBuilder {
 	key: string;
-	config: BrickConfigT;
-	constructor(key: string, config?: BrickConfigPropsT) {
+	config: BrickConfig;
+	constructor(key: string, config?: BrickConfigProps) {
 		super();
 		this.key = key;
 		this.config = {

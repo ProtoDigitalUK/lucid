@@ -7,7 +7,7 @@ import type {
 	OperandValueExpressionOrList,
 	UpdateQueryBuilder,
 } from "kysely";
-import type { DocumentFiltersResponse } from "../builders/collection-builder/index.js";
+import type { DocumentFiltersResponse } from "../builders/collection-builder/types.js";
 import type { LucidDB } from "./types.js";
 
 export interface QueryBuilderConfigT<DB, Table extends keyof DB> {

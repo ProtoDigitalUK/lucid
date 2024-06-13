@@ -1,22 +1,22 @@
 import FieldBuilder from "../field-builder/index.js";
 import type BrickBuilder from "../brick-builder/index.js";
-import type {
-	FieldTypes,
-	CFProps,
-	CFConfig,
-} from "../../custom-fields/types.js";
-import type z from "zod";
-import type CollectionConfigSchema from "./schema.js";
-import type { CollectionDocumentBuilderHooks } from "../../../types/hooks.js";
+import type { FieldTypes, CFProps } from "../../custom-fields/types.js";
 import type { RequestQueryParsed } from "../../../middleware/validate-query.js";
-import type { CFColumn } from "../../custom-fields/types.js";
+import type {
+	FieldCollectionConfig,
+	CollectionConfigSchemaType,
+	CollectionData,
+	DocumentFiltersResponse,
+	CollectionBrickConfig,
+	FieldFilters,
+} from "./types.js";
 
-export default class CollectionBuilder extends FieldBuilder {
+class CollectionBuilder extends FieldBuilder {
 	key: string;
-	config: CollectionConfigSchemaT;
+	config: CollectionConfigSchemaType;
 	includeFieldKeys: string[] = [];
 	filterableFieldKeys: FieldFilters = [];
-	constructor(key: string, config: CollectionConfigSchemaT) {
+	constructor(key: string, config: CollectionConfigSchemaType) {
 		super();
 		this.key = key;
 		this.config = config;
@@ -157,7 +157,7 @@ export default class CollectionBuilder extends FieldBuilder {
 
 	// ------------------------------------
 	// Getters
-	get data(): CollectionDataT {
+	get data(): CollectionData {
 		return {
 			key: this.key,
 			mode: this.config.mode,
@@ -204,51 +204,4 @@ export default class CollectionBuilder extends FieldBuilder {
 	}
 }
 
-export interface FieldCollectionConfig {
-	list?: true;
-	filterable?: true;
-}
-
-export interface CollectionConfigSchemaT
-	extends z.infer<typeof CollectionConfigSchema> {
-	hooks?: CollectionDocumentBuilderHooks[];
-	bricks?: {
-		fixed?: Array<BrickBuilder>;
-		builder?: Array<BrickBuilder>;
-	};
-}
-
-export type CollectionDataT = {
-	key: string;
-	mode: CollectionConfigSchemaT["mode"];
-	title: CollectionConfigSchemaT["title"];
-	singular: CollectionConfigSchemaT["singular"];
-	description: string | null;
-	locked: boolean;
-	config: {
-		translations: boolean;
-		fields: {
-			filter: FieldFilters;
-			include: string[];
-		};
-	};
-};
-
-export type FieldFilters = Array<{
-	key: string;
-	type: FieldTypes;
-}>;
-
-export interface CollectionBrickConfig {
-	key: BrickBuilder["key"];
-	title: BrickBuilder["config"]["title"];
-	description: BrickBuilder["config"]["description"];
-	preview: BrickBuilder["config"]["preview"];
-	fields: CFConfig<FieldTypes>[];
-}
-
-export interface DocumentFiltersResponse {
-	key: string;
-	value: string | string[];
-	column: CFColumn<FieldTypes>;
-}
+export default CollectionBuilder;
