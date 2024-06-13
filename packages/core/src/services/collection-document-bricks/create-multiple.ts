@@ -97,6 +97,8 @@ const createMultiple = async (
 				formatInsertFields({
 					groups: groups,
 					brickId: b.id,
+					brickKey: b.key,
+					brickType: b.type,
 					fields: b.fields,
 					collection: data.collection,
 				}),
