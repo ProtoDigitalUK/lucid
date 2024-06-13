@@ -131,7 +131,7 @@ class FieldBuilder {
 		const repeaterStack: Map<string, CFConfig<"repeater">> = new Map();
 
 		for (const field of fields) {
-			const config = structuredClone(field.config);
+			const config = JSON.parse(JSON.stringify(field.config));
 
 			if (field.type === "tab") {
 				if (currentTab) result.push(currentTab);

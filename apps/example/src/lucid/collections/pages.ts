@@ -1,3 +1,4 @@
+import z from "zod";
 import { CollectionBuilder } from "@lucidcms/core";
 import BannerBrick from "../bricks/banner.js";
 import IntroBrick from "../bricks/intro.js";
@@ -37,13 +38,17 @@ const PageCollection = new CollectionBuilder("page", {
 	.addText(
 		"page_title",
 		{
-			hidden: false,
-			disabled: false,
 			labels: {
 				title: {
 					en: "Page title",
 				},
 				description: "The title of the page.",
+			},
+			hidden: false,
+			disabled: false,
+			validation: {
+				required: true,
+				zod: z.string().min(2).max(128),
 			},
 		},
 		{

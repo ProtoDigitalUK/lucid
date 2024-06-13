@@ -97,9 +97,13 @@ abstract class CustomField<T extends FieldTypes> {
 			return { valid: true };
 		}
 
+		const firstIsssue = response.error.issues[0];
+
 		return {
 			valid: false,
-			message: response?.error.message,
+			message:
+				firstIsssue?.message ??
+				T("an_unknown_error_occurred_validating_the_field"),
 		};
 	}
 	// Getters

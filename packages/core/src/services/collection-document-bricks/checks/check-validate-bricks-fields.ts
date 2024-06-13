@@ -94,7 +94,7 @@ const validateBrick = (props: {
 	for (let i = 0; i < fields.length; i++) {
 		const field = fields[i];
 		if (field === undefined) continue;
-		if (props.brick.id === undefined) continue;
+
 		const fieldRes = validateField({
 			field: field,
 			brickId: props.brick.id,
@@ -110,7 +110,7 @@ const validateBrick = (props: {
 };
 const validateField = (props: {
 	field: FieldInsertItem;
-	brickId: number;
+	brickId?: number;
 	instance: CollectionBuilder | BrickBuilder;
 	media: Awaited<ReturnType<typeof getAllMedia>>;
 	users: Awaited<ReturnType<typeof getAllUsers>>;
