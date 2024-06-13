@@ -1,5 +1,15 @@
 # @lucidcms/core
 
+## v0.5.0-alpha.3
+
+### Bug Fixes:
+
+- Fixed format insert field not using brick instance to find custom field class. ([1a8fad5](https://github.com/ProtoDigitalUK/lucid/commit/1a8fad55f63f36d2fab3767b0323328b8459b233))
+- Fixed issue with field validation expecting a brick to have an id else continuing a loop and not validating the field. ([3aacf8d](https://github.com/ProtoDigitalUK/lucid/commit/3aacf8d6725a4cd94e327a9bae712eb443c68fa5))
+- Updated add brick modal component to support brick title and description locale variations. ([0c71513](https://github.com/ProtoDigitalUK/lucid/commit/0c71513abc53bd49b0a0ba13f619f98ea2a8a4f4))
+- Fixed Postgres issue with title_translations.value and alt_translations.value not being in groupBy function. ([38c13e3](https://github.com/ProtoDigitalUK/lucid/commit/38c13e34c9c96269a88c9f001a4583d674d3f33a))
+- Fixed issue with validation and error handling where brick id wasn’t being used to identify field error. Meant fields with same key would share errors. ([6bc477e](https://github.com/ProtoDigitalUK/lucid/commit/6bc477ee08ebc0adb5f578fd27648db6eff712a8))
+
 ## v0.5.0-alpha.2
 
 ### Features:
