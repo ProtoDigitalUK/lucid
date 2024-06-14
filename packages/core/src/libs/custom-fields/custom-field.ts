@@ -48,22 +48,39 @@ abstract class CustomField<T extends FieldTypes> {
 
 		return title;
 	}
-	public validate(
-		value: unknown,
-		relationData?: unknown,
-	): CustomFieldValidateResponse {
+	public validate(props: {
+		type: FieldTypes;
+		value: unknown;
+		relationData?: unknown;
+	}): CustomFieldValidateResponse {
 		if (this.config.type === "tab") return { valid: true };
 
+		// Check type
+		const fieldTypeRes = this.fieldTypeValidation(props.type);
+		if (fieldTypeRes.valid === false) return fieldTypeRes;
+
 		// required
-		const requiredRes = this.requiredCheck(value);
+		const requiredRes = this.requiredCheck(props.value);
 		if (!requiredRes.valid) return requiredRes;
 
 		// zod
-		const zodRes = this.zodCheck(value);
+		const zodRes = this.zodCheck(props.value);
 		if (!zodRes.valid) return zodRes;
 
 		// value type
-		return this.typeValidation(value, relationData);
+		return this.typeValidation(props.value, props.relationData);
+	}
+	private fieldTypeValidation(type: FieldTypes) {
+		if (this.errors.fieldType.condition?.(type)) {
+			return {
+				valid: false,
+				message: T("field_type_mismatch", {
+					received: type,
+					expected: this.config.type,
+				}),
+			};
+		}
+		return { valid: true };
 	}
 	private requiredCheck(value: unknown): CustomFieldValidateResponse {
 		if (this.config.type === "tab") return { valid: true };
@@ -108,10 +125,18 @@ abstract class CustomField<T extends FieldTypes> {
 	}
 	// Getters
 	get errors(): {
+		fieldType: CustomFieldErrorItem;
 		required: CustomFieldErrorItem;
 		zod: CustomFieldErrorItem;
 	} {
 		return {
+			fieldType: {
+				condition: (value: unknown) => value !== this.type,
+				message: T("field_type_mismatch", {
+					received: "unknown",
+					expected: this.config.type,
+				}),
+			},
 			required: {
 				condition: (value: unknown) =>
 					value === undefined || value === null || value === "",
