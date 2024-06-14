@@ -168,9 +168,11 @@ export const validateField = (props: {
 					type: media.type,
 				} satisfies MediaReferenceData);
 			} else if (props.field.value !== undefined) {
-				fieldInstance.validate(null, undefined);
+				// if the media doesnt exist, we treat the value as null
+				fieldValRes = fieldInstance.validate(null, undefined);
+			} else {
+				fieldValRes = fieldInstance.validate(undefined, undefined);
 			}
-
 			break;
 		}
 		case "user": {
@@ -183,13 +185,20 @@ export const validateField = (props: {
 					lastName: user.last_name,
 				} satisfies UserReferenceData);
 			} else if (props.field.value !== undefined) {
+				// if the user doesnt exist, we treat the value as null
 				fieldValRes = fieldInstance.validate(null, undefined);
+			} else {
+				fieldValRes = fieldInstance.validate(undefined, undefined);
 			}
 			break;
 		}
 		default: {
 			fieldValRes = fieldInstance.validate(props.field.value, undefined);
 		}
+	}
+
+	if (props.field.type === "media") {
+		console.log(fieldValRes);
 	}
 
 	if (fieldValRes.valid === true) return null;
