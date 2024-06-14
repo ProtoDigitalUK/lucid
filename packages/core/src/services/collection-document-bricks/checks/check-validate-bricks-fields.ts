@@ -63,7 +63,7 @@ const checkValidateBricksFields = async (
 	}
 };
 
-const validateBrick = (props: {
+export const validateBrick = (props: {
 	brick: BrickInsertItem;
 	collection: CollectionBuilder;
 	media: Awaited<ReturnType<typeof getAllMedia>>;
@@ -71,12 +71,26 @@ const validateBrick = (props: {
 }): FieldErrors[] => {
 	const errors: FieldErrors[] = [];
 
-	const instance =
-		props.brick.type === "collection-fields"
-			? props.collection
-			: props.collection.brickInstances.find(
-					(b) => b.key === props.brick.key,
-				);
+	let instance = undefined;
+
+	switch (props.brick.type) {
+		case "collection-fields": {
+			instance = props.collection;
+			break;
+		}
+		case "builder": {
+			instance = props.collection.config.bricks?.builder?.find(
+				(b) => b.key === props.brick.key,
+			);
+			break;
+		}
+		case "fixed": {
+			instance = props.collection.config.bricks?.fixed?.find(
+				(b) => b.key === props.brick.key,
+			);
+			break;
+		}
+	}
 
 	if (!instance) {
 		throw new LucidAPIError({
@@ -108,7 +122,7 @@ const validateBrick = (props: {
 
 	return errors;
 };
-const validateField = (props: {
+export const validateField = (props: {
 	field: FieldInsertItem;
 	brickId: number | string;
 	instance: CollectionBuilder | BrickBuilder;
