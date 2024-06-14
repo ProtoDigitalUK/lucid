@@ -138,7 +138,7 @@
 	"please_provide_new_password": "Please provide a new password.",
 	"please_provide_current_password": "Please provide your current password.",
 	"generic_field_required": "Please enter a value for this field.",
-	"checkbox_field_required": "Please ensure the switch is checked.",
+	"checkbox_field_required": "Please ensure the checkbox is checked.",
 	"select_field_required": "Please select an option.",
 	"generic_field_invalid": "Please enter a valid value for this field.",
 	"please_ensure_a_valid_option_is_selected": "Please ensure a valid option is selected.",
@@ -154,5 +154,7 @@
 	"field_media_doenst_have_type": "This media does not have a type.",
 	"field_media_doenst_have_width": "This media does not have a width.",
 	"field_media_doenst_have_height": "This media does not have a height.",
-	"field_type_mismatch": "The type of the field does not match the type of the config field. Received: \"{{received}}\" Expected: \"{{expected}}\"."
+	"field_type_mismatch": "The type of the field does not match the type of the config field. Received: \"{{received}}\" Expected: \"{{expected}}\".",
+	"field_date_invalid": "Please ensure the date you have entered is valid.",
+	"field_link_target_error_message": "Please set the target to one of the following: {{valid}}"
 }

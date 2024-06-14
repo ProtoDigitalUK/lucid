@@ -23,7 +23,12 @@
 		"lint:fix": "biome lint --apply ./src",
 		"clear-db:postgres": "node ./scripts/clear-db-pg.js"
 	},
-	"files": ["dist", "cms", "templates", "assets"],
+	"files": [
+		"dist",
+		"cms",
+		"templates",
+		"assets"
+	],
 	"author": "Proto Digital",
 	"repository": {
 		"type": "git",
@@ -89,7 +94,8 @@
 		"slug": "^8.2.3",
 		"uuid": "^9.0.1",
 		"winston": "^3.13.0",
-		"zod": "^3.22.4"
+		"zod": "^3.22.4",
+		"zod-validation-error": "^3.3.0"
 	},
 	"volta": {
 		"node": "20.12.2"

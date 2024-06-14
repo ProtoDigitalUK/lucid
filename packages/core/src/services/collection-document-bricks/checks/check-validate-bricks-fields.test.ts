@@ -1,6 +1,7 @@
 import { expect, test } from "vitest";
 import T from "../../../translations/index.js";
 import z from "zod";
+import constants from "../../../constants.js";
 import CollectionBuilder from "../../../libs/builders/collection-builder/index.js";
 import flattenFields from "../helpers/flatten-fields.js";
 import {
@@ -123,7 +124,9 @@ test("validate brick along with brick field validation", async () => {
 			{
 				key: "json_test",
 				type: "json",
-				value: '{"key":"value"}',
+				value: {
+					key: "value",
+				},
 			},
 			{
 				key: "colour_test",
@@ -219,47 +222,511 @@ test("validate brick along with brick field validation", async () => {
 
 // -----------------------------------------------
 // Checkbox custom field
+const CheckboxCollection = new CollectionBuilder("collection", {
+	mode: "multiple",
+	title: "Test",
+	singular: "Test",
+	translations: true,
+})
+	.addCheckbox("standard_checkbox")
+	.addCheckbox("required_chekbox", {
+		validation: {
+			required: true,
+		},
+	});
+
 test("successfully validate field - checkbox", async () => {
-	expect(true).toBe(true);
+	// Standard
+	const standardValidate = validateField({
+		brickId: CONSTANTS.collectionBrickId,
+		field: {
+			key: "standard_checkbox",
+			type: "checkbox",
+			value: 0,
+			localeCode: "en",
+		},
+		instance: CheckboxCollection,
+		media: [],
+		users: [],
+	});
+	expect(standardValidate).toBe(null);
+
+	// Required
+	const requiredValidate = validateField({
+		brickId: CONSTANTS.collectionBrickId,
+		field: {
+			key: "required_chekbox",
+			type: "checkbox",
+			value: 1,
+			localeCode: "en",
+		},
+		instance: CheckboxCollection,
+		media: [],
+		users: [],
+	});
+	expect(requiredValidate).toBe(null);
 });
 test("fail to validate field - checkbox", async () => {
-	expect(true).toBe(true);
+	// Required
+	const requiredValidate = validateField({
+		brickId: CONSTANTS.collectionBrickId,
+		field: {
+			key: "required_chekbox",
+			type: "checkbox",
+			value: 0,
+			localeCode: "en",
+		},
+		instance: CheckboxCollection,
+		media: [],
+		users: [],
+	});
+	expect(requiredValidate).toEqual({
+		key: "required_chekbox",
+		brickId: CONSTANTS.collectionBrickId,
+		localeCode: "en",
+		groupId: undefined,
+		message: T("checkbox_field_required"),
+	});
 });
 
 // -----------------------------------------------
 // Colour custom field
+const ColourCollection = new CollectionBuilder("collection", {
+	mode: "multiple",
+	title: "Test",
+	singular: "Test",
+	translations: true,
+})
+	.addColour("standard_colour")
+	.addColour("required_colour", {
+		validation: {
+			required: true,
+		},
+	});
 test("successfully validate field - colour", async () => {
-	expect(true).toBe(true);
+	// Standard
+	const standardValidate = validateField({
+		brickId: CONSTANTS.collectionBrickId,
+		field: {
+			key: "standard_colour",
+			type: "colour",
+			value: "#000000",
+			localeCode: "en",
+		},
+		instance: ColourCollection,
+		media: [],
+		users: [],
+	});
+	expect(standardValidate).toBe(null);
+
+	// Required
+	const requiredValidate = validateField({
+		brickId: CONSTANTS.collectionBrickId,
+		field: {
+			key: "required_colour",
+			type: "colour",
+			value: "#000000",
+			localeCode: "en",
+		},
+		instance: ColourCollection,
+		media: [],
+		users: [],
+	});
+	expect(requiredValidate).toBe(null);
 });
 test("fail to validate field - colour", async () => {
-	expect(true).toBe(true);
+	// Required
+	const requiredValidate = {
+		empty: validateField({
+			brickId: CONSTANTS.collectionBrickId,
+			field: {
+				key: "required_colour",
+				type: "colour",
+				value: "",
+				localeCode: "en",
+			},
+			instance: ColourCollection,
+			media: [],
+			users: [],
+		}),
+		null: validateField({
+			brickId: CONSTANTS.collectionBrickId,
+			field: {
+				key: "required_colour",
+				type: "colour",
+				value: null,
+				localeCode: "en",
+			},
+			instance: ColourCollection,
+			media: [],
+			users: [],
+		}),
+		undefined: validateField({
+			brickId: CONSTANTS.collectionBrickId,
+			field: {
+				key: "required_colour",
+				type: "colour",
+				value: undefined,
+				localeCode: "en",
+			},
+			instance: ColourCollection,
+			media: [],
+			users: [],
+		}),
+	};
+	expect(requiredValidate).toEqual({
+		empty: {
+			key: "required_colour",
+			brickId: CONSTANTS.collectionBrickId,
+			localeCode: "en",
+			groupId: undefined,
+			message: T("generic_field_required"),
+		},
+		null: {
+			key: "required_colour",
+			brickId: CONSTANTS.collectionBrickId,
+			localeCode: "en",
+			groupId: undefined,
+			message: T("generic_field_required"),
+		},
+		undefined: {
+			key: "required_colour",
+			brickId: CONSTANTS.collectionBrickId,
+			localeCode: "en",
+			groupId: undefined,
+			message: T("generic_field_required"),
+		},
+	});
 });
 
 // -----------------------------------------------
 // DateTime custom field
+const DateTimeCollection = new CollectionBuilder("collection", {
+	mode: "multiple",
+	title: "Test",
+	singular: "Test",
+	translations: true,
+})
+	.addDateTime("standard_datetime")
+	.addDateTime("required_datetime", {
+		validation: {
+			required: true,
+		},
+	});
 test("successfully validate field - datetime", async () => {
-	expect(true).toBe(true);
+	// Standard
+	const standardValidate = validateField({
+		brickId: CONSTANTS.collectionBrickId,
+		field: {
+			key: "standard_datetime",
+			type: "datetime",
+			value: "2022-01-01T00:00:00.000Z",
+			localeCode: "en",
+		},
+		instance: DateTimeCollection,
+		media: [],
+		users: [],
+	});
+	expect(standardValidate).toBe(null);
+
+	// Required
+	const requiredValidate = validateField({
+		brickId: CONSTANTS.collectionBrickId,
+		field: {
+			key: "required_datetime",
+			type: "datetime",
+			value: "2022-01-01T00:00:00.000Z",
+			localeCode: "en",
+		},
+		instance: DateTimeCollection,
+		media: [],
+		users: [],
+	});
+	expect(requiredValidate).toBe(null);
 });
 test("fail to validate field - datetime", async () => {
-	expect(true).toBe(true);
+	// Standard
+	const standardValidate = validateField({
+		brickId: CONSTANTS.collectionBrickId,
+		field: {
+			key: "standard_datetime",
+			type: "datetime",
+			value: "invalid",
+			localeCode: "en",
+		},
+		instance: DateTimeCollection,
+		media: [],
+		users: [],
+	});
+	expect(standardValidate).toEqual({
+		key: "standard_datetime",
+		brickId: CONSTANTS.collectionBrickId,
+		localeCode: "en",
+		groupId: undefined,
+		message: T("field_date_invalid"),
+	});
+
+	// Required
+	const requiredValidate = validateField({
+		brickId: CONSTANTS.collectionBrickId,
+		field: {
+			key: "required_datetime",
+			type: "datetime",
+			value: "",
+			localeCode: "en",
+		},
+		instance: DateTimeCollection,
+		media: [],
+		users: [],
+	});
+	expect(requiredValidate).toEqual({
+		key: "required_datetime",
+		brickId: CONSTANTS.collectionBrickId,
+		localeCode: "en",
+		groupId: undefined,
+		message: T("generic_field_required"),
+	});
 });
 
 // -----------------------------------------------
 // JSON custom field
+const JSONCollection = new CollectionBuilder("collection", {
+	mode: "multiple",
+	title: "Test",
+	singular: "Test",
+	translations: true,
+})
+	.addJSON("standard_json")
+	.addJSON("required_json", {
+		validation: {
+			required: true,
+		},
+	})
+	.addJSON("zod_json", {
+		validation: {
+			zod: z.object({
+				key: z.string(),
+				value: z.string(),
+			}),
+		},
+	});
 test("successfully validate field - json", async () => {
-	expect(true).toBe(true);
+	// Standard
+	const standardValidate = validateField({
+		brickId: CONSTANTS.collectionBrickId,
+		field: {
+			key: "standard_json",
+			type: "json",
+			value: {
+				key: "value",
+			},
+			localeCode: "en",
+		},
+		instance: JSONCollection,
+		media: [],
+		users: [],
+	});
+	expect(standardValidate).toBe(null);
+
+	// Required
+	const requiredValidate = validateField({
+		brickId: CONSTANTS.collectionBrickId,
+		field: {
+			key: "required_json",
+			type: "json",
+			value: {
+				key: "value",
+			},
+			localeCode: "en",
+		},
+		instance: JSONCollection,
+		media: [],
+		users: [],
+	});
+	expect(requiredValidate).toBe(null);
+
+	// Zod
+	const zodValidate = validateField({
+		brickId: CONSTANTS.collectionBrickId,
+		field: {
+			key: "zod_json",
+			type: "json",
+			value: {
+				key: "value",
+				value: "value",
+			},
+			localeCode: "en",
+		},
+		instance: JSONCollection,
+		media: [],
+		users: [],
+	});
+	expect(zodValidate).toBe(null);
 });
 test("fail to validate field - json", async () => {
-	expect(true).toBe(true);
+	// Standard
+	const standardValidate = validateField({
+		brickId: CONSTANTS.collectionBrickId,
+		field: {
+			key: "standard_json",
+			type: "json",
+			value: "false", // tests safe parse of JSON
+			localeCode: "en",
+		},
+		instance: JSONCollection,
+		media: [],
+		users: [],
+	});
+	expect(standardValidate).toBe(null);
+
+	// Required
+	const requiredValidate = validateField({
+		brickId: CONSTANTS.collectionBrickId,
+		field: {
+			key: "required_json",
+			type: "json",
+			value: undefined,
+			localeCode: "en",
+		},
+		instance: JSONCollection,
+		media: [],
+		users: [],
+	});
+	expect(requiredValidate).toEqual({
+		key: "required_json",
+		brickId: CONSTANTS.collectionBrickId,
+		localeCode: "en",
+		groupId: undefined,
+		message: T("generic_field_required"),
+	});
+
+	// Zod
+	const zodValidate = validateField({
+		brickId: CONSTANTS.collectionBrickId,
+		field: {
+			key: "zod_json",
+			type: "json",
+			value: {
+				key: "value",
+				value: true, // not a string
+			},
+			localeCode: "en",
+		},
+		instance: JSONCollection,
+		media: [],
+		users: [],
+	});
+	expect(zodValidate).toEqual({
+		key: "zod_json",
+		brickId: CONSTANTS.collectionBrickId,
+		localeCode: "en",
+		groupId: undefined,
+		message:
+			'Validation error: Expected string, received boolean at "value"', // zod error message
+	});
 });
 
 // -----------------------------------------------
 // Link custom field
+const LinkCollection = new CollectionBuilder("collection", {
+	mode: "multiple",
+	title: "Test",
+	singular: "Test",
+	translations: true,
+})
+	.addLink("standard_link")
+	.addLink("required_link", {
+		validation: {
+			required: true,
+		},
+	});
 test("successfully validate field - link", async () => {
-	expect(true).toBe(true);
+	// Standard
+	const standardValidate = validateField({
+		brickId: CONSTANTS.collectionBrickId,
+		field: {
+			key: "standard_link",
+			type: "link",
+			value: {
+				url: "https://example.com",
+				target: "_blank",
+				label: "Link 1",
+			},
+			localeCode: "en",
+		},
+		instance: LinkCollection,
+		media: [],
+		users: [],
+	});
+	expect(standardValidate).toBe(null);
+
+	// Required
+	const requiredValidate = validateField({
+		brickId: CONSTANTS.collectionBrickId,
+		field: {
+			key: "required_link",
+			type: "link",
+			value: {
+				url: "https://example.com",
+				target: "_blank",
+				label: "Link 1",
+			},
+			localeCode: "en",
+		},
+		instance: LinkCollection,
+		media: [],
+		users: [],
+	});
+	expect(requiredValidate).toBe(null);
 });
 test("fail to validate field - link", async () => {
-	expect(true).toBe(true);
+	// Standard
+	const standardValidate = validateField({
+		brickId: CONSTANTS.collectionBrickId,
+		field: {
+			key: "standard_link",
+			type: "link",
+			value: {
+				url: "https://example.com",
+				target: "test", // invalid target
+				label: "Link 1",
+			},
+			localeCode: "en",
+		},
+		instance: LinkCollection,
+		media: [],
+		users: [],
+	});
+	expect(standardValidate).toEqual({
+		key: "standard_link",
+		brickId: CONSTANTS.collectionBrickId,
+		localeCode: "en",
+		groupId: undefined,
+		message: T("field_link_target_error_message", {
+			valid: constants.customFields.link.targets.join(", "),
+		}),
+	});
+
+	// Required
+	const requiredValidate = validateField({
+		brickId: CONSTANTS.collectionBrickId,
+		field: {
+			key: "required_link",
+			type: "link",
+			value: undefined,
+			localeCode: "en",
+		},
+		instance: LinkCollection,
+		media: [],
+		users: [],
+	});
+	expect(requiredValidate).toEqual({
+		key: "required_link",
+		brickId: CONSTANTS.collectionBrickId,
+		localeCode: "en",
+		groupId: undefined,
+		message: T("generic_field_required"),
+	});
 });
 
 // -----------------------------------------------
@@ -501,46 +968,47 @@ test("successfully validate field - media", async () => {
 	expect(extensionValidate).toBe(null);
 });
 test("fail to validate field - media", async () => {
-	// Required - false as doesnt exist
-	const requiredValidate1 = validateField({
-		brickId: CONSTANTS.collectionBrickId,
-		field: {
+	const requiredValidate = {
+		exists: validateField({
+			brickId: CONSTANTS.collectionBrickId,
+			field: {
+				key: "required_media",
+				type: "media",
+				value: 1,
+				localeCode: "en",
+			},
+			instance: MediaCollection,
+			media: [],
+			users: [],
+		}),
+		null: validateField({
+			brickId: CONSTANTS.collectionBrickId,
+			field: {
+				key: "required_media",
+				type: "media",
+				value: null,
+				localeCode: "en",
+			},
+			instance: MediaCollection,
+			media: [],
+			users: [],
+		}),
+	};
+	expect(requiredValidate).toEqual({
+		exists: {
 			key: "required_media",
-			type: "media",
-			value: 1,
+			brickId: CONSTANTS.collectionBrickId,
 			localeCode: "en",
+			groupId: undefined,
+			message: T("generic_field_required"),
 		},
-		instance: MediaCollection,
-		media: [],
-		users: [],
-	});
-	expect(requiredValidate1).toEqual({
-		key: "required_media",
-		brickId: CONSTANTS.collectionBrickId,
-		localeCode: "en",
-		groupId: undefined,
-		message: T("generic_field_required"),
-	});
-
-	// Required - false as doesnt exist
-	const requiredValidate2 = validateField({
-		brickId: CONSTANTS.collectionBrickId,
-		field: {
+		null: {
 			key: "required_media",
-			type: "media",
-			value: null,
+			brickId: CONSTANTS.collectionBrickId,
 			localeCode: "en",
+			groupId: undefined,
+			message: T("generic_field_required"),
 		},
-		instance: MediaCollection,
-		media: [],
-		users: [],
-	});
-	expect(requiredValidate2).toEqual({
-		key: "required_media",
-		brickId: CONSTANTS.collectionBrickId,
-		localeCode: "en",
-		groupId: undefined,
-		message: T("generic_field_required"),
 	});
 
 	// Min width
@@ -732,11 +1200,133 @@ test("fail to validate field - media", async () => {
 
 // -----------------------------------------------
 // Number custom field
+const NumberCollection = new CollectionBuilder("collection", {
+	mode: "multiple",
+	title: "Test",
+	singular: "Test",
+	translations: true,
+})
+	.addNumber("standard_number")
+	.addNumber("required_number", {
+		validation: {
+			required: true,
+		},
+	})
+	.addNumber("min_number", {
+		validation: {
+			zod: z.number().min(5),
+		},
+	});
 test("successfully validate field - number", async () => {
-	expect(true).toBe(true);
+	// Standard
+	const standardValidate = validateField({
+		brickId: CONSTANTS.collectionBrickId,
+		field: {
+			key: "standard_number",
+			type: "number",
+			value: 1,
+			localeCode: "en",
+		},
+		instance: NumberCollection,
+		media: [],
+		users: [],
+	});
+	expect(standardValidate).toBe(null);
+
+	// Required
+	const requiredValidate = validateField({
+		brickId: CONSTANTS.collectionBrickId,
+		field: {
+			key: "required_number",
+			type: "number",
+			value: 1,
+			localeCode: "en",
+		},
+		instance: NumberCollection,
+		media: [],
+		users: [],
+	});
+	expect(requiredValidate).toBe(null);
+
+	// Zod
+	const zodValidate = validateField({
+		brickId: CONSTANTS.collectionBrickId,
+		field: {
+			key: "min_number",
+			type: "number",
+			value: 5,
+			localeCode: "en",
+		},
+		instance: NumberCollection,
+		media: [],
+		users: [],
+	});
+	expect(zodValidate).toBe(null);
 });
 test("fail to validate field - number", async () => {
-	expect(true).toBe(true);
+	// TODO: implement value data type validation, this currently doesnt fail
+	// Standard
+	// const standardValidate = validateField({
+	// 	brickId: CONSTANTS.collectionBrickId,
+	// 	field: {
+	// 		key: "standard_number",
+	// 		type: "number",
+	// 		value: "1",
+	// 		localeCode: "en",
+	// 	},
+	// 	instance: NumberCollection,
+	// 	media: [],
+	// 	users: [],
+	// });
+	// expect(standardValidate).toEqual({
+	// 	key: "standard_number",
+	// 	brickId: CONSTANTS.collectionBrickId,
+	// 	localeCode: "en",
+	// 	groupId: undefined,
+	// 	message: T("field_number_invalid"),
+	// });
+
+	// Required
+	const requiredValidate = validateField({
+		brickId: CONSTANTS.collectionBrickId,
+		field: {
+			key: "required_number",
+			type: "number",
+			value: undefined,
+			localeCode: "en",
+		},
+		instance: NumberCollection,
+		media: [],
+		users: [],
+	});
+	expect(requiredValidate).toEqual({
+		key: "required_number",
+		brickId: CONSTANTS.collectionBrickId,
+		localeCode: "en",
+		groupId: undefined,
+		message: T("generic_field_required"),
+	});
+
+	// Zod
+	const zodValidate = validateField({
+		brickId: CONSTANTS.collectionBrickId,
+		field: {
+			key: "min_number",
+			type: "number",
+			value: 1,
+			localeCode: "en",
+		},
+		instance: NumberCollection,
+		media: [],
+		users: [],
+	});
+	expect(zodValidate).toEqual({
+		key: "min_number",
+		brickId: CONSTANTS.collectionBrickId,
+		localeCode: "en",
+		groupId: undefined,
+		message: "Validation error: Number must be greater than or equal to 5", // zod error message
+	});
 });
 
 // -----------------------------------------------
@@ -980,33 +1570,357 @@ test("fail to validate field - text", async () => {
 		brickId: CONSTANTS.collectionBrickId,
 		localeCode: "en",
 		groupId: undefined,
-		message: "String must contain at least 5 character(s)", // zod error message
+		message:
+			"Validation error: String must contain at least 5 character(s)", // zod error message
 	});
 });
 
 // -----------------------------------------------
 // Textarea custom field
+const TextareaCollection = new CollectionBuilder("collection", {
+	mode: "multiple",
+	title: "Test",
+	singular: "Test",
+	translations: true,
+})
+	.addTextarea("standard_textarea")
+	.addTextarea("required_textarea", {
+		validation: {
+			required: true,
+		},
+	})
+	.addTextarea("min_length_textarea", {
+		validation: {
+			zod: z.string().min(5),
+		},
+	});
 test("successfully validate field - textarea", async () => {
-	expect(true).toBe(true);
+	// Standard
+	const standardValidate = validateField({
+		brickId: CONSTANTS.collectionBrickId,
+		field: {
+			key: "standard_textarea",
+			type: "textarea",
+			value: "Standard textarea",
+			localeCode: "en",
+		},
+		instance: TextareaCollection,
+		media: [],
+		users: [],
+	});
+	expect(standardValidate).toBe(null);
+
+	// Required
+	const requiredValidate = validateField({
+		brickId: CONSTANTS.collectionBrickId,
+		field: {
+			key: "required_textarea",
+			type: "textarea",
+			value: "Required textarea",
+			localeCode: "en",
+		},
+		instance: TextareaCollection,
+		media: [],
+		users: [],
+	});
+	expect(requiredValidate).toBe(null);
+
+	// Min length
+	const minLengthValidate = validateField({
+		brickId: CONSTANTS.collectionBrickId,
+		field: {
+			key: "min_length_textarea",
+			type: "textarea",
+			value: "Min length textarea",
+			localeCode: "en",
+		},
+		instance: TextareaCollection,
+		media: [],
+		users: [],
+	});
+	expect(minLengthValidate).toBe(null);
 });
 test("fail to validate field - textarea", async () => {
-	expect(true).toBe(true);
+	// Required
+	const requiredValidate = validateField({
+		brickId: CONSTANTS.collectionBrickId,
+		field: {
+			key: "required_textarea",
+			type: "textarea",
+			value: undefined,
+			localeCode: "en",
+		},
+		instance: TextareaCollection,
+		media: [],
+		users: [],
+	});
+	expect(requiredValidate).toEqual({
+		key: "required_textarea",
+		brickId: CONSTANTS.collectionBrickId,
+		localeCode: "en",
+		groupId: undefined,
+		message: T("generic_field_required"),
+	});
+
+	// Min length
+	const minLengthValidate = validateField({
+		brickId: CONSTANTS.collectionBrickId,
+		field: {
+			key: "min_length_textarea",
+			type: "textarea",
+			value: "1",
+			localeCode: "en",
+		},
+		instance: TextareaCollection,
+		media: [],
+		users: [],
+	});
+	expect(minLengthValidate).toEqual({
+		key: "min_length_textarea",
+		brickId: CONSTANTS.collectionBrickId,
+		localeCode: "en",
+		groupId: undefined,
+		message:
+			"Validation error: String must contain at least 5 character(s)", // zod error message
+	});
 });
 
 // -----------------------------------------------
 // User custom field
+const UserCollection = new CollectionBuilder("collection", {
+	mode: "multiple",
+	title: "Test",
+	singular: "Test",
+	translations: true,
+})
+	.addUser("standard_user")
+	.addUser("required_user", {
+		validation: {
+			required: true,
+		},
+	});
 test("successfully validate field - user", async () => {
-	expect(true).toBe(true);
+	// Standard
+	const standardValidate = validateField({
+		brickId: CONSTANTS.collectionBrickId,
+		field: {
+			key: "standard_user",
+			type: "user",
+			value: 1,
+			localeCode: "en",
+		},
+		instance: UserCollection,
+		media: [],
+		users: [
+			{
+				id: 1,
+				email: "test@test.com",
+				first_name: "Test",
+				last_name: "User",
+				username: "test-user",
+			},
+		],
+	});
+	expect(standardValidate).toBe(null);
+
+	// Required
+	const requiredValidate = validateField({
+		brickId: CONSTANTS.collectionBrickId,
+		field: {
+			key: "required_user",
+			type: "user",
+			value: 1,
+			localeCode: "en",
+		},
+		instance: UserCollection,
+		media: [],
+		users: [
+			{
+				id: 1,
+				email: "test@test.com",
+				first_name: "Test",
+				last_name: "User",
+				username: "test-user",
+			},
+		],
+	});
+	expect(requiredValidate).toBe(null);
 });
 test("fail to validate field - user", async () => {
-	expect(true).toBe(true);
+	// Required
+	const requiredValidate = {
+		exists: validateField({
+			brickId: CONSTANTS.collectionBrickId,
+			field: {
+				key: "required_user",
+				type: "user",
+				value: 1,
+				localeCode: "en",
+			},
+			instance: UserCollection,
+			media: [],
+			users: [],
+		}),
+		null: validateField({
+			brickId: CONSTANTS.collectionBrickId,
+			field: {
+				key: "required_user",
+				type: "user",
+				value: null,
+				localeCode: "en",
+			},
+			instance: UserCollection,
+			media: [],
+			users: [],
+		}),
+	};
+	expect(requiredValidate).toEqual({
+		exists: {
+			key: "required_user",
+			brickId: CONSTANTS.collectionBrickId,
+			localeCode: "en",
+			groupId: undefined,
+			message: T("generic_field_required"),
+		},
+		null: {
+			key: "required_user",
+			brickId: CONSTANTS.collectionBrickId,
+			localeCode: "en",
+			groupId: undefined,
+			message: T("generic_field_required"),
+		},
+	});
 });
 
 // -----------------------------------------------
 // Wysiwyg custom field
+const WysiwygCollection = new CollectionBuilder("collection", {
+	mode: "multiple",
+	title: "Test",
+	singular: "Test",
+	translations: true,
+})
+	.addWysiwyg("standard_wysiwyg")
+	.addWysiwyg("required_wysiwyg", {
+		validation: {
+			required: true,
+		},
+	})
+	.addWysiwyg("min_length_wysiwyg", {
+		validation: {
+			zod: z.string().min(5),
+		},
+	});
 test("successfully validate field - wysiwyg", async () => {
-	expect(true).toBe(true);
+	// Standard
+	const standardValidate = validateField({
+		brickId: CONSTANTS.collectionBrickId,
+		field: {
+			key: "standard_wysiwyg",
+			type: "wysiwyg",
+			value: "<h1>Heading</h1><p>Body</p>",
+			localeCode: "en",
+		},
+		instance: WysiwygCollection,
+		media: [],
+		users: [],
+	});
+	expect(standardValidate).toBe(null);
+
+	// Required
+	const requiredValidate = validateField({
+		brickId: CONSTANTS.collectionBrickId,
+		field: {
+			key: "required_wysiwyg",
+			type: "wysiwyg",
+			value: "<h1>Heading</h1><p>Body</p>",
+			localeCode: "en",
+		},
+		instance: WysiwygCollection,
+		media: [],
+		users: [],
+	});
+	expect(requiredValidate).toBe(null);
+
+	// Min length
+	const minLengthValidate = validateField({
+		brickId: CONSTANTS.collectionBrickId,
+		field: {
+			key: "min_length_wysiwyg",
+			type: "wysiwyg",
+			value: "<h1>Heading</h1><p>Body</p>",
+			localeCode: "en",
+		},
+		instance: WysiwygCollection,
+		media: [],
+		users: [],
+	});
+	expect(minLengthValidate).toBe(null);
 });
 test("fail to validate field - wysiwyg", async () => {
-	expect(true).toBe(true);
+	// Required
+	const requiredValidate = {
+		exists: validateField({
+			brickId: CONSTANTS.collectionBrickId,
+			field: {
+				key: "required_wysiwyg",
+				type: "wysiwyg",
+				value: undefined,
+				localeCode: "en",
+			},
+			instance: WysiwygCollection,
+			media: [],
+			users: [],
+		}),
+		null: validateField({
+			brickId: CONSTANTS.collectionBrickId,
+			field: {
+				key: "required_wysiwyg",
+				type: "wysiwyg",
+				value: null,
+				localeCode: "en",
+			},
+			instance: WysiwygCollection,
+			media: [],
+			users: [],
+		}),
+	};
+	expect(requiredValidate).toEqual({
+		exists: {
+			key: "required_wysiwyg",
+			brickId: CONSTANTS.collectionBrickId,
+			localeCode: "en",
+			groupId: undefined,
+			message: T("generic_field_required"),
+		},
+		null: {
+			key: "required_wysiwyg",
+			brickId: CONSTANTS.collectionBrickId,
+			localeCode: "en",
+			groupId: undefined,
+			message: T("generic_field_required"),
+		},
+	});
+
+	// Min length
+	const minLengthValidate = validateField({
+		brickId: CONSTANTS.collectionBrickId,
+		field: {
+			key: "min_length_wysiwyg",
+			type: "wysiwyg",
+			value: "Hi",
+			localeCode: "en",
+		},
+		instance: WysiwygCollection,
+		media: [],
+		users: [],
+	});
+	expect(minLengthValidate).toEqual({
+		key: "min_length_wysiwyg",
+		brickId: CONSTANTS.collectionBrickId,
+		localeCode: "en",
+		groupId: undefined,
+		message:
+			"Validation error: String must contain at least 5 character(s)", // zod error message
+	});
 });

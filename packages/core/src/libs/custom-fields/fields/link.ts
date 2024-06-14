@@ -1,5 +1,7 @@
+import T from "../../../translations/index.js";
 import CustomField from "../custom-field.js";
 import Formatter from "../../formatters/index.js";
+import constants from "../../../constants.js";
 import type { LinkValue } from "../../../types.js";
 import type {
 	CFConfig,
@@ -80,14 +82,17 @@ class LinkCustomField extends CustomField<"link"> {
 		if (!relationData) return { valid: true };
 		if (!relationData.target) return { valid: true };
 
-		const allowedValues = ["_self", "_blank"];
+		// TODO: verify url is valid?
+		// TODO: verify label is valid?
 
-		if (!allowedValues.includes(relationData.target)) {
+		if (
+			!constants.customFields.link.targets.includes(relationData.target)
+		) {
 			return {
 				valid: false,
-				message: `Please set the target to one of the following: ${allowedValues.join(
-					", ",
-				)}.`,
+				message: T("field_link_target_error_message", {
+					valid: constants.customFields.link.targets.join(", "),
+				}),
 			};
 		}
 

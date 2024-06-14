@@ -38,6 +38,11 @@ export default {
 	fieldBuiler: {
 		maxRepeaterDepth: 3,
 	},
+	customFields: {
+		link: {
+			targets: ["_self", "_blank", "_parent", "_top", "framename"],
+		},
+	},
 	query: {
 		page: 1,
 		perPage: 10,

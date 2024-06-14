@@ -57,6 +57,7 @@ class ColourCustomField extends CustomField<"colour"> {
 		} satisfies CFInsertItem<"colour">;
 	}
 	typeValidation() {
+		// TODO: down the line, add validation for different colour formats - currently accepts any value
 		return {
 			valid: true,
 		};

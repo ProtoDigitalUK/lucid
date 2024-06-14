@@ -1,4 +1,5 @@
 import T from "../../translations/index.js";
+import { fromError } from "zod-validation-error";
 import type {
 	CFConfig,
 	FieldTypes,
@@ -55,6 +56,8 @@ abstract class CustomField<T extends FieldTypes> {
 	}): CustomFieldValidateResponse {
 		if (this.config.type === "tab") return { valid: true };
 
+		// TODO: add validation for value data type, ie number custom field should only accept numbers etc.
+
 		// Check type
 		const fieldTypeRes = this.fieldTypeValidation(props.type);
 		if (fieldTypeRes.valid === false) return fieldTypeRes;
@@ -106,6 +109,7 @@ abstract class CustomField<T extends FieldTypes> {
 		if (this.config.type === "colour") return { valid: true };
 		if (this.config.type === "link") return { valid: true };
 		if (this.config.type === "user") return { valid: true };
+		if (this.config.type === "wysiwyg") return { valid: true };
 
 		if (!this.config.validation?.zod) return { valid: true };
 
@@ -114,12 +118,10 @@ abstract class CustomField<T extends FieldTypes> {
 			return { valid: true };
 		}
 
-		const firstIsssue = response.error.issues[0];
-
 		return {
 			valid: false,
 			message:
-				firstIsssue?.message ??
+				fromError(response.error).message ??
 				T("an_unknown_error_occurred_validating_the_field"),
 		};
 	}

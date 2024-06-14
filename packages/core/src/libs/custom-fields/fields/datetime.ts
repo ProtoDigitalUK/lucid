@@ -1,3 +1,4 @@
+import T from "../../../translations/index.js";
 import CustomField from "../custom-field.js";
 import type { CFConfig, CFProps, CFResponse, CFInsertItem } from "../types.js";
 import type { FieldProp } from "../../formatters/collection-document-fields.js";
@@ -57,16 +58,12 @@ class DatetimeCustomField extends CustomField<"datetime"> {
 		} satisfies CFInsertItem<"datetime">;
 	}
 	typeValidation(value: string) {
-		if (this.config.validation?.required !== true && !value) {
-			return { valid: true };
-		}
-
 		const date = new Date(value);
 
 		if (Number.isNaN(date.getTime())) {
 			return {
 				valid: false,
-				message: "Please ensure the date is valid.",
+				message: T("field_date_invalid"),
 			};
 		}
 

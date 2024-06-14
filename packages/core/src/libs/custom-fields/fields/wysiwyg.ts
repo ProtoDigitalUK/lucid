@@ -1,5 +1,7 @@
+import T from "../../../translations/index.js";
 import CustomField from "../custom-field.js";
 import sanitizeHtml from "sanitize-html";
+import { fromError } from "zod-validation-error";
 import type { CFConfig, CFProps, CFResponse, CFInsertItem } from "../types.js";
 import type { FieldProp } from "../../formatters/collection-document-fields.js";
 import type { FieldInsertItem } from "../../../services/collection-document-bricks/helpers/flatten-fields.js";
@@ -58,10 +60,7 @@ class WysiwygCustomField extends CustomField<"wysiwyg"> {
 		} satisfies CFInsertItem<"wysiwyg">;
 	}
 	typeValidation(value: string) {
-		const sanitizedValue = sanitizeHtml(value, {
-			allowedTags: [],
-			allowedAttributes: {},
-		});
+		const sanitizedValue = sanitizeHtml(value);
 
 		if (this.config.validation?.zod) {
 			const response =
@@ -72,7 +71,9 @@ class WysiwygCustomField extends CustomField<"wysiwyg"> {
 
 			return {
 				valid: false,
-				message: response?.error.message,
+				message:
+					fromError(response.error).message ??
+					T("an_unknown_error_occurred_validating_the_field"),
 			};
 		}
 
