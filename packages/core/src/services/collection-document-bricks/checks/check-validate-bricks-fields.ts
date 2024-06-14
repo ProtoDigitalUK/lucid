@@ -152,55 +152,82 @@ export const validateField = (props: {
 		case "link": {
 			const value = props.field.value as LinkValue | undefined;
 
-			fieldValRes = fieldInstance.validate(value, {
-				target: value?.target,
-				label: value?.label,
-			} satisfies LinkReferenceData);
+			fieldValRes = fieldInstance.validate({
+				type: props.field.type,
+				value: value,
+				relationData: {
+					target: value?.target,
+					label: value?.label,
+				} satisfies LinkReferenceData,
+			});
 			break;
 		}
 		case "media": {
 			const media = props.media.find((m) => m.id === props.field.value);
 			if (media) {
-				fieldValRes = fieldInstance.validate(props.field.value, {
-					extension: media.file_extension,
-					width: media.width,
-					height: media.height,
-					type: media.type,
-				} satisfies MediaReferenceData);
+				fieldValRes = fieldInstance.validate({
+					type: props.field.type,
+					value: props.field.value,
+					relationData: {
+						extension: media.file_extension,
+						width: media.width,
+						height: media.height,
+						type: media.type,
+					} satisfies MediaReferenceData,
+				});
 			} else if (props.field.value !== undefined) {
 				// if the media doesnt exist, we treat the value as null
-				fieldValRes = fieldInstance.validate(null, undefined);
+				fieldValRes = fieldInstance.validate({
+					type: props.field.type,
+					value: null,
+					relationData: undefined,
+				});
 			} else {
-				fieldValRes = fieldInstance.validate(undefined, undefined);
+				fieldValRes = fieldInstance.validate({
+					type: props.field.type,
+					value: undefined,
+					relationData: undefined,
+				});
 			}
 			break;
 		}
 		case "user": {
 			const user = props.users.find((u) => u.id === props.field.value);
 			if (user) {
-				fieldValRes = fieldInstance.validate(props.field.value, {
-					username: user.username,
-					email: user.email,
-					firstName: user.first_name,
-					lastName: user.last_name,
-				} satisfies UserReferenceData);
+				fieldValRes = fieldInstance.validate({
+					type: props.field.type,
+					value: props.field.value,
+					relationData: {
+						username: user.username,
+						email: user.email,
+						firstName: user.first_name,
+						lastName: user.last_name,
+					} satisfies UserReferenceData,
+				});
 			} else if (props.field.value !== undefined) {
 				// if the user doesnt exist, we treat the value as null
-				fieldValRes = fieldInstance.validate(null, undefined);
+				fieldValRes = fieldInstance.validate({
+					type: props.field.type,
+					value: null,
+					relationData: undefined,
+				});
 			} else {
-				fieldValRes = fieldInstance.validate(undefined, undefined);
+				fieldValRes = fieldInstance.validate({
+					type: props.field.type,
+					value: undefined,
+					relationData: undefined,
+				});
 			}
 			break;
 		}
 		default: {
-			fieldValRes = fieldInstance.validate(props.field.value, undefined);
+			fieldValRes = fieldInstance.validate({
+				type: props.field.type,
+				value: props.field.value,
+				relationData: undefined,
+			});
 		}
 	}
-
-	if (props.field.type === "media") {
-		console.log(fieldValRes);
-	}
-
 	if (fieldValRes.valid === true) return null;
 
 	return {
