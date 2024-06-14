@@ -96,10 +96,7 @@ const createMultiple = async (
 			fields: postInsertBricks.flatMap((b) =>
 				formatInsertFields({
 					groups: groups,
-					brickId: b.id,
-					brickKey: b.key,
-					brickType: b.type,
-					fields: b.fields,
+					brick: b,
 					collection: data.collection,
 				}),
 			),

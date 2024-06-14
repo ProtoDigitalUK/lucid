@@ -19,10 +19,15 @@ export interface ServiceData {
 	}>;
 }
 
+export interface GroupSimpleResponse {
+	group_id: number;
+	ref: string | null;
+}
+
 const createMultipleGroups = async (
 	serviceConfig: ServiceConfig,
 	data: ServiceData,
-) => {
+): Promise<GroupSimpleResponse[]> => {
 	const flatGroups = data.brickGroups.flatMap((bg) => bg.groups || []);
 	if (flatGroups.length === 0) return [];
 

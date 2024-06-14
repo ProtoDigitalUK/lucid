@@ -1,6 +1,5 @@
 import { expect, test } from "vitest";
 import flattenFields from "./flatten-fields.js";
-import defaultConfig from "../../../libs/config/default-config.js";
 import CollectionBuilder from "../../../libs/builders/collection-builder/index.js";
 
 const pagesCollection = new CollectionBuilder("pages", {

@@ -1,10 +1,13 @@
 import Repository from "../../libs/repositories/index.js";
 import type { ServiceConfig } from "../../utils/service-wrapper.js";
-import type formatInsertFields from "./helpers/format-insert-fields.js";
+import type {
+	CFInsertItem,
+	FieldTypes,
+} from "../../libs/custom-fields/types.js";
 
 export interface ServiceData {
 	documentId: number;
-	fields: ReturnType<typeof formatInsertFields>;
+	fields: CFInsertItem<FieldTypes>[];
 }
 
 const createMultipleFields = async (

@@ -1,6 +1,7 @@
 import T from "../../../translations/index.js";
 import { LucidAPIError } from "../../../utils/error-handler.js";
 import type { BrickInsertItem } from "./format-insert-bricks.js";
+import type { GroupInsertItem, FieldInsertItem } from "./flatten-fields.js";
 
 const formatPostInsertBricks = (
 	bricks: Array<BrickInsertItem>,
@@ -10,7 +11,14 @@ const formatPostInsertBricks = (
 		brick_key: string | null;
 		brick_order: number | null;
 	}>,
-) =>
+): {
+	id: number;
+	key: string | undefined;
+	order: number | undefined;
+	type: "builder" | "fixed" | "collection-fields";
+	groups: GroupInsertItem[];
+	fields: FieldInsertItem[];
+}[] =>
 	bricks.map((brick) => {
 		const foundBrick = insertedBricks.find(
 			(res) =>

@@ -1,27 +1,29 @@
-import type createMultipleGroups from "../create-multiple-groups.js";
+import type { GroupSimpleResponse } from "../create-multiple-groups.js";
 import type { FieldInsertItem } from "./flatten-fields.js";
 import type CollectionBuilder from "../../../libs/builders/collection-builder/index.js";
 import type {
 	CFInsertItem,
 	FieldTypes,
 } from "../../../libs/custom-fields/types.js";
+import type CustomField from "../../../libs/custom-fields/custom-field.js";
 
 const formatInsertFields = (props: {
-	brickId: number;
-	brickKey: string | undefined;
-	brickType: "builder" | "fixed" | "collection-fields";
-	groups: Awaited<ReturnType<typeof createMultipleGroups>>;
-	fields: FieldInsertItem[];
+	brick: {
+		id: number;
+		key: string | undefined;
+		type: "builder" | "fixed" | "collection-fields";
+		fields: FieldInsertItem[];
+	};
+	groups: GroupSimpleResponse[];
 	collection: CollectionBuilder;
-}) => {
+}): CFInsertItem<FieldTypes>[] => {
 	return (
-		props.fields
+		props.brick.fields
 			.map((field) => {
 				const fieldInstance = getFieldInstance({
 					collection: props.collection,
-					brickType: props.brickType,
+					brick: props.brick,
 					fieldKey: field.key,
-					brickKey: props.brickKey,
 				});
 				if (!fieldInstance) return null;
 
@@ -30,7 +32,7 @@ const formatInsertFields = (props: {
 				);
 				return fieldInstance.getInsertField({
 					item: field,
-					brickId: props.brickId,
+					brickId: props.brick.id,
 					groupId: targetGroup?.group_id ?? null,
 				});
 			})
@@ -41,22 +43,24 @@ const formatInsertFields = (props: {
 
 const getFieldInstance = (props: {
 	collection: CollectionBuilder;
-	brickType: "builder" | "fixed" | "collection-fields";
 	fieldKey: string;
-	brickKey: string | undefined;
-}) => {
-	if (props.brickType === "collection-fields") {
+	brick: {
+		type: "builder" | "fixed" | "collection-fields";
+		key: string | undefined;
+	};
+}): CustomField<FieldTypes> | undefined => {
+	if (props.brick.type === "collection-fields") {
 		return props.collection.fields.get(props.fieldKey);
 	}
-	if (props.brickType === "fixed") {
+	if (props.brick.type === "fixed") {
 		const fixedBrick = props.collection.config.bricks?.fixed?.find(
-			(b) => b.key === props.brickKey,
+			(b) => b.key === props.brick.key,
 		);
 		return fixedBrick?.fields.get(props.fieldKey);
 	}
-	if (props.brickType === "builder") {
+	if (props.brick.type === "builder") {
 		const builderBrick = props.collection.config.bricks?.builder?.find(
-			(b) => b.key === props.brickKey,
+			(b) => b.key === props.brick.key,
 		);
 		return builderBrick?.fields.get(props.fieldKey);
 	}
