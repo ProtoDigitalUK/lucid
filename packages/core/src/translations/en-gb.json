@@ -143,5 +143,16 @@
 	"generic_field_invalid": "Please enter a valid value for this field.",
 	"please_ensure_a_valid_option_is_selected": "Please ensure a valid option is selected.",
 	"cannot_find_field_in_collection_or_brick": "Cannot find field within the collection or brick. Please ensure a field with this key exists.",
-	"an_unknown_error_occurred_validating_the_field": "An unknown error occured when validating the field."
+	"an_unknown_error_occurred_validating_the_field": "An unknown error occured when validating the field.",
+	"field_media_min_width": "Media width must be greater than {{min}}px.",
+	"field_media_max_width": "Media width must be less than {{max}}px.",
+	"field_media_min_height": "Media height must be greater than {{min}}px.",
+	"field_media_max_height": "Media height must be less than {{max}}px.",
+	"field_media_type": "Media must be of type \"{{type}}\".",
+	"field_media_extension": "Media must be one of the following extensions: {{extensions}}.",
+	"field_media_not_found": "We couldn't find the media you selected.",
+	"field_media_doenst_have_type": "This media does not have a type.",
+	"field_media_doenst_have_width": "This media does not have a width.",
+	"field_media_doenst_have_height": "This media does not have a height.",
+	"field_type_mismatch": "The type of the field does not match the type of the config field. Received: \"{{received}}\" Expected: \"{{expected}}\"."
 }

@@ -1,3 +1,4 @@
+import T from "../../../translations/index.js";
 import CustomField from "../custom-field.js";
 import mediaHelpers from "../../../utils/media-helpers.js";
 import type { MediaType } from "../../../types.js";
@@ -96,7 +97,7 @@ class MediaCustomField extends CustomField<"media"> {
 		if (relationData === undefined) {
 			return {
 				valid: false,
-				message: "We couldn't find the media you selected.",
+				message: T("field_media_not_found"),
 			};
 		}
 
@@ -106,9 +107,10 @@ class MediaCustomField extends CustomField<"media"> {
 			if (!this.config.validation.extensions.includes(extension)) {
 				return {
 					valid: false,
-					message: `Media must be one of the following extensions: ${this.config.validation.extensions.join(
-						", ",
-					)}`,
+					message: T("field_media_extension", {
+						extensions:
+							this.config.validation.extensions.join(", "),
+					}),
 				};
 			}
 		}
@@ -119,25 +121,27 @@ class MediaCustomField extends CustomField<"media"> {
 			if (!type) {
 				return {
 					valid: false,
-					message: "This media does not have a type.",
+					message: T("field_media_doenst_have_type"),
 				};
 			}
 
 			if (this.config.validation.type !== type) {
 				return {
 					valid: false,
-					message: `Media must be of type "${this.config.validation.type}".`,
+					message: T("field_media_type", {
+						type: this.config.validation.type,
+					}),
 				};
 			}
 		}
 
 		// Check width
-		if (this.config.validation?.width) {
+		if (this.config.validation?.width && relationData.type === "image") {
 			const width = relationData.width;
 			if (!width) {
 				return {
 					valid: false,
-					message: "This media does not have a width.",
+					message: T("field_media_doenst_have_width"),
 				};
 			}
 
@@ -147,7 +151,9 @@ class MediaCustomField extends CustomField<"media"> {
 			) {
 				return {
 					valid: false,
-					message: `Media width must be greater than ${this.config.validation.width.min}px.`,
+					message: T("field_media_min_width", {
+						min: this.config.validation.width.min,
+					}),
 				};
 			}
 			if (
@@ -156,18 +162,20 @@ class MediaCustomField extends CustomField<"media"> {
 			) {
 				return {
 					valid: false,
-					message: `Media width must be less than ${this.config.validation.width.max}px.`,
+					message: T("field_media_max_width", {
+						max: this.config.validation.width.max,
+					}),
 				};
 			}
 		}
 
 		// Check height
-		if (this.config.validation?.height) {
+		if (this.config.validation?.height && relationData.type === "image") {
 			const height = relationData.height;
 			if (!height) {
 				return {
 					valid: false,
-					message: "This media does not have a height.",
+					message: T("field_media_doenst_have_height"),
 				};
 			}
 
@@ -177,7 +185,9 @@ class MediaCustomField extends CustomField<"media"> {
 			) {
 				return {
 					valid: false,
-					message: `Media height must be greater than ${this.config.validation.height.min}px.`,
+					message: T("field_media_min_height", {
+						min: this.config.validation.height.min,
+					}),
 				};
 			}
 			if (
@@ -186,7 +196,9 @@ class MediaCustomField extends CustomField<"media"> {
 			) {
 				return {
 					valid: false,
-					message: `Media height must be less than ${this.config.validation.height.max}px.`,
+					message: T("field_media_max_height", {
+						max: this.config.validation.height.max,
+					}),
 				};
 			}
 		}
