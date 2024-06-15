@@ -363,18 +363,19 @@ test("transaction - two level deep service wrapper success and error", async () 
 	expect(success.data).toBeDefined();
 	expect(error.error).toEqual(CONSTANTS.error.level2);
 
-	const successDocuments = await config.db.client
-		.selectFrom("lucid_collection_documents")
-		.select("id")
-		.where("collection_key", "=", successCollectionKey)
-		.execute();
-	expect(successDocuments.length).toBe(2);
-
-	expect(
-		await config.db.client
+	const [successDocuments, errorDocuments] = await Promise.all([
+		config.db.client
+			.selectFrom("lucid_collection_documents")
+			.select("id")
+			.where("collection_key", "=", successCollectionKey)
+			.execute(),
+		config.db.client
 			.selectFrom("lucid_collection_documents")
 			.select("id")
 			.where("collection_key", "=", errorCollectionKey)
 			.executeTakeFirst(),
-	).toBeUndefined();
+	]);
+
+	expect(successDocuments.length).toBe(2);
+	expect(errorDocuments).toBeUndefined();
 });
