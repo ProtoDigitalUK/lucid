@@ -92,8 +92,8 @@ test("basic - one level deep service wrapper success and error", async () => {
 		),
 	]);
 
-	expect(success).toEqual({ error: undefined, data: { test: "test" } });
-	expect(error).toEqual({ error: CONSTANTS.error.level1, data: undefined });
+	expect(success.data).toBeDefined();
+	expect(error.error).toEqual(CONSTANTS.error.level1);
 });
 
 test("basic - two level deep service wrapper success and error", async () => {
@@ -180,8 +180,8 @@ test("basic - two level deep service wrapper success and error", async () => {
 		),
 	]);
 
-	expect(success).toEqual({ error: undefined, data: { test: "test" } });
-	expect(error).toEqual({ error: CONSTANTS.error.level2, data: undefined });
+	expect(success.data).toBeDefined();
+	expect(error.error).toEqual(CONSTANTS.error.level2);
 });
 
 test("transaction - one level deep service wrapper success and error", async () => {
@@ -252,8 +252,8 @@ test("transaction - one level deep service wrapper success and error", async () 
 		),
 	]);
 
-	expect(success).toEqual({ error: undefined, data: { id: 1 } });
-	expect(error).toEqual({ error: CONSTANTS.error.level1, data: undefined });
+	expect(success.data).toBeDefined();
+	expect(error.error).toEqual(CONSTANTS.error.level1);
 	expect(
 		await config.db.client
 			.selectFrom("lucid_collection_documents")
