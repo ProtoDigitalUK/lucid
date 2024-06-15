@@ -3,7 +3,6 @@
     "exclude": [
         "./coverage",
         "./dist",
-        "tests",
         "jest.config.ts",
         "./cms",
         "./node_modules",

@@ -82,8 +82,6 @@ class LinkCustomField extends CustomField<"link"> {
 		} satisfies CFInsertItem<"link">;
 	}
 	cfSpecificValidation(value: unknown) {
-		console.log("value", value);
-
 		const valueSchema = z.object({
 			url: z.string().optional().nullable(),
 			target: z.string().optional().nullable(),
