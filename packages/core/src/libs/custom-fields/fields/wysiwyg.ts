@@ -1,7 +1,7 @@
-import T from "../../../translations/index.js";
 import CustomField from "../custom-field.js";
 import sanitizeHtml from "sanitize-html";
-import { fromError } from "zod-validation-error";
+import zodSafeParse from "../utils/zod-safe-parse.js";
+import keyToTitle from "../utils/key-to-title.js";
 import type { CFConfig, CFProps, CFResponse, CFInsertItem } from "../types.js";
 import type { FieldProp } from "../../formatters/collection-document-fields.js";
 import type { FieldInsertItem } from "../../../services/collection-document-bricks/helpers/flatten-fields.js";
@@ -20,7 +20,7 @@ class WysiwygCustomField extends CustomField<"wysiwyg"> {
 			key: this.key,
 			type: this.type,
 			labels: {
-				title: this.props?.labels?.title ?? super.keyToTitle(this.key),
+				title: this.props?.labels?.title ?? keyToTitle(this.key),
 				description: this.props?.labels?.description,
 				placeholder: this.props?.labels?.placeholder,
 			},
@@ -59,22 +59,11 @@ class WysiwygCustomField extends CustomField<"wysiwyg"> {
 			userId: null,
 		} satisfies CFInsertItem<"wysiwyg">;
 	}
-	typeValidation(value: string) {
+	cfSpecificValidation(value: string) {
 		const sanitizedValue = sanitizeHtml(value);
 
 		if (this.config.validation?.zod) {
-			const response =
-				this.config.validation?.zod?.safeParse(sanitizedValue);
-			if (response?.success) {
-				return { valid: true };
-			}
-
-			return {
-				valid: false,
-				message:
-					fromError(response.error).message ??
-					T("an_unknown_error_occurred_validating_the_field"),
-			};
+			return zodSafeParse(sanitizedValue, this.config.validation?.zod);
 		}
 
 		return { valid: true };

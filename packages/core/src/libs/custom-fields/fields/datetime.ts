@@ -1,5 +1,6 @@
 import T from "../../../translations/index.js";
 import CustomField from "../custom-field.js";
+import keyToTitle from "../utils/key-to-title.js";
 import type { CFConfig, CFProps, CFResponse, CFInsertItem } from "../types.js";
 import type { FieldProp } from "../../formatters/collection-document-fields.js";
 import type { FieldInsertItem } from "../../../services/collection-document-bricks/helpers/flatten-fields.js";
@@ -18,7 +19,7 @@ class DatetimeCustomField extends CustomField<"datetime"> {
 			key: this.key,
 			type: this.type,
 			labels: {
-				title: this.props?.labels?.title ?? super.keyToTitle(this.key),
+				title: this.props?.labels?.title ?? keyToTitle(this.key),
 				description: this.props?.labels?.description,
 				placeholder: this.props?.labels?.placeholder,
 			},
@@ -57,7 +58,7 @@ class DatetimeCustomField extends CustomField<"datetime"> {
 			userId: null,
 		} satisfies CFInsertItem<"datetime">;
 	}
-	typeValidation(value: string) {
+	cfSpecificValidation(value: string) {
 		const date = new Date(value);
 
 		if (Number.isNaN(date.getTime())) {

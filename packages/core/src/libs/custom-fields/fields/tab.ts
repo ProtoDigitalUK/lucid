@@ -1,4 +1,5 @@
 import CustomField from "../custom-field.js";
+import keyToTitle from "../utils/key-to-title.js";
 import type { CFConfig, CFProps, CFResponse } from "../types.js";
 
 class TabCustomField extends CustomField<"tab"> {
@@ -15,7 +16,7 @@ class TabCustomField extends CustomField<"tab"> {
 			key: this.key,
 			type: this.type,
 			labels: {
-				title: this.props?.labels?.title ?? super.keyToTitle(this.key),
+				title: this.props?.labels?.title ?? keyToTitle(this.key),
 				description: this.props?.labels?.description,
 			},
 			fields: [],
@@ -31,7 +32,7 @@ class TabCustomField extends CustomField<"tab"> {
 	getInsertField() {
 		return null;
 	}
-	typeValidation() {
+	cfSpecificValidation() {
 		return {
 			valid: true,
 		};

@@ -1,6 +1,7 @@
 import T from "../../../translations/index.js";
 import CustomField from "../custom-field.js";
 import merge from "lodash.merge";
+import keyToTitle from "../utils/key-to-title.js";
 import type { CFConfig, CFProps, CFResponse, CFInsertItem } from "../types.js";
 import type { FieldProp } from "../../formatters/collection-document-fields.js";
 import type { FieldInsertItem } from "../../../services/collection-document-bricks/helpers/flatten-fields.js";
@@ -19,7 +20,7 @@ class SelectCustomField extends CustomField<"select"> {
 			key: this.key,
 			type: this.type,
 			labels: {
-				title: this.props?.labels?.title ?? super.keyToTitle(this.key),
+				title: this.props?.labels?.title ?? keyToTitle(this.key),
 				description: this.props?.labels?.description,
 				placeholder: this.props?.labels?.placeholder,
 			},
@@ -59,7 +60,7 @@ class SelectCustomField extends CustomField<"select"> {
 			userId: null,
 		} satisfies CFInsertItem<"select">;
 	}
-	typeValidation(value: string) {
+	cfSpecificValidation(value: string) {
 		if (this.config.validation?.required !== true && !value) {
 			return { valid: true };
 		}

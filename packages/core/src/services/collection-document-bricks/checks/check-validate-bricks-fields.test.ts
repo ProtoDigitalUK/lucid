@@ -267,6 +267,28 @@ test("successfully validate field - checkbox", async () => {
 	expect(requiredValidate).toBe(null);
 });
 test("fail to validate field - checkbox", async () => {
+	// Standard
+	const standardValidate = validateField({
+		brickId: CONSTANTS.collectionBrickId,
+		field: {
+			key: "standard_checkbox",
+			type: "checkbox",
+			value: "1",
+			localeCode: "en",
+		},
+		instance: CheckboxCollection,
+		media: [],
+		users: [],
+	});
+	expect(standardValidate).toEqual({
+		key: "standard_checkbox",
+		brickId: CONSTANTS.collectionBrickId,
+		localeCode: "en",
+		groupId: undefined,
+		message:
+			"Invalid literal value, expected 1, or Invalid literal value, expected 0, or Expected boolean, received string", // zod error message
+	});
+
 	// Required
 	const requiredValidate = validateField({
 		brickId: CONSTANTS.collectionBrickId,
@@ -621,8 +643,7 @@ test("fail to validate field - json", async () => {
 		brickId: CONSTANTS.collectionBrickId,
 		localeCode: "en",
 		groupId: undefined,
-		message:
-			'Validation error: Expected string, received boolean at "value"', // zod error message
+		message: 'Expected string, received boolean at "value"', // zod error message
 	});
 });
 
@@ -1325,7 +1346,7 @@ test("fail to validate field - number", async () => {
 		brickId: CONSTANTS.collectionBrickId,
 		localeCode: "en",
 		groupId: undefined,
-		message: "Validation error: Number must be greater than or equal to 5", // zod error message
+		message: "Number must be greater than or equal to 5", // zod error message
 	});
 });
 
@@ -1570,8 +1591,7 @@ test("fail to validate field - text", async () => {
 		brickId: CONSTANTS.collectionBrickId,
 		localeCode: "en",
 		groupId: undefined,
-		message:
-			"Validation error: String must contain at least 5 character(s)", // zod error message
+		message: "String must contain at least 5 character(s)", // zod error message
 	});
 });
 
@@ -1680,8 +1700,7 @@ test("fail to validate field - textarea", async () => {
 		brickId: CONSTANTS.collectionBrickId,
 		localeCode: "en",
 		groupId: undefined,
-		message:
-			"Validation error: String must contain at least 5 character(s)", // zod error message
+		message: "String must contain at least 5 character(s)", // zod error message
 	});
 });
 
@@ -1920,7 +1939,6 @@ test("fail to validate field - wysiwyg", async () => {
 		brickId: CONSTANTS.collectionBrickId,
 		localeCode: "en",
 		groupId: undefined,
-		message:
-			"Validation error: String must contain at least 5 character(s)", // zod error message
+		message: "String must contain at least 5 character(s)", // zod error message
 	});
 });

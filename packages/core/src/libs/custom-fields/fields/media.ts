@@ -1,6 +1,7 @@
 import T from "../../../translations/index.js";
 import CustomField from "../custom-field.js";
 import mediaHelpers from "../../../utils/media-helpers.js";
+import keyToTitle from "../utils/key-to-title.js";
 import type { MediaType } from "../../../types.js";
 import type {
 	CFConfig,
@@ -26,7 +27,7 @@ class MediaCustomField extends CustomField<"media"> {
 			key: this.key,
 			type: this.type,
 			labels: {
-				title: this.props?.labels?.title ?? super.keyToTitle(this.key),
+				title: this.props?.labels?.title ?? keyToTitle(this.key),
 				description: this.props?.labels?.description,
 			},
 			translations: this.props?.translations ?? false,
@@ -89,7 +90,10 @@ class MediaCustomField extends CustomField<"media"> {
 			userId: null,
 		} satisfies CFInsertItem<"media">;
 	}
-	typeValidation(value: number | null, relationData: MediaReferenceData) {
+	cfSpecificValidation(
+		value: number | null,
+		relationData: MediaReferenceData,
+	) {
 		if (this.config.validation?.required !== true && !value) {
 			return { valid: true };
 		}

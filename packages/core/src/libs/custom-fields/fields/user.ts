@@ -1,4 +1,5 @@
 import CustomField from "../custom-field.js";
+import keyToTitle from "../utils/key-to-title.js";
 import type {
 	CFConfig,
 	CFProps,
@@ -23,7 +24,7 @@ class UserCustomField extends CustomField<"user"> {
 			key: this.key,
 			type: this.type,
 			labels: {
-				title: this.props?.labels?.title ?? super.keyToTitle(this.key),
+				title: this.props?.labels?.title ?? keyToTitle(this.key),
 				description: this.props?.labels?.description,
 			},
 			translations: this.props?.translations ?? false,
@@ -65,7 +66,10 @@ class UserCustomField extends CustomField<"user"> {
 			userId: props.item.value,
 		} satisfies CFInsertItem<"user">;
 	}
-	typeValidation(value: number | null, relationData: UserReferenceData) {
+	cfSpecificValidation(
+		value: number | null,
+		relationData: UserReferenceData,
+	) {
 		if (this.config.validation?.required !== true && !value)
 			return { valid: true };
 

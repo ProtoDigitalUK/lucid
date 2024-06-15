@@ -1,5 +1,4 @@
 import T from "../../translations/index.js";
-import { fromError } from "zod-validation-error";
 import type {
 	CFConfig,
 	FieldTypes,
@@ -10,6 +9,7 @@ import type {
 	CustomFieldErrorItem,
 	CustomFieldValidateResponse,
 } from "./types.js";
+import zodSafeParse from "./utils/zod-safe-parse.js";
 import type { FieldProp } from "../formatters/collection-document-fields.js";
 import type { FieldInsertItem } from "../../services/collection-document-bricks/helpers/flatten-fields.js";
 
@@ -25,7 +25,7 @@ abstract class CustomField<T extends FieldTypes> {
 		data?: FieldProp;
 		host?: string;
 	}): CFResponse<T>;
-	abstract typeValidation(
+	abstract cfSpecificValidation(
 		value: unknown,
 		relationData?: unknown,
 	): {
@@ -39,16 +39,6 @@ abstract class CustomField<T extends FieldTypes> {
 	}): CFInsertItem<T> | null;
 
 	// Methods
-	protected keyToTitle(key: string): string {
-		if (typeof key !== "string") return key;
-
-		const title = key
-			.split(/[-_]/g)
-			.map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-			.join(" ");
-
-		return title;
-	}
 	public validate(props: {
 		type: FieldTypes;
 		value: unknown;
@@ -70,8 +60,8 @@ abstract class CustomField<T extends FieldTypes> {
 		const zodRes = this.zodCheck(props.value);
 		if (!zodRes.valid) return zodRes;
 
-		// value type
-		return this.typeValidation(props.value, props.relationData);
+		// custom field specific validation
+		return this.cfSpecificValidation(props.value, props.relationData);
 	}
 	private fieldTypeValidation(type: FieldTypes) {
 		if (this.errors.fieldType.condition?.(type)) {
@@ -113,23 +103,14 @@ abstract class CustomField<T extends FieldTypes> {
 
 		if (!this.config.validation?.zod) return { valid: true };
 
-		const response = this.config.validation?.zod?.safeParse(value);
-		if (response?.success) {
-			return { valid: true };
-		}
-
-		return {
-			valid: false,
-			message:
-				fromError(response.error).message ??
-				T("an_unknown_error_occurred_validating_the_field"),
-		};
+		return zodSafeParse(value, this.config.validation?.zod);
 	}
 	// Getters
 	get errors(): {
 		fieldType: CustomFieldErrorItem;
 		required: CustomFieldErrorItem;
 		zod: CustomFieldErrorItem;
+		dataType: CustomFieldErrorItem;
 	} {
 		return {
 			fieldType: {
@@ -146,6 +127,9 @@ abstract class CustomField<T extends FieldTypes> {
 			},
 			zod: {
 				message: T("generic_field_invalid"),
+			},
+			dataType: {
+				message: T("generic_field_data_type_mismatch"),
 			},
 		};
 	}

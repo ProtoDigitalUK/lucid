@@ -1,4 +1,5 @@
 import CustomField from "../custom-field.js";
+import keyToTitle from "../utils/key-to-title.js";
 import type { CFConfig, CFProps, CFResponse, CFInsertItem } from "../types.js";
 import type { FieldProp } from "../../formatters/collection-document-fields.js";
 import type { FieldInsertItem } from "../../../services/collection-document-bricks/helpers/flatten-fields.js";
@@ -17,7 +18,7 @@ class ColourCustomField extends CustomField<"colour"> {
 			key: this.key,
 			type: this.type,
 			labels: {
-				title: this.props?.labels?.title ?? super.keyToTitle(this.key),
+				title: this.props?.labels?.title ?? keyToTitle(this.key),
 				description: this.props?.labels?.description,
 			},
 			presets: this.props?.presets ?? [],
@@ -56,7 +57,7 @@ class ColourCustomField extends CustomField<"colour"> {
 			userId: null,
 		} satisfies CFInsertItem<"colour">;
 	}
-	typeValidation() {
+	cfSpecificValidation() {
 		// TODO: down the line, add validation for different colour formats - currently accepts any value
 		return {
 			valid: true,

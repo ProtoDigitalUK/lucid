@@ -558,7 +558,7 @@ export type CustomFieldErrorGetter = {
 	required: CustomFieldErrorItem;
 };
 export type CustomFieldErrorItem = {
-	condition?: (value: unknown) => boolean;
+	condition?: (...args: unknown[]) => boolean;
 	message: string;
 };
 export type CustomFieldValidateResponse = {
