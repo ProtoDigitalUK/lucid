@@ -1,25 +1,23 @@
 import { expect, test, beforeAll, afterAll } from "vitest";
+import z from "zod";
 import testConfig from "../test-helpers/test-config.js";
 import testDatabase from "../test-helpers/test-database.js";
-import serviceWrapper, {
-	type ServiceConfig,
-	type ServiceResponse,
-} from "./service-wrapper.js";
+import serviceWrapper from "./service-wrapper.js";
+import type { ServiceResponse, ServiceFn } from "./types.js";
+import mergeServiceError from "./utils/merge-errors.js";
 
 const CONSTANTS = {
 	error: {
-		level1: {
+		level1: mergeServiceError({
+			type: "basic",
 			status: 500,
-			code: "internal",
 			name: "Example Error - Level 1",
-			message: "An unknown error occurred",
-		},
-		level2: {
+		}),
+		level2: mergeServiceError({
+			type: "basic",
 			status: 500,
-			code: "internal",
 			name: "Example Error - Level 2",
-			message: "An unknown error occurred",
-		},
+		}),
 	},
 };
 
@@ -39,16 +37,18 @@ test("basic - one level deep service wrapper success and error", async () => {
 	const config = await testConfig.basic();
 
 	// Setup
-	const testService = async (
-		serviceConfig: ServiceConfig,
-		props: {
-			data: Record<string, string>;
-			returnError: boolean;
-		},
-	): ServiceResponse<Record<string, string>> => {
+	const testService: ServiceFn<
+		[
+			{
+				data: Record<string, string>;
+				returnError: boolean;
+			},
+		],
+		Record<string, string>
+	> = async (_, data) => {
 		await new Promise((resolve) => setTimeout(resolve, 50));
 
-		if (props.returnError) {
+		if (data.returnError) {
 			return {
 				error: CONSTANTS.error.level1,
 				data: undefined,
@@ -56,7 +56,7 @@ test("basic - one level deep service wrapper success and error", async () => {
 		}
 		return {
 			error: undefined,
-			data: props.data,
+			data: data.data,
 		};
 	};
 
@@ -102,21 +102,23 @@ test("basic - two level deep service wrapper success and error", async () => {
 	const config = await testConfig.basic();
 
 	// Setup
-	const testServiceOne = async (
-		serviceConfig: ServiceConfig,
-		props: {
-			data: Record<string, string>;
-			returnError: boolean;
-		},
-	): ServiceResponse<Record<string, string>> => {
+	const testServiceOne: ServiceFn<
+		[
+			{
+				data: Record<string, string>;
+				returnError: boolean;
+			},
+		],
+		Record<string, string>
+	> = async (service, data) => {
 		await new Promise((resolve) => setTimeout(resolve, 50));
 
 		const serviceTwo = await serviceWrapper(testServiceTwo, {
 			transaction: false,
-		})(serviceConfig, props);
+		})(service, data);
 		if (serviceTwo.error) return serviceTwo;
 
-		if (props.returnError) {
+		if (data.returnError) {
 			return {
 				error: CONSTANTS.error.level1,
 				data: undefined,
@@ -124,19 +126,21 @@ test("basic - two level deep service wrapper success and error", async () => {
 		}
 		return {
 			error: undefined,
-			data: props.data,
+			data: data.data,
 		};
 	};
-	const testServiceTwo = async (
-		serviceConfig: ServiceConfig,
-		props: {
-			data: Record<string, string>;
-			returnError: boolean;
-		},
-	): ServiceResponse<Record<string, string>> => {
+	const testServiceTwo: ServiceFn<
+		[
+			{
+				data: Record<string, string>;
+				returnError: boolean;
+			},
+		],
+		Record<string, string>
+	> = async (_, data): ServiceResponse<Record<string, string>> => {
 		await new Promise((resolve) => setTimeout(resolve, 50));
 
-		if (props.returnError) {
+		if (data.returnError) {
 			return {
 				error: CONSTANTS.error.level2,
 				data: undefined,
@@ -144,7 +148,7 @@ test("basic - two level deep service wrapper success and error", async () => {
 		}
 		return {
 			error: undefined,
-			data: props.data,
+			data: data.data,
 		};
 	};
 
@@ -190,22 +194,24 @@ test("transaction - one level deep service wrapper success and error", async () 
 	const errorCollectionKey = "transaction_test_error_1";
 
 	// Setup
-	const createDocument = async (
-		serviceConfig: ServiceConfig,
-		props: {
-			collectionKey: string;
-			returnError: boolean;
-		},
-	): ServiceResponse<{ id: number }> => {
-		const documentRes = await serviceConfig.db
+	const createDocument: ServiceFn<
+		[
+			{
+				collectionKey: string;
+				returnError: boolean;
+			},
+		],
+		{ id: number }
+	> = async (service, data) => {
+		const documentRes = await service.db
 			.insertInto("lucid_collection_documents")
 			.values({
-				collection_key: props.collectionKey,
+				collection_key: data.collectionKey,
 			})
 			.returning("id")
 			.executeTakeFirst();
 
-		if (props.returnError) {
+		if (data.returnError) {
 			return {
 				error: CONSTANTS.error.level1,
 				data: undefined,
@@ -269,28 +275,30 @@ test("transaction - two level deep service wrapper success and error", async () 
 	const errorCollectionKey = "transaction_test_error_2";
 
 	// Setup
-	const createDocumentWithDepth = async (
-		serviceConfig: ServiceConfig,
-		props: {
-			collectionKey: string;
-			returnError: boolean;
-			levelTwo: {
-				call: boolean;
+	const createDocumentWithDepth: ServiceFn<
+		[
+			{
+				collectionKey: string;
 				returnError: boolean;
-			};
-		},
-	): ServiceResponse<{ id: number }> => {
-		const documentRes = await serviceConfig.db
+				levelTwo: {
+					call: boolean;
+					returnError: boolean;
+				};
+			},
+		],
+		{ id: number }
+	> = async (service, data) => {
+		const documentRes = await service.db
 			.insertInto("lucid_collection_documents")
 			.values({
-				collection_key: props.collectionKey,
+				collection_key: data.collectionKey,
 			})
 			.returning("id")
 			.executeTakeFirst();
 
-		if (props.returnError) {
+		if (data.returnError) {
 			return {
-				error: props.levelTwo.call
+				error: data.levelTwo.call
 					? CONSTANTS.error.level1
 					: CONSTANTS.error.level2,
 				data: undefined,
@@ -299,20 +307,20 @@ test("transaction - two level deep service wrapper success and error", async () 
 
 		if (documentRes === undefined)
 			return {
-				error: props.levelTwo.call
+				error: data.levelTwo.call
 					? CONSTANTS.error.level1
 					: CONSTANTS.error.level2,
 				data: undefined,
 			};
 
-		if (props.levelTwo.call) {
+		if (data.levelTwo.call) {
 			return await serviceWrapper(createDocumentWithDepth, {
 				transaction: true,
-			})(serviceConfig, {
+			})(service, {
 				collectionKey: successCollectionKey,
-				returnError: props.levelTwo.returnError,
+				returnError: data.levelTwo.returnError,
 				levelTwo: {
-					...props.levelTwo,
+					...data.levelTwo,
 					call: false,
 				},
 			});
@@ -378,4 +386,61 @@ test("transaction - two level deep service wrapper success and error", async () 
 
 	expect(successDocuments.length).toBe(2);
 	expect(errorDocuments).toBeUndefined();
+});
+
+test("service wrapper schema validation", async () => {
+	const config = await testConfig.basic();
+
+	const schema = z.object({
+		key: z.string(),
+		value: z.string(),
+	});
+
+	// Setup
+	const testService: ServiceFn<
+		[Record<string, string>],
+		Record<string, string>
+	> = async (service, data) => {
+		return {
+			error: undefined,
+			data: data,
+		};
+	};
+
+	// Execute
+	const [success, error] = await Promise.all([
+		serviceWrapper(testService, {
+			transaction: false,
+			schema: schema,
+		})(
+			{
+				db: config.db.client,
+				config: config,
+			},
+			{
+				key: "test",
+				value: "test",
+			},
+		),
+		serviceWrapper(testService, {
+			transaction: false,
+			schema: schema,
+		})(
+			{
+				db: config.db.client,
+				config: config,
+			},
+			{
+				key: "test",
+				// @ts-expect-error
+				value: 100,
+			},
+		),
+	]);
+
+	expect(success.data).toEqual({
+		key: "test",
+		value: "test",
+	});
+	expect(error.error?.zod).toBeDefined();
 });

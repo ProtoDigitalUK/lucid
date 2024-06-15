@@ -1,38 +1,39 @@
-import type { Config } from "../../types/config.js";
-import type { KyselyDB } from "../db/types.js";
-import ServiceTransactionError from "./service-transaction-error.js";
-
-export type ServiceConfig = {
-	// Dependencie injection
-	db: KyselyDB;
-	config: Config;
-};
-
-export type ServiceWrapperConfig = {
-	transaction: boolean; //* Decides whether the db queries should be within a transaction or not
-	// default errors
-	// zod schema for validation
-};
-
-export type ServiceError = {
-	status: number;
-	code: string;
-	name: string;
-	message: string;
-};
-
-export type ServiceResponse<T> = Promise<{
-	error: ServiceError | undefined;
-	data: T | undefined;
-}>;
+import TransactionError from "./utils/transaction-error.js";
+import mergeServiceError from "./utils/merge-errors.js";
+import type {
+	ServiceConfig,
+	ServiceWrapperConfig,
+	ServiceResponse,
+	ServiceFn,
+} from "./types.js";
 
 const serviceWrapper =
 	<T extends unknown[], R>(
-		fn: (serviceConfig: ServiceConfig, ...args: T) => ServiceResponse<R>,
+		fn: ServiceFn<T, R>,
 		wrapperConfig: ServiceWrapperConfig,
 	) =>
 	async (serviceConfig: ServiceConfig, ...args: T): ServiceResponse<R> => {
 		try {
+			//* Validate input if a schema is provided
+			if (wrapperConfig.schema) {
+				const result = await wrapperConfig.schema.safeParseAsync(
+					args[wrapperConfig.schemaArgIndex ?? 0],
+				);
+				if (result.success === false) {
+					return {
+						error: mergeServiceError(
+							{
+								type: "validation",
+								// message: result.error.message,
+								zod: result.error,
+							},
+							wrapperConfig.defaultError,
+						),
+						data: undefined,
+					};
+				}
+			}
+
 			//* If transactions are not enabled or the serviceConfig is already in a transaction via a parent
 			if (!wrapperConfig.transaction || serviceConfig.db.isTransaction) {
 				return await fn(serviceConfig, ...args);
@@ -49,42 +50,44 @@ const serviceWrapper =
 				);
 				if (result.error) {
 					//! Kysely needs function to throw for transaction to rollback !\\
-					throw new ServiceTransactionError(result.error);
+					throw new TransactionError(result.error);
 				}
 
 				return result;
 			});
 		} catch (error) {
-			if (error instanceof ServiceTransactionError) {
+			if (error instanceof TransactionError) {
 				return {
-					error: error.error,
+					error: mergeServiceError(
+						error.error,
+						wrapperConfig.defaultError,
+					),
 					data: undefined,
 				};
 			}
 
-			// TODO: move error messages to translations and update copy
 			if (error instanceof Error) {
 				return {
-					error: {
-						status: 500,
-						code: "internal",
-						name: "Internal Server Error",
-						message:
-							error.message ??
-							"An internal server error occurred",
-					},
+					error: mergeServiceError(
+						{
+							type: "basic",
+							message: error.message,
+						},
+						wrapperConfig.defaultError,
+					),
 					data: undefined,
 				};
 			}
 
-			// TODO: move error messages to translations and update copy
 			return {
-				error: {
-					status: 500,
-					code: "internal",
-					name: "Internal Server Error",
-					message: "An internal server error occurred",
-				},
+				error: mergeServiceError(
+					{
+						type: "basic",
+						// @ts-expect-error
+						message: error?.message ?? undefined,
+					},
+					wrapperConfig.defaultError,
+				),
 				data: undefined,
 			};
 		}

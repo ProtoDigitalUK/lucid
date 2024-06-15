@@ -159,5 +159,7 @@
 	"field_type_mismatch": "The type of the field does not match the type of the config field. Received: \"{{received}}\" Expected: \"{{expected}}\"",
 	"field_date_invalid": "Please ensure the date you have entered is valid",
 	"field_link_target_error_message": "Please set the target to one of the following: {{valid}}",
-	"generic_field_data_type_mismatch": "The data type is incorrect"
+	"generic_field_data_type_mismatch": "The data type is incorrect",
+	"unknown_service_error": "An unknown error occurred",
+	"unknown_service_error_message": "An unknown error occurred. Please try again later."
 }
