@@ -1,5 +1,7 @@
+import z from "zod";
 import CustomField from "../custom-field.js";
 import keyToTitle from "../utils/key-to-title.js";
+import zodSafeParse from "../utils/zod-safe-parse.js";
 import type { CFConfig, CFProps, CFResponse, CFInsertItem } from "../types.js";
 import type { FieldProp } from "../../formatters/collection-document-fields.js";
 import type { FieldInsertItem } from "../../../services/collection-document-bricks/helpers/flatten-fields.js";
@@ -57,7 +59,12 @@ class NumberCustomField extends CustomField<"number"> {
 			userId: null,
 		} satisfies CFInsertItem<"number">;
 	}
-	cfSpecificValidation() {
+	cfSpecificValidation(value: unknown) {
+		const valueSchema = z.number();
+
+		const valueValidate = zodSafeParse(value, valueSchema);
+		if (!valueValidate.valid) return valueValidate;
+
 		return {
 			valid: true,
 		};

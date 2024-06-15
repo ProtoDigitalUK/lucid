@@ -1,5 +1,7 @@
+import z from "zod";
 import CustomField from "../custom-field.js";
 import keyToTitle from "../utils/key-to-title.js";
+import zodSafeParse from "../utils/zod-safe-parse.js";
 import type {
 	CFConfig,
 	CFProps,
@@ -66,12 +68,11 @@ class UserCustomField extends CustomField<"user"> {
 			userId: props.item.value,
 		} satisfies CFInsertItem<"user">;
 	}
-	cfSpecificValidation(
-		value: number | null,
-		relationData: UserReferenceData,
-	) {
-		if (this.config.validation?.required !== true && !value)
-			return { valid: true };
+	cfSpecificValidation(value: unknown, relationData: UserReferenceData) {
+		const valueSchema = z.number();
+
+		const valueValidate = zodSafeParse(value, valueSchema);
+		if (!valueValidate.valid) return valueValidate;
 
 		if (relationData === undefined) {
 			return {

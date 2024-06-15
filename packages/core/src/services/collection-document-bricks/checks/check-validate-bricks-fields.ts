@@ -4,7 +4,6 @@ import type { FieldErrors } from "../../../types/errors.js";
 import type {
 	FieldTypes,
 	MediaReferenceData,
-	LinkReferenceData,
 	UserReferenceData,
 } from "../../../libs/custom-fields/types.js";
 import type { FieldInsertItem } from "../helpers/flatten-fields.js";
@@ -51,8 +50,8 @@ const checkValidateBricksFields = async (
 	if (errors.length) {
 		throw new LucidAPIError({
 			type: "basic",
-			name: T("error_saving_bricks"),
-			message: T("there_was_an_error_updating_bricks"),
+			name: T("field_validation_error_name"),
+			message: T("field_validation_error_message"),
 			status: 400,
 			errorResponse: {
 				body: {
@@ -103,10 +102,8 @@ export const validateBrick = (props: {
 		});
 	}
 
-	const fields = props.brick.fields || [];
-
-	for (let i = 0; i < fields.length; i++) {
-		const field = fields[i];
+	for (let i = 0; i < props.brick.fields.length; i++) {
+		const field = props.brick.fields[i];
 		if (field === undefined) continue;
 
 		const fieldRes = validateField({
@@ -149,19 +146,6 @@ export const validateField = (props: {
 	};
 
 	switch (props.field.type) {
-		case "link": {
-			const value = props.field.value as LinkValue | undefined;
-
-			fieldValRes = fieldInstance.validate({
-				type: props.field.type,
-				value: value,
-				relationData: {
-					target: value?.target,
-					label: value?.label,
-				} satisfies LinkReferenceData,
-			});
-			break;
-		}
 		case "media": {
 			const media = props.media.find((m) => m.id === props.field.value);
 			if (media) {

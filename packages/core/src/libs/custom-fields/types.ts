@@ -578,7 +578,3 @@ export interface UserReferenceData {
 	lastName: string | null;
 	email: string;
 }
-export interface LinkReferenceData {
-	target?: string | null;
-	label?: string | null;
-}

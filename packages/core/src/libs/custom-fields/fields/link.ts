@@ -1,5 +1,7 @@
 import T from "../../../translations/index.js";
+import z from "zod";
 import CustomField from "../custom-field.js";
+import zodSafeParse from "../utils/zod-safe-parse.js";
 import Formatter from "../../formatters/index.js";
 import constants from "../../../constants.js";
 import type { LinkValue } from "../../../types.js";
@@ -8,7 +10,7 @@ import type {
 	CFProps,
 	CFResponse,
 	CFInsertItem,
-	LinkReferenceData,
+	LinkResValue,
 } from "../types.js";
 import keyToTitle from "../utils/key-to-title.js";
 import type { FieldProp } from "../../formatters/collection-document-fields.js";
@@ -79,15 +81,23 @@ class LinkCustomField extends CustomField<"link"> {
 			userId: null,
 		} satisfies CFInsertItem<"link">;
 	}
-	cfSpecificValidation(value: string, relationData: LinkReferenceData) {
-		if (!relationData) return { valid: true };
-		if (!relationData.target) return { valid: true };
+	cfSpecificValidation(value: unknown) {
+		console.log("value", value);
 
-		// TODO: verify url is valid?
-		// TODO: verify label is valid?
+		const valueSchema = z.object({
+			url: z.string().optional().nullable(),
+			target: z.string().optional().nullable(),
+			label: z.string().optional().nullable(),
+		});
+
+		const valueValidate = zodSafeParse(value, valueSchema);
+		if (!valueValidate.valid) return valueValidate;
+
+		const val = value as LinkValue;
 
 		if (
-			!constants.customFields.link.targets.includes(relationData.target)
+			val.target &&
+			!constants.customFields.link.targets.includes(val.target)
 		) {
 			return {
 				valid: false,

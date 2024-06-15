@@ -46,8 +46,6 @@ abstract class CustomField<T extends FieldTypes> {
 	}): CustomFieldValidateResponse {
 		if (this.config.type === "tab") return { valid: true };
 
-		// TODO: add validation for value data type, ie number custom field should only accept numbers etc.
-
 		// Check type
 		const fieldTypeRes = this.fieldTypeValidation(props.type);
 		if (fieldTypeRes.valid === false) return fieldTypeRes;
@@ -59,6 +57,11 @@ abstract class CustomField<T extends FieldTypes> {
 		// zod
 		const zodRes = this.zodCheck(props.value);
 		if (!zodRes.valid) return zodRes;
+
+		// nullish skip further validation
+		if (props.value === null || props.value === undefined) {
+			return { valid: true };
+		}
 
 		// custom field specific validation
 		return this.cfSpecificValidation(props.value, props.relationData);
@@ -110,7 +113,6 @@ abstract class CustomField<T extends FieldTypes> {
 		fieldType: CustomFieldErrorItem;
 		required: CustomFieldErrorItem;
 		zod: CustomFieldErrorItem;
-		dataType: CustomFieldErrorItem;
 	} {
 		return {
 			fieldType: {
@@ -127,9 +129,6 @@ abstract class CustomField<T extends FieldTypes> {
 			},
 			zod: {
 				message: T("generic_field_invalid"),
-			},
-			dataType: {
-				message: T("generic_field_data_type_mismatch"),
 			},
 		};
 	}

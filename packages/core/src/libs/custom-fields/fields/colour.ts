@@ -1,5 +1,7 @@
+import z from "zod";
 import CustomField from "../custom-field.js";
 import keyToTitle from "../utils/key-to-title.js";
+import zodSafeParse from "../utils/zod-safe-parse.js";
 import type { CFConfig, CFProps, CFResponse, CFInsertItem } from "../types.js";
 import type { FieldProp } from "../../formatters/collection-document-fields.js";
 import type { FieldInsertItem } from "../../../services/collection-document-bricks/helpers/flatten-fields.js";
@@ -57,8 +59,13 @@ class ColourCustomField extends CustomField<"colour"> {
 			userId: null,
 		} satisfies CFInsertItem<"colour">;
 	}
-	cfSpecificValidation() {
+	cfSpecificValidation(value: unknown) {
 		// TODO: down the line, add validation for different colour formats - currently accepts any value
+		const valueSchema = z.string();
+
+		const valueValidate = zodSafeParse(value, valueSchema);
+		if (!valueValidate.valid) return valueValidate;
+
 		return {
 			valid: true,
 		};

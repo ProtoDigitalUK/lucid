@@ -1,6 +1,6 @@
 import { expect, test } from "vitest";
 import T from "../../../translations/index.js";
-import z from "zod";
+import z, { boolean } from "zod";
 import constants from "../../../constants.js";
 import CollectionBuilder from "../../../libs/builders/collection-builder/index.js";
 import flattenFields from "../helpers/flatten-fields.js";
@@ -357,6 +357,27 @@ test("successfully validate field - colour", async () => {
 	expect(requiredValidate).toBe(null);
 });
 test("fail to validate field - colour", async () => {
+	// Standard
+	const standardValidate = validateField({
+		brickId: CONSTANTS.collectionBrickId,
+		field: {
+			key: "standard_colour",
+			type: "colour",
+			value: 0,
+			localeCode: "en",
+		},
+		instance: ColourCollection,
+		media: [],
+		users: [],
+	});
+	expect(standardValidate).toEqual({
+		key: "standard_colour",
+		brickId: CONSTANTS.collectionBrickId,
+		localeCode: "en",
+		groupId: undefined,
+		message: "Expected string, received number", // zod error message
+	});
+
 	// Required
 	const requiredValidate = {
 		empty: validateField({
@@ -437,19 +458,49 @@ const DateTimeCollection = new CollectionBuilder("collection", {
 	});
 test("successfully validate field - datetime", async () => {
 	// Standard
-	const standardValidate = validateField({
-		brickId: CONSTANTS.collectionBrickId,
-		field: {
-			key: "standard_datetime",
-			type: "datetime",
-			value: "2022-01-01T00:00:00.000Z",
-			localeCode: "en",
-		},
-		instance: DateTimeCollection,
-		media: [],
-		users: [],
+	const standardValidate = {
+		string: validateField({
+			brickId: CONSTANTS.collectionBrickId,
+			field: {
+				key: "standard_datetime",
+				type: "datetime",
+				value: "2024-06-15T14:14:21.704Z",
+				localeCode: "en",
+			},
+			instance: DateTimeCollection,
+			media: [],
+			users: [],
+		}),
+		number: validateField({
+			brickId: CONSTANTS.collectionBrickId,
+			field: {
+				key: "standard_datetime",
+				type: "datetime",
+				value: 1676103221704,
+				localeCode: "en",
+			},
+			instance: DateTimeCollection,
+			media: [],
+			users: [],
+		}),
+		date: validateField({
+			brickId: CONSTANTS.collectionBrickId,
+			field: {
+				key: "standard_datetime",
+				type: "datetime",
+				value: new Date("2024-06-15T14:14:21.704Z"),
+				localeCode: "en",
+			},
+			instance: DateTimeCollection,
+			media: [],
+			users: [],
+		}),
+	};
+	expect(standardValidate).toEqual({
+		date: null,
+		number: null,
+		string: null,
 	});
-	expect(standardValidate).toBe(null);
 
 	// Required
 	const requiredValidate = validateField({
@@ -457,7 +508,7 @@ test("successfully validate field - datetime", async () => {
 		field: {
 			key: "required_datetime",
 			type: "datetime",
-			value: "2022-01-01T00:00:00.000Z",
+			value: "2024-06-15T14:14:21.704Z",
 			localeCode: "en",
 		},
 		instance: DateTimeCollection,
@@ -468,24 +519,67 @@ test("successfully validate field - datetime", async () => {
 });
 test("fail to validate field - datetime", async () => {
 	// Standard
-	const standardValidate = validateField({
-		brickId: CONSTANTS.collectionBrickId,
-		field: {
-			key: "standard_datetime",
-			type: "datetime",
-			value: "invalid",
-			localeCode: "en",
-		},
-		instance: DateTimeCollection,
-		media: [],
-		users: [],
-	});
+	const standardValidate = {
+		boolean: validateField({
+			brickId: CONSTANTS.collectionBrickId,
+			field: {
+				key: "standard_datetime",
+				type: "datetime",
+				value: true,
+				localeCode: "en",
+			},
+			instance: DateTimeCollection,
+			media: [],
+			users: [],
+		}),
+		string: validateField({
+			brickId: CONSTANTS.collectionBrickId,
+			field: {
+				key: "standard_datetime",
+				type: "datetime",
+				value: "string",
+				localeCode: "en",
+			},
+			instance: DateTimeCollection,
+			media: [],
+			users: [],
+		}),
+		invalid: validateField({
+			brickId: CONSTANTS.collectionBrickId,
+			field: {
+				key: "standard_datetime",
+				type: "datetime",
+				value: "20024-06-15T14:14:21.704",
+				localeCode: "en",
+			},
+			instance: DateTimeCollection,
+			media: [],
+			users: [],
+		}),
+	};
 	expect(standardValidate).toEqual({
-		key: "standard_datetime",
-		brickId: CONSTANTS.collectionBrickId,
-		localeCode: "en",
-		groupId: undefined,
-		message: T("field_date_invalid"),
+		boolean: {
+			key: "standard_datetime",
+			brickId: CONSTANTS.collectionBrickId,
+			localeCode: "en",
+			groupId: undefined,
+			message:
+				"Expected string, received boolean, or Expected number, received boolean, or Expected date, received boolean", // zod error message
+		},
+		string: {
+			key: "standard_datetime",
+			brickId: CONSTANTS.collectionBrickId,
+			localeCode: "en",
+			groupId: undefined,
+			message: T("field_date_invalid"),
+		},
+		invalid: {
+			key: "standard_datetime",
+			brickId: CONSTANTS.collectionBrickId,
+			localeCode: "en",
+			groupId: undefined,
+			message: T("field_date_invalid"),
+		},
 	});
 
 	// Required
@@ -592,14 +686,20 @@ test("fail to validate field - json", async () => {
 		field: {
 			key: "standard_json",
 			type: "json",
-			value: "false", // tests safe parse of JSON
+			value: "invalid json",
 			localeCode: "en",
 		},
 		instance: JSONCollection,
 		media: [],
 		users: [],
 	});
-	expect(standardValidate).toBe(null);
+	expect(standardValidate).toEqual({
+		key: "standard_json",
+		brickId: CONSTANTS.collectionBrickId,
+		localeCode: "en",
+		groupId: undefined,
+		message: "Expected object, received string", // zod error message
+	});
 
 	// Required
 	const requiredValidate = validateField({
@@ -702,30 +802,80 @@ test("successfully validate field - link", async () => {
 });
 test("fail to validate field - link", async () => {
 	// Standard
-	const standardValidate = validateField({
-		brickId: CONSTANTS.collectionBrickId,
-		field: {
-			key: "standard_link",
-			type: "link",
-			value: {
-				url: "https://example.com",
-				target: "test", // invalid target
-				label: "Link 1",
+	const standardValidate = {
+		url: validateField({
+			brickId: CONSTANTS.collectionBrickId,
+			field: {
+				key: "standard_link",
+				type: "link",
+				value: {
+					url: false, // invalid
+					target: "_blank",
+					label: "Link 1",
+				},
+				localeCode: "en",
 			},
-			localeCode: "en",
-		},
-		instance: LinkCollection,
-		media: [],
-		users: [],
-	});
-	expect(standardValidate).toEqual({
-		key: "standard_link",
-		brickId: CONSTANTS.collectionBrickId,
-		localeCode: "en",
-		groupId: undefined,
-		message: T("field_link_target_error_message", {
-			valid: constants.customFields.link.targets.join(", "),
+			instance: LinkCollection,
+			media: [],
+			users: [],
 		}),
+		target: validateField({
+			brickId: CONSTANTS.collectionBrickId,
+			field: {
+				key: "standard_link",
+				type: "link",
+				value: {
+					url: "https://example.com",
+					target: "test", // invalid
+					label: "Link 1",
+				},
+				localeCode: "en",
+			},
+			instance: LinkCollection,
+			media: [],
+			users: [],
+		}),
+		label: validateField({
+			brickId: CONSTANTS.collectionBrickId,
+			field: {
+				key: "standard_link",
+				type: "link",
+				value: {
+					url: "https://example.com",
+					target: "_blank",
+					label: false, // invalid
+				},
+				localeCode: "en",
+			},
+			instance: LinkCollection,
+			media: [],
+			users: [],
+		}),
+	};
+	expect(standardValidate).toEqual({
+		url: {
+			key: "standard_link",
+			brickId: CONSTANTS.collectionBrickId,
+			localeCode: "en",
+			groupId: undefined,
+			message: 'Expected string, received boolean at "url"', // zod error message
+		},
+		target: {
+			key: "standard_link",
+			brickId: CONSTANTS.collectionBrickId,
+			localeCode: "en",
+			groupId: undefined,
+			message: T("field_link_target_error_message", {
+				valid: constants.customFields.link.targets.join(", "),
+			}),
+		},
+		label: {
+			key: "standard_link",
+			brickId: CONSTANTS.collectionBrickId,
+			localeCode: "en",
+			groupId: undefined,
+			message: 'Expected string, received boolean at "label"', // zod error message
+		},
 	});
 
 	// Required
@@ -989,6 +1139,7 @@ test("successfully validate field - media", async () => {
 	expect(extensionValidate).toBe(null);
 });
 test("fail to validate field - media", async () => {
+	// Required
 	const requiredValidate = {
 		exists: validateField({
 			brickId: CONSTANTS.collectionBrickId,
@@ -1285,27 +1436,26 @@ test("successfully validate field - number", async () => {
 	expect(zodValidate).toBe(null);
 });
 test("fail to validate field - number", async () => {
-	// TODO: implement value data type validation, this currently doesnt fail
-	// Standard
-	// const standardValidate = validateField({
-	// 	brickId: CONSTANTS.collectionBrickId,
-	// 	field: {
-	// 		key: "standard_number",
-	// 		type: "number",
-	// 		value: "1",
-	// 		localeCode: "en",
-	// 	},
-	// 	instance: NumberCollection,
-	// 	media: [],
-	// 	users: [],
-	// });
-	// expect(standardValidate).toEqual({
-	// 	key: "standard_number",
-	// 	brickId: CONSTANTS.collectionBrickId,
-	// 	localeCode: "en",
-	// 	groupId: undefined,
-	// 	message: T("field_number_invalid"),
-	// });
+	// Standard;
+	const standardValidate = validateField({
+		brickId: CONSTANTS.collectionBrickId,
+		field: {
+			key: "standard_number",
+			type: "number",
+			value: "1",
+			localeCode: "en",
+		},
+		instance: NumberCollection,
+		media: [],
+		users: [],
+	});
+	expect(standardValidate).toEqual({
+		key: "standard_number",
+		brickId: CONSTANTS.collectionBrickId,
+		localeCode: "en",
+		groupId: undefined,
+		message: "Expected number, received string", // zod error message
+	});
 
 	// Required
 	const requiredValidate = validateField({
@@ -1401,24 +1551,47 @@ test("successfully validate field - select", async () => {
 });
 test("fail to validate field - select", async () => {
 	// Standard
-	const standardValidate = validateField({
-		brickId: CONSTANTS.collectionBrickId,
-		field: {
-			key: "standard_select",
-			type: "select",
-			value: "option-10",
-			localeCode: "en",
-		},
-		instance: SelectCollection,
-		media: [],
-		users: [],
-	});
+	const standardValidate = {
+		exists: validateField({
+			brickId: CONSTANTS.collectionBrickId,
+			field: {
+				key: "standard_select",
+				type: "select",
+				value: "option-10",
+				localeCode: "en",
+			},
+			instance: SelectCollection,
+			media: [],
+			users: [],
+		}),
+		number: validateField({
+			brickId: CONSTANTS.collectionBrickId,
+			field: {
+				key: "standard_select",
+				type: "select",
+				value: 1,
+				localeCode: "en",
+			},
+			instance: SelectCollection,
+			media: [],
+			users: [],
+		}),
+	};
 	expect(standardValidate).toEqual({
-		key: "standard_select",
-		brickId: CONSTANTS.collectionBrickId,
-		localeCode: "en",
-		groupId: undefined,
-		message: T("please_ensure_a_valid_option_is_selected"),
+		exists: {
+			key: "standard_select",
+			brickId: CONSTANTS.collectionBrickId,
+			localeCode: "en",
+			groupId: undefined,
+			message: T("please_ensure_a_valid_option_is_selected"),
+		},
+		number: {
+			key: "standard_select",
+			brickId: CONSTANTS.collectionBrickId,
+			localeCode: "en",
+			groupId: undefined,
+			message: "Expected string, received number", // zod error message
+		},
 	});
 
 	// Required
@@ -1510,6 +1683,27 @@ test("successfully validate field - text", async () => {
 	expect(minLengthValidate).toBe(null);
 });
 test("fail to validate field - text", async () => {
+	// Standard
+	const standardValidate = validateField({
+		brickId: CONSTANTS.collectionBrickId,
+		field: {
+			key: "standard_text",
+			type: "text",
+			value: 100,
+			localeCode: "en",
+		},
+		instance: TextCollection,
+		media: [],
+		users: [],
+	});
+	expect(standardValidate).toEqual({
+		key: "standard_text",
+		brickId: CONSTANTS.collectionBrickId,
+		localeCode: "en",
+		groupId: undefined,
+		message: "Expected string, received number", // zod error message
+	});
+
 	// Required
 	const requiredValidate = {
 		undefined: validateField({
@@ -1661,6 +1855,27 @@ test("successfully validate field - textarea", async () => {
 	expect(minLengthValidate).toBe(null);
 });
 test("fail to validate field - textarea", async () => {
+	// Standard
+	const standardValidate = validateField({
+		brickId: CONSTANTS.collectionBrickId,
+		field: {
+			key: "standard_textarea",
+			type: "textarea",
+			value: 100,
+			localeCode: "en",
+		},
+		instance: TextareaCollection,
+		media: [],
+		users: [],
+	});
+	expect(standardValidate).toEqual({
+		key: "standard_textarea",
+		brickId: CONSTANTS.collectionBrickId,
+		localeCode: "en",
+		groupId: undefined,
+		message: "Expected string, received number", // zod error message
+	});
+
 	// Required
 	const requiredValidate = validateField({
 		brickId: CONSTANTS.collectionBrickId,
@@ -1877,6 +2092,27 @@ test("successfully validate field - wysiwyg", async () => {
 	expect(minLengthValidate).toBe(null);
 });
 test("fail to validate field - wysiwyg", async () => {
+	// Standard
+	const standardValidate = validateField({
+		brickId: CONSTANTS.collectionBrickId,
+		field: {
+			key: "standard_wysiwyg",
+			type: "wysiwyg",
+			value: 100,
+			localeCode: "en",
+		},
+		instance: WysiwygCollection,
+		media: [],
+		users: [],
+	});
+	expect(standardValidate).toEqual({
+		key: "standard_wysiwyg",
+		brickId: CONSTANTS.collectionBrickId,
+		localeCode: "en",
+		groupId: undefined,
+		message: "Expected string, received number", // zod error message
+	});
+
 	// Required
 	const requiredValidate = {
 		exists: validateField({

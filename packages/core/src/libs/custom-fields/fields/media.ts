@@ -1,7 +1,9 @@
 import T from "../../../translations/index.js";
+import z from "zod";
 import CustomField from "../custom-field.js";
 import mediaHelpers from "../../../utils/media-helpers.js";
 import keyToTitle from "../utils/key-to-title.js";
+import zodSafeParse from "../utils/zod-safe-parse.js";
 import type { MediaType } from "../../../types.js";
 import type {
 	CFConfig,
@@ -90,13 +92,11 @@ class MediaCustomField extends CustomField<"media"> {
 			userId: null,
 		} satisfies CFInsertItem<"media">;
 	}
-	cfSpecificValidation(
-		value: number | null,
-		relationData: MediaReferenceData,
-	) {
-		if (this.config.validation?.required !== true && !value) {
-			return { valid: true };
-		}
+	cfSpecificValidation(value: unknown, relationData: MediaReferenceData) {
+		const valueSchema = z.number();
+
+		const valueValidate = zodSafeParse(value, valueSchema);
+		if (!valueValidate.valid) return valueValidate;
 
 		if (relationData === undefined) {
 			return {

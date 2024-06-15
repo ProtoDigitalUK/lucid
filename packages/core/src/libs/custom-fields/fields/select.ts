@@ -1,7 +1,9 @@
 import T from "../../../translations/index.js";
+import z from "zod";
 import CustomField from "../custom-field.js";
 import merge from "lodash.merge";
 import keyToTitle from "../utils/key-to-title.js";
+import zodSafeParse from "../utils/zod-safe-parse.js";
 import type { CFConfig, CFProps, CFResponse, CFInsertItem } from "../types.js";
 import type { FieldProp } from "../../formatters/collection-document-fields.js";
 import type { FieldInsertItem } from "../../../services/collection-document-bricks/helpers/flatten-fields.js";
@@ -60,16 +62,17 @@ class SelectCustomField extends CustomField<"select"> {
 			userId: null,
 		} satisfies CFInsertItem<"select">;
 	}
-	cfSpecificValidation(value: string) {
-		if (this.config.validation?.required !== true && !value) {
-			return { valid: true };
-		}
+	cfSpecificValidation(value: unknown) {
+		const valueSchema = z.string();
+
+		const valueValidate = zodSafeParse(value, valueSchema);
+		if (!valueValidate.valid) return valueValidate;
 
 		if (this.config.options) {
 			const optionValues = this.config.options.map(
 				(option) => option.value,
 			);
-			if (!optionValues.includes(value)) {
+			if (!optionValues.includes(value as string)) {
 				return {
 					valid: false,
 					message: T("please_ensure_a_valid_option_is_selected"),

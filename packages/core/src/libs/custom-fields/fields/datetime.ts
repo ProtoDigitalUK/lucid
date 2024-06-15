@@ -1,6 +1,9 @@
 import T from "../../../translations/index.js";
+import z from "zod";
 import CustomField from "../custom-field.js";
 import keyToTitle from "../utils/key-to-title.js";
+import zodSafeParse from "../utils/zod-safe-parse.js";
+import { isValid, parse } from "date-fns";
 import type { CFConfig, CFProps, CFResponse, CFInsertItem } from "../types.js";
 import type { FieldProp } from "../../formatters/collection-document-fields.js";
 import type { FieldInsertItem } from "../../../services/collection-document-bricks/helpers/flatten-fields.js";
@@ -58,10 +61,14 @@ class DatetimeCustomField extends CustomField<"datetime"> {
 			userId: null,
 		} satisfies CFInsertItem<"datetime">;
 	}
-	cfSpecificValidation(value: string) {
-		const date = new Date(value);
+	cfSpecificValidation(value: unknown) {
+		const valueSchema = z.union([z.string(), z.number(), z.date()]);
 
-		if (Number.isNaN(date.getTime())) {
+		const valueValidate = zodSafeParse(value, valueSchema);
+		if (!valueValidate.valid) return valueValidate;
+
+		const date = new Date(value as string | number | Date);
+		if (!isValid(date)) {
 			return {
 				valid: false,
 				message: T("field_date_invalid"),

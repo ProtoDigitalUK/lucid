@@ -1,3 +1,4 @@
+import z from "zod";
 import CustomField from "../custom-field.js";
 import sanitizeHtml from "sanitize-html";
 import zodSafeParse from "../utils/zod-safe-parse.js";
@@ -60,6 +61,11 @@ class WysiwygCustomField extends CustomField<"wysiwyg"> {
 		} satisfies CFInsertItem<"wysiwyg">;
 	}
 	cfSpecificValidation(value: string) {
+		const valueSchema = z.string();
+
+		const valueValidate = zodSafeParse(value, valueSchema);
+		if (!valueValidate.valid) return valueValidate;
+
 		const sanitizedValue = sanitizeHtml(value);
 
 		if (this.config.validation?.zod) {
