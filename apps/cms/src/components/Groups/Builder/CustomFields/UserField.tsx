@@ -70,10 +70,10 @@ export const UserField: Component<UserFieldProps> = (props) => {
 						key: props.state.fieldConfig.key,
 						groupId: props.state.groupId,
 						repeaterKey: props.state.repeaterKey,
-						value: Number(value),
+						value: value === undefined ? undefined : Number(value),
 						contentLocale: props.state.contentLocale,
 					});
-					setValue(value as number);
+					setValue(value as number | undefined);
 				});
 			}}
 			copy={{

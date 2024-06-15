@@ -165,6 +165,7 @@ export const Select: Component<SelectProps> = (props) => {
 									class="pointer-events-auto h-5 w-5 flex items-center justify-center rounded-full text-primary-contrast hover:bg-error-base duration-200 transition-colors focus:outline-none focus:ring-1 ring-error-base focus:fill-error-base"
 									onClick={(e) => {
 										e.stopPropagation();
+										console.log("clear");
 										props.onChange(undefined);
 									}}
 								>

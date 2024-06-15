@@ -60,6 +60,7 @@ const UserSearchSelect: Component<UserSearchSelectProps> = (props) => {
 			theme={props.theme}
 			disabled={props.disabled}
 			required={props.required}
+			noClear={false}
 		/>
 	);
 };
