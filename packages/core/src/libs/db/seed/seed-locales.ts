@@ -3,11 +3,11 @@ import { LucidError } from "../../../utils/error-handler.js";
 import Repository from "../../repositories/index.js";
 import type { ServiceConfig } from "../../services/types.js";
 
-const seedLocales = async (serviceConfig: ServiceConfig) => {
+const seedLocales = async (service: ServiceConfig) => {
 	try {
 		// Responsible for syncing locales config with the database
-		const LocalesRepo = Repository.get("locales", serviceConfig.db);
-		const localeCodes = serviceConfig.config.localisation.locales.map(
+		const LocalesRepo = Repository.get("locales", service.db);
+		const localeCodes = service.config.localisation.locales.map(
 			(locale) => locale.code,
 		);
 

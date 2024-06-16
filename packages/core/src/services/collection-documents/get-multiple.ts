@@ -17,18 +17,15 @@ const getMultiple: ServiceFn<
 		data: CollectionDocumentResponse[];
 		count: number;
 	}
-> = async (serviceConfig, data) => {
-	const collectionRes = await collectionsServices.getSingleInstance(
-		serviceConfig,
-		{
-			key: data.collectionKey,
-		},
-	);
+> = async (service, data) => {
+	const collectionRes = await collectionsServices.getSingleInstance(service, {
+		key: data.collectionKey,
+	});
 	if (collectionRes.error) return collectionRes;
 
 	const CollectionDocumentsRepo = Repository.get(
 		"collection-documents",
-		serviceConfig.db,
+		service.db,
 	);
 	const CollectionDocumentsFormatter = Formatter.get("collection-documents");
 
@@ -36,7 +33,7 @@ const getMultiple: ServiceFn<
 		await CollectionDocumentsRepo.selectMultipleFiltered({
 			query: data.query,
 			collection: collectionRes.data,
-			config: serviceConfig.config,
+			config: service.config,
 		});
 
 	return {
@@ -45,12 +42,12 @@ const getMultiple: ServiceFn<
 			data: CollectionDocumentsFormatter.formatMultiple({
 				documents: documents,
 				collection: collectionRes.data,
-				host: serviceConfig.config.host,
+				host: service.config.host,
 				localisation: {
-					locales: serviceConfig.config.localisation.locales.map(
+					locales: service.config.localisation.locales.map(
 						(l) => l.code,
 					),
-					default: serviceConfig.config.localisation.defaultLocale,
+					default: service.config.localisation.defaultLocale,
 				},
 			}),
 			count: Formatter.parseCount(documentCount?.count),

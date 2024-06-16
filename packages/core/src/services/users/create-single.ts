@@ -21,8 +21,8 @@ const createSingle: ServiceFn<
 		},
 	],
 	number
-> = async (serviceConfig, data) => {
-	const UsersRepo = Repository.get("users", serviceConfig.db);
+> = async (service, data) => {
+	const UsersRepo = Repository.get("users", service.db);
 
 	const [userExists, roleExistsRes] = await Promise.all([
 		UsersRepo.selectSingleByEmailUsername({
@@ -32,7 +32,7 @@ const createSingle: ServiceFn<
 				email: data.email,
 			},
 		}),
-		usersServices.checks.checkRolesExist(serviceConfig, {
+		usersServices.checks.checkRolesExist(service, {
 			roleIds: data.roleIds,
 		}),
 	]);
@@ -94,14 +94,14 @@ const createSingle: ServiceFn<
 		minutes: constants.userInviteTokenExpirationMinutes,
 	}).toISOString();
 
-	const userTokenRes = await userTokens.createSingle(serviceConfig, {
+	const userTokenRes = await userTokens.createSingle(service, {
 		userId: newUser.id,
 		tokenType: "password_reset",
 		expiryDate: expiryDate,
 	});
 	if (userTokenRes.error) return userTokenRes;
 
-	const sendEmailRes = await email.sendEmail(serviceConfig, {
+	const sendEmailRes = await email.sendEmail(service, {
 		type: "internal",
 		to: data.email,
 		subject: T("user_invite_email_subject"),
@@ -110,7 +110,7 @@ const createSingle: ServiceFn<
 			firstName: data.firstName,
 			lastName: data.lastName,
 			email: data.email,
-			resetLink: `${serviceConfig.config.host}${constants.locations.resetPassword}?token=${userTokenRes.data.token}`,
+			resetLink: `${service.config.host}${constants.locations.resetPassword}?token=${userTokenRes.data.token}`,
 		},
 	});
 	if (sendEmailRes.error) return sendEmailRes;
@@ -123,7 +123,7 @@ const createSingle: ServiceFn<
 		};
 	}
 
-	const UserRolesRepo = Repository.get("user-roles", serviceConfig.db);
+	const UserRolesRepo = Repository.get("user-roles", service.db);
 
 	await UserRolesRepo.createMultiple({
 		items: data.roleIds.map((r) => ({

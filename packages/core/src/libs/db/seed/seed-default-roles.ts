@@ -7,9 +7,9 @@ import Repository from "../../repositories/index.js";
 import Formatter from "../../formatters/index.js";
 import type { ServiceConfig } from "../../services/types.js";
 
-const seedDefaultRoles = async (serviceConfig: ServiceConfig) => {
+const seedDefaultRoles = async (service: ServiceConfig) => {
 	try {
-		const RolesRepo = Repository.get("roles", serviceConfig.db);
+		const RolesRepo = Repository.get("roles", service.db);
 
 		const totalRoleCount = await RolesRepo.count();
 		if (Formatter.parseCount(totalRoleCount?.count) > 0) return;
@@ -19,7 +19,7 @@ const seedDefaultRoles = async (serviceConfig: ServiceConfig) => {
 			rolePromises.push(
 				serviceWrapper(rolesServices.createSingle, {
 					transaction: false,
-				})(serviceConfig, {
+				})(service, {
 					name: role.name,
 					description: role.description,
 					permissions: role.permissions,

@@ -23,9 +23,9 @@ const processImage: ServiceFn<
 		contentType: string | undefined;
 		body: Readable;
 	}
-> = async (serviceConfig, data) => {
+> = async (service, data) => {
 	const mediaStrategyRes =
-		await mediaServices.checks.checkHasMediaStrategy(serviceConfig);
+		await mediaServices.checks.checkHasMediaStrategy(service);
 	if (mediaStrategyRes.error) return mediaStrategyRes;
 
 	// get og image
@@ -63,11 +63,11 @@ const processImage: ServiceFn<
 
 	// Optimise image
 	const [imageRes, processedCountRes] = await Promise.all([
-		processedImageServices.optimiseImage(serviceConfig, {
+		processedImageServices.optimiseImage(service, {
 			buffer: await mediaHelpers.streamToBuffer(res.response.body),
 			options: data.options,
 		}),
-		processedImageServices.getSingleCount(serviceConfig, {
+		processedImageServices.getSingleCount(service, {
 			key: data.key,
 		}),
 	]);
@@ -88,7 +88,7 @@ const processImage: ServiceFn<
 	stream.end(Buffer.from(imageRes.data.buffer));
 
 	// Check if the processed image limit has been reached for this key, if so return processed image without saving
-	if (processedCountRes.data >= serviceConfig.config.media.processed.limit) {
+	if (processedCountRes.data >= service.config.media.processed.limit) {
 		return {
 			error: undefined,
 			data: {
@@ -102,7 +102,7 @@ const processImage: ServiceFn<
 
 	// Check if we can store it
 	const canStoreRes = await processedImageServices.checks.checkCanStore(
-		serviceConfig,
+		service,
 		{
 			size: imageRes.data.size,
 		},
@@ -119,12 +119,9 @@ const processImage: ServiceFn<
 		};
 	}
 
-	const ProcessedImagesRepo = Repository.get(
-		"processed-images",
-		serviceConfig.db,
-	);
+	const ProcessedImagesRepo = Repository.get("processed-images", service.db);
 
-	if (serviceConfig.config.media.processed.store === true) {
+	if (service.config.media.processed.store === true) {
 		Promise.all([
 			ProcessedImagesRepo.createSingle({
 				key: data.processKey,
@@ -144,7 +141,7 @@ const processImage: ServiceFn<
 					key: data.processKey,
 				},
 			}),
-			optionsServices.updateSingle(serviceConfig, {
+			optionsServices.updateSingle(service, {
 				name: "media_storage_used",
 				valueInt: canStoreRes.data.proposedSize,
 			}),

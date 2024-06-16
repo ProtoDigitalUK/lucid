@@ -12,7 +12,7 @@ const serviceWrapper =
 		fn: ServiceFn<T, R>,
 		wrapperConfig: ServiceWrapperConfig,
 	) =>
-	async (serviceConfig: ServiceConfig, ...args: T): ServiceResponse<R> => {
+	async (service: ServiceConfig, ...args: T): ServiceResponse<R> => {
 		try {
 			//* Validate input if a schema is provided
 			if (wrapperConfig.schema) {
@@ -34,16 +34,16 @@ const serviceWrapper =
 				}
 			}
 
-			//* If transactions are not enabled or the serviceConfig is already in a transaction via a parent
-			if (!wrapperConfig.transaction || serviceConfig.db.isTransaction) {
-				return await fn(serviceConfig, ...args);
+			//* If transactions are not enabled or the service is already in a transaction via a parent
+			if (!wrapperConfig.transaction || service.db.isTransaction) {
+				return await fn(service, ...args);
 			}
 
 			//* If transactions are enabled
-			return await serviceConfig.db.transaction().execute(async (tx) => {
+			return await service.db.transaction().execute(async (tx) => {
 				const result = await fn(
 					{
-						...serviceConfig,
+						...service,
 						db: tx,
 					},
 					...args,

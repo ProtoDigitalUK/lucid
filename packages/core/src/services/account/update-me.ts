@@ -20,8 +20,8 @@ const updateMe: ServiceFn<
 		},
 	],
 	undefined
-> = async (serviceConfig, data) => {
-	const UsersRepo = Repository.get("users", serviceConfig.db);
+> = async (service, data) => {
+	const UsersRepo = Repository.get("users", service.db);
 
 	const getUser = await UsersRepo.selectSingle({
 		select: ["super_admin", "password", "first_name"],
@@ -83,7 +83,7 @@ const updateMe: ServiceFn<
 						],
 					})
 				: undefined,
-			account.checks.checkUpdatePassword(serviceConfig, {
+			account.checks.checkUpdatePassword(service, {
 				password: getUser.password,
 				currentPassword: data.currentPassword,
 				newPassword: data.newPassword,
@@ -161,7 +161,7 @@ const updateMe: ServiceFn<
 	}
 
 	if (data.email !== undefined) {
-		const sendEmail = await email.sendEmail(serviceConfig, {
+		const sendEmail = await email.sendEmail(service, {
 			template: constants.emailTemplates.emailChanged,
 			type: "internal",
 			to: data.email,

@@ -4,9 +4,9 @@ import { LucidError } from "../utils/error-handler.js";
 import Repository from "../libs/repositories/index.js";
 import type { ServiceConfig, ServiceFn } from "../libs/services/types.js";
 
-const clearExpiredTokens = async (serviceConfig: ServiceConfig) => {
+const clearExpiredTokens = async (service: ServiceConfig) => {
 	try {
-		const UserTokensRepo = Repository.get("user-tokens", serviceConfig.db);
+		const UserTokensRepo = Repository.get("user-tokens", service.db);
 
 		await UserTokensRepo.deleteMultiple({
 			where: [
@@ -24,14 +24,14 @@ const clearExpiredTokens = async (serviceConfig: ServiceConfig) => {
 	}
 };
 
-const updateMediaStorage = async (serviceConfig: ServiceConfig) => {
+const updateMediaStorage = async (service: ServiceConfig) => {
 	try {
-		const MediaRepo = Repository.get("media", serviceConfig.db);
+		const MediaRepo = Repository.get("media", service.db);
 		const ProcessedImagesRepo = Repository.get(
 			"processed-images",
-			serviceConfig.db,
+			service.db,
 		);
-		const OptionsRepo = Repository.get("options", serviceConfig.db);
+		const OptionsRepo = Repository.get("options", service.db);
 
 		const [mediaItems, processeddImagesItems] = await Promise.all([
 			MediaRepo.selectMultiple({
@@ -74,11 +74,11 @@ const updateMediaStorage = async (serviceConfig: ServiceConfig) => {
 };
 
 const registerCronJobs: ServiceFn<[], undefined> = async (
-	serviceConfig: ServiceConfig,
+	service: ServiceConfig,
 ) => {
 	cron.schedule("0 0 * * *", async () => {
-		clearExpiredTokens(serviceConfig);
-		updateMediaStorage(serviceConfig);
+		clearExpiredTokens(service);
+		updateMediaStorage(service);
 	});
 
 	return {

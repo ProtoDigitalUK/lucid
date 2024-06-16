@@ -13,8 +13,8 @@ const getSingle: ServiceFn<
 		},
 	],
 	EmailResponse
-> = async (serviceConfig, data) => {
-	const EmailsRepo = Repository.get("emails", serviceConfig.db);
+> = async (service, data) => {
+	const EmailsRepo = Repository.get("emails", service.db);
 	const EmailsFormatter = Formatter.get("emails");
 
 	const email = await EmailsRepo.selectSingleById({
@@ -46,7 +46,7 @@ const getSingle: ServiceFn<
 		};
 	}
 
-	const html = await emailServices.renderTemplate(serviceConfig, {
+	const html = await emailServices.renderTemplate(service, {
 		template: email.template,
 		data: Formatter.parseJSON<Record<string, unknown>>(email.data),
 	});

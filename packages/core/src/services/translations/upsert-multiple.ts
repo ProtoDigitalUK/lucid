@@ -19,12 +19,12 @@ export interface ServiceData<K extends string> {
 const upsertMultiple: ServiceFn<[ServiceData<string>], undefined> = async <
 	K extends string,
 >(
-	serviceConfig: ServiceConfig,
+	service: ServiceConfig,
 	data: ServiceData<K>,
 ) => {
 	if (shouldUpdateTranslations(data.items.map((item) => item.translations))) {
 		const localeExistsRes = await localesServices.checks.checkLocalesExist(
-			serviceConfig,
+			service,
 			{
 				localeCodes: getUniquelocaleCodes(
 					data.items.map((item) => item.translations || []),
@@ -57,10 +57,7 @@ const upsertMultiple: ServiceFn<[ServiceData<string>], undefined> = async <
 			};
 		}
 
-		const TranslationsRepo = Repository.get(
-			"translations",
-			serviceConfig.db,
-		);
+		const TranslationsRepo = Repository.get("translations", service.db);
 
 		await TranslationsRepo.upsertMultiple(translations);
 

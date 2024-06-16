@@ -3,9 +3,9 @@ import { LucidError } from "../../../utils/error-handler.js";
 import Repository from "../../repositories/index.js";
 import type { ServiceConfig } from "../../services/types.js";
 
-const seedDefaultOptions = async (serviceConfig: ServiceConfig) => {
+const seedDefaultOptions = async (service: ServiceConfig) => {
 	try {
-		const OptionsRepo = Repository.get("options", serviceConfig.db);
+		const OptionsRepo = Repository.get("options", service.db);
 
 		const mediaStorageOption = await OptionsRepo.selectSingle({
 			select: ["name"],

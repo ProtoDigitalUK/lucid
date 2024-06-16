@@ -15,13 +15,13 @@ const getMultiple: ServiceFn<
 		data: RoleResponse[];
 		count: number;
 	}
-> = async (serviceConfig, data) => {
-	const RolesRepo = Repository.get("roles", serviceConfig.db);
+> = async (service, data) => {
+	const RolesRepo = Repository.get("roles", service.db);
 	const RolesFormatter = Formatter.get("roles");
 
 	const [roles, rolesCount] = await RolesRepo.selectMultipleFiltered({
 		query: data.query,
-		config: serviceConfig.config,
+		config: service.config,
 	});
 
 	return {

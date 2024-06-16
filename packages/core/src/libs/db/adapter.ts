@@ -72,12 +72,12 @@ export default class DatabaseAdapter {
 		}
 	}
 	async seed(config: Config) {
-		const seedData: ServiceFn<[], undefined> = async (serviceConfig) => {
+		const seedData: ServiceFn<[], undefined> = async (service) => {
 			await Promise.allSettled([
-				seedDefaultOptions(serviceConfig),
-				seedDefaultUser(serviceConfig),
-				seedLocales(serviceConfig),
-				seedDefaultRoles(serviceConfig),
+				seedDefaultOptions(service),
+				seedDefaultUser(service),
+				seedLocales(service),
+				seedDefaultRoles(service),
 			]);
 			return {
 				error: undefined,

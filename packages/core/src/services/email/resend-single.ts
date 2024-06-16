@@ -13,12 +13,12 @@ const resendSingle: ServiceFn<
 		success: boolean;
 		message: string;
 	}
-> = async (serviceConfig, data) => {
+> = async (service, data) => {
 	const emailConfigRes =
-		await emailServices.checks.checkHasEmailConfig(serviceConfig);
+		await emailServices.checks.checkHasEmailConfig(service);
 	if (emailConfigRes.error) return emailConfigRes;
 
-	const EmailsRepo = Repository.get("emails", serviceConfig.db);
+	const EmailsRepo = Repository.get("emails", service.db);
 
 	const email = await EmailsRepo.selectSingleById({
 		id: data.id,
@@ -42,7 +42,7 @@ const resendSingle: ServiceFn<
 
 	const templateData = (email.data ?? {}) as Record<string, unknown>;
 
-	const html = await emailServices.renderTemplate(serviceConfig, {
+	const html = await emailServices.renderTemplate(service, {
 		template: email.template,
 		data: templateData,
 	});

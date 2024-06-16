@@ -13,8 +13,8 @@ const updateSingle: ServiceFn<
 		},
 	],
 	undefined
-> = async (serviceConfig, data) => {
-	const OptionsRepo = Repository.get("options", serviceConfig.db);
+> = async (service, data) => {
+	const OptionsRepo = Repository.get("options", service.db);
 
 	const updateOption = await OptionsRepo.updateSingle({
 		where: [

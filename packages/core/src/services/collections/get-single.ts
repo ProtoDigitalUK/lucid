@@ -16,8 +16,8 @@ const getSingle: ServiceFn<
 		},
 	],
 	CollectionResponse
-> = async (serviceConfig, data) => {
-	const collection = serviceConfig.config.collections?.find(
+> = async (service, data) => {
+	const collection = service.config.collections?.find(
 		(c) => c.key === data.key,
 	);
 
@@ -45,7 +45,7 @@ const getSingle: ServiceFn<
 	) {
 		const CollectionDocumentsRepo = Repository.get(
 			"collection-documents",
-			serviceConfig.db,
+			service.db,
 		);
 
 		const document = await CollectionDocumentsRepo.selectSingle({

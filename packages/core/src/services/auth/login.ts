@@ -13,8 +13,8 @@ const login: ServiceFn<
 	{
 		id: number;
 	}
-> = async (serviceConfig, data) => {
-	const UsersRepo = Repository.get("users", serviceConfig.db);
+> = async (service, data) => {
+	const UsersRepo = Repository.get("users", service.db);
 
 	const user = await UsersRepo.selectSingleByEmailUsername({
 		select: ["id", "password", "is_deleted"],

@@ -14,8 +14,8 @@ const createSingle: ServiceFn<
 	{
 		token: string;
 	}
-> = async (serviceConfig, data) => {
-	const UserTokensRepo = Repository.get("user-tokens", serviceConfig.db);
+> = async (service, data) => {
+	const UserTokensRepo = Repository.get("user-tokens", service.db);
 
 	const token = crypto.randomBytes(32).toString("hex");
 

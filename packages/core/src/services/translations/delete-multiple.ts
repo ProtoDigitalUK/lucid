@@ -8,11 +8,8 @@ const deleteMultiple: ServiceFn<
 		},
 	],
 	undefined
-> = async (serviceConfig, data) => {
-	const TranslationKeysRepo = Repository.get(
-		"translation-keys",
-		serviceConfig.db,
-	);
+> = async (service, data) => {
+	const TranslationKeysRepo = Repository.get("translation-keys", service.db);
 
 	await TranslationKeysRepo.deleteMultiple({
 		where: [

@@ -13,7 +13,7 @@ const createMultipleFields: ServiceFn<
 		},
 	],
 	undefined
-> = async (serviceConfig, data) => {
+> = async (service, data) => {
 	if (data.fields.length === 0) {
 		return {
 			error: undefined,
@@ -23,7 +23,7 @@ const createMultipleFields: ServiceFn<
 
 	const CollectionDocumentFieldsRepo = Repository.get(
 		"collection-document-fields",
-		serviceConfig.db,
+		service.db,
 	);
 
 	await CollectionDocumentFieldsRepo.createMultiple({

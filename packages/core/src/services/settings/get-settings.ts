@@ -4,12 +4,12 @@ import Formatter from "../../libs/formatters/index.js";
 import type { ServiceFn } from "../../libs/services/types.js";
 import type { SettingsResponse } from "../../types/response.js";
 
-const getSettings: ServiceFn<[], SettingsResponse> = async (serviceConfig) => {
+const getSettings: ServiceFn<[], SettingsResponse> = async (service) => {
 	const [mediaStorageUsedRes, processedImageCountRes] = await Promise.all([
-		optionsServices.getSingle(serviceConfig, {
+		optionsServices.getSingle(service, {
 			name: "media_storage_used",
 		}),
-		processedImagesServices.getCount(serviceConfig),
+		processedImagesServices.getCount(service),
 	]);
 	if (mediaStorageUsedRes.error) return mediaStorageUsedRes;
 	if (processedImageCountRes.error) return processedImageCountRes;
@@ -23,7 +23,7 @@ const getSettings: ServiceFn<[], SettingsResponse> = async (serviceConfig) => {
 				mediaStorageUsed: mediaStorageUsedRes.data.valueInt || 0,
 				processedImageCount: processedImageCountRes.data,
 			},
-			config: serviceConfig.config,
+			config: service.config,
 		}),
 	};
 };

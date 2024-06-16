@@ -21,15 +21,15 @@ const checkValidateBricksFields: ServiceFn<
 		},
 	],
 	undefined
-> = async (serviceConfig, data) => {
+> = async (service, data) => {
 	const flatFields =
 		data.bricks.flatMap((brick) => {
 			return brick.fields || [];
 		}) || [];
 
 	const [media, users] = await Promise.all([
-		getAllMedia(serviceConfig, flatFields),
-		getAllUsers(serviceConfig, flatFields),
+		getAllMedia(service, flatFields),
+		getAllUsers(service, flatFields),
 	]);
 
 	const errors: FieldErrors[] = [];
@@ -243,14 +243,14 @@ const allFieldIdsOfType = <T>(fields: FieldInsertItem[], type: FieldTypes) => {
 };
 
 const getAllMedia = async (
-	serviceConfig: ServiceConfig,
+	service: ServiceConfig,
 	fields: FieldInsertItem[],
 ) => {
 	try {
 		const ids = allFieldIdsOfType<number>(fields, "media");
 		if (ids.length === 0) return [];
 
-		const MediaRepo = Repository.get("media", serviceConfig.db);
+		const MediaRepo = Repository.get("media", service.db);
 
 		return MediaRepo.selectMultiple({
 			select: ["id", "file_extension", "width", "height", "type"],
@@ -267,14 +267,14 @@ const getAllMedia = async (
 	}
 };
 const getAllUsers = async (
-	serviceConfig: ServiceConfig,
+	service: ServiceConfig,
 	fields: FieldInsertItem[],
 ) => {
 	try {
 		const ids = allFieldIdsOfType<number>(fields, "user");
 		if (ids.length === 0) return [];
 
-		const UsersRepo = Repository.get("users", serviceConfig.db);
+		const UsersRepo = Repository.get("users", service.db);
 
 		return await UsersRepo.selectMultiple({
 			select: ["id", "username", "email", "first_name", "last_name"],

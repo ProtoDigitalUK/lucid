@@ -9,7 +9,7 @@ const checkRolesExist: ServiceFn<
 		},
 	],
 	undefined
-> = async (serviceConfig, data) => {
+> = async (service, data) => {
 	if (data.roleIds.length === 0) {
 		return {
 			error: undefined,
@@ -17,7 +17,7 @@ const checkRolesExist: ServiceFn<
 		};
 	}
 
-	const RolesRepo = Repository.get("roles", serviceConfig.db);
+	const RolesRepo = Repository.get("roles", service.db);
 	const roles = await RolesRepo.selectMultiple({
 		select: ["id"],
 		where: [

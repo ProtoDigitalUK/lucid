@@ -12,8 +12,8 @@ const getSingle: ServiceFn<
 		},
 	],
 	OptionsResponse
-> = async (serviceConfig, data) => {
-	const OptionsRepo = Repository.get("options", serviceConfig.db);
+> = async (service, data) => {
+	const OptionsRepo = Repository.get("options", service.db);
 	const OptionsFormatter = Formatter.get("options");
 
 	const optionRes = await OptionsRepo.selectSingle({

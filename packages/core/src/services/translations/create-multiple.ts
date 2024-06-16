@@ -18,7 +18,7 @@ const createMultiple: ServiceFn<
 	[ServiceData<string>],
 	Record<string, number>
 > = async <K extends string>(
-	serviceConfig: ServiceConfig,
+	service: ServiceConfig,
 	data: ServiceData<K>,
 ): ServiceResponse<Record<K, number>> => {
 	if (data.keys.length === 0) {
@@ -31,10 +31,7 @@ const createMultiple: ServiceFn<
 		};
 	}
 
-	const TranslationKeysRepo = Repository.get(
-		"translation-keys",
-		serviceConfig.db,
-	);
+	const TranslationKeysRepo = Repository.get("translation-keys", service.db);
 
 	const translationKeyEntries = await TranslationKeysRepo.createMultiple(
 		data.keys.map((k) => ({ createdAt: new Date().toISOString() })),
@@ -69,7 +66,7 @@ const createMultiple: ServiceFn<
 		};
 	}
 
-	const TranslationsRepo = Repository.get("translations", serviceConfig.db);
+	const TranslationsRepo = Repository.get("translations", service.db);
 
 	await TranslationsRepo.upsertMultiple(
 		data.translations.map((translation) => {

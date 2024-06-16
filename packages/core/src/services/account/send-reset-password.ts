@@ -15,8 +15,8 @@ const sendResetPassword: ServiceFn<
 	{
 		message: string;
 	}
-> = async (serviceConfig, data) => {
-	const UsersRepo = Repository.get("users", serviceConfig.db);
+> = async (service, data) => {
+	const UsersRepo = Repository.get("users", service.db);
 
 	const userExists = await UsersRepo.selectSingle({
 		select: ["id", "first_name", "last_name", "email"],
@@ -42,14 +42,14 @@ const sendResetPassword: ServiceFn<
 		minutes: constants.passwordResetTokenExpirationMinutes,
 	}).toISOString();
 
-	const userToken = await userTokens.createSingle(serviceConfig, {
+	const userToken = await userTokens.createSingle(service, {
 		userId: userExists.id,
 		tokenType: "password_reset",
 		expiryDate: expiryDate,
 	});
 	if (userToken.error) return userToken;
 
-	const sendEmail = await email.sendEmail(serviceConfig, {
+	const sendEmail = await email.sendEmail(service, {
 		type: "internal",
 		to: userExists.email,
 		subject: T("reset_password_email_subject"),
@@ -58,7 +58,7 @@ const sendResetPassword: ServiceFn<
 			firstName: userExists.first_name,
 			lastName: userExists.last_name,
 			email: userExists.email,
-			resetLink: `${serviceConfig.config.host}${constants.locations.resetPassword}?token=${userToken.data.token}`,
+			resetLink: `${service.config.host}${constants.locations.resetPassword}?token=${userToken.data.token}`,
 		},
 	});
 	if (sendEmail.error) return sendEmail;

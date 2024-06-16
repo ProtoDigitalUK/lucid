@@ -13,14 +13,11 @@ const deleteSingle: ServiceFn<
 		},
 	],
 	undefined
-> = async (serviceConfig, data) => {
+> = async (service, data) => {
 	const collectionRes =
-		await collectionDocumentsServices.checks.checkCollection(
-			serviceConfig,
-			{
-				key: data.collectionKey,
-			},
-		);
+		await collectionDocumentsServices.checks.checkCollection(service, {
+			key: data.collectionKey,
+		});
 	if (collectionRes.error) return collectionRes;
 
 	if (collectionRes.data.config.locked === true) {
@@ -39,7 +36,7 @@ const deleteSingle: ServiceFn<
 
 	const CollectionDocumentsRepo = Repository.get(
 		"collection-documents",
-		serviceConfig.db,
+		service.db,
 	);
 
 	const getDocument = await CollectionDocumentsRepo.selectSingle({
@@ -83,11 +80,11 @@ const deleteSingle: ServiceFn<
 		{
 			service: "collection-documents",
 			event: "beforeDelete",
-			config: serviceConfig.config,
+			config: service.config,
 			collectionInstance: collectionRes.data,
 		},
 		{
-			db: serviceConfig.db,
+			db: service.db,
 			meta: {
 				collectionKey: data.collectionKey,
 				userId: data.userId,
@@ -127,11 +124,11 @@ const deleteSingle: ServiceFn<
 		{
 			service: "collection-documents",
 			event: "afterDelete",
-			config: serviceConfig.config,
+			config: service.config,
 			collectionInstance: collectionRes.data,
 		},
 		{
-			db: serviceConfig.db,
+			db: service.db,
 			meta: {
 				collectionKey: data.collectionKey,
 				userId: data.userId,

@@ -9,7 +9,7 @@ const checkLocalesExist: ServiceFn<
 		},
 	],
 	undefined
-> = async (serviceConfig, data) => {
+> = async (service, data) => {
 	const localeCodes = Array.from(new Set(data.localeCodes));
 
 	if (localeCodes.length === 0) {
@@ -19,7 +19,7 @@ const checkLocalesExist: ServiceFn<
 		};
 	}
 
-	const LocalesRepo = Repository.get("locales", serviceConfig.db);
+	const LocalesRepo = Repository.get("locales", service.db);
 
 	const locales = await LocalesRepo.selectMultiple({
 		select: ["code"],

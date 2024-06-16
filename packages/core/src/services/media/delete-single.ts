@@ -11,16 +11,13 @@ const deleteSingle: ServiceFn<
 		},
 	],
 	undefined
-> = async (serviceConfig, data) => {
+> = async (service, data) => {
 	const mediaStrategyRes =
-		await mediaServices.checks.checkHasMediaStrategy(serviceConfig);
+		await mediaServices.checks.checkHasMediaStrategy(service);
 	if (mediaStrategyRes.error) return mediaStrategyRes;
 
-	const MediaRepo = Repository.get("media", serviceConfig.db);
-	const ProcessedImagesRepo = Repository.get(
-		"processed-images",
-		serviceConfig.db,
-	);
+	const MediaRepo = Repository.get("media", service.db);
+	const ProcessedImagesRepo = Repository.get("processed-images", service.db);
 
 	const getMedia = await MediaRepo.selectSingle({
 		select: ["key"],
@@ -83,7 +80,7 @@ const deleteSingle: ServiceFn<
 		mediaStrategyRes.data.deleteMultiple(
 			allProcessedImages.map((i) => i.key),
 		),
-		mediaServices.storage.deleteObject(serviceConfig, {
+		mediaServices.storage.deleteObject(service, {
 			key: deleteMedia.key,
 			size: deleteMedia.file_size,
 			processedSize: allProcessedImages.reduce(
@@ -91,7 +88,7 @@ const deleteSingle: ServiceFn<
 				0,
 			),
 		}),
-		translationsServices.deleteMultiple(serviceConfig, {
+		translationsServices.deleteMultiple(service, {
 			ids: [
 				deleteMedia.title_translation_key_id,
 				deleteMedia.alt_translation_key_id,

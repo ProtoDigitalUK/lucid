@@ -10,18 +10,15 @@ const clearSingle: ServiceFn<
 		},
 	],
 	undefined
-> = async (serviceConfig, data) => {
+> = async (service, data) => {
 	const mediaStrategyRes =
-		await mediaServices.checks.checkHasMediaStrategy(serviceConfig);
+		await mediaServices.checks.checkHasMediaStrategy(service);
 	if (mediaStrategyRes.error) return mediaStrategyRes;
 
-	const ProcessedImagesRepo = Repository.get(
-		"processed-images",
-		serviceConfig.db,
-	);
+	const ProcessedImagesRepo = Repository.get("processed-images", service.db);
 
 	const [storageUsedRes, processedImages] = await Promise.all([
-		optionsServices.getSingle(serviceConfig, {
+		optionsServices.getSingle(service, {
 			name: "media_storage_used",
 		}),
 		ProcessedImagesRepo.selectMultiple({
@@ -59,7 +56,7 @@ const clearSingle: ServiceFn<
 				},
 			],
 		}),
-		optionsServices.updateSingle(serviceConfig, {
+		optionsServices.updateSingle(service, {
 			name: "media_storage_used",
 			valueInt: newStorageUsed < 0 ? 0 : newStorageUsed,
 		}),

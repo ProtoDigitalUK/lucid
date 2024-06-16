@@ -8,8 +8,8 @@ const deleteSingle: ServiceFn<
 		},
 	],
 	undefined
-> = async (serviceConfig, data) => {
-	const EmailsRepo = Repository.get("emails", serviceConfig.db);
+> = async (service, data) => {
+	const EmailsRepo = Repository.get("emails", service.db);
 
 	const deleteEmail = await EmailsRepo.deleteSingle({
 		where: [

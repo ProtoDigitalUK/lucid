@@ -11,8 +11,8 @@ const deleteSingle: ServiceFn<
 		},
 	],
 	undefined
-> = async (serviceConfig, data) => {
-	const UsersRepo = Repository.get("users", serviceConfig.db);
+> = async (service, data) => {
+	const UsersRepo = Repository.get("users", service.db);
 
 	if (data.currentUserId === data.userId) {
 		return {
@@ -25,7 +25,7 @@ const deleteSingle: ServiceFn<
 		};
 	}
 
-	await UsersServices.checks.checkNotLastUser(serviceConfig);
+	await UsersServices.checks.checkNotLastUser(service);
 
 	const deleteUserRes = await UsersRepo.updateSingle({
 		data: {

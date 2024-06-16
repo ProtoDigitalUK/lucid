@@ -12,9 +12,9 @@ const checkCanStoreMedia: ServiceFn<
 	{
 		proposedSize: number;
 	}
-> = async (serviceConfig, data) => {
-	const maxFileSize = serviceConfig.config.media.maxSize;
-	const storageLimit = serviceConfig.config.media.storage;
+> = async (service, data) => {
+	const maxFileSize = service.config.media.maxSize;
+	const storageLimit = service.config.media.storage;
 
 	if (data.size > maxFileSize) {
 		return {
@@ -42,7 +42,7 @@ const checkCanStoreMedia: ServiceFn<
 		};
 	}
 
-	const storageUsedRes = await optionsServices.getSingle(serviceConfig, {
+	const storageUsedRes = await optionsServices.getSingle(service, {
 		name: "media_storage_used",
 	});
 	if (storageUsedRes.error) return storageUsedRes;

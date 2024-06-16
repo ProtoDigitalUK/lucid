@@ -11,12 +11,12 @@ const deleteObject: ServiceFn<
 		},
 	],
 	undefined
-> = async (serviceConfig, data) => {
+> = async (service, data) => {
 	const mediaStrategyRes =
-		await mediaServices.checks.checkHasMediaStrategy(serviceConfig);
+		await mediaServices.checks.checkHasMediaStrategy(service);
 	if (mediaStrategyRes.error) return mediaStrategyRes;
 
-	const storageUsedRes = await optionsServices.getSingle(serviceConfig, {
+	const storageUsedRes = await optionsServices.getSingle(service, {
 		name: "media_storage_used",
 	});
 	if (storageUsedRes.error) return storageUsedRes;
@@ -26,7 +26,7 @@ const deleteObject: ServiceFn<
 
 	const [_, updateStorageRes] = await Promise.all([
 		mediaStrategyRes.data.deleteSingle(data.key),
-		optionsServices.updateSingle(serviceConfig, {
+		optionsServices.updateSingle(service, {
 			name: "media_storage_used",
 			valueInt: newStorageUsed < 0 ? 0 : newStorageUsed,
 		}),

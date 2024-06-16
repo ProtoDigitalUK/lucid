@@ -13,7 +13,7 @@ const uploadObject: ServiceFn<
 		},
 	],
 	RouteMediaMetaData
-> = async (serviceConfig, data) => {
+> = async (service, data) => {
 	let tempFilePath = undefined;
 
 	try {
@@ -36,7 +36,7 @@ const uploadObject: ServiceFn<
 		}
 
 		const mediaStrategyRes =
-			await mediaServices.checks.checkHasMediaStrategy(serviceConfig);
+			await mediaServices.checks.checkHasMediaStrategy(service);
 		if (mediaStrategyRes.error) return mediaStrategyRes;
 
 		// Save file to temp folder
@@ -53,7 +53,7 @@ const uploadObject: ServiceFn<
 
 		// Ensure we available storage space
 		const proposedSizeRes = await mediaServices.checks.checkCanStoreMedia(
-			serviceConfig,
+			service,
 			{
 				filename: data.fileData.filename,
 				size: metaData.size,
@@ -90,13 +90,10 @@ const uploadObject: ServiceFn<
 		metaData.etag = saveObjectRes.response?.etag;
 
 		// Update storage usage stats
-		const updateStorageRes = await optionsServices.updateSingle(
-			serviceConfig,
-			{
-				name: "media_storage_used",
-				valueInt: proposedSizeRes.data.proposedSize,
-			},
-		);
+		const updateStorageRes = await optionsServices.updateSingle(service, {
+			name: "media_storage_used",
+			valueInt: proposedSizeRes.data.proposedSize,
+		});
 		if (updateStorageRes.error) return updateStorageRes;
 
 		return {

@@ -10,8 +10,8 @@ const getAll: ServiceFn<
 		},
 	],
 	CollectionResponse[]
-> = async (serviceConfig, data) => {
-	const collections = serviceConfig.config.collections ?? [];
+> = async (service, data) => {
+	const collections = service.config.collections ?? [];
 
 	const CollectionsFormatter = Formatter.get("collections");
 
@@ -22,7 +22,7 @@ const getAll: ServiceFn<
 
 		const CollectionDocumentsRepo = Repository.get(
 			"collection-documents",
-			serviceConfig.db,
+			service.db,
 		);
 
 		const documents = await CollectionDocumentsRepo.selectMultiple({

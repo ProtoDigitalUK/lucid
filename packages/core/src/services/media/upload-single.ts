@@ -26,15 +26,15 @@ const uploadSingle: ServiceFn<
 		},
 	],
 	number
-> = async (serviceConfig, data) => {
+> = async (service, data) => {
 	let objectStored = false;
 	let objectKey = undefined;
 
 	try {
-		const MediaRepo = Repository.get("media", serviceConfig.db);
+		const MediaRepo = Repository.get("media", service.db);
 
 		const localeExistsRes = await localesServices.checks.checkLocalesExist(
-			serviceConfig,
+			service,
 			{
 				localeCodes: getUniquelocaleCodes([
 					data.titleTranslations || [],
@@ -45,7 +45,7 @@ const uploadSingle: ServiceFn<
 		if (localeExistsRes.error) return localeExistsRes;
 
 		const [translationKeyIdsRes, uploadObjectRes] = await Promise.all([
-			translationsServices.createMultiple(serviceConfig, {
+			translationsServices.createMultiple(service, {
 				keys: ["title", "alt"],
 				translations: mergeTranslationGroups([
 					{
@@ -58,7 +58,7 @@ const uploadSingle: ServiceFn<
 					},
 				]),
 			}),
-			mediaServices.storage.uploadObject(serviceConfig, {
+			mediaServices.storage.uploadObject(service, {
 				fileData: data.fileData,
 			}),
 		]);
@@ -98,7 +98,7 @@ const uploadSingle: ServiceFn<
 		};
 	} catch (e) {
 		if (objectStored && objectKey !== undefined) {
-			serviceConfig.config.media?.strategy?.deleteSingle(objectKey);
+			service.config.media?.strategy?.deleteSingle(objectKey);
 		}
 
 		return {

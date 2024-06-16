@@ -16,7 +16,7 @@ const checkSingleCollectionDocumentCount: ServiceFn<
 		},
 	],
 	undefined
-> = async (serviceConfig, data) => {
+> = async (service, data) => {
 	if (data.documentId !== undefined) {
 		return {
 			error: undefined,
@@ -32,7 +32,7 @@ const checkSingleCollectionDocumentCount: ServiceFn<
 
 	const CollectionDocumentsRepo = Repository.get(
 		"collection-documents",
-		serviceConfig.db,
+		service.db,
 	);
 
 	const hasDocument = await CollectionDocumentsRepo.selectSingle({

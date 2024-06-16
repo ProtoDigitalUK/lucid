@@ -6,9 +6,9 @@ import Repository from "../../repositories/index.js";
 import Formatter from "../../formatters/index.js";
 import type { ServiceConfig } from "../../services/types.js";
 
-const seedDefaultUser = async (serviceConfig: ServiceConfig) => {
+const seedDefaultUser = async (service: ServiceConfig) => {
 	try {
-		const UsersRepo = Repository.get("users", serviceConfig.db);
+		const UsersRepo = Repository.get("users", service.db);
 
 		const totalUserCount = await UsersRepo.count();
 		if (Formatter.parseCount(totalUserCount?.count) > 0) return;

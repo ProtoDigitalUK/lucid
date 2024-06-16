@@ -18,10 +18,10 @@ const createMultiple: ServiceFn<
 		},
 	],
 	undefined
-> = async (serviceConfig, data) => {
+> = async (service, data) => {
 	const CollectionDocumentBricksRepo = Repository.get(
 		"collection-document-bricks",
-		serviceConfig.db,
+		service.db,
 	);
 
 	// -------------------------------------------------------------------------------
@@ -30,7 +30,7 @@ const createMultiple: ServiceFn<
 		bricks: data.bricks,
 		fields: data.fields,
 		documentId: data.documentId,
-		localisation: serviceConfig.config.localisation,
+		localisation: service.config.localisation,
 		collection: data.collection,
 	});
 	if (bricks.length === 0) {
@@ -48,7 +48,7 @@ const createMultiple: ServiceFn<
 
 	const checkValidateBricksFields =
 		await collectionBricksServices.checks.checkValidateBricksFields(
-			serviceConfig,
+			service,
 			{
 				collection: data.collection,
 				bricks: bricks,
@@ -59,7 +59,7 @@ const createMultiple: ServiceFn<
 	// -------------------------------------------------------------------------------
 	// delete all bricks
 	const deleteAllBricks = await collectionBricksServices.deleteMultipleBricks(
-		serviceConfig,
+		service,
 		{
 			documentId: data.documentId,
 			apply: {
@@ -87,7 +87,7 @@ const createMultiple: ServiceFn<
 	// -------------------------------------------------------------------------------
 	// create groups
 	const groups = await collectionBricksServices.createMultipleGroups(
-		serviceConfig,
+		service,
 		{
 			documentId: data.documentId,
 			brickGroups: postInsertBricks.map((b) => ({
@@ -101,7 +101,7 @@ const createMultiple: ServiceFn<
 	// -------------------------------------------------------------------------------
 	// create fields
 	const fields = await collectionBricksServices.createMultipleFields(
-		serviceConfig,
+		service,
 		{
 			documentId: data.documentId,
 			fields: postInsertBricks.flatMap((b) =>

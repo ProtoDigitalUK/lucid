@@ -16,16 +16,16 @@ const getSingle: ServiceFn<
 		},
 	],
 	CollectionDocumentResponse
-> = async (serviceConfig, data) => {
+> = async (service, data) => {
 	const CollectionDocumentsRepo = Repository.get(
 		"collection-documents",
-		serviceConfig.db,
+		service.db,
 	);
 	const CollectionDocumentsFormatter = Formatter.get("collection-documents");
 
 	const document = await CollectionDocumentsRepo.selectSingleById({
 		id: data.id,
-		config: serviceConfig.config,
+		config: service.config,
 	});
 
 	if (document === undefined || document.collection_key === null) {
@@ -44,17 +44,14 @@ const getSingle: ServiceFn<
 		};
 	}
 
-	const collectionRes = await collectionsServices.getSingleInstance(
-		serviceConfig,
-		{
-			key: document.collection_key,
-		},
-	);
+	const collectionRes = await collectionsServices.getSingleInstance(service, {
+		key: document.collection_key,
+	});
 	if (collectionRes.error) return collectionRes;
 
 	if (data.query.include?.includes("bricks")) {
 		const bricksRes = await collectionDocumentBricksServices.getMultiple(
-			serviceConfig,
+			service,
 			{
 				documentId: data.id,
 				collectionKey: document.collection_key,
@@ -69,12 +66,12 @@ const getSingle: ServiceFn<
 				collection: collectionRes.data,
 				bricks: bricksRes.data.bricks,
 				fields: bricksRes.data.fields,
-				host: serviceConfig.config.host,
+				host: service.config.host,
 				localisation: {
-					locales: serviceConfig.config.localisation.locales.map(
+					locales: service.config.localisation.locales.map(
 						(l) => l.code,
 					),
-					default: serviceConfig.config.localisation.defaultLocale,
+					default: service.config.localisation.defaultLocale,
 				},
 			}),
 		};
@@ -87,12 +84,10 @@ const getSingle: ServiceFn<
 			collection: collectionRes.data,
 			bricks: [],
 			fields: [],
-			host: serviceConfig.config.host,
+			host: service.config.host,
 			localisation: {
-				locales: serviceConfig.config.localisation.locales.map(
-					(l) => l.code,
-				),
-				default: serviceConfig.config.localisation.defaultLocale,
+				locales: service.config.localisation.locales.map((l) => l.code),
+				default: service.config.localisation.defaultLocale,
 			},
 		}),
 	};

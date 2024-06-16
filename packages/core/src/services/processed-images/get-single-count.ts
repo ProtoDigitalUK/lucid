@@ -9,11 +9,8 @@ const getSingleCount: ServiceFn<
 		},
 	],
 	number
-> = async (serviceConfig, data) => {
-	const ProcessedImagesRepo = Repository.get(
-		"processed-images",
-		serviceConfig.db,
-	);
+> = async (service, data) => {
+	const ProcessedImagesRepo = Repository.get("processed-images", service.db);
 
 	const processedImageCount = await ProcessedImagesRepo.count({
 		where: [

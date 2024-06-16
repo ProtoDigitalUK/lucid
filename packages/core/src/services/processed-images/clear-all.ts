@@ -3,18 +3,15 @@ import mediaServices from "../media/index.js";
 import optionsServices from "../options/index.js";
 import type { ServiceFn } from "../../libs/services/types.js";
 
-const clearAll: ServiceFn<[], undefined> = async (serviceConfig) => {
+const clearAll: ServiceFn<[], undefined> = async (service) => {
 	const mediaStrategyRes =
-		await mediaServices.checks.checkHasMediaStrategy(serviceConfig);
+		await mediaServices.checks.checkHasMediaStrategy(service);
 	if (mediaStrategyRes.error) return mediaStrategyRes;
 
-	const ProcessedImagesRepo = Repository.get(
-		"processed-images",
-		serviceConfig.db,
-	);
+	const ProcessedImagesRepo = Repository.get("processed-images", service.db);
 
 	const [storageUsedRes, processedImages] = await Promise.all([
-		optionsServices.getSingle(serviceConfig, {
+		optionsServices.getSingle(service, {
 			name: "media_storage_used",
 		}),
 		ProcessedImagesRepo.selectMultiple({
@@ -39,7 +36,7 @@ const clearAll: ServiceFn<[], undefined> = async (serviceConfig) => {
 		ProcessedImagesRepo.deleteMultiple({
 			where: [],
 		}),
-		optionsServices.updateSingle(serviceConfig, {
+		optionsServices.updateSingle(service, {
 			name: "media_storage_used",
 			valueInt: newStorageUsed < 0 ? 0 : newStorageUsed,
 		}),

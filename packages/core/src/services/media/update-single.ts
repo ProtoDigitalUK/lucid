@@ -21,11 +21,11 @@ const updateSingle: ServiceFn<
 		},
 	],
 	number | undefined
-> = async (serviceConfig, data) => {
+> = async (service, data) => {
 	// if translations are present, insert on conflict update
 	// do translations first so if they throw an error, the file is not uploaded
 	// if the file upload throws an error, the translations are not inserted due to the transaction
-	const MediaRepo = Repository.get("media", serviceConfig.db);
+	const MediaRepo = Repository.get("media", service.db);
 
 	const media = await MediaRepo.selectSingle({
 		select: [
@@ -61,7 +61,7 @@ const updateSingle: ServiceFn<
 	}
 
 	const upsertTranslationsRes = await translationsServices.upsertMultiple(
-		serviceConfig,
+		service,
 		{
 			keys: {
 				title: media.title_translation_key_id,
@@ -88,14 +88,11 @@ const updateSingle: ServiceFn<
 		};
 	}
 
-	const updateObjectRes = await mediaServices.storage.updateObject(
-		serviceConfig,
-		{
-			fileData: data.fileData,
-			previousSize: media.file_size,
-			key: media.key,
-		},
-	);
+	const updateObjectRes = await mediaServices.storage.updateObject(service, {
+		fileData: data.fileData,
+		previousSize: media.file_size,
+		key: media.key,
+	});
 	if (updateObjectRes.error) return updateObjectRes;
 
 	const mediaUpdateRes = await MediaRepo.updateSingle({

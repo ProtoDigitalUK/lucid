@@ -13,7 +13,7 @@ const deleteMultiple: ServiceFn<
 		},
 	],
 	undefined
-> = async (serviceConfig, data) => {
+> = async (service, data) => {
 	if (data.ids.length === 0) {
 		return {
 			error: undefined,
@@ -22,12 +22,9 @@ const deleteMultiple: ServiceFn<
 	}
 
 	const collectionRes =
-		await collectionDocumentsServices.checks.checkCollection(
-			serviceConfig,
-			{
-				key: data.collectionKey,
-			},
-		);
+		await collectionDocumentsServices.checks.checkCollection(service, {
+			key: data.collectionKey,
+		});
 	if (collectionRes.error) return collectionRes;
 
 	if (collectionRes.data.config.locked === true) {
@@ -46,7 +43,7 @@ const deleteMultiple: ServiceFn<
 
 	const CollectionDocumentsRepo = Repository.get(
 		"collection-documents",
-		serviceConfig.db,
+		service.db,
 	);
 
 	const getDocuments = await CollectionDocumentsRepo.selectMultiple({
@@ -102,11 +99,11 @@ const deleteMultiple: ServiceFn<
 		{
 			service: "collection-documents",
 			event: "beforeDelete",
-			config: serviceConfig.config,
+			config: service.config,
 			collectionInstance: collectionRes.data,
 		},
 		{
-			db: serviceConfig.db,
+			db: service.db,
 			meta: {
 				collectionKey: data.collectionKey,
 				userId: data.userId,
@@ -146,11 +143,11 @@ const deleteMultiple: ServiceFn<
 		{
 			service: "collection-documents",
 			event: "afterDelete",
-			config: serviceConfig.config,
+			config: service.config,
 			collectionInstance: collectionRes.data,
 		},
 		{
-			db: serviceConfig.db,
+			db: service.db,
 			meta: {
 				collectionKey: data.collectionKey,
 				userId: data.userId,

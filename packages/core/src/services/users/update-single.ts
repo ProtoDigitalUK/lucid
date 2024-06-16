@@ -27,8 +27,8 @@ const updateSingle: ServiceFn<
 		},
 	],
 	number
-> = async (serviceConfig, data) => {
-	const UsersRepo = Repository.get("users", serviceConfig.db);
+> = async (service, data) => {
+	const UsersRepo = Repository.get("users", service.db);
 
 	if (data.auth.id === data.userId) {
 		return {
@@ -162,7 +162,7 @@ const updateSingle: ServiceFn<
 				},
 			],
 		}),
-		usersServices.updateMultipleRoles(serviceConfig, {
+		usersServices.updateMultipleRoles(service, {
 			userId: data.userId,
 			roleIds: data.roleIds,
 		}),
@@ -180,7 +180,7 @@ const updateSingle: ServiceFn<
 	}
 
 	if (data.email !== undefined) {
-		const sendEmailRes = await email.sendEmail(serviceConfig, {
+		const sendEmailRes = await email.sendEmail(service, {
 			template: constants.emailTemplates.emailChanged,
 			type: "internal",
 			to: data.email,

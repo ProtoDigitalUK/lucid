@@ -21,11 +21,11 @@ const streamMedia: ServiceFn<
 		contentType: string | undefined;
 		body: Readable;
 	}
-> = async (serviceConfig, data) => {
+> = async (service, data) => {
 	const format = mediaHelpers.chooseFormat(data.accept, data.query.format);
 
 	const mediaStrategyRes =
-		await mediaServices.checks.checkHasMediaStrategy(serviceConfig);
+		await mediaServices.checks.checkHasMediaStrategy(service);
 	if (mediaStrategyRes.error) return mediaStrategyRes;
 
 	// ------------------------------
@@ -92,7 +92,7 @@ const streamMedia: ServiceFn<
 	}
 
 	// Process
-	return await processedImageServices.processImage(serviceConfig, {
+	return await processedImageServices.processImage(service, {
 		key: data.key,
 		processKey: processKey,
 		options: {

@@ -10,7 +10,7 @@ const updateMultipleRoles: ServiceFn<
 		},
 	],
 	undefined
-> = async (serviceConfig, data) => {
+> = async (service, data) => {
 	if (data.roleIds === undefined) {
 		return {
 			error: undefined,
@@ -18,10 +18,10 @@ const updateMultipleRoles: ServiceFn<
 		};
 	}
 
-	const UserRolesRepo = Repository.get("user-roles", serviceConfig.db);
+	const UserRolesRepo = Repository.get("user-roles", service.db);
 
 	const [roleExistsRes] = await Promise.all([
-		usersServices.checks.checkRolesExist(serviceConfig, {
+		usersServices.checks.checkRolesExist(service, {
 			roleIds: data.roleIds || [],
 		}),
 		UserRolesRepo.deleteMultiple({

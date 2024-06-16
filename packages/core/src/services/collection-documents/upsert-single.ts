@@ -20,19 +20,16 @@ const upsertSingle: ServiceFn<
 		},
 	],
 	number
-> = async (serviceConfig, data) => {
+> = async (service, data) => {
 	const collectionRes =
-		await collectionDocumentsServices.checks.checkCollection(
-			serviceConfig,
-			{
-				key: data.collectionKey,
-			},
-		);
+		await collectionDocumentsServices.checks.checkCollection(service, {
+			key: data.collectionKey,
+		});
 	if (collectionRes.error) return collectionRes;
 
 	const CollectionDocumentsRepo = Repository.get(
 		"collection-documents",
-		serviceConfig.db,
+		service.db,
 	);
 
 	if (data.documentId !== undefined) {
@@ -85,7 +82,7 @@ const upsertSingle: ServiceFn<
 
 	const checkDocumentCount =
 		await collectionDocumentsServices.checks.checkSingleCollectionDocumentCount(
-			serviceConfig,
+			service,
 			{
 				collectionKey: data.collectionKey,
 				collectionMode: collectionRes.data.data.mode,
@@ -98,11 +95,11 @@ const upsertSingle: ServiceFn<
 		{
 			service: "collection-documents",
 			event: "beforeUpsert",
-			config: serviceConfig.config,
+			config: service.config,
 			collectionInstance: collectionRes.data,
 		},
 		{
-			db: serviceConfig.db,
+			db: service.db,
 			meta: {
 				collectionKey: data.collectionKey,
 				userId: data.userId,
@@ -131,7 +128,7 @@ const upsertSingle: ServiceFn<
 	}
 
 	const createMultipleBricks =
-		await collectionDocumentBricksServices.createMultiple(serviceConfig, {
+		await collectionDocumentBricksServices.createMultiple(service, {
 			documentId: document.id,
 			bricks: bodyData.bricks,
 			fields: bodyData.fields,
@@ -143,11 +140,11 @@ const upsertSingle: ServiceFn<
 		{
 			service: "collection-documents",
 			event: "afterUpsert",
-			config: serviceConfig.config,
+			config: service.config,
 			collectionInstance: collectionRes.data,
 		},
 		{
-			db: serviceConfig.db,
+			db: service.db,
 			meta: {
 				collectionKey: data.collectionKey,
 				userId: data.userId,

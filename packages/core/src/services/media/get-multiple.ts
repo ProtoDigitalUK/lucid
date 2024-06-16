@@ -16,14 +16,14 @@ const getMultiple: ServiceFn<
 		data: MediaResponse[];
 		count: number;
 	}
-> = async (serviceConfig, data) => {
-	const MediaRepo = Repository.get("media", serviceConfig.db);
+> = async (service, data) => {
+	const MediaRepo = Repository.get("media", service.db);
 	const MediaFormatter = Formatter.get("media");
 
 	const [medias, mediasCount] = await MediaRepo.selectMultipleFiltered({
 		localeCode: data.localeCode,
 		query: data.query,
-		config: serviceConfig.config,
+		config: service.config,
 	});
 
 	return {
@@ -31,7 +31,7 @@ const getMultiple: ServiceFn<
 		data: {
 			data: MediaFormatter.formatMultiple({
 				media: medias,
-				host: serviceConfig.config.host,
+				host: service.config.host,
 			}),
 			count: Formatter.parseCount(mediasCount?.count),
 		},
