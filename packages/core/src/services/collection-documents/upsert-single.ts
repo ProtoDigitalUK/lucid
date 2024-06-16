@@ -20,9 +20,7 @@ const upsertSingle: ServiceFn<
 			fields?: Array<FieldSchemaType>;
 		},
 	],
-	{
-		documentId: number;
-	}
+	number
 > = async (serviceConfig, data) => {
 	const collectionRes = await serviceWrapper(
 		collectionDocumentsServices.checks.checkCollection,
@@ -171,9 +169,7 @@ const upsertSingle: ServiceFn<
 
 	return {
 		error: undefined,
-		data: {
-			documentId: document.id,
-		},
+		data: document.id,
 	};
 };
 

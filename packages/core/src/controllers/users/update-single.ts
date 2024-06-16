@@ -11,7 +11,7 @@ const updateSingleController: RouteController<
 	typeof usersSchema.updateSingle.body,
 	typeof usersSchema.updateSingle.query
 > = async (request, reply) => {
-	const udapteUser = await serviceWrapper(usersServices.updateSingle, {
+	const updateUser = await serviceWrapper(usersServices.updateSingle, {
 		transaction: true,
 		defaultError: {
 			type: "basic",
@@ -41,7 +41,7 @@ const updateSingleController: RouteController<
 			isDeleted: request.body.isDeleted,
 		},
 	);
-	if (udapteUser.error) throw new LucidAPIError(udapteUser.error);
+	if (updateUser.error) throw new LucidAPIError(updateUser.error);
 
 	reply.status(204).send();
 };

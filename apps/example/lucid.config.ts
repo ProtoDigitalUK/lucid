@@ -49,6 +49,7 @@ export default lucid.config({
 		processed: {
 			store: true,
 		},
+		fallbackImage: "https://placehold.co/600x400",
 	},
 	// hooks: [
 	// 	{

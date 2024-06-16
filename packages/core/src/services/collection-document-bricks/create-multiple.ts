@@ -47,7 +47,7 @@ const createMultiple: ServiceFn<
 		collectionBricksServices.checks.checkDuplicateOrder(bricks);
 	if (checkBrickOrder.error) return checkBrickOrder;
 
-	const checkValidateBricksFiedls =
+	const checkValidateBricksFields =
 		await collectionBricksServices.checks.checkValidateBricksFields(
 			serviceConfig,
 			{
@@ -55,7 +55,7 @@ const createMultiple: ServiceFn<
 				bricks: bricks,
 			},
 		);
-	if (checkValidateBricksFiedls.error) return checkValidateBricksFiedls;
+	if (checkValidateBricksFields.error) return checkValidateBricksFields;
 
 	// -------------------------------------------------------------------------------
 	// delete all bricks

@@ -36,7 +36,7 @@ const checkRolesExist: ServiceFn<
 				status: 400,
 				errorResponse: {
 					body: {
-						role_ids: {
+						roleIds: {
 							code: "invalid",
 							message: T("error_not_found_message", {
 								name: T("role"),

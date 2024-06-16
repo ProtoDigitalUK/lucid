@@ -59,7 +59,7 @@ const checkSingleCollectionDocumentCount: ServiceFn<
 				status: 400,
 				errorResponse: {
 					body: {
-						collection_key: {
+						collectionKey: {
 							code: "invalid",
 							message: T(
 								"this_collection_has_a_document_already",

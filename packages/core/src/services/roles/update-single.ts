@@ -43,7 +43,7 @@ const updateSingle: ServiceFn<
 				})
 			: undefined,
 	]);
-	if (validatePermsRes?.error) throw validatePermsRes.error;
+	if (validatePermsRes?.error) return validatePermsRes;
 
 	if (data.name !== undefined && checkNameIsUnique !== undefined) {
 		return {

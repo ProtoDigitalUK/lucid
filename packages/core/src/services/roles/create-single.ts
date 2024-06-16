@@ -33,7 +33,7 @@ const createSingle: ServiceFn<
 			],
 		}),
 	]);
-	if (validatePermsRes.error) throw validatePermsRes.error;
+	if (validatePermsRes.error) return validatePermsRes;
 
 	if (checkNameIsUnique !== undefined) {
 		return {
