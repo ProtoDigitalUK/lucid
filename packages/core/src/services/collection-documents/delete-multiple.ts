@@ -2,7 +2,6 @@ import T from "../../translations/index.js";
 import Repository from "../../libs/repositories/index.js";
 import collectionDocumentsServices from "./index.js";
 import executeHooks from "../../libs/hooks/execute-hooks.js";
-import serviceWrapper from "../../libs/services/service-wrapper.js";
 import type { ServiceFn } from "../../libs/services/types.js";
 
 const deleteMultiple: ServiceFn<
@@ -22,14 +21,13 @@ const deleteMultiple: ServiceFn<
 		};
 	}
 
-	const collectionRes = await serviceWrapper(
-		collectionDocumentsServices.checks.checkCollection,
-		{
-			transaction: false,
-		},
-	)(serviceConfig, {
-		key: data.collectionKey,
-	});
+	const collectionRes =
+		await collectionDocumentsServices.checks.checkCollection(
+			serviceConfig,
+			{
+				key: data.collectionKey,
+			},
+		);
 	if (collectionRes.error) return collectionRes;
 
 	if (collectionRes.data.config.locked === true) {

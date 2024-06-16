@@ -3,7 +3,6 @@ import argon2 from "argon2";
 import userTokens from "../user-tokens/index.js";
 import email from "../email/index.js";
 import constants from "../../constants.js";
-import serviceWrapper from "../../libs/services/service-wrapper.js";
 import Repository from "../../libs/repositories/index.js";
 import type { ServiceFn } from "../../libs/services/types.js";
 
@@ -19,9 +18,7 @@ const resetPassword: ServiceFn<
 	const UserTokensRepo = Repository.get("user-tokens", service.db);
 	const UsersRepo = Repository.get("users", service.db);
 
-	const token = await serviceWrapper(userTokens.getSingle, {
-		transaction: false,
-	})(service, {
+	const token = await userTokens.getSingle(service, {
 		token: data.token,
 		tokenType: "password_reset",
 	});
@@ -63,9 +60,7 @@ const resetPassword: ServiceFn<
 				},
 			],
 		}),
-		serviceWrapper(email.sendEmail, {
-			transaction: false,
-		})(service, {
+		email.sendEmail(service, {
 			template: constants.emailTemplates.passwordResetSuccess,
 			type: "internal",
 			to: user.email,

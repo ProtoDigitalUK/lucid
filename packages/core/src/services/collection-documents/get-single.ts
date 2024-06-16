@@ -3,7 +3,6 @@ import collectionDocumentBricksServices from "../collection-document-bricks/inde
 import collectionsServices from "../collections/index.js";
 import Repository from "../../libs/repositories/index.js";
 import Formatter from "../../libs/formatters/index.js";
-import serviceWrapper from "../../libs/services/service-wrapper.js";
 import type z from "zod";
 import type { ServiceFn } from "../../libs/services/types.js";
 import type collectionDocumentsSchema from "../../schemas/collection-documents.js";
@@ -45,26 +44,22 @@ const getSingle: ServiceFn<
 		};
 	}
 
-	const collectionRes = await serviceWrapper(
-		collectionsServices.getSingleInstance,
+	const collectionRes = await collectionsServices.getSingleInstance(
+		serviceConfig,
 		{
-			transaction: false,
+			key: document.collection_key,
 		},
-	)(serviceConfig, {
-		key: document.collection_key,
-	});
+	);
 	if (collectionRes.error) return collectionRes;
 
 	if (data.query.include?.includes("bricks")) {
-		const bricksRes = await serviceWrapper(
-			collectionDocumentBricksServices.getMultiple,
+		const bricksRes = await collectionDocumentBricksServices.getMultiple(
+			serviceConfig,
 			{
-				transaction: false,
+				documentId: data.id,
+				collectionKey: document.collection_key,
 			},
-		)(serviceConfig, {
-			documentId: data.id,
-			collectionKey: document.collection_key,
-		});
+		);
 		if (bricksRes.error) return bricksRes;
 
 		return {

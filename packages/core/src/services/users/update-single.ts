@@ -3,7 +3,6 @@ import argon2 from "argon2";
 import usersServices from "./index.js";
 import Repository from "../../libs/repositories/index.js";
 import email from "../email/index.js";
-import serviceWrapper from "../../libs/services/service-wrapper.js";
 import constants from "../../constants.js";
 import type { BooleanInt } from "../../libs/db/types.js";
 import type { ServiceFn } from "../../libs/services/types.js";
@@ -163,9 +162,7 @@ const updateSingle: ServiceFn<
 				},
 			],
 		}),
-		serviceWrapper(usersServices.updateMultipleRoles, {
-			transaction: false,
-		})(serviceConfig, {
+		usersServices.updateMultipleRoles(serviceConfig, {
 			userId: data.userId,
 			roleIds: data.roleIds,
 		}),
@@ -183,9 +180,7 @@ const updateSingle: ServiceFn<
 	}
 
 	if (data.email !== undefined) {
-		const sendEmailRes = await serviceWrapper(email.sendEmail, {
-			transaction: false,
-		})(serviceConfig, {
+		const sendEmailRes = await email.sendEmail(serviceConfig, {
 			template: constants.emailTemplates.emailChanged,
 			type: "internal",
 			to: data.email,

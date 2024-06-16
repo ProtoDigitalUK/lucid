@@ -2,7 +2,6 @@ import T from "../../translations/index.js";
 import mediaServices from "./index.js";
 import translationsServices from "../translations/index.js";
 import Repository from "../../libs/repositories/index.js";
-import serviceWrapper from "../../libs/services/service-wrapper.js";
 import type { MultipartFile } from "@fastify/multipart";
 import type { ServiceFn } from "../../libs/services/types.js";
 
@@ -61,27 +60,25 @@ const updateSingle: ServiceFn<
 		};
 	}
 
-	const upsertTranslationsRes = await serviceWrapper(
-		translationsServices.upsertMultiple,
+	const upsertTranslationsRes = await translationsServices.upsertMultiple(
+		serviceConfig,
 		{
-			transaction: false,
-		},
-	)(serviceConfig, {
-		keys: {
-			title: media.title_translation_key_id,
-			alt: media.alt_translation_key_id,
-		},
-		items: [
-			{
-				translations: data.titleTranslations || [],
-				key: "title",
+			keys: {
+				title: media.title_translation_key_id,
+				alt: media.alt_translation_key_id,
 			},
-			{
-				translations: data.altTranslations || [],
-				key: "alt",
-			},
-		],
-	});
+			items: [
+				{
+					translations: data.titleTranslations || [],
+					key: "title",
+				},
+				{
+					translations: data.altTranslations || [],
+					key: "alt",
+				},
+			],
+		},
+	);
 	if (upsertTranslationsRes.error) return upsertTranslationsRes;
 
 	if (data.fileData === undefined) {
@@ -91,16 +88,14 @@ const updateSingle: ServiceFn<
 		};
 	}
 
-	const updateObjectRes = await serviceWrapper(
-		mediaServices.storage.updateObject,
+	const updateObjectRes = await mediaServices.storage.updateObject(
+		serviceConfig,
 		{
-			transaction: false,
+			fileData: data.fileData,
+			previousSize: media.file_size,
+			key: media.key,
 		},
-	)(serviceConfig, {
-		fileData: data.fileData,
-		previousSize: media.file_size,
-		key: media.key,
-	});
+	);
 	if (updateObjectRes.error) return updateObjectRes;
 
 	const mediaUpdateRes = await MediaRepo.updateSingle({

@@ -2,7 +2,6 @@ import emailServices from "./index.js";
 import { getEmailHash } from "../../utils/helpers.js";
 import Repository from "../../libs/repositories/index.js";
 import Formatter from "../../libs/formatters/index.js";
-import serviceWrapper from "../../libs/services/service-wrapper.js";
 import type { ServiceFn } from "../../libs/services/types.js";
 import type { EmailResponse } from "../../types/response.js";
 
@@ -24,17 +23,11 @@ const sendEmail: ServiceFn<
 	const EmailsRepo = Repository.get("emails", service.db);
 	const EmailsFormatter = Formatter.get("emails");
 
-	const emailConfigRes = await serviceWrapper(
-		emailServices.checks.checkHasEmailConfig,
-		{
-			transaction: false,
-		},
-	)(service);
+	const emailConfigRes =
+		await emailServices.checks.checkHasEmailConfig(service);
 	if (emailConfigRes.error) return emailConfigRes;
 
-	const html = await serviceWrapper(emailServices.renderTemplate, {
-		transaction: false,
-	})(service, {
+	const html = await emailServices.renderTemplate(service, {
 		template: data.template,
 		data: data.data,
 	});

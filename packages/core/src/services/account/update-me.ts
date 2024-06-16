@@ -1,6 +1,5 @@
 import T from "../../translations/index.js";
 import type { FastifyRequest } from "fastify";
-import serviceWrapper from "../../libs/services/service-wrapper.js";
 import type { ServiceFn } from "../../libs/services/types.js";
 import Repository from "../../libs/repositories/index.js";
 import email from "../email/index.js";
@@ -84,9 +83,7 @@ const updateMe: ServiceFn<
 						],
 					})
 				: undefined,
-			serviceWrapper(account.checks.checkUpdatePassword, {
-				transaction: false,
-			})(serviceConfig, {
+			account.checks.checkUpdatePassword(serviceConfig, {
 				password: getUser.password,
 				currentPassword: data.currentPassword,
 				newPassword: data.newPassword,
@@ -164,9 +161,7 @@ const updateMe: ServiceFn<
 	}
 
 	if (data.email !== undefined) {
-		const sendEmail = await serviceWrapper(email.sendEmail, {
-			transaction: false,
-		})(serviceConfig, {
+		const sendEmail = await email.sendEmail(serviceConfig, {
 			template: constants.emailTemplates.emailChanged,
 			type: "internal",
 			to: data.email,

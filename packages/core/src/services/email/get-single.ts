@@ -2,7 +2,6 @@ import T from "../../translations/index.js";
 import emailServices from "./index.js";
 import Repository from "../../libs/repositories/index.js";
 import Formatter from "../../libs/formatters/index.js";
-import serviceWrapper from "../../libs/services/service-wrapper.js";
 import type { ServiceFn } from "../../libs/services/types.js";
 import type { EmailResponse } from "../../types/response.js";
 
@@ -47,9 +46,7 @@ const getSingle: ServiceFn<
 		};
 	}
 
-	const html = await serviceWrapper(emailServices.renderTemplate, {
-		transaction: false,
-	})(serviceConfig, {
+	const html = await emailServices.renderTemplate(serviceConfig, {
 		template: email.template,
 		data: Formatter.parseJSON<Record<string, unknown>>(email.data),
 	});

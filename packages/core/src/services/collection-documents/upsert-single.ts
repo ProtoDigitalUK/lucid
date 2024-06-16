@@ -1,5 +1,4 @@
 import T from "../../translations/index.js";
-import serviceWrapper from "../../libs/services/service-wrapper.js";
 import collectionDocumentsServices from "./index.js";
 import collectionDocumentBricksServices from "../collection-document-bricks/index.js";
 import Repository from "../../libs/repositories/index.js";
@@ -22,14 +21,13 @@ const upsertSingle: ServiceFn<
 	],
 	number
 > = async (serviceConfig, data) => {
-	const collectionRes = await serviceWrapper(
-		collectionDocumentsServices.checks.checkCollection,
-		{
-			transaction: false,
-		},
-	)(serviceConfig, {
-		key: data.collectionKey,
-	});
+	const collectionRes =
+		await collectionDocumentsServices.checks.checkCollection(
+			serviceConfig,
+			{
+				key: data.collectionKey,
+			},
+		);
 	if (collectionRes.error) return collectionRes;
 
 	const CollectionDocumentsRepo = Repository.get(
@@ -85,16 +83,15 @@ const upsertSingle: ServiceFn<
 		}
 	}
 
-	const checkDocumentCount = await serviceWrapper(
-		collectionDocumentsServices.checks.checkSingleCollectionDocumentCount,
-		{
-			transaction: false,
-		},
-	)(serviceConfig, {
-		collectionKey: data.collectionKey,
-		collectionMode: collectionRes.data.data.mode,
-		documentId: data.documentId,
-	});
+	const checkDocumentCount =
+		await collectionDocumentsServices.checks.checkSingleCollectionDocumentCount(
+			serviceConfig,
+			{
+				collectionKey: data.collectionKey,
+				collectionMode: collectionRes.data.data.mode,
+				documentId: data.documentId,
+			},
+		);
 	if (checkDocumentCount.error) return checkDocumentCount;
 
 	const hookResponse = await executeHooks(
@@ -133,17 +130,13 @@ const upsertSingle: ServiceFn<
 		};
 	}
 
-	const createMultipleBricks = await serviceWrapper(
-		collectionDocumentBricksServices.createMultiple,
-		{
-			transaction: false,
-		},
-	)(serviceConfig, {
-		documentId: document.id,
-		bricks: bodyData.bricks,
-		fields: bodyData.fields,
-		collection: collectionRes.data,
-	});
+	const createMultipleBricks =
+		await collectionDocumentBricksServices.createMultiple(serviceConfig, {
+			documentId: document.id,
+			bricks: bodyData.bricks,
+			fields: bodyData.fields,
+			collection: collectionRes.data,
+		});
 	if (createMultipleBricks.error) return createMultipleBricks;
 
 	await executeHooks(

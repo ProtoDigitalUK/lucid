@@ -3,7 +3,6 @@ import type { MultipartFile } from "@fastify/multipart";
 import mediaHelpers from "../../../utils/media-helpers.js";
 import mediaServices from "../index.js";
 import optionsServices from "../../options/index.js";
-import serviceWrapper from "../../../libs/services/service-wrapper.js";
 import type { ServiceFn } from "../../../libs/services/types.js";
 import type { RouteMediaMetaData } from "../../../utils/media-helpers.js";
 
@@ -36,12 +35,8 @@ const uploadObject: ServiceFn<
 			};
 		}
 
-		const mediaStrategyRes = await serviceWrapper(
-			mediaServices.checks.checkHasMediaStrategy,
-			{
-				transaction: false,
-			},
-		)(serviceConfig);
+		const mediaStrategyRes =
+			await mediaServices.checks.checkHasMediaStrategy(serviceConfig);
 		if (mediaStrategyRes.error) return mediaStrategyRes;
 
 		// Save file to temp folder
@@ -57,15 +52,13 @@ const uploadObject: ServiceFn<
 		});
 
 		// Ensure we available storage space
-		const proposedSizeRes = await serviceWrapper(
-			mediaServices.checks.checkCanStoreMedia,
+		const proposedSizeRes = await mediaServices.checks.checkCanStoreMedia(
+			serviceConfig,
 			{
-				transaction: false,
+				filename: data.fileData.filename,
+				size: metaData.size,
 			},
-		)(serviceConfig, {
-			filename: data.fileData.filename,
-			size: metaData.size,
-		});
+		);
 		if (proposedSizeRes.error) return proposedSizeRes;
 
 		// Save file to storage
@@ -97,15 +90,13 @@ const uploadObject: ServiceFn<
 		metaData.etag = saveObjectRes.response?.etag;
 
 		// Update storage usage stats
-		const updateStorageRes = await serviceWrapper(
-			optionsServices.updateSingle,
+		const updateStorageRes = await optionsServices.updateSingle(
+			serviceConfig,
 			{
-				transaction: false,
+				name: "media_storage_used",
+				valueInt: proposedSizeRes.data.proposedSize,
 			},
-		)(serviceConfig, {
-			name: "media_storage_used",
-			valueInt: proposedSizeRes.data.proposedSize,
-		});
+		);
 		if (updateStorageRes.error) return updateStorageRes;
 
 		return {

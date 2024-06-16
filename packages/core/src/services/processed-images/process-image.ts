@@ -7,7 +7,6 @@ import mediaHelpers from "../../utils/media-helpers.js";
 import Repository from "../../libs/repositories/index.js";
 import mediaServices from "../media/index.js";
 import optionsServices from "../options/index.js";
-import serviceWrapper from "../../libs/services/service-wrapper.js";
 import type { ServiceFn } from "../../libs/services/types.js";
 
 const processImage: ServiceFn<
@@ -25,12 +24,8 @@ const processImage: ServiceFn<
 		body: Readable;
 	}
 > = async (serviceConfig, data) => {
-	const mediaStrategyRes = await serviceWrapper(
-		mediaServices.checks.checkHasMediaStrategy,
-		{
-			transaction: false,
-		},
-	)(serviceConfig);
+	const mediaStrategyRes =
+		await mediaServices.checks.checkHasMediaStrategy(serviceConfig);
 	if (mediaStrategyRes.error) return mediaStrategyRes;
 
 	// get og image
@@ -106,14 +101,12 @@ const processImage: ServiceFn<
 	}
 
 	// Check if we can store it
-	const canStoreRes = await serviceWrapper(
-		processedImageServices.checks.checkCanStore,
+	const canStoreRes = await processedImageServices.checks.checkCanStore(
+		serviceConfig,
 		{
-			transaction: false,
+			size: imageRes.data.size,
 		},
-	)(serviceConfig, {
-		size: imageRes.data.size,
-	});
+	);
 	if (canStoreRes.error) {
 		return {
 			error: undefined,
@@ -151,9 +144,7 @@ const processImage: ServiceFn<
 					key: data.processKey,
 				},
 			}),
-			serviceWrapper(optionsServices.updateSingle, {
-				transaction: false,
-			})(serviceConfig, {
+			optionsServices.updateSingle(serviceConfig, {
 				name: "media_storage_used",
 				valueInt: canStoreRes.data.proposedSize,
 			}),

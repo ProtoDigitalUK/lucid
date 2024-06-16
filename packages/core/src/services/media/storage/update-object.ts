@@ -4,7 +4,6 @@ import mediaHelpers from "../../../utils/media-helpers.js";
 import mediaServices from "../index.js";
 import optionsServices from "../../options/index.js";
 import processedImagesServices from "../../processed-images/index.js";
-import serviceWrapper from "../../../libs/services/service-wrapper.js";
 import type { ServiceFn } from "../../../libs/services/types.js";
 import type { RouteMediaMetaData } from "../../../utils/media-helpers.js";
 
@@ -39,12 +38,8 @@ const updateObject: ServiceFn<
 			};
 		}
 
-		const mediaStrategyRes = await serviceWrapper(
-			mediaServices.checks.checkHasMediaStrategy,
-			{
-				transaction: false,
-			},
-		)(serviceConfig);
+		const mediaStrategyRes =
+			await mediaServices.checks.checkHasMediaStrategy(serviceConfig);
 		if (mediaStrategyRes.error) return mediaStrategyRes;
 
 		// Save file to temp folder
@@ -60,16 +55,14 @@ const updateObject: ServiceFn<
 		});
 
 		// Ensure we available storage space
-		const proposedSizeRes = await serviceWrapper(
-			mediaServices.checks.checkCanUpdateMedia,
+		const proposedSizeRes = await mediaServices.checks.checkCanUpdateMedia(
+			serviceConfig,
 			{
-				transaction: false,
+				filename: data.fileData.filename,
+				size: metaData.size,
+				previousSize: data.previousSize,
 			},
-		)(serviceConfig, {
-			filename: data.fileData.filename,
-			size: metaData.size,
-			previousSize: data.previousSize,
-		});
+		);
 		if (proposedSizeRes.error) return proposedSizeRes;
 
 		// Save file to storage
@@ -101,27 +94,14 @@ const updateObject: ServiceFn<
 			};
 		}
 
-		const updateStoragePromise = serviceWrapper(
-			optionsServices.updateSingle,
-			{
-				transaction: false,
-			},
-		)(serviceConfig, {
-			name: "media_storage_used",
-			valueInt: proposedSizeRes.data.proposedSize,
-		});
-		const clearProcessedPromise = serviceWrapper(
-			processedImagesServices.clearSingle,
-			{
-				transaction: false,
-			},
-		)(serviceConfig, {
-			key: data.key,
-		});
-
 		const [storageRes, clearProcessRes] = await Promise.all([
-			updateStoragePromise,
-			clearProcessedPromise,
+			optionsServices.updateSingle(serviceConfig, {
+				name: "media_storage_used",
+				valueInt: proposedSizeRes.data.proposedSize,
+			}),
+			processedImagesServices.clearSingle(serviceConfig, {
+				key: data.key,
+			}),
 		]);
 		if (storageRes.error) return storageRes;
 		if (clearProcessRes.error) return clearProcessRes;

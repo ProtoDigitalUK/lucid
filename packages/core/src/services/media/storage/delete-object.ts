@@ -1,6 +1,5 @@
 import optionsServices from "../../options/index.js";
 import mediaServices from "../index.js";
-import serviceWrapper from "../../../libs/services/service-wrapper.js";
 import type { ServiceFn } from "../../../libs/services/types.js";
 
 const deleteObject: ServiceFn<
@@ -13,17 +12,11 @@ const deleteObject: ServiceFn<
 	],
 	undefined
 > = async (serviceConfig, data) => {
-	const mediaStrategyRes = await serviceWrapper(
-		mediaServices.checks.checkHasMediaStrategy,
-		{
-			transaction: false,
-		},
-	)(serviceConfig);
+	const mediaStrategyRes =
+		await mediaServices.checks.checkHasMediaStrategy(serviceConfig);
 	if (mediaStrategyRes.error) return mediaStrategyRes;
 
-	const storageUsedRes = await serviceWrapper(optionsServices.getSingle, {
-		transaction: false,
-	})(serviceConfig, {
+	const storageUsedRes = await optionsServices.getSingle(serviceConfig, {
 		name: "media_storage_used",
 	});
 	if (storageUsedRes.error) return storageUsedRes;
@@ -33,9 +26,7 @@ const deleteObject: ServiceFn<
 
 	const [_, updateStorageRes] = await Promise.all([
 		mediaStrategyRes.data.deleteSingle(data.key),
-		serviceWrapper(optionsServices.updateSingle, {
-			transaction: false,
-		})(serviceConfig, {
+		optionsServices.updateSingle(serviceConfig, {
 			name: "media_storage_used",
 			valueInt: newStorageUsed < 0 ? 0 : newStorageUsed,
 		}),

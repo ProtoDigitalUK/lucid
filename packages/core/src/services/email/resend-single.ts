@@ -1,7 +1,6 @@
 import T from "../../translations/index.js";
 import emailServices from "./index.js";
 import Repository from "../../libs/repositories/index.js";
-import serviceWrapper from "../../libs/services/service-wrapper.js";
 import type { ServiceFn } from "../../libs/services/types.js";
 
 const resendSingle: ServiceFn<
@@ -15,12 +14,8 @@ const resendSingle: ServiceFn<
 		message: string;
 	}
 > = async (serviceConfig, data) => {
-	const emailConfigRes = await serviceWrapper(
-		emailServices.checks.checkHasEmailConfig,
-		{
-			transaction: false,
-		},
-	)(serviceConfig);
+	const emailConfigRes =
+		await emailServices.checks.checkHasEmailConfig(serviceConfig);
 	if (emailConfigRes.error) return emailConfigRes;
 
 	const EmailsRepo = Repository.get("emails", serviceConfig.db);
@@ -47,9 +42,7 @@ const resendSingle: ServiceFn<
 
 	const templateData = (email.data ?? {}) as Record<string, unknown>;
 
-	const html = await serviceWrapper(emailServices.renderTemplate, {
-		transaction: false,
-	})(serviceConfig, {
+	const html = await emailServices.renderTemplate(serviceConfig, {
 		template: email.template,
 		data: templateData,
 	});

@@ -6,7 +6,6 @@ import {
 	getUniquelocaleCodes,
 } from "../../utils/translation-helpers.js";
 import Repository from "../../libs/repositories/index.js";
-import serviceWrapper from "../../libs/services/service-wrapper.js";
 import type { ServiceConfig, ServiceFn } from "../../libs/services/types.js";
 
 export interface ServiceData<K extends string> {
@@ -24,16 +23,14 @@ const upsertMultiple: ServiceFn<[ServiceData<string>], undefined> = async <
 	data: ServiceData<K>,
 ) => {
 	if (shouldUpdateTranslations(data.items.map((item) => item.translations))) {
-		const localeExistsRes = await serviceWrapper(
-			localesServices.checks.checkLocalesExist,
+		const localeExistsRes = await localesServices.checks.checkLocalesExist(
+			serviceConfig,
 			{
-				transaction: false,
+				localeCodes: getUniquelocaleCodes(
+					data.items.map((item) => item.translations || []),
+				),
 			},
-		)(serviceConfig, {
-			localeCodes: getUniquelocaleCodes(
-				data.items.map((item) => item.translations || []),
-			),
-		});
+		);
 		if (localeExistsRes.error) return localeExistsRes;
 
 		const translations = mergeTranslationGroups<K>(data.items)

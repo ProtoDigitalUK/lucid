@@ -1,6 +1,5 @@
 import T from "../../../translations/index.js";
 import optionsServices from "../../options/index.js";
-import serviceWrapper from "../../../libs/services/service-wrapper.js";
 import type { ServiceFn } from "../../../libs/services/types.js";
 
 const checkCanStore: ServiceFn<
@@ -25,9 +24,7 @@ const checkCanStore: ServiceFn<
 		};
 	}
 
-	const storageUsed = await serviceWrapper(optionsServices.getSingle, {
-		transaction: false,
-	})(serviceConfig, {
+	const storageUsed = await optionsServices.getSingle(serviceConfig, {
 		name: "media_storage_used",
 	});
 	if (storageUsed.error) return storageUsed;

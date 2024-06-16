@@ -5,7 +5,6 @@ import { add } from "date-fns";
 import constants from "../../constants.js";
 import email from "../email/index.js";
 import userTokens from "../user-tokens/index.js";
-import serviceWrapper from "../../libs/services/service-wrapper.js";
 import type { BooleanInt } from "../../libs/db/types.js";
 import type { ServiceFn } from "../../libs/services/types.js";
 
@@ -33,9 +32,7 @@ const createSingle: ServiceFn<
 				email: data.email,
 			},
 		}),
-		serviceWrapper(usersServices.checks.checkRolesExist, {
-			transaction: false,
-		})(serviceConfig, {
+		usersServices.checks.checkRolesExist(serviceConfig, {
 			roleIds: data.roleIds,
 		}),
 	]);
@@ -97,18 +94,14 @@ const createSingle: ServiceFn<
 		minutes: constants.userInviteTokenExpirationMinutes,
 	}).toISOString();
 
-	const userTokenRes = await serviceWrapper(userTokens.createSingle, {
-		transaction: false,
-	})(serviceConfig, {
+	const userTokenRes = await userTokens.createSingle(serviceConfig, {
 		userId: newUser.id,
 		tokenType: "password_reset",
 		expiryDate: expiryDate,
 	});
 	if (userTokenRes.error) return userTokenRes;
 
-	const sendEmailRes = await serviceWrapper(email.sendEmail, {
-		transaction: false,
-	})(serviceConfig, {
+	const sendEmailRes = await email.sendEmail(serviceConfig, {
 		type: "internal",
 		to: data.email,
 		subject: T("user_invite_email_subject"),

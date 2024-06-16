@@ -3,7 +3,6 @@ import { add } from "date-fns";
 import constants from "../../constants.js";
 import userTokens from "../user-tokens/index.js";
 import email from "../email/index.js";
-import serviceWrapper from "../../libs/services/service-wrapper.js";
 import Repository from "../../libs/repositories/index.js";
 import type { ServiceFn } from "../../libs/services/types.js";
 
@@ -43,18 +42,14 @@ const sendResetPassword: ServiceFn<
 		minutes: constants.passwordResetTokenExpirationMinutes,
 	}).toISOString();
 
-	const userToken = await serviceWrapper(userTokens.createSingle, {
-		transaction: false,
-	})(serviceConfig, {
+	const userToken = await userTokens.createSingle(serviceConfig, {
 		userId: userExists.id,
 		tokenType: "password_reset",
 		expiryDate: expiryDate,
 	});
 	if (userToken.error) return userToken;
 
-	const sendEmail = await serviceWrapper(email.sendEmail, {
-		transaction: false,
-	})(serviceConfig, {
+	const sendEmail = await email.sendEmail(serviceConfig, {
 		type: "internal",
 		to: userExists.email,
 		subject: T("reset_password_email_subject"),

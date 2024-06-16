@@ -2,7 +2,6 @@ import T from "../../translations/index.js";
 import mediaServices from "./index.js";
 import translationsServices from "../translations/index.js";
 import Repository from "../../libs/repositories/index.js";
-import serviceWrapper from "../../libs/services/service-wrapper.js";
 import type { ServiceFn } from "../../libs/services/types.js";
 
 const deleteSingle: ServiceFn<
@@ -13,12 +12,8 @@ const deleteSingle: ServiceFn<
 	],
 	undefined
 > = async (serviceConfig, data) => {
-	const mediaStrategyRes = await serviceWrapper(
-		mediaServices.checks.checkHasMediaStrategy,
-		{
-			transaction: false,
-		},
-	)(serviceConfig);
+	const mediaStrategyRes =
+		await mediaServices.checks.checkHasMediaStrategy(serviceConfig);
 	if (mediaStrategyRes.error) return mediaStrategyRes;
 
 	const MediaRepo = Repository.get("media", serviceConfig.db);
@@ -88,9 +83,7 @@ const deleteSingle: ServiceFn<
 		mediaStrategyRes.data.deleteMultiple(
 			allProcessedImages.map((i) => i.key),
 		),
-		serviceWrapper(mediaServices.storage.deleteObject, {
-			transaction: false,
-		})(serviceConfig, {
+		mediaServices.storage.deleteObject(serviceConfig, {
 			key: deleteMedia.key,
 			size: deleteMedia.file_size,
 			processedSize: allProcessedImages.reduce(
@@ -98,9 +91,7 @@ const deleteSingle: ServiceFn<
 				0,
 			),
 		}),
-		serviceWrapper(translationsServices.deleteMultiple, {
-			transaction: false,
-		})(serviceConfig, {
+		translationsServices.deleteMultiple(serviceConfig, {
 			ids: [
 				deleteMedia.title_translation_key_id,
 				deleteMedia.alt_translation_key_id,

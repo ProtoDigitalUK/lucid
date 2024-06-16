@@ -1,6 +1,5 @@
 import usersServices from "./index.js";
 import Repository from "../../libs/repositories/index.js";
-import serviceWrapper from "../../libs/services/service-wrapper.js";
 import type { ServiceFn } from "../../libs/services/types.js";
 
 const updateMultipleRoles: ServiceFn<
@@ -22,9 +21,7 @@ const updateMultipleRoles: ServiceFn<
 	const UserRolesRepo = Repository.get("user-roles", serviceConfig.db);
 
 	const [roleExistsRes] = await Promise.all([
-		serviceWrapper(usersServices.checks.checkRolesExist, {
-			transaction: false,
-		})(serviceConfig, {
+		usersServices.checks.checkRolesExist(serviceConfig, {
 			roleIds: data.roleIds || [],
 		}),
 		UserRolesRepo.deleteMultiple({

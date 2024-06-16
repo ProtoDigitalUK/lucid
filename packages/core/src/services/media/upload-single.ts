@@ -6,7 +6,6 @@ import {
 	getUniquelocaleCodes,
 } from "../../utils/translation-helpers.js";
 import Repository from "../../libs/repositories/index.js";
-import serviceWrapper from "../../libs/services/service-wrapper.js";
 import type { BooleanInt } from "../../libs/db/types.js";
 import type { MultipartFile } from "@fastify/multipart";
 import type { ServiceFn } from "../../libs/services/types.js";
@@ -34,49 +33,34 @@ const uploadSingle: ServiceFn<
 	try {
 		const MediaRepo = Repository.get("media", serviceConfig.db);
 
-		const localeExistsRes = await serviceWrapper(
-			localesServices.checks.checkLocalesExist,
+		const localeExistsRes = await localesServices.checks.checkLocalesExist(
+			serviceConfig,
 			{
-				transaction: false,
+				localeCodes: getUniquelocaleCodes([
+					data.titleTranslations || [],
+					data.altTranslations || [],
+				]),
 			},
-		)(serviceConfig, {
-			localeCodes: getUniquelocaleCodes([
-				data.titleTranslations || [],
-				data.altTranslations || [],
-			]),
-		});
+		);
 		if (localeExistsRes.error) return localeExistsRes;
 
-		const translationKeyIdPromise = serviceWrapper(
-			translationsServices.createMultiple,
-			{
-				transaction: false,
-			},
-		)(serviceConfig, {
-			keys: ["title", "alt"],
-			translations: mergeTranslationGroups([
-				{
-					translations: data.titleTranslations || [],
-					key: "title",
-				},
-				{
-					translations: data.altTranslations || [],
-					key: "alt",
-				},
-			]),
-		});
-		const uploadObjectPromise = serviceWrapper(
-			mediaServices.storage.uploadObject,
-			{
-				transaction: false,
-			},
-		)(serviceConfig, {
-			fileData: data.fileData,
-		});
-
 		const [translationKeyIdsRes, uploadObjectRes] = await Promise.all([
-			translationKeyIdPromise,
-			uploadObjectPromise,
+			translationsServices.createMultiple(serviceConfig, {
+				keys: ["title", "alt"],
+				translations: mergeTranslationGroups([
+					{
+						translations: data.titleTranslations || [],
+						key: "title",
+					},
+					{
+						translations: data.altTranslations || [],
+						key: "alt",
+					},
+				]),
+			}),
+			mediaServices.storage.uploadObject(serviceConfig, {
+				fileData: data.fileData,
+			}),
 		]);
 		if (translationKeyIdsRes.error) return translationKeyIdsRes;
 		if (uploadObjectRes.error) return uploadObjectRes;

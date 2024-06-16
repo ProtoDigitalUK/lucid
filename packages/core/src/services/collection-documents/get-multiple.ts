@@ -1,7 +1,6 @@
 import collectionsServices from "../collections/index.js";
 import Repository from "../../libs/repositories/index.js";
 import Formatter from "../../libs/formatters/index.js";
-import serviceWrapper from "../../libs/services/service-wrapper.js";
 import type z from "zod";
 import type collectionDocumentsSchema from "../../schemas/collection-documents.js";
 import type { ServiceFn } from "../../libs/services/types.js";
@@ -19,14 +18,12 @@ const getMultiple: ServiceFn<
 		count: number;
 	}
 > = async (serviceConfig, data) => {
-	const collectionRes = await serviceWrapper(
-		collectionsServices.getSingleInstance,
+	const collectionRes = await collectionsServices.getSingleInstance(
+		serviceConfig,
 		{
-			transaction: false,
+			key: data.collectionKey,
 		},
-	)(serviceConfig, {
-		key: data.collectionKey,
-	});
+	);
 	if (collectionRes.error) return collectionRes;
 
 	const CollectionDocumentsRepo = Repository.get(

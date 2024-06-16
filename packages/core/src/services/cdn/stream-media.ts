@@ -4,7 +4,6 @@ import type { Readable } from "node:stream";
 import type cdnSchema from "../../schemas/cdn.js";
 import mediaHelpers from "../../utils/media-helpers.js";
 import processedImageServices from "../processed-images/index.js";
-import serviceWrapper from "../../libs/services/service-wrapper.js";
 import type { ServiceFn } from "../../libs/services/types.js";
 import mediaServices from "../media/index.js";
 
@@ -25,12 +24,8 @@ const streamMedia: ServiceFn<
 > = async (serviceConfig, data) => {
 	const format = mediaHelpers.chooseFormat(data.accept, data.query.format);
 
-	const mediaStrategyRes = await serviceWrapper(
-		mediaServices.checks.checkHasMediaStrategy,
-		{
-			transaction: false,
-		},
-	)(serviceConfig);
+	const mediaStrategyRes =
+		await mediaServices.checks.checkHasMediaStrategy(serviceConfig);
 	if (mediaStrategyRes.error) return mediaStrategyRes;
 
 	// ------------------------------
@@ -97,9 +92,7 @@ const streamMedia: ServiceFn<
 	}
 
 	// Process
-	return await serviceWrapper(processedImageServices.processImage, {
-		transaction: false,
-	})(serviceConfig, {
+	return await processedImageServices.processImage(serviceConfig, {
 		key: data.key,
 		processKey: processKey,
 		options: {

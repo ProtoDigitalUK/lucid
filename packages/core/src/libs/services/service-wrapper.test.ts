@@ -113,9 +113,7 @@ test("basic - two level deep service wrapper success and error", async () => {
 	> = async (service, data) => {
 		await new Promise((resolve) => setTimeout(resolve, 50));
 
-		const serviceTwo = await serviceWrapper(testServiceTwo, {
-			transaction: false,
-		})(service, data);
+		const serviceTwo = await testServiceTwo(service, data);
 		if (serviceTwo.error) return serviceTwo;
 
 		if (data.returnError) {
@@ -314,9 +312,7 @@ test("transaction - two level deep service wrapper success and error", async () 
 			};
 
 		if (data.levelTwo.call) {
-			return await serviceWrapper(createDocumentWithDepth, {
-				transaction: true,
-			})(service, {
+			return await createDocumentWithDepth(service, {
 				collectionKey: successCollectionKey,
 				returnError: data.levelTwo.returnError,
 				levelTwo: {

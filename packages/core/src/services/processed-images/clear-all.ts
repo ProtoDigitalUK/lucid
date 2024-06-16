@@ -1,16 +1,11 @@
 import Repository from "../../libs/repositories/index.js";
 import mediaServices from "../media/index.js";
 import optionsServices from "../options/index.js";
-import serviceWrapper from "../../libs/services/service-wrapper.js";
 import type { ServiceFn } from "../../libs/services/types.js";
 
 const clearAll: ServiceFn<[], undefined> = async (serviceConfig) => {
-	const mediaStrategyRes = await serviceWrapper(
-		mediaServices.checks.checkHasMediaStrategy,
-		{
-			transaction: false,
-		},
-	)(serviceConfig);
+	const mediaStrategyRes =
+		await mediaServices.checks.checkHasMediaStrategy(serviceConfig);
 	if (mediaStrategyRes.error) return mediaStrategyRes;
 
 	const ProcessedImagesRepo = Repository.get(
@@ -19,9 +14,7 @@ const clearAll: ServiceFn<[], undefined> = async (serviceConfig) => {
 	);
 
 	const [storageUsedRes, processedImages] = await Promise.all([
-		serviceWrapper(optionsServices.getSingle, {
-			transaction: false,
-		})(serviceConfig, {
+		optionsServices.getSingle(serviceConfig, {
 			name: "media_storage_used",
 		}),
 		ProcessedImagesRepo.selectMultiple({
@@ -46,9 +39,7 @@ const clearAll: ServiceFn<[], undefined> = async (serviceConfig) => {
 		ProcessedImagesRepo.deleteMultiple({
 			where: [],
 		}),
-		serviceWrapper(optionsServices.updateSingle, {
-			transaction: false,
-		})(serviceConfig, {
+		optionsServices.updateSingle(serviceConfig, {
 			name: "media_storage_used",
 			valueInt: newStorageUsed < 0 ? 0 : newStorageUsed,
 		}),

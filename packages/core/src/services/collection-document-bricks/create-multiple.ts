@@ -3,7 +3,6 @@ import formatInsertBricks from "./helpers/format-insert-bricks.js";
 import formatPostInsertBricks from "./helpers/format-post-insert-bricks.js";
 import formatInsertFields from "./helpers/format-insert-fields.js";
 import collectionBricksServices from "./index.js";
-import serviceWrapper from "../../libs/services/service-wrapper.js";
 import type { ServiceFn } from "../../libs/services/types.js";
 import type CollectionBuilder from "../../libs/builders/collection-builder/index.js";
 import type { BrickSchema } from "../../schemas/collection-bricks.js";
@@ -59,18 +58,16 @@ const createMultiple: ServiceFn<
 
 	// -------------------------------------------------------------------------------
 	// delete all bricks
-	const deleteAllBricks = await serviceWrapper(
-		collectionBricksServices.deleteMultipleBricks,
+	const deleteAllBricks = await collectionBricksServices.deleteMultipleBricks(
+		serviceConfig,
 		{
-			transaction: false,
+			documentId: data.documentId,
+			apply: {
+				bricks: data.bricks !== undefined,
+				collectionFields: data.fields !== undefined,
+			},
 		},
-	)(serviceConfig, {
-		documentId: data.documentId,
-		apply: {
-			bricks: data.bricks !== undefined,
-			collectionFields: data.fields !== undefined,
-		},
-	});
+	);
 	if (deleteAllBricks.error) return deleteAllBricks;
 
 	// -------------------------------------------------------------------------------
@@ -89,37 +86,33 @@ const createMultiple: ServiceFn<
 
 	// -------------------------------------------------------------------------------
 	// create groups
-	const groups = await serviceWrapper(
-		collectionBricksServices.createMultipleGroups,
+	const groups = await collectionBricksServices.createMultipleGroups(
+		serviceConfig,
 		{
-			transaction: false,
+			documentId: data.documentId,
+			brickGroups: postInsertBricks.map((b) => ({
+				brickId: b.id,
+				groups: b.groups,
+			})),
 		},
-	)(serviceConfig, {
-		documentId: data.documentId,
-		brickGroups: postInsertBricks.map((b) => ({
-			brickId: b.id,
-			groups: b.groups,
-		})),
-	});
+	);
 	if (groups.error) return groups;
 
 	// -------------------------------------------------------------------------------
 	// create fields
-	const fields = await serviceWrapper(
-		collectionBricksServices.createMultipleFields,
+	const fields = await collectionBricksServices.createMultipleFields(
+		serviceConfig,
 		{
-			transaction: false,
+			documentId: data.documentId,
+			fields: postInsertBricks.flatMap((b) =>
+				formatInsertFields({
+					groups: groups.data,
+					brick: b,
+					collection: data.collection,
+				}),
+			),
 		},
-	)(serviceConfig, {
-		documentId: data.documentId,
-		fields: postInsertBricks.flatMap((b) =>
-			formatInsertFields({
-				groups: groups.data,
-				brick: b,
-				collection: data.collection,
-			}),
-		),
-	});
+	);
 	if (fields.error) return fields;
 
 	return {
