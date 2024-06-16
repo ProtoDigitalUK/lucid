@@ -7,7 +7,6 @@ const checkCanUpdateMedia: ServiceFn<
 		{
 			size: number;
 			previousSize: number;
-			filename: string;
 		},
 	],
 	{
@@ -21,9 +20,7 @@ const checkCanUpdateMedia: ServiceFn<
 		return {
 			error: {
 				type: "basic",
-				name: T("default_error_name"),
 				message: T("file_too_large_max_size_is", {
-					name: data.filename,
 					size: maxFileSize,
 				}),
 				status: 500,
@@ -32,7 +29,6 @@ const checkCanUpdateMedia: ServiceFn<
 						file: {
 							code: "storage",
 							message: T("file_too_large_max_size_is", {
-								name: data.filename,
 								size: maxFileSize,
 							}),
 						},
@@ -54,7 +50,6 @@ const checkCanUpdateMedia: ServiceFn<
 		return {
 			error: {
 				type: "basic",
-				name: T("default_error_name"),
 				message: T("file_exceeds_storage_limit_max_limit_is", {
 					size: storageLimit,
 				}),

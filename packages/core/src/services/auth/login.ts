@@ -28,7 +28,6 @@ const login: ServiceFn<
 		return {
 			error: {
 				type: "authorisation",
-				name: T("login_error_name"),
 				message: T("login_error_message"),
 				status: 401,
 			},
@@ -40,7 +39,6 @@ const login: ServiceFn<
 		return {
 			error: {
 				type: "authorisation",
-				name: T("login_error_name"),
 				message: T("login_suspended_error_message"),
 				status: 401,
 			},
@@ -53,7 +51,6 @@ const login: ServiceFn<
 		return {
 			error: {
 				type: "authorisation",
-				name: T("login_error_name"),
 				message: T("login_error_message"),
 				status: 401,
 			},

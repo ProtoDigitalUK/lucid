@@ -55,7 +55,6 @@ const updateObject: ServiceFn<
 		// Ensure we available storage space
 		const proposedSizeRes =
 			await LucidServices.media.checks.checkCanUpdateMedia(service, {
-				filename: data.fileData.filename,
 				size: metaData.size,
 				previousSize: data.previousSize,
 			});

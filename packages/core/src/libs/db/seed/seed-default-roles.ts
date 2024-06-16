@@ -29,9 +29,7 @@ const seedDefaultRoles = async (service: ServiceConfig) => {
 		await Promise.all(rolePromises);
 	} catch (error) {
 		throw new LucidError({
-			message: T("dynamic_an_error_occurred_saving_default", {
-				name: T("roles").toLowerCase(),
-			}),
+			message: T("roles_error_occured_saving_default"),
 		});
 	}
 };

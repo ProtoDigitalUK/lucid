@@ -81,9 +81,7 @@ const seedLocales = async (service: ServiceConfig) => {
 		]);
 	} catch (error) {
 		throw new LucidError({
-			message: T("dynamic_an_error_occurred_saving_default", {
-				name: T("locale").toLowerCase(),
-			}),
+			message: T("locale_error_occured_saving_default"),
 		});
 	}
 };

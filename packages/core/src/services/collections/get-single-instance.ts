@@ -18,12 +18,7 @@ const getSingleInstance: ServiceFn<
 		return {
 			error: {
 				type: "basic",
-				name: T("error_not_found_name", {
-					name: T("collection"),
-				}),
-				message: T("collection_not_found_message", {
-					collectionKey: data.key,
-				}),
+				message: T("collection_not_found_message"),
 				status: 404,
 			},
 			data: undefined,

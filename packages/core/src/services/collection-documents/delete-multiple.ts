@@ -35,9 +35,7 @@ const deleteMultiple: ServiceFn<
 			error: {
 				type: "basic",
 				name: T("error_locked_collection_name"),
-				message: T("error_locked_collection_message_delete", {
-					name: collectionRes.data.data.title,
-				}),
+				message: T("error_locked_collection_message_delete"),
 				status: 400,
 			},
 			data: undefined,
@@ -74,12 +72,7 @@ const deleteMultiple: ServiceFn<
 		return {
 			error: {
 				type: "basic",
-				name: T("error_not_found_name", {
-					name: T("document"),
-				}),
-				message: T("error_not_found_message", {
-					name: T("document"),
-				}),
+				message: T("document_not_found_message"),
 				errorResponse: {
 					body: {
 						ids: {

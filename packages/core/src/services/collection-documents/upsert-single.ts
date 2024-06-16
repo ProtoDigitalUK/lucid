@@ -55,12 +55,7 @@ const upsertSingle: ServiceFn<
 			return {
 				error: {
 					type: "basic",
-					name: T("error_not_found_name", {
-						name: T("document"),
-					}),
-					message: T("error_not_found_message", {
-						name: T("document"),
-					}),
+					message: T("document_not_found_message"),
 					status: 404,
 				},
 				data: undefined,
@@ -72,9 +67,7 @@ const upsertSingle: ServiceFn<
 				error: {
 					type: "basic",
 					name: T("error_locked_collection_name"),
-					message: T("error_locked_collection_message", {
-						name: collectionRes.data.data.title,
-					}),
+					message: T("error_locked_collection_message"),
 					status: 400,
 				},
 				data: undefined,

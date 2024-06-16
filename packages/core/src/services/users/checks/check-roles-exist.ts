@@ -38,9 +38,7 @@ const checkRolesExist: ServiceFn<
 					body: {
 						roleIds: {
 							code: "invalid",
-							message: T("error_not_found_message", {
-								name: T("role"),
-							}),
+							message: T("role_not_found_message"),
 						},
 					},
 				},

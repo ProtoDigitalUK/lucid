@@ -37,9 +37,7 @@ const updateMe: ServiceFn<
 		return {
 			error: {
 				type: "basic",
-				message: T("error_not_found_message", {
-					name: T("account"),
-				}),
+				message: T("account_not_found_message"),
 				status: 404,
 			},
 			data: undefined,
@@ -150,9 +148,7 @@ const updateMe: ServiceFn<
 		return {
 			error: {
 				type: "basic",
-				message: T("update_error_message", {
-					name: T("your_account"),
-				}),
+				message: T("route_user_me_update_error_message"),
 				status: 400,
 			},
 			data: undefined,

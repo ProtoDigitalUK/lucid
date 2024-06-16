@@ -6,9 +6,7 @@ import type { Permission } from "../types/response.js";
 const throwPermissionError = () => {
 	throw new LucidAPIError({
 		type: "basic",
-		name: T("dynamic_error_name", {
-			name: T("permission"),
-		}),
+		name: T("permission_error_name"),
 		message: T("you_do_not_have_permission_to_perform_this_action"),
 		status: 403,
 	});

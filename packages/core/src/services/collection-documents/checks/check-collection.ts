@@ -18,9 +18,7 @@ const checkCollection: ServiceFn<
 		return {
 			error: {
 				type: "basic",
-				message: T("error_not_found_message", {
-					name: T("collection"),
-				}),
+				message: T("collection_not_found_message"),
 				status: 404,
 			},
 			data: undefined,

@@ -53,7 +53,6 @@ const uploadObject: ServiceFn<
 		// Ensure we available storage space
 		const proposedSizeRes =
 			await LucidServices.media.checks.checkCanStoreMedia(service, {
-				filename: data.fileData.filename,
 				size: metaData.size,
 			});
 		if (proposedSizeRes.error) return proposedSizeRes;

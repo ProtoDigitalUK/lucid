@@ -28,12 +28,7 @@ const getSingle: ServiceFn<
 		return {
 			error: {
 				type: "basic",
-				name: T("error_not_found_name", {
-					name: T("user"),
-				}),
-				message: T("error_not_found_message", {
-					name: T("user"),
-				}),
+				message: T("user_not_found_message"),
 				status: 404,
 			},
 			data: undefined,

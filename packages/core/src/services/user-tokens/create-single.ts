@@ -30,7 +30,6 @@ const createSingle: ServiceFn<
 		return {
 			error: {
 				type: "basic",
-				message: T("error_creating_user_token"),
 				status: 500,
 			},
 			data: undefined,
