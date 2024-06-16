@@ -18,9 +18,9 @@ const loginController: RouteController<
 		transaction: false,
 		defaultError: {
 			type: "basic",
-			name: T("default_error_name"),
-			message: T("default_error_message"),
 			code: "login",
+			name: T("route_login_error_name"),
+			message: T("route_login_error_message"),
 			status: 500,
 		},
 	})(

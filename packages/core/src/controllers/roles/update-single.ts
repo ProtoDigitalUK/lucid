@@ -18,13 +18,8 @@ const updateSingleController: RouteController<
 		transaction: true,
 		defaultError: {
 			type: "basic",
-			name: T("method_error_name", {
-				name: T("role"),
-				method: T("update"),
-			}),
-			message: T("update_error_message", {
-				name: T("role").toLowerCase(),
-			}),
+			name: T("route_roles_update_error_name"),
+			message: T("route_roles_update_error_message"),
 			status: 500,
 		},
 	})(

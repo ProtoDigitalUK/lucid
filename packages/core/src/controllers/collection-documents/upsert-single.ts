@@ -23,18 +23,12 @@ const upsertSingleController: RouteController<
 			transaction: true,
 			defaultError: {
 				type: "basic",
-				name: T("method_error_name", {
-					name: T("document"),
-					method: request.body.documentId ? T("update") : T("create"),
-				}),
-				message: T(
-					request.body.documentId
-						? "update_error_message"
-						: "creation_error_message",
-					{
-						name: T("document").toLowerCase(),
-					},
-				),
+				name: request.body.documentId
+					? T("route_document_update_error_name")
+					: T("route_document_create_error_name"),
+				message: request.body.documentId
+					? T("route_document_update_error_message")
+					: T("route_document_create_error_message"),
 				status: 500,
 			},
 		},

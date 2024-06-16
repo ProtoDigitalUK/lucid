@@ -17,11 +17,8 @@ const getAllController: RouteController<
 		transaction: false,
 		defaultError: {
 			type: "basic",
-			name: T("method_error_name", {
-				name: T("collection"),
-				method: T("fetch"),
-			}),
-			message: T("default_error_message"),
+			name: T("route_collection_fetch_error_name"),
+			message: T("route_collection_fetch_error_message"),
 			status: 500,
 		},
 	})(

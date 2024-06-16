@@ -18,13 +18,8 @@ const updateSingleController: RouteController<
 		transaction: true,
 		defaultError: {
 			type: "basic",
-			name: T("method_error_name", {
-				name: T("media"),
-				method: T("update"),
-			}),
-			message: T("update_error_message", {
-				name: T("media").toLowerCase(),
-			}),
+			name: T("route_media_update_error_name"),
+			message: T("route_media_update_error_message"),
 			status: 500,
 		},
 	})(

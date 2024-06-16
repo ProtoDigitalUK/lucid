@@ -20,13 +20,8 @@ const deleteSingleController: RouteController<
 			transaction: true,
 			defaultError: {
 				type: "basic",
-				name: T("method_error_name", {
-					name: T("email"),
-					method: T("delete"),
-				}),
-				message: T("deletion_error_message", {
-					name: T("email").toLowerCase(),
-				}),
+				name: T("route_email_delete_error_name"),
+				message: T("route_email_delete_error_message"),
 				status: 500,
 			},
 		},

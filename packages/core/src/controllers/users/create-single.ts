@@ -17,13 +17,8 @@ const createSingleController: RouteController<
 		transaction: true,
 		defaultError: {
 			type: "basic",
-			name: T("method_error_name", {
-				name: T("user"),
-				method: T("create"),
-			}),
-			message: T("creation_error_message", {
-				name: T("user").toLowerCase(),
-			}),
+			name: T("route_user_create_error_name"),
+			message: T("route_user_create_error_message"),
 			status: 500,
 		},
 	})(
@@ -47,13 +42,8 @@ const createSingleController: RouteController<
 		transaction: false,
 		defaultError: {
 			type: "basic",
-			name: T("method_error_name", {
-				name: T("user"),
-				method: T("create"),
-			}),
-			message: T("creation_error_message", {
-				name: T("user").toLowerCase(),
-			}),
+			name: T("route_user_fetch_error_name"),
+			message: T("route_user_fetch_error_message"),
 			status: 500,
 		},
 	})(

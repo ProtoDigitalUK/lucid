@@ -20,13 +20,8 @@ const uploadSingleController: RouteController<
 		transaction: true,
 		defaultError: {
 			type: "basic",
-			name: T("method_error_name", {
-				name: T("media"),
-				method: T("create"),
-			}),
-			message: T("creation_error_message", {
-				name: T("media").toLowerCase(),
-			}),
+			name: T("route_media_upload_error_name"),
+			message: T("route_media_upload_error_message"),
 			status: 500,
 		},
 	})(
@@ -47,11 +42,8 @@ const uploadSingleController: RouteController<
 		transaction: false,
 		defaultError: {
 			type: "basic",
-			name: T("method_error_name", {
-				name: T("media"),
-				method: T("fetch"),
-			}),
-			message: T("default_error_message"),
+			name: T("route_media_fetch_error_name"),
+			message: T("route_media_fetch_error_message"),
 			status: 500,
 		},
 	})(

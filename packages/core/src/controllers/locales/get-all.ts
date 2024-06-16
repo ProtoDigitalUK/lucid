@@ -20,11 +20,8 @@ const getAllController: RouteController<
 		transaction: false,
 		defaultError: {
 			type: "basic",
-			name: T("method_error_name", {
-				name: T("locale"),
-				method: T("fetch"),
-			}),
-			message: T("default_error_message"),
+			name: T("route_locale_fetch_error_name"),
+			message: T("route_locale_fetch_error_message"),
 			status: 500,
 		},
 	})({

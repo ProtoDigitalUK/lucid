@@ -20,13 +20,8 @@ const clearAllProcessedController: RouteController<
 			transaction: true,
 			defaultError: {
 				type: "basic",
-				name: T("method_error_name", {
-					name: T("processed_images"),
-					method: T("delete"),
-				}),
-				message: T("deletion_error_message", {
-					name: T("processed_images").toLowerCase(),
-				}),
+				name: T("route_media_clear_processed_error_name"),
+				message: T("route_media_clear_processed_error_message"),
 				status: 500,
 			},
 		},

@@ -21,11 +21,8 @@ const getMultipleController: RouteController<
 		transaction: false,
 		defaultError: {
 			type: "basic",
-			name: T("method_error_name", {
-				name: T("media"),
-				method: T("fetch"),
-			}),
-			message: T("default_error_message"),
+			name: T("route_media_fetch_error_name"),
+			message: T("route_media_fetch_error_message"),
 			status: 500,
 		},
 	})(

@@ -21,8 +21,8 @@ const sendResetPasswordController: RouteController<
 			transaction: true,
 			defaultError: {
 				type: "basic",
-				name: T("default_error_name"),
-				message: T("default_error_message"),
+				name: T("route_send_password_reset_error_name"),
+				message: T("route_send_password_reset_error_message"),
 				status: 500,
 			},
 		},
