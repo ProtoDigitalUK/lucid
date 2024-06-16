@@ -1,38 +1,51 @@
 import T from "../../translations/index.js";
-import { LucidAPIError } from "../../utils/error-handler.js";
 import Formatter from "../../libs/formatters/index.js";
 import Repository from "../../libs/repositories/index.js";
-import type { ServiceConfig } from "../../utils/service-wrapper.js";
+import type { ServiceFn } from "../../libs/services/types.js";
+import type { UserResponse } from "../../types/response.js";
 
 export interface ServiceData {
 	userId: number;
 }
 
-const getSingle = async (serviceConfig: ServiceConfig, data: ServiceData) => {
-	const UsersRepo = Repository.get("users", serviceConfig.db);
+const getSingle: ServiceFn<
+	[
+		{
+			userId: number;
+		},
+	],
+	UserResponse
+> = async (service, data) => {
+	const UsersRepo = Repository.get("users", service.db);
 	const UsersFormatter = Formatter.get("users");
 
 	const user = await UsersRepo.selectSingleById({
 		id: data.userId,
-		config: serviceConfig.config,
+		config: service.config,
 	});
 
 	if (!user) {
-		throw new LucidAPIError({
-			type: "basic",
-			name: T("error_not_found_name", {
-				name: T("user"),
-			}),
-			message: T("error_not_found_message", {
-				name: T("user"),
-			}),
-			status: 404,
-		});
+		return {
+			error: {
+				type: "basic",
+				name: T("error_not_found_name", {
+					name: T("user"),
+				}),
+				message: T("error_not_found_message", {
+					name: T("user"),
+				}),
+				status: 404,
+			},
+			data: undefined,
+		};
 	}
 
-	return UsersFormatter.formatSingle({
-		user: user,
-	});
+	return {
+		error: undefined,
+		data: UsersFormatter.formatSingle({
+			user: user,
+		}),
+	};
 };
 
 export default getSingle;

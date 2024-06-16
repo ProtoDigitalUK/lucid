@@ -1,15 +1,20 @@
 import T from "../../translations/index.js";
-import { LucidAPIError } from "../../utils/error-handler.js";
 import Repository from "../../libs/repositories/index.js";
-import type { ServiceConfig } from "../../utils/service-wrapper.js";
+import type { ServiceFn } from "../../libs/services/types.js";
 
-export interface ServiceData {
-	tokenType: "password_reset";
-	token: string;
-}
-
-const getSingle = async (serviceConfig: ServiceConfig, data: ServiceData) => {
-	const UserTokensRepo = Repository.get("user-tokens", serviceConfig.db);
+const getSingle: ServiceFn<
+	[
+		{
+			tokenType: "password_reset";
+			token: string;
+		},
+	],
+	{
+		id: number;
+		user_id: number | null;
+	}
+> = async (service, data) => {
+	const UserTokensRepo = Repository.get("user-tokens", service.db);
 
 	const userToken = await UserTokensRepo.selectSingle({
 		select: ["id", "user_id"],
@@ -33,19 +38,25 @@ const getSingle = async (serviceConfig: ServiceConfig, data: ServiceData) => {
 	});
 
 	if (userToken === undefined) {
-		throw new LucidAPIError({
-			type: "basic",
-			name: T("error_not_found_name", {
-				name: T("token"),
-			}),
-			message: T("error_not_found_message", {
-				name: T("token"),
-			}),
-			status: 404,
-		});
+		return {
+			error: {
+				type: "basic",
+				name: T("error_not_found_name", {
+					name: T("token"),
+				}),
+				message: T("error_not_found_message", {
+					name: T("token"),
+				}),
+				status: 404,
+			},
+			data: undefined,
+		};
 	}
 
-	return userToken;
+	return {
+		error: undefined,
+		data: userToken,
+	};
 };
 
 export default getSingle;

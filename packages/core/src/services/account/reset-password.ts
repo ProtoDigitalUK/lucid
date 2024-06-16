@@ -3,30 +3,29 @@ import argon2 from "argon2";
 import userTokens from "../user-tokens/index.js";
 import email from "../email/index.js";
 import constants from "../../constants.js";
-import serviceWrapper from "../../utils/service-wrapper.js";
-import { LucidAPIError } from "../../utils/error-handler.js";
+import serviceWrapper from "../../libs/services/service-wrapper.js";
 import Repository from "../../libs/repositories/index.js";
-import type { ServiceConfig } from "../../utils/service-wrapper.js";
+import type { ServiceFn } from "../../libs/services/types.js";
 
-export interface ServiceData {
-	token: string;
-	password: string;
-}
-
-const resetPassword = async (
-	serviceConfig: ServiceConfig,
-	data: ServiceData,
-) => {
-	const UserTokensRepo = Repository.get("user-tokens", serviceConfig.db);
-	const UsersRepo = Repository.get("users", serviceConfig.db);
-
-	const token = await serviceWrapper(userTokens.getSingle, false)(
-		serviceConfig,
+const resetPassword: ServiceFn<
+	[
 		{
-			token: data.token,
-			tokenType: "password_reset",
+			token: string;
+			password: string;
 		},
-	);
+	],
+	undefined
+> = async (service, data) => {
+	const UserTokensRepo = Repository.get("user-tokens", service.db);
+	const UsersRepo = Repository.get("users", service.db);
+
+	const token = await serviceWrapper(userTokens.getSingle, {
+		transaction: false,
+	})(service, {
+		token: data.token,
+		tokenType: "password_reset",
+	});
+	if (token.error) return token;
 
 	const hashedPassword = await argon2.hash(data.password);
 
@@ -39,29 +38,34 @@ const resetPassword = async (
 			{
 				key: "id",
 				operator: "=",
-				value: token.user_id,
+				value: token.data.user_id,
 			},
 		],
 	});
 
 	if (user === undefined) {
-		throw new LucidAPIError({
-			type: "basic",
-			status: 400,
-		});
+		return {
+			error: {
+				type: "basic",
+				status: 400,
+			},
+			data: undefined,
+		};
 	}
 
-	await Promise.all([
+	const [_, sendEmail] = await Promise.all([
 		UserTokensRepo.deleteMultiple({
 			where: [
 				{
 					key: "id",
 					operator: "=",
-					value: token.id,
+					value: token.data.id,
 				},
 			],
 		}),
-		serviceWrapper(email.sendEmail, false)(serviceConfig, {
+		serviceWrapper(email.sendEmail, {
+			transaction: false,
+		})(service, {
 			template: constants.emailTemplates.passwordResetSuccess,
 			type: "internal",
 			to: user.email,
@@ -72,6 +76,12 @@ const resetPassword = async (
 			},
 		}),
 	]);
+	if (sendEmail.error) return sendEmail;
+
+	return {
+		error: undefined,
+		data: undefined,
+	};
 };
 
 export default resetPassword;

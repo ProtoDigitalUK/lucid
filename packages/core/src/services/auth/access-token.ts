@@ -22,13 +22,14 @@ export const generateAccessToken = async (
 				userId: userId,
 			},
 		);
+		if (user.error) throw new LucidAPIError(user.error);
 
 		const payload = {
-			id: user.id,
-			username: user.username,
-			email: user.email,
-			permissions: user.permissions,
-			superAdmin: user.superAdmin || 0,
+			id: user.data.id,
+			username: user.data.username,
+			email: user.data.email,
+			permissions: user.data.permissions,
+			superAdmin: user.data.superAdmin ?? 0,
 		} satisfies FastifyRequest["auth"];
 
 		const token = jwt.sign(

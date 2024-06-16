@@ -1,28 +1,30 @@
-import T from "../../translations/index.js";
 import emailServices from "./index.js";
 import { getEmailHash } from "../../utils/helpers.js";
-import { LucidAPIError } from "../../utils/error-handler.js";
 import Repository from "../../libs/repositories/index.js";
 import Formatter from "../../libs/formatters/index.js";
-import type { ServiceConfig } from "../../utils/service-wrapper.js";
+import type { ServiceFn } from "../../libs/services/types.js";
+import type { EmailResponse } from "../../types/response.js";
 
-export interface ServiceData {
-	type: "internal" | "external";
-	to: string;
-	subject: string;
-	template: string;
-	cc?: string;
-	bcc?: string;
-	replyTo?: string;
-	data: Record<string, unknown>;
-}
-
-const sendEmail = async (serviceConfig: ServiceConfig, data: ServiceData) => {
-	const EmailsRepo = Repository.get("emails", serviceConfig.db);
+const sendEmail: ServiceFn<
+	[
+		{
+			type: "internal" | "external";
+			to: string;
+			subject: string;
+			template: string;
+			cc?: string;
+			bcc?: string;
+			replyTo?: string;
+			data: Record<string, unknown>;
+		},
+	],
+	EmailResponse
+> = async (service, data) => {
+	const EmailsRepo = Repository.get("emails", service.db);
 	const EmailsFormatter = Formatter.get("emails");
 
 	const emailConfig = emailServices.checks.checkHasEmailConfig({
-		config: serviceConfig.config,
+		config: service.config,
 	});
 
 	const html = await emailServices.renderTemplate(data.template, data.data);
@@ -84,16 +86,22 @@ const sendEmail = async (serviceConfig: ServiceConfig, data: ServiceData) => {
 		});
 
 		if (emailUpdated === undefined) {
-			throw new LucidAPIError({
-				type: "basic",
-				status: 500,
-			});
+			return {
+				error: {
+					type: "basic",
+					status: 500,
+				},
+				data: undefined,
+			};
 		}
 
-		return EmailsFormatter.formatSingle({
-			email: emailUpdated,
-			html: html,
-		});
+		return {
+			error: undefined,
+			data: EmailsFormatter.formatSingle({
+				email: emailUpdated,
+				html: html,
+			}),
+		};
 	}
 	const newEmail = await EmailsRepo.createSingle({
 		emailHash: emailHash,
@@ -114,16 +122,22 @@ const sendEmail = async (serviceConfig: ServiceConfig, data: ServiceData) => {
 	});
 
 	if (newEmail === undefined) {
-		throw new LucidAPIError({
-			type: "basic",
-			status: 500,
-		});
+		return {
+			error: {
+				type: "basic",
+				status: 500,
+			},
+			data: undefined,
+		};
 	}
 
-	return EmailsFormatter.formatSingle({
-		email: newEmail,
-		html: html,
-	});
+	return {
+		error: undefined,
+		data: EmailsFormatter.formatSingle({
+			email: newEmail,
+			html: html,
+		}),
+	};
 };
 
 export default sendEmail;

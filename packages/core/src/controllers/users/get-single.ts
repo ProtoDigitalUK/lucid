@@ -6,6 +6,7 @@ import serviceWrapper from "../../utils/service-wrapper.js";
 import buildResponse from "../../utils/build-response.js";
 import UsersFormatter from "../../libs/formatters/users.js";
 import { ensureThrowAPIError } from "../../utils/error-helpers.js";
+import { LucidAPIError } from "../../utils/error-handler.js";
 import type { RouteController } from "../../types/types.js";
 
 const getSingleController: RouteController<
@@ -23,10 +24,11 @@ const getSingleController: RouteController<
 				userId: Number.parseInt(request.params.id),
 			},
 		);
+		if (user.error) throw new LucidAPIError(user.error);
 
 		reply.status(200).send(
 			await buildResponse(request, {
-				data: user,
+				data: user.data,
 			}),
 		);
 	} catch (error) {

@@ -38,6 +38,7 @@ import lucidLogger from "../libs/logging/index.js";
  *    },
  * });
  */
+// TODO: update to use service wrapper error type
 export class LucidAPIError extends Error {
 	type: LucidAPIErrorData["type"] = "basic";
 	code: LucidAPIErrorData["code"];
@@ -81,6 +82,7 @@ export class LucidAPIError extends Error {
 		}
 	}
 	// public methods
+	// TODO: remove
 	setMissingValues(data: Partial<LucidAPIErrorData>) {
 		if (
 			(this.name === undefined || this.name === "") &&

@@ -31,10 +31,9 @@ export type ServiceError = {
 	errorResponse?: ErrorResult;
 };
 
-export type ServiceResponse<T> = Promise<{
-	error: ServiceError | undefined;
-	data: T | undefined;
-}>;
+export type ServiceResponse<T> = Promise<
+	{ error: ServiceError; data: undefined } | { error: undefined; data: T }
+>;
 
 export type ServiceFn<T extends unknown[], R> = (
 	service: ServiceConfig,

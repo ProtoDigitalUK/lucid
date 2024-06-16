@@ -4,9 +4,9 @@ import {
 	swaggerResponse,
 	swaggerHeaders,
 } from "../../utils/swagger-helpers.js";
-import serviceWrapper from "../../utils/service-wrapper.js";
+import serviceWrapper from "../../libs/services/service-wrapper.js";
 import account from "../../services/account/index.js";
-import { ensureThrowAPIError } from "../../utils/error-helpers.js";
+import { LucidAPIError } from "../../utils/error-handler.js";
 import type { RouteController } from "../../types/types.js";
 
 const resetPasswordController: RouteController<
@@ -14,27 +14,27 @@ const resetPasswordController: RouteController<
 	typeof accountSchema.resetPassword.body,
 	typeof accountSchema.resetPassword.query
 > = async (request, reply) => {
-	try {
-		await serviceWrapper(account.resetPassword, true)(
-			{
-				db: request.server.config.db.client,
-				config: request.server.config,
-			},
-			{
-				token: request.params.token,
-				password: request.body.password,
-			},
-		);
-
-		reply.status(204).send();
-	} catch (error) {
-		ensureThrowAPIError(error, {
+	const resetPassword = await serviceWrapper(account.resetPassword, {
+		transaction: false,
+		defaultError: {
 			type: "basic",
 			name: T("default_error_name"),
 			message: T("default_error_message"),
 			status: 500,
-		});
-	}
+		},
+	})(
+		{
+			db: request.server.config.db.client,
+			config: request.server.config,
+		},
+		{
+			token: request.params.token,
+			password: request.body.password,
+		},
+	);
+	if (resetPassword.error) throw new LucidAPIError(resetPassword.error);
+
+	reply.status(204).send();
 };
 
 export default {
