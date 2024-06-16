@@ -5,6 +5,8 @@ import jwt from "jsonwebtoken";
 import usersServices from "../users/index.js";
 import { LucidAPIError } from "../../utils/error-handler.js";
 
+// TODO: make all functions here use service wrapper and ServiceFn - seperate into own file in access token directory
+
 const key = "_access";
 
 export const generateAccessToken = async (

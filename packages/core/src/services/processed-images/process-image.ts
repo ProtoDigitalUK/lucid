@@ -7,25 +7,25 @@ import processedImageServices from "./index.js";
 import mediaHelpers from "../../utils/media-helpers.js";
 import Repository from "../../libs/repositories/index.js";
 import mediaServices from "../media/index.js";
-import type { ServiceConfig } from "../../utils/service-wrapper.js";
 import optionsServices from "../options/index.js";
-import serviceWrapper from "../../utils/service-wrapper.js";
+import serviceWrapper from "../../libs/services/service-wrapper.js";
+import type { ServiceFn } from "../../libs/services/types.js";
 
-export interface ServiceData {
-	key: string;
-	processKey: string;
-	options: z.infer<typeof cdnSchema.streamSingle.query>;
-}
-
-const processImage = async (
-	serviceConfig: ServiceConfig,
-	data: ServiceData,
-): Promise<{
-	key: string;
-	contentLength: number | undefined;
-	contentType: string | undefined;
-	body: Readable;
-}> => {
+const processImage: ServiceFn<
+	[
+		{
+			key: string;
+			processKey: string;
+			options: z.infer<typeof cdnSchema.streamSingle.query>;
+		},
+	],
+	{
+		key: string;
+		contentLength: number | undefined;
+		contentType: string | undefined;
+		body: Readable;
+	}
+> = async (serviceConfig, data) => {
 	const mediaStrategy = mediaServices.checks.checkHasMediaStrategy({
 		config: serviceConfig.config,
 	});
@@ -35,25 +35,31 @@ const processImage = async (
 
 	// If there is no response
 	if (!res.success || !res.response) {
-		throw new LucidAPIError({
-			type: "basic",
-			name: T("error_not_found_name", {
-				name: T("media"),
-			}),
-			message: T("error_not_found_message", {
-				name: T("media"),
-			}),
-			status: 404,
-		});
+		return {
+			error: {
+				type: "basic",
+				name: T("error_not_found_name", {
+					name: T("media"),
+				}),
+				message: T("error_not_found_message", {
+					name: T("media"),
+				}),
+				status: 404,
+			},
+			data: undefined,
+		};
 	}
 
 	// If the response is not an image
 	if (!res.response?.contentType?.startsWith("image/")) {
 		return {
-			key: data.key,
-			contentLength: res.response.contentLength,
-			contentType: res.response.contentType,
-			body: res.response.body,
+			error: undefined,
+			data: {
+				key: data.key,
+				contentLength: res.response.contentLength,
+				contentType: res.response.contentType,
+				body: res.response.body,
+			},
 		};
 	}
 
@@ -70,10 +76,13 @@ const processImage = async (
 
 	if (!imageRes.success || !imageRes.data) {
 		return {
-			key: data.key,
-			contentLength: res.response.contentLength,
-			contentType: res.response.contentType,
-			body: res.response.body,
+			error: undefined,
+			data: {
+				key: data.key,
+				contentLength: res.response.contentLength,
+				contentType: res.response.contentType,
+				body: res.response.body,
+			},
 		};
 	}
 
@@ -83,26 +92,34 @@ const processImage = async (
 	// Check if the processed image limit has been reached for this key, if so return processed image without saving
 	if (processedCount >= serviceConfig.config.media.processed.limit) {
 		return {
-			key: data.processKey,
-			contentLength: imageRes.data.size,
-			contentType: imageRes.data.mimeType,
-			body: stream,
+			error: undefined,
+			data: {
+				key: data.processKey,
+				contentLength: imageRes.data.size,
+				contentType: imageRes.data.mimeType,
+				body: stream,
+			},
 		};
 	}
 
 	// Check if we can store it
 	const canStoreRes = await serviceWrapper(
 		processedImageServices.checks.checkCanStore,
-		false,
+		{
+			transaction: false,
+		},
 	)(serviceConfig, {
 		size: imageRes.data.size,
 	});
-	if (canStoreRes.success === false) {
+	if (canStoreRes.error) {
 		return {
-			key: data.processKey,
-			contentLength: imageRes.data.size,
-			contentType: imageRes.data.mimeType,
-			body: stream,
+			error: undefined,
+			data: {
+				key: data.processKey,
+				contentLength: imageRes.data.size,
+				contentType: imageRes.data.mimeType,
+				body: stream,
+			},
 		};
 	}
 
@@ -131,18 +148,23 @@ const processImage = async (
 					key: data.processKey,
 				},
 			}),
-			serviceWrapper(optionsServices.updateSingle, false)(serviceConfig, {
+			serviceWrapper(optionsServices.updateSingle, {
+				transaction: false,
+			})(serviceConfig, {
 				name: "media_storage_used",
-				valueInt: canStoreRes.proposedSize,
+				valueInt: canStoreRes.data.proposedSize,
 			}),
 		]);
 	}
 
 	return {
-		key: data.processKey,
-		contentLength: imageRes.data.size,
-		contentType: imageRes.data.mimeType,
-		body: stream,
+		error: undefined,
+		data: {
+			key: data.processKey,
+			contentLength: imageRes.data.size,
+			contentType: imageRes.data.mimeType,
+			body: stream,
+		},
 	};
 };
 

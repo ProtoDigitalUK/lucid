@@ -1,20 +1,27 @@
 import T from "../../translations/index.js";
-import { LucidAPIError } from "../../utils/error-handler.js";
 import emailServices from "./index.js";
 import Repository from "../../libs/repositories/index.js";
-import type { ServiceConfig } from "../../utils/service-wrapper.js";
+import serviceWrapper from "../../libs/services/service-wrapper.js";
+import type { ServiceFn } from "../../libs/services/types.js";
 
-export interface ServiceData {
-	id: number;
-}
-
-const resendSingle = async (
-	serviceConfig: ServiceConfig,
-	data: ServiceData,
-) => {
-	const emailConfig = emailServices.checks.checkHasEmailConfig({
-		config: serviceConfig.config,
-	});
+const resendSingle: ServiceFn<
+	[
+		{
+			id: number;
+		},
+	],
+	{
+		success: boolean;
+		message: string;
+	}
+> = async (serviceConfig, data) => {
+	const emailConfigRes = await serviceWrapper(
+		emailServices.checks.checkHasEmailConfig,
+		{
+			transaction: false,
+		},
+	)(serviceConfig);
+	if (emailConfigRes.error) return emailConfigRes;
 
 	const EmailsRepo = Repository.get("emails", serviceConfig.db);
 
@@ -23,25 +30,32 @@ const resendSingle = async (
 	});
 
 	if (email === undefined) {
-		throw new LucidAPIError({
-			type: "basic",
-			name: T("error_not_found_name", {
-				name: T("email"),
-			}),
-			message: T("error_not_found_message", {
-				name: T("email"),
-			}),
-			status: 404,
-		});
+		return {
+			error: {
+				type: "basic",
+				name: T("error_not_found_name", {
+					name: T("email"),
+				}),
+				message: T("error_not_found_message", {
+					name: T("email"),
+				}),
+				status: 404,
+			},
+			data: undefined,
+		};
 	}
 
 	const templateData = (email.data ?? {}) as Record<string, unknown>;
-	const html = await emailServices.renderTemplate(
-		email.template,
-		templateData,
-	);
 
-	const result = await emailConfig.strategy(
+	const html = await serviceWrapper(emailServices.renderTemplate, {
+		transaction: false,
+	})(serviceConfig, {
+		template: email.template,
+		data: templateData,
+	});
+	if (html.error) return html;
+
+	const result = await emailConfigRes.data.strategy(
 		{
 			to: email.to_address,
 			subject: email.subject ?? "",
@@ -49,7 +63,7 @@ const resendSingle = async (
 				name: email.from_name,
 				email: email.from_address,
 			},
-			html: html,
+			html: html.data,
 			cc: email.cc ?? undefined,
 			bcc: email.bcc ?? undefined,
 		},
@@ -81,8 +95,11 @@ const resendSingle = async (
 	});
 
 	return {
-		success: result.success,
-		message: result.message,
+		error: undefined,
+		data: {
+			success: result.success,
+			message: result.message,
+		},
 	};
 };
 

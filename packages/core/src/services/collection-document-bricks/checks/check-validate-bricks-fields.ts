@@ -1,5 +1,6 @@
 import T from "../../../translations/index.js";
-import { LucidAPIError } from "../../../utils/error-handler.js";
+import lucidLogger from "../../../libs/logging/index.js";
+import Repository from "../../../libs/repositories/index.js";
 import type { FieldErrors } from "../../../types/errors.js";
 import type {
 	FieldTypes,
@@ -7,22 +8,20 @@ import type {
 	UserReferenceData,
 } from "../../../libs/custom-fields/types.js";
 import type { FieldInsertItem } from "../helpers/flatten-fields.js";
-import type { LinkValue } from "../../../types/response.js";
 import type BrickBuilder from "../../../libs/builders/brick-builder/index.js";
 import type CollectionBuilder from "../../../libs/builders/collection-builder/index.js";
-import type { ServiceConfig } from "../../../utils/service-wrapper.js";
+import type { ServiceConfig, ServiceFn } from "../../../libs/services/types.js";
 import type { BrickInsertItem } from "../helpers/format-insert-bricks.js";
-import Repository from "../../../libs/repositories/index.js";
 
-export interface ServiceData {
-	bricks: Array<BrickInsertItem>;
-	collection: CollectionBuilder;
-}
-
-const checkValidateBricksFields = async (
-	serviceConfig: ServiceConfig,
-	data: ServiceData,
-) => {
+const checkValidateBricksFields: ServiceFn<
+	[
+		{
+			bricks: Array<BrickInsertItem>;
+			collection: CollectionBuilder;
+		},
+	],
+	undefined
+> = async (serviceConfig, data) => {
 	const flatFields =
 		data.bricks.flatMap((brick) => {
 			return brick.fields || [];
@@ -48,18 +47,26 @@ const checkValidateBricksFields = async (
 	}
 
 	if (errors.length) {
-		throw new LucidAPIError({
-			type: "basic",
-			name: T("field_validation_error_name"),
-			message: T("field_validation_error_message"),
-			status: 400,
-			errorResponse: {
-				body: {
-					fields: errors,
+		return {
+			error: {
+				type: "basic",
+				name: T("field_validation_error_name"),
+				message: T("field_validation_error_message"),
+				status: 400,
+				errorResponse: {
+					body: {
+						fields: errors,
+					},
 				},
 			},
-		});
+			data: undefined,
+		};
 	}
+
+	return {
+		error: undefined,
+		data: undefined,
+	};
 };
 
 export const validateBrick = (props: {
@@ -92,14 +99,12 @@ export const validateBrick = (props: {
 	}
 
 	if (!instance) {
-		throw new LucidAPIError({
-			type: "basic",
-			name: T("error_saving_bricks"),
+		lucidLogger("error", {
 			message: T("error_saving_page_brick_couldnt_find_brick_config", {
 				key: props.brick.key || "",
 			}),
-			status: 400,
 		});
+		return errors;
 	}
 
 	for (let i = 0; i < props.brick.fields.length; i++) {

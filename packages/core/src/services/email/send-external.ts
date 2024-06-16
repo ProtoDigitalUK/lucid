@@ -1,22 +1,22 @@
 import emailServices from "./index.js";
-import serviceWrapper from "../../utils/service-wrapper.js";
+import serviceWrapper from "../../libs/services/service-wrapper.js";
 import getConfig from "../../libs/config/get-config.js";
 
-export interface ServiceData {
+const sendExternal = async (data: {
 	to: string;
 	subject: string;
 	template: string;
 	cc?: string;
 	bcc?: string;
-	replyTo?: string; // user facing camelCase
+	replyTo?: string;
 	data: {
 		[key: string]: unknown;
 	};
-}
-
-const sendExternal = async (data: ServiceData) => {
+}) => {
 	const config = await getConfig();
-	return serviceWrapper(emailServices.sendEmail, true)(
+	return serviceWrapper(emailServices.sendEmail, {
+		transaction: true,
+	})(
 		{
 			db: config.db.client,
 			config: config,

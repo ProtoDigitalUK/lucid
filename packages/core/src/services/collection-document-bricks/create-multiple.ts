@@ -1,25 +1,25 @@
-import type { BrickSchema } from "../../schemas/collection-bricks.js";
-import type { FieldSchemaType } from "../../schemas/collection-fields.js";
-import type { ServiceConfig } from "../../utils/service-wrapper.js";
 import Repository from "../../libs/repositories/index.js";
 import formatInsertBricks from "./helpers/format-insert-bricks.js";
 import formatPostInsertBricks from "./helpers/format-post-insert-bricks.js";
 import formatInsertFields from "./helpers/format-insert-fields.js";
 import collectionBricksServices from "./index.js";
-import serviceWrapper from "../../utils/service-wrapper.js";
+import serviceWrapper from "../../libs/services/service-wrapper.js";
+import type { ServiceFn } from "../../libs/services/types.js";
 import type CollectionBuilder from "../../libs/builders/collection-builder/index.js";
+import type { BrickSchema } from "../../schemas/collection-bricks.js";
+import type { FieldSchemaType } from "../../schemas/collection-fields.js";
 
-export interface ServiceData {
-	documentId: number;
-	bricks?: Array<BrickSchema>;
-	fields?: Array<FieldSchemaType>;
-	collection: CollectionBuilder;
-}
-
-const createMultiple = async (
-	serviceConfig: ServiceConfig,
-	data: ServiceData,
-) => {
+const createMultiple: ServiceFn<
+	[
+		{
+			documentId: number;
+			bricks?: Array<BrickSchema>;
+			fields?: Array<FieldSchemaType>;
+			collection: CollectionBuilder;
+		},
+	],
+	undefined
+> = async (serviceConfig, data) => {
 	const CollectionDocumentBricksRepo = Repository.get(
 		"collection-document-bricks",
 		serviceConfig.db,
@@ -34,31 +34,44 @@ const createMultiple = async (
 		localisation: serviceConfig.config.localisation,
 		collection: data.collection,
 	});
-	if (bricks.length === 0) return;
+	if (bricks.length === 0) {
+		return {
+			error: undefined,
+			data: undefined,
+		};
+	}
 
 	// -------------------------------------------------------------------------------
 	// validation
-	collectionBricksServices.checks.checkDuplicateOrder(bricks);
-	await collectionBricksServices.checks.checkValidateBricksFields(
-		serviceConfig,
-		{
-			collection: data.collection,
-			bricks: bricks,
-		},
-	);
+	const checkBrickOrder =
+		collectionBricksServices.checks.checkDuplicateOrder(bricks);
+	if (checkBrickOrder.error) return checkBrickOrder;
+
+	const checkValidateBricksFiedls =
+		await collectionBricksServices.checks.checkValidateBricksFields(
+			serviceConfig,
+			{
+				collection: data.collection,
+				bricks: bricks,
+			},
+		);
+	if (checkValidateBricksFiedls.error) return checkValidateBricksFiedls;
 
 	// -------------------------------------------------------------------------------
 	// delete all bricks
-	await serviceWrapper(collectionBricksServices.deleteMultipleBricks, false)(
-		serviceConfig,
+	const deleteAllBricks = await serviceWrapper(
+		collectionBricksServices.deleteMultipleBricks,
 		{
-			documentId: data.documentId,
-			apply: {
-				bricks: data.bricks !== undefined,
-				collectionFields: data.fields !== undefined,
-			},
+			transaction: false,
 		},
-	);
+	)(serviceConfig, {
+		documentId: data.documentId,
+		apply: {
+			bricks: data.bricks !== undefined,
+			collectionFields: data.fields !== undefined,
+		},
+	});
+	if (deleteAllBricks.error) return deleteAllBricks;
 
 	// -------------------------------------------------------------------------------
 	// insert bricks
@@ -78,7 +91,9 @@ const createMultiple = async (
 	// create groups
 	const groups = await serviceWrapper(
 		collectionBricksServices.createMultipleGroups,
-		false,
+		{
+			transaction: false,
+		},
 	)(serviceConfig, {
 		documentId: data.documentId,
 		brickGroups: postInsertBricks.map((b) => ({
@@ -86,22 +101,31 @@ const createMultiple = async (
 			groups: b.groups,
 		})),
 	});
+	if (groups.error) return groups;
 
 	// -------------------------------------------------------------------------------
 	// create fields
-	await serviceWrapper(collectionBricksServices.createMultipleFields, false)(
-		serviceConfig,
+	const fields = await serviceWrapper(
+		collectionBricksServices.createMultipleFields,
 		{
-			documentId: data.documentId,
-			fields: postInsertBricks.flatMap((b) =>
-				formatInsertFields({
-					groups: groups,
-					brick: b,
-					collection: data.collection,
-				}),
-			),
+			transaction: false,
 		},
-	);
+	)(serviceConfig, {
+		documentId: data.documentId,
+		fields: postInsertBricks.flatMap((b) =>
+			formatInsertFields({
+				groups: groups.data,
+				brick: b,
+				collection: data.collection,
+			}),
+		),
+	});
+	if (fields.error) return fields;
+
+	return {
+		error: undefined,
+		data: undefined,
+	};
 };
 
 export default createMultiple;

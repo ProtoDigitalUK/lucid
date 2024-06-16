@@ -5,8 +5,8 @@ import {
 	swaggerHeaders,
 } from "../../utils/swagger-helpers.js";
 import emailServices from "../../services/email/index.js";
-import serviceWrapper from "../../utils/service-wrapper.js";
-import { ensureThrowAPIError } from "../../utils/error-helpers.js";
+import serviceWrapper from "../../libs/services/service-wrapper.js";
+import { LucidAPIError } from "../../utils/error-handler.js";
 import type { RouteController } from "../../types/types.js";
 
 const deleteSingleController: RouteController<
@@ -14,19 +14,9 @@ const deleteSingleController: RouteController<
 	typeof emailsSchema.deleteSingle.body,
 	typeof emailsSchema.deleteSingle.query
 > = async (request, reply) => {
-	try {
-		await serviceWrapper(emailServices.deleteSingle, true)(
-			{
-				db: request.server.config.db.client,
-				config: request.server.config,
-			},
-			{
-				id: Number.parseInt(request.params.id, 10),
-			},
-		);
-		reply.status(204).send();
-	} catch (error) {
-		ensureThrowAPIError(error, {
+	const deleteSingle = await serviceWrapper(emailServices.deleteSingle, {
+		transaction: true,
+		defaultError: {
 			type: "basic",
 			name: T("method_error_name", {
 				name: T("email"),
@@ -36,8 +26,19 @@ const deleteSingleController: RouteController<
 				name: T("email").toLowerCase(),
 			}),
 			status: 500,
-		});
-	}
+		},
+	})(
+		{
+			db: request.server.config.db.client,
+			config: request.server.config,
+		},
+		{
+			id: Number.parseInt(request.params.id, 10),
+		},
+	);
+	if (deleteSingle.error) throw new LucidAPIError(deleteSingle.error);
+
+	reply.status(204).send();
 };
 
 export default {

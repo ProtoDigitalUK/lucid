@@ -15,7 +15,7 @@ const resetPasswordController: RouteController<
 	typeof accountSchema.resetPassword.query
 > = async (request, reply) => {
 	const resetPassword = await serviceWrapper(account.resetPassword, {
-		transaction: false,
+		transaction: true,
 		defaultError: {
 			type: "basic",
 			name: T("default_error_name"),

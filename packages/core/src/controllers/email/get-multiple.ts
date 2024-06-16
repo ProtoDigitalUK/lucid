@@ -5,10 +5,10 @@ import {
 	swaggerQueryString,
 } from "../../utils/swagger-helpers.js";
 import emailServices from "../../services/email/index.js";
-import serviceWrapper from "../../utils/service-wrapper.js";
 import buildResponse from "../../utils/build-response.js";
 import EmailsFormatter from "../../libs/formatters/emails.js";
-import { ensureThrowAPIError } from "../../utils/error-helpers.js";
+import serviceWrapper from "../../libs/services/service-wrapper.js";
+import { LucidAPIError } from "../../utils/error-handler.js";
 import type { RouteController } from "../../types/types.js";
 
 const getMultipleController: RouteController<
@@ -16,29 +16,9 @@ const getMultipleController: RouteController<
 	typeof emailsSchema.getMultiple.body,
 	typeof emailsSchema.getMultiple.query
 > = async (request, reply) => {
-	try {
-		const emails = await serviceWrapper(emailServices.getMultiple, false)(
-			{
-				db: request.server.config.db.client,
-				config: request.server.config,
-			},
-			{
-				query: request.query,
-			},
-		);
-
-		reply.status(200).send(
-			await buildResponse(request, {
-				data: emails.data,
-				pagination: {
-					count: emails.count,
-					page: request.query.page,
-					perPage: request.query.perPage,
-				},
-			}),
-		);
-	} catch (error) {
-		ensureThrowAPIError(error, {
+	const emails = await serviceWrapper(emailServices.getMultiple, {
+		transaction: false,
+		defaultError: {
 			type: "basic",
 			name: T("method_error_name", {
 				name: T("email"),
@@ -46,8 +26,28 @@ const getMultipleController: RouteController<
 			}),
 			message: T("default_error_message"),
 			status: 500,
-		});
-	}
+		},
+	})(
+		{
+			db: request.server.config.db.client,
+			config: request.server.config,
+		},
+		{
+			query: request.query,
+		},
+	);
+	if (emails.error) throw new LucidAPIError(emails.error);
+
+	reply.status(200).send(
+		await buildResponse(request, {
+			data: emails.data.data,
+			pagination: {
+				count: emails.data.count,
+				page: request.query.page,
+				perPage: request.query.perPage,
+			},
+		}),
+	);
 };
 
 export default {

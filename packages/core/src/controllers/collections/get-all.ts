@@ -2,10 +2,10 @@ import T from "../../translations/index.js";
 import collectionsSchema from "../../schemas/collections.js";
 import { swaggerResponse } from "../../utils/swagger-helpers.js";
 import collectionsServices from "../../services/collections/index.js";
-import serviceWrapper from "../../utils/service-wrapper.js";
 import buildResponse from "../../utils/build-response.js";
 import CollectionsFormatter from "../../libs/formatters/collections.js";
-import { ensureThrowAPIError } from "../../utils/error-helpers.js";
+import serviceWrapper from "../../libs/services/service-wrapper.js";
+import { LucidAPIError } from "../../utils/error-handler.js";
 import type { RouteController } from "../../types/types.js";
 
 const getAllController: RouteController<
@@ -13,27 +13,9 @@ const getAllController: RouteController<
 	typeof collectionsSchema.getAll.body,
 	typeof collectionsSchema.getAll.query
 > = async (request, reply) => {
-	try {
-		const collections = await serviceWrapper(
-			collectionsServices.getAll,
-			false,
-		)(
-			{
-				db: request.server.config.db.client,
-				config: request.server.config,
-			},
-			{
-				includeDocumentId: true,
-			},
-		);
-
-		reply.status(200).send(
-			await buildResponse(request, {
-				data: collections,
-			}),
-		);
-	} catch (error) {
-		ensureThrowAPIError(error, {
+	const collections = await serviceWrapper(collectionsServices.getAll, {
+		transaction: false,
+		defaultError: {
 			type: "basic",
 			name: T("method_error_name", {
 				name: T("collection"),
@@ -41,8 +23,23 @@ const getAllController: RouteController<
 			}),
 			message: T("default_error_message"),
 			status: 500,
-		});
-	}
+		},
+	})(
+		{
+			db: request.server.config.db.client,
+			config: request.server.config,
+		},
+		{
+			includeDocumentId: true,
+		},
+	);
+	if (collections.error) throw new LucidAPIError(collections.error);
+
+	reply.status(200).send(
+		await buildResponse(request, {
+			data: collections.data,
+		}),
+	);
 };
 
 export default {

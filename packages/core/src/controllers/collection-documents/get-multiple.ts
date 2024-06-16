@@ -6,10 +6,10 @@ import {
 	swaggerHeaders,
 } from "../../utils/swagger-helpers.js";
 import collectionDocumentsServices from "../../services/collection-documents/index.js";
-import serviceWrapper from "../../utils/service-wrapper.js";
 import buildResponse from "../../utils/build-response.js";
 import CollectionDocumentsFormatter from "../../libs/formatters/collection-documents.js";
-import { ensureThrowAPIError } from "../../utils/error-helpers.js";
+import serviceWrapper from "../../libs/services/service-wrapper.js";
+import { LucidAPIError } from "../../utils/error-handler.js";
 import type { RouteController } from "../../types/types.js";
 
 const getMultipleController: RouteController<
@@ -17,42 +17,42 @@ const getMultipleController: RouteController<
 	typeof collectionDocumentsSchema.getMultiple.body,
 	typeof collectionDocumentsSchema.getMultiple.query
 > = async (request, reply) => {
-	try {
-		const documents = await serviceWrapper(
-			collectionDocumentsServices.getMultiple,
-			false,
-		)(
-			{
-				db: request.server.config.db.client,
-				config: request.server.config,
+	const documents = await serviceWrapper(
+		collectionDocumentsServices.getMultiple,
+		{
+			transaction: false,
+			defaultError: {
+				type: "basic",
+				name: T("method_error_name", {
+					name: T("document"),
+					method: T("fetch"),
+				}),
+				message: T("default_error_message"),
+				status: 500,
 			},
-			{
-				collectionKey: request.params.collectionKey,
-				query: request.query,
-			},
-		);
+		},
+	)(
+		{
+			db: request.server.config.db.client,
+			config: request.server.config,
+		},
+		{
+			collectionKey: request.params.collectionKey,
+			query: request.query,
+		},
+	);
+	if (documents.error) throw new LucidAPIError(documents.error);
 
-		reply.status(200).send(
-			await buildResponse(request, {
-				data: documents.data,
-				pagination: {
-					count: documents.count,
-					page: request.query.page,
-					perPage: request.query.perPage,
-				},
-			}),
-		);
-	} catch (error) {
-		ensureThrowAPIError(error, {
-			type: "basic",
-			name: T("method_error_name", {
-				name: T("document"),
-				method: T("fetch"),
-			}),
-			message: T("default_error_message"),
-			status: 500,
-		});
-	}
+	reply.status(200).send(
+		await buildResponse(request, {
+			data: documents.data.data,
+			pagination: {
+				count: documents.data.count,
+				page: request.query.page,
+				perPage: request.query.perPage,
+			},
+		}),
+	);
 };
 
 export default {

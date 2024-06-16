@@ -1,15 +1,14 @@
-import { LucidAPIError } from "../../utils/error-handler.js";
 import Repository from "../../libs/repositories/index.js";
-import type { ServiceConfig } from "../../utils/service-wrapper.js";
+import type { ServiceFn } from "../../libs/services/types.js";
 
-export interface ServiceData {
-	id: number;
-}
-
-const deleteSingle = async (
-	serviceConfig: ServiceConfig,
-	data: ServiceData,
-) => {
+const deleteSingle: ServiceFn<
+	[
+		{
+			id: number;
+		},
+	],
+	undefined
+> = async (serviceConfig, data) => {
 	const EmailsRepo = Repository.get("emails", serviceConfig.db);
 
 	const deleteEmail = await EmailsRepo.deleteSingle({
@@ -23,11 +22,19 @@ const deleteSingle = async (
 	});
 
 	if (deleteEmail === undefined) {
-		throw new LucidAPIError({
-			type: "basic",
-			status: 500,
-		});
+		return {
+			error: {
+				type: "basic",
+				status: 500,
+			},
+			data: undefined,
+		};
 	}
+
+	return {
+		error: undefined,
+		data: undefined,
+	};
 };
 
 export default deleteSingle;

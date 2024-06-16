@@ -1,15 +1,18 @@
 import T from "../../translations/index.js";
-import { LucidAPIError } from "../../utils/error-handler.js";
 import Repository from "../../libs/repositories/index.js";
 import Formatter from "../../libs/formatters/index.js";
 import type { OptionName } from "../../types/response.js";
-import type { ServiceConfig } from "../../utils/service-wrapper.js";
+import type { ServiceFn } from "../../libs/services/types.js";
+import type { OptionsResponse } from "../../types/response.js";
 
-export interface ServiceData {
-	name: OptionName;
-}
-
-const getSingle = async (serviceConfig: ServiceConfig, data: ServiceData) => {
+const getSingle: ServiceFn<
+	[
+		{
+			name: OptionName;
+		},
+	],
+	OptionsResponse
+> = async (serviceConfig, data) => {
 	const OptionsRepo = Repository.get("options", serviceConfig.db);
 	const OptionsFormatter = Formatter.get("options");
 
@@ -25,21 +28,27 @@ const getSingle = async (serviceConfig: ServiceConfig, data: ServiceData) => {
 	});
 
 	if (optionRes === undefined) {
-		throw new LucidAPIError({
-			type: "basic",
-			name: T("error_not_found_name", {
-				name: T("option"),
-			}),
-			message: T("error_not_found_message", {
-				name: T("option"),
-			}),
-			status: 404,
-		});
+		return {
+			error: {
+				type: "basic",
+				name: T("error_not_found_name", {
+					name: T("option"),
+				}),
+				message: T("error_not_found_message", {
+					name: T("option"),
+				}),
+				status: 404,
+			},
+			data: undefined,
+		};
 	}
 
-	return OptionsFormatter.formatSingle({
-		option: optionRes,
-	});
+	return {
+		error: undefined,
+		data: OptionsFormatter.formatSingle({
+			option: optionRes,
+		}),
+	};
 };
 
 export default getSingle;

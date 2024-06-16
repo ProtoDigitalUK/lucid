@@ -1,26 +1,27 @@
 import T from "../../translations/index.js";
 import type { FastifyRequest } from "fastify";
-import argon2 from "argon2";
-import { LucidAPIError } from "../../utils/error-handler.js";
-import serviceWrapper from "../../utils/service-wrapper.js";
-import type { ServiceConfig } from "../../utils/service-wrapper.js";
+import serviceWrapper from "../../libs/services/service-wrapper.js";
+import type { ServiceFn } from "../../libs/services/types.js";
 import Repository from "../../libs/repositories/index.js";
 import email from "../email/index.js";
 import account from "./index.js";
 import constants from "../../constants.js";
 
-export interface ServiceData {
-	auth: FastifyRequest["auth"];
-	firstName?: string;
-	lastName?: string;
-	username?: string;
-	email?: string;
-	currentPassword?: string;
-	newPassword?: string;
-	passwordConfirmation?: string;
-}
-
-const updateMe = async (serviceConfig: ServiceConfig, data: ServiceData) => {
+const updateMe: ServiceFn<
+	[
+		{
+			auth: FastifyRequest["auth"];
+			firstName?: string;
+			lastName?: string;
+			username?: string;
+			email?: string;
+			currentPassword?: string;
+			newPassword?: string;
+			passwordConfirmation?: string;
+		},
+	],
+	undefined
+> = async (serviceConfig, data) => {
 	const UsersRepo = Repository.get("users", serviceConfig.db);
 
 	const getUser = await UsersRepo.selectSingle({
@@ -35,13 +36,16 @@ const updateMe = async (serviceConfig: ServiceConfig, data: ServiceData) => {
 	});
 
 	if (getUser === undefined) {
-		throw new LucidAPIError({
-			type: "basic",
-			message: T("error_not_found_message", {
-				name: T("account"),
-			}),
-			status: 404,
-		});
+		return {
+			error: {
+				type: "basic",
+				message: T("error_not_found_message", {
+					name: T("account"),
+				}),
+				status: 404,
+			},
+			data: undefined,
+		};
 	}
 
 	const [userWithEmail, userWithUsername, updatePassword] = await Promise.all(
@@ -80,45 +84,51 @@ const updateMe = async (serviceConfig: ServiceConfig, data: ServiceData) => {
 						],
 					})
 				: undefined,
-			serviceWrapper(account.checks.checkUpdatePassword, false)(
-				serviceConfig,
-				{
-					password: getUser.password,
-					currentPassword: data.currentPassword,
-					newPassword: data.newPassword,
-					passwordConfirmation: data.passwordConfirmation,
-				},
-			),
+			serviceWrapper(account.checks.checkUpdatePassword, {
+				transaction: false,
+			})(serviceConfig, {
+				password: getUser.password,
+				currentPassword: data.currentPassword,
+				newPassword: data.newPassword,
+				passwordConfirmation: data.passwordConfirmation,
+			}),
 		],
 	);
+	if (updatePassword.error) return updatePassword;
 
 	if (data.email !== undefined && userWithEmail !== undefined) {
-		throw new LucidAPIError({
-			type: "basic",
-			status: 400,
-			errorResponse: {
-				body: {
-					email: {
-						code: "invalid",
-						message: T("this_email_is_already_in_use"),
+		return {
+			error: {
+				type: "basic",
+				status: 400,
+				errorResponse: {
+					body: {
+						email: {
+							code: "invalid",
+							message: T("this_email_is_already_in_use"),
+						},
 					},
 				},
 			},
-		});
+			data: undefined,
+		};
 	}
 	if (data.username !== undefined && userWithUsername !== undefined) {
-		throw new LucidAPIError({
-			type: "basic",
-			status: 400,
-			errorResponse: {
-				body: {
-					username: {
-						code: "invalid",
-						message: T("this_username_is_already_in_use"),
+		return {
+			error: {
+				type: "basic",
+				status: 400,
+				errorResponse: {
+					body: {
+						username: {
+							code: "invalid",
+							message: T("this_username_is_already_in_use"),
+						},
 					},
 				},
 			},
-		});
+			data: undefined,
+		};
 	}
 
 	const updateMe = await UsersRepo.updateSingle({
@@ -128,8 +138,8 @@ const updateMe = async (serviceConfig: ServiceConfig, data: ServiceData) => {
 			username: data.username,
 			email: data.email,
 			updatedAt: new Date().toISOString(),
-			password: updatePassword.newPassword,
-			triggerPasswordReset: updatePassword.triggerPasswordReset,
+			password: updatePassword.data.newPassword,
+			triggerPasswordReset: updatePassword.data.triggerPasswordReset,
 		},
 		where: [
 			{
@@ -141,17 +151,22 @@ const updateMe = async (serviceConfig: ServiceConfig, data: ServiceData) => {
 	});
 
 	if (updateMe === undefined) {
-		throw new LucidAPIError({
-			type: "basic",
-			message: T("update_error_message", {
-				name: T("your_account"),
-			}),
-			status: 400,
-		});
+		return {
+			error: {
+				type: "basic",
+				message: T("update_error_message", {
+					name: T("your_account"),
+				}),
+				status: 400,
+			},
+			data: undefined,
+		};
 	}
 
 	if (data.email !== undefined) {
-		await serviceWrapper(email.sendEmail, false)(serviceConfig, {
+		const sendEmail = await serviceWrapper(email.sendEmail, {
+			transaction: false,
+		})(serviceConfig, {
 			template: constants.emailTemplates.emailChanged,
 			type: "internal",
 			to: data.email,
@@ -160,9 +175,22 @@ const updateMe = async (serviceConfig: ServiceConfig, data: ServiceData) => {
 				firstName: data.firstName || getUser.first_name,
 			},
 		});
+		if (sendEmail.error) return sendEmail;
 	}
 
-	if (getUser.super_admin === 0) return;
+	if (getUser.super_admin === 0) {
+		return {
+			error: undefined,
+			data: undefined,
+		};
+	}
+
+	// super admin specific
+
+	return {
+		error: undefined,
+		data: undefined,
+	};
 };
 
 export default updateMe;

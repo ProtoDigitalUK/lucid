@@ -4,9 +4,9 @@ import {
 	swaggerResponse,
 	swaggerHeaders,
 } from "../../utils/swagger-helpers.js";
-import serviceWrapper from "../../utils/service-wrapper.js";
+import serviceWrapper from "../../libs/services/service-wrapper.js";
 import account from "../../services/account/index.js";
-import { ensureThrowAPIError } from "../../utils/error-helpers.js";
+import { LucidAPIError } from "../../utils/error-handler.js";
 import type { RouteController } from "../../types/types.js";
 
 const updateMeController: RouteController<
@@ -14,27 +14,9 @@ const updateMeController: RouteController<
 	typeof accountSchema.updateMe.body,
 	typeof accountSchema.updateMe.query
 > = async (request, reply) => {
-	try {
-		await serviceWrapper(account.updateMe, true)(
-			{
-				db: request.server.config.db.client,
-				config: request.server.config,
-			},
-			{
-				auth: request.auth,
-				firstName: request.body.firstName,
-				lastName: request.body.lastName,
-				username: request.body.username,
-				email: request.body.email,
-				currentPassword: request.body.currentPassword,
-				newPassword: request.body.newPassword,
-				passwordConfirmation: request.body.passwordConfirmation,
-			},
-		);
-
-		reply.status(204).send();
-	} catch (error) {
-		ensureThrowAPIError(error, {
+	const updateMe = await serviceWrapper(account.updateMe, {
+		transaction: true,
+		defaultError: {
 			type: "basic",
 			name: T("method_error_name", {
 				name: T("user"),
@@ -44,8 +26,26 @@ const updateMeController: RouteController<
 				name: T("user").toLowerCase(),
 			}),
 			status: 500,
-		});
-	}
+		},
+	})(
+		{
+			db: request.server.config.db.client,
+			config: request.server.config,
+		},
+		{
+			auth: request.auth,
+			firstName: request.body.firstName,
+			lastName: request.body.lastName,
+			username: request.body.username,
+			email: request.body.email,
+			currentPassword: request.body.currentPassword,
+			newPassword: request.body.newPassword,
+			passwordConfirmation: request.body.passwordConfirmation,
+		},
+	);
+	if (updateMe.error) throw new LucidAPIError(updateMe.error);
+
+	reply.status(204).send();
 };
 
 export default {

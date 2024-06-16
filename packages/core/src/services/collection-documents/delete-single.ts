@@ -1,34 +1,42 @@
 import T from "../../translations/index.js";
-import { LucidAPIError } from "../../utils/error-handler.js";
 import Repository from "../../libs/repositories/index.js";
 import collectionDocumentsServices from "./index.js";
 import executeHooks from "../../libs/hooks/execute-hooks.js";
-import type { ServiceConfig } from "../../utils/service-wrapper.js";
+import serviceWrapper from "../../libs/services/service-wrapper.js";
+import type { ServiceFn } from "../../libs/services/types.js";
 
-export interface ServiceData {
-	id: number;
-	collectionKey: string;
-	userId: number;
-}
+const deleteSingle: ServiceFn<
+	[
+		{
+			id: number;
+			collectionKey: string;
+			userId: number;
+		},
+	],
+	undefined
+> = async (serviceConfig, data) => {
+	const collectionRes = await serviceWrapper(
+		collectionDocumentsServices.checks.checkCollection,
+		{
+			transaction: false,
+		},
+	)(serviceConfig, {
+		key: data.collectionKey,
+	});
+	if (collectionRes.error) return collectionRes;
 
-const deleteSingle = async (
-	serviceConfig: ServiceConfig,
-	data: ServiceData,
-) => {
-	const collectionInstance =
-		await collectionDocumentsServices.checks.checkCollection({
-			key: data.collectionKey,
-		});
-
-	if (collectionInstance.config.locked === true) {
-		throw new LucidAPIError({
-			type: "basic",
-			name: T("error_locked_collection_name"),
-			message: T("error_locked_collection_message_delete", {
-				name: collectionInstance.data.title,
-			}),
-			status: 400,
-		});
+	if (collectionRes.data.config.locked === true) {
+		return {
+			error: {
+				type: "basic",
+				name: T("error_locked_collection_name"),
+				message: T("error_locked_collection_message_delete", {
+					name: collectionRes.data.data.title,
+				}),
+				status: 400,
+			},
+			data: undefined,
+		};
 	}
 
 	const CollectionDocumentsRepo = Repository.get(
@@ -58,16 +66,19 @@ const deleteSingle = async (
 	});
 
 	if (getDocument === undefined) {
-		throw new LucidAPIError({
-			type: "basic",
-			name: T("error_not_found_name", {
-				name: T("document"),
-			}),
-			message: T("error_not_found_message", {
-				name: T("document"),
-			}),
-			status: 404,
-		});
+		return {
+			error: {
+				type: "basic",
+				name: T("error_not_found_name", {
+					name: T("document"),
+				}),
+				message: T("error_not_found_message", {
+					name: T("document"),
+				}),
+				status: 404,
+			},
+			data: undefined,
+		};
 	}
 
 	await executeHooks(
@@ -75,7 +86,7 @@ const deleteSingle = async (
 			service: "collection-documents",
 			event: "beforeDelete",
 			config: serviceConfig.config,
-			collectionInstance: collectionInstance,
+			collectionInstance: collectionRes.data,
 		},
 		{
 			db: serviceConfig.db,
@@ -105,10 +116,13 @@ const deleteSingle = async (
 	});
 
 	if (deletePage === undefined) {
-		throw new LucidAPIError({
-			type: "basic",
-			status: 500,
-		});
+		return {
+			error: {
+				type: "basic",
+				status: 500,
+			},
+			data: undefined,
+		};
 	}
 
 	await executeHooks(
@@ -116,7 +130,7 @@ const deleteSingle = async (
 			service: "collection-documents",
 			event: "afterDelete",
 			config: serviceConfig.config,
-			collectionInstance: collectionInstance,
+			collectionInstance: collectionRes.data,
 		},
 		{
 			db: serviceConfig.db,
@@ -129,6 +143,11 @@ const deleteSingle = async (
 			},
 		},
 	);
+
+	return {
+		error: undefined,
+		data: undefined,
+	};
 };
 
 export default deleteSingle;

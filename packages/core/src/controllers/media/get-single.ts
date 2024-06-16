@@ -1,11 +1,11 @@
 import T from "../../translations/index.js";
 import mediaSchema from "../../schemas/media.js";
 import { swaggerResponse } from "../../utils/swagger-helpers.js";
-import serviceWrapper from "../../utils/service-wrapper.js";
 import mediaServices from "../../services/media/index.js";
 import buildResponse from "../../utils/build-response.js";
 import MediaFormatter from "../../libs/formatters/media.js";
-import { ensureThrowAPIError } from "../../utils/error-helpers.js";
+import serviceWrapper from "../../libs/services/service-wrapper.js";
+import { LucidAPIError } from "../../utils/error-handler.js";
 import type { RouteController } from "../../types/types.js";
 
 const getSingleController: RouteController<
@@ -13,24 +13,9 @@ const getSingleController: RouteController<
 	typeof mediaSchema.getSingle.body,
 	typeof mediaSchema.getSingle.query
 > = async (request, reply) => {
-	try {
-		const media = await serviceWrapper(mediaServices.getSingle, false)(
-			{
-				db: request.server.config.db.client,
-				config: request.server.config,
-			},
-			{
-				id: Number.parseInt(request.params.id),
-			},
-		);
-
-		reply.status(200).send(
-			await buildResponse(request, {
-				data: media,
-			}),
-		);
-	} catch (error) {
-		ensureThrowAPIError(error, {
+	const media = await serviceWrapper(mediaServices.getSingle, {
+		transaction: false,
+		defaultError: {
 			type: "basic",
 			name: T("method_error_name", {
 				name: T("media"),
@@ -38,8 +23,23 @@ const getSingleController: RouteController<
 			}),
 			message: T("default_error_message"),
 			status: 500,
-		});
-	}
+		},
+	})(
+		{
+			db: request.server.config.db.client,
+			config: request.server.config,
+		},
+		{
+			id: Number.parseInt(request.params.id),
+		},
+	);
+	if (media.error) throw new LucidAPIError(media.error);
+
+	reply.status(200).send(
+		await buildResponse(request, {
+			data: media.data,
+		}),
+	);
 };
 
 export default {

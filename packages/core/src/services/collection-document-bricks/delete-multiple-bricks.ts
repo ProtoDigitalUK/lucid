@@ -1,18 +1,18 @@
 import Repository from "../../libs/repositories/index.js";
-import type { ServiceConfig } from "../../utils/service-wrapper.js";
+import type { ServiceFn } from "../../libs/services/types.js";
 
-export interface ServiceData {
-	documentId: number;
-	apply: {
-		bricks: boolean;
-		collectionFields: boolean;
-	};
-}
-
-const deleteMultipleBricks = async (
-	serviceConfig: ServiceConfig,
-	data: ServiceData,
-) => {
+const deleteMultipleBricks: ServiceFn<
+	[
+		{
+			documentId: number;
+			apply: {
+				bricks: boolean;
+				collectionFields: boolean;
+			};
+		},
+	],
+	undefined
+> = async (serviceConfig, data) => {
 	const CollectionDocumentBricksRepo = Repository.get(
 		"collection-document-bricks",
 		serviceConfig.db,
@@ -50,6 +50,11 @@ const deleteMultipleBricks = async (
 			],
 		});
 	}
+
+	return {
+		error: undefined,
+		data: undefined,
+	};
 };
 
 export default deleteMultipleBricks;

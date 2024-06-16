@@ -4,9 +4,9 @@ import {
 	swaggerResponse,
 	swaggerHeaders,
 } from "../../utils/swagger-helpers.js";
-import serviceWrapper from "../../utils/service-wrapper.js";
 import mediaServices from "../../services/media/index.js";
-import { ensureThrowAPIError } from "../../utils/error-helpers.js";
+import serviceWrapper from "../../libs/services/service-wrapper.js";
+import { LucidAPIError } from "../../utils/error-handler.js";
 import type { RouteController } from "../../types/types.js";
 
 const deleteSingleController: RouteController<
@@ -14,20 +14,9 @@ const deleteSingleController: RouteController<
 	typeof mediaSchema.deleteSingle.body,
 	typeof mediaSchema.deleteSingle.query
 > = async (request, reply) => {
-	try {
-		await serviceWrapper(mediaServices.deleteSingle, true)(
-			{
-				db: request.server.config.db.client,
-				config: request.server.config,
-			},
-			{
-				id: Number.parseInt(request.params.id),
-			},
-		);
-
-		reply.status(204).send();
-	} catch (error) {
-		ensureThrowAPIError(error, {
+	const deleteSingel = await serviceWrapper(mediaServices.deleteSingle, {
+		transaction: true,
+		defaultError: {
 			type: "basic",
 			name: T("method_error_name", {
 				name: T("media"),
@@ -37,8 +26,19 @@ const deleteSingleController: RouteController<
 				name: T("media").toLowerCase(),
 			}),
 			status: 500,
-		});
-	}
+		},
+	})(
+		{
+			db: request.server.config.db.client,
+			config: request.server.config,
+		},
+		{
+			id: Number.parseInt(request.params.id),
+		},
+	);
+	if (deleteSingel.error) throw new LucidAPIError(deleteSingel.error);
+
+	reply.status(204).send();
 };
 
 export default {

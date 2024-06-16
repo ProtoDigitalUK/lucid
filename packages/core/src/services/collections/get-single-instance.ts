@@ -1,30 +1,39 @@
 import T from "../../translations/index.js";
-import { LucidAPIError } from "../../utils/error-handler.js";
-import getConfig from "../../libs/config/get-config.js";
+import type { ServiceFn } from "../../libs/services/types.js";
+import type CollectionBuilder from "../../libs/builders/collection-builder/index.js";
 
-export interface ServiceData {
-	key: string;
-}
-
-const getSingleInstance = async (data: ServiceData) => {
-	const config = await getConfig();
-
-	const collection = config.collections?.find((c) => c.key === data.key);
+const getSingleInstance: ServiceFn<
+	[
+		{
+			key: string;
+		},
+	],
+	CollectionBuilder
+> = async (service, data) => {
+	const collection = service.config.collections?.find(
+		(c) => c.key === data.key,
+	);
 
 	if (collection === undefined) {
-		throw new LucidAPIError({
-			type: "basic",
-			name: T("error_not_found_name", {
-				name: T("collection"),
-			}),
-			message: T("collection_not_found_message", {
-				collectionKey: data.key,
-			}),
-			status: 404,
-		});
+		return {
+			error: {
+				type: "basic",
+				name: T("error_not_found_name", {
+					name: T("collection"),
+				}),
+				message: T("collection_not_found_message", {
+					collectionKey: data.key,
+				}),
+				status: 404,
+			},
+			data: undefined,
+		};
 	}
 
-	return collection;
+	return {
+		error: undefined,
+		data: collection,
+	};
 };
 
 export default getSingleInstance;

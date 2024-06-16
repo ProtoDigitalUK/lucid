@@ -1,20 +1,19 @@
-import { LucidAPIError } from "../../utils/error-handler.js";
+import Repository from "../../libs/repositories/index.js";
+import type { ServiceFn } from "../../libs/services/types.js";
 import type { OptionName } from "../../types/response.js";
 import type { BooleanInt } from "../../libs/db/types.js";
-import Repository from "../../libs/repositories/index.js";
-import type { ServiceConfig } from "../../utils/service-wrapper.js";
 
-export interface ServiceData {
-	name: OptionName;
-	valueText?: string;
-	valueInt?: number;
-	valueBool?: BooleanInt;
-}
-
-const updateSingle = async (
-	serviceConfig: ServiceConfig,
-	data: ServiceData,
-) => {
+const updateSingle: ServiceFn<
+	[
+		{
+			name: OptionName;
+			valueText?: string;
+			valueInt?: number;
+			valueBool?: BooleanInt;
+		},
+	],
+	undefined
+> = async (serviceConfig, data) => {
 	const OptionsRepo = Repository.get("options", serviceConfig.db);
 
 	const updateOption = await OptionsRepo.updateSingle({
@@ -33,13 +32,19 @@ const updateSingle = async (
 	});
 
 	if (updateOption === undefined) {
-		throw new LucidAPIError({
-			type: "basic",
-			status: 400,
-		});
+		return {
+			error: {
+				type: "basic",
+				status: 400,
+			},
+			data: undefined,
+		};
 	}
 
-	return;
+	return {
+		error: undefined,
+		data: undefined,
+	};
 };
 
 export default updateSingle;

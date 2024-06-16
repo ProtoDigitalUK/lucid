@@ -1,34 +1,40 @@
 import T from "../../translations/index.js";
-import { LucidAPIError } from "../../utils/error-handler.js";
 import Repository from "../../libs/repositories/index.js";
 import Formatter from "../../libs/formatters/index.js";
-import type { ServiceConfig } from "../../utils/service-wrapper.js";
+import type { ServiceFn } from "../../libs/services/types.js";
+import type { CollectionResponse } from "../../types/response.js";
 
-export interface ServiceData {
-	key: string;
-	include?: {
-		bricks?: boolean;
-		fields?: boolean;
-		documentId?: boolean;
-	};
-}
-
-const getSingle = async (serviceConfig: ServiceConfig, data: ServiceData) => {
+const getSingle: ServiceFn<
+	[
+		{
+			key: string;
+			include?: {
+				bricks?: boolean;
+				fields?: boolean;
+				documentId?: boolean;
+			};
+		},
+	],
+	CollectionResponse
+> = async (serviceConfig, data) => {
 	const collection = serviceConfig.config.collections?.find(
 		(c) => c.key === data.key,
 	);
 
 	if (collection === undefined) {
-		throw new LucidAPIError({
-			type: "basic",
-			name: T("error_not_found_name", {
-				name: T("collection"),
-			}),
-			message: T("collection_not_found_message", {
-				collectionKey: data.key,
-			}),
-			status: 404,
-		});
+		return {
+			error: {
+				type: "basic",
+				name: T("error_not_found_name", {
+					name: T("collection"),
+				}),
+				message: T("collection_not_found_message", {
+					collectionKey: data.key,
+				}),
+				status: 404,
+			},
+			data: undefined,
+		};
 	}
 
 	const CollectionsFormatter = Formatter.get("collections");
@@ -58,22 +64,28 @@ const getSingle = async (serviceConfig: ServiceConfig, data: ServiceData) => {
 			],
 		});
 
-		return CollectionsFormatter.formatSingle({
-			collection: collection,
-			include: data.include,
-			documents: [
-				{
-					id: document?.id,
-					collection_key: collection.key,
-				},
-			],
-		});
+		return {
+			error: undefined,
+			data: CollectionsFormatter.formatSingle({
+				collection: collection,
+				include: data.include,
+				documents: [
+					{
+						id: document?.id,
+						collection_key: collection.key,
+					},
+				],
+			}),
+		};
 	}
 
-	return CollectionsFormatter.formatSingle({
-		collection: collection,
-		include: data.include,
-	});
+	return {
+		error: undefined,
+		data: CollectionsFormatter.formatSingle({
+			collection: collection,
+			include: data.include,
+		}),
+	};
 };
 
 export default getSingle;

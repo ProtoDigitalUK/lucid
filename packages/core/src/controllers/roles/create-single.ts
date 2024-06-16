@@ -5,10 +5,10 @@ import {
 	swaggerHeaders,
 } from "../../utils/swagger-helpers.js";
 import rolesServices from "../../services/roles/index.js";
-import serviceWrapper from "../../utils/service-wrapper.js";
 import buildResponse from "../../utils/build-response.js";
 import RolesFormatter from "../../libs/formatters/roles.js";
-import { ensureThrowAPIError } from "../../utils/error-helpers.js";
+import serviceWrapper from "../../libs/services/service-wrapper.js";
+import { LucidAPIError } from "../../utils/error-handler.js";
 import type { RouteController } from "../../types/types.js";
 
 const createSingleController: RouteController<
@@ -16,36 +16,9 @@ const createSingleController: RouteController<
 	typeof rolesSchema.createSingle.body,
 	typeof rolesSchema.createSingle.query
 > = async (request, reply) => {
-	try {
-		const roleId = await serviceWrapper(rolesServices.createSingle, true)(
-			{
-				db: request.server.config.db.client,
-				config: request.server.config,
-			},
-			{
-				name: request.body.name,
-				description: request.body.description,
-				permissions: request.body.permissions,
-			},
-		);
-
-		const role = await serviceWrapper(rolesServices.getSingle, false)(
-			{
-				db: request.server.config.db.client,
-				config: request.server.config,
-			},
-			{
-				id: roleId,
-			},
-		);
-
-		reply.status(200).send(
-			await buildResponse(request, {
-				data: role,
-			}),
-		);
-	} catch (error) {
-		ensureThrowAPIError(error, {
+	const roleId = await serviceWrapper(rolesServices.createSingle, {
+		transaction: true,
+		defaultError: {
 			type: "basic",
 			name: T("method_error_name", {
 				name: T("role"),
@@ -55,8 +28,47 @@ const createSingleController: RouteController<
 				name: T("role").toLowerCase(),
 			}),
 			status: 500,
-		});
-	}
+		},
+	})(
+		{
+			db: request.server.config.db.client,
+			config: request.server.config,
+		},
+		{
+			name: request.body.name,
+			description: request.body.description,
+			permissions: request.body.permissions,
+		},
+	);
+	if (roleId.error) throw new LucidAPIError(roleId.error);
+
+	const role = await serviceWrapper(rolesServices.getSingle, {
+		transaction: false,
+		defaultError: {
+			type: "basic",
+			name: T("method_error_name", {
+				name: T("role"),
+				method: T("fetch"),
+			}),
+			message: T("default_error_message"),
+			status: 500,
+		},
+	})(
+		{
+			db: request.server.config.db.client,
+			config: request.server.config,
+		},
+		{
+			id: roleId.data,
+		},
+	);
+	if (role.error) throw new LucidAPIError(role.error);
+
+	reply.status(200).send(
+		await buildResponse(request, {
+			data: role.data,
+		}),
+	);
 };
 
 export default {

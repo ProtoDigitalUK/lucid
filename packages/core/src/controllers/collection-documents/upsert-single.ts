@@ -5,11 +5,11 @@ import {
 	swaggerHeaders,
 } from "../../utils/swagger-helpers.js";
 import collectionDocumentsServices from "../../services/collection-documents/index.js";
-import serviceWrapper from "../../utils/service-wrapper.js";
 import { swaggerBodyBricksObj } from "../../schemas/collection-bricks.js";
 import { swaggerFieldObj } from "../../schemas/collection-fields.js";
 import buildResponse from "../../utils/build-response.js";
-import { ensureThrowAPIError } from "../../utils/error-helpers.js";
+import serviceWrapper from "../../libs/services/service-wrapper.js";
+import { LucidAPIError } from "../../utils/error-handler.js";
 import type { RouteController } from "../../types/types.js";
 
 const upsertSingleController: RouteController<
@@ -17,49 +17,49 @@ const upsertSingleController: RouteController<
 	typeof collectionDocumentsSchema.upsertSingle.body,
 	typeof collectionDocumentsSchema.upsertSingle.query
 > = async (request, reply) => {
-	try {
-		const documentId = await serviceWrapper(
-			collectionDocumentsServices.upsertSingle,
-			true,
-		)(
-			{
-				db: request.server.config.db.client,
-				config: request.server.config,
+	const documentId = await serviceWrapper(
+		collectionDocumentsServices.upsertSingle,
+		{
+			transaction: true,
+			defaultError: {
+				type: "basic",
+				name: T("method_error_name", {
+					name: T("document"),
+					method: request.body.documentId ? T("update") : T("create"),
+				}),
+				message: T(
+					request.body.documentId
+						? "update_error_message"
+						: "creation_error_message",
+					{
+						name: T("document").toLowerCase(),
+					},
+				),
+				status: 500,
 			},
-			{
-				collectionKey: request.params.collectionKey,
-				userId: request.auth.id,
-				documentId: request.body.documentId,
-				bricks: request.body.bricks,
-				fields: request.body.fields,
-			},
-		);
+		},
+	)(
+		{
+			db: request.server.config.db.client,
+			config: request.server.config,
+		},
+		{
+			collectionKey: request.params.collectionKey,
+			userId: request.auth.id,
+			documentId: request.body.documentId,
+			bricks: request.body.bricks,
+			fields: request.body.fields,
+		},
+	);
+	if (documentId.error) throw new LucidAPIError(documentId.error);
 
-		reply.status(200).send(
-			await buildResponse(request, {
-				data: {
-					id: documentId,
-				},
-			}),
-		);
-	} catch (error) {
-		ensureThrowAPIError(error, {
-			type: "basic",
-			name: T("method_error_name", {
-				name: T("document"),
-				method: request.body.documentId ? T("update") : T("create"),
-			}),
-			message: T(
-				request.body.documentId
-					? "update_error_message"
-					: "creation_error_message",
-				{
-					name: T("document").toLowerCase(),
-				},
-			),
-			status: 500,
-		});
-	}
+	reply.status(200).send(
+		await buildResponse(request, {
+			data: {
+				id: documentId.data,
+			},
+		}),
+	);
 };
 
 export default {

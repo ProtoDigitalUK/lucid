@@ -5,11 +5,11 @@ import {
 	swaggerHeaders,
 	swaggerQueryString,
 } from "../../utils/swagger-helpers.js";
-import serviceWrapper from "../../utils/service-wrapper.js";
 import mediaServices from "../../services/media/index.js";
 import buildResponse from "../../utils/build-response.js";
 import MediaFormatter from "../../libs/formatters/media.js";
-import { ensureThrowAPIError } from "../../utils/error-helpers.js";
+import serviceWrapper from "../../libs/services/service-wrapper.js";
+import { LucidAPIError } from "../../utils/error-handler.js";
 import type { RouteController } from "../../types/types.js";
 
 const getMultipleController: RouteController<
@@ -17,30 +17,9 @@ const getMultipleController: RouteController<
 	typeof mediaSchema.getMultiple.body,
 	typeof mediaSchema.getMultiple.query
 > = async (request, reply) => {
-	try {
-		const media = await serviceWrapper(mediaServices.getMultiple, false)(
-			{
-				db: request.server.config.db.client,
-				config: request.server.config,
-			},
-			{
-				query: request.query,
-				localeCode: request.locale.code,
-			},
-		);
-
-		reply.status(200).send(
-			await buildResponse(request, {
-				data: media.data,
-				pagination: {
-					count: media.count,
-					page: request.query.page,
-					perPage: request.query.perPage,
-				},
-			}),
-		);
-	} catch (error) {
-		ensureThrowAPIError(error, {
+	const media = await serviceWrapper(mediaServices.getMultiple, {
+		transaction: false,
+		defaultError: {
 			type: "basic",
 			name: T("method_error_name", {
 				name: T("media"),
@@ -48,8 +27,29 @@ const getMultipleController: RouteController<
 			}),
 			message: T("default_error_message"),
 			status: 500,
-		});
-	}
+		},
+	})(
+		{
+			db: request.server.config.db.client,
+			config: request.server.config,
+		},
+		{
+			query: request.query,
+			localeCode: request.locale.code,
+		},
+	);
+	if (media.error) throw new LucidAPIError(media.error);
+
+	reply.status(200).send(
+		await buildResponse(request, {
+			data: media.data.data,
+			pagination: {
+				count: media.data.count,
+				page: request.query.page,
+				perPage: request.query.perPage,
+			},
+		}),
+	);
 };
 
 export default {

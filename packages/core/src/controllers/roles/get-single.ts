@@ -2,10 +2,10 @@ import T from "../../translations/index.js";
 import rolesSchema from "../../schemas/roles.js";
 import { swaggerResponse } from "../../utils/swagger-helpers.js";
 import rolesServices from "../../services/roles/index.js";
-import serviceWrapper from "../../utils/service-wrapper.js";
 import buildResponse from "../../utils/build-response.js";
 import RolesFormatter from "../../libs/formatters/roles.js";
-import { ensureThrowAPIError } from "../../utils/error-helpers.js";
+import serviceWrapper from "../../libs/services/service-wrapper.js";
+import { LucidAPIError } from "../../utils/error-handler.js";
 import type { RouteController } from "../../types/types.js";
 
 const getSingleController: RouteController<
@@ -13,24 +13,9 @@ const getSingleController: RouteController<
 	typeof rolesSchema.getSingle.body,
 	typeof rolesSchema.getSingle.query
 > = async (request, reply) => {
-	try {
-		const role = await serviceWrapper(rolesServices.getSingle, false)(
-			{
-				db: request.server.config.db.client,
-				config: request.server.config,
-			},
-			{
-				id: Number.parseInt(request.params.id, 10),
-			},
-		);
-
-		reply.status(200).send(
-			await buildResponse(request, {
-				data: role,
-			}),
-		);
-	} catch (error) {
-		ensureThrowAPIError(error, {
+	const role = await serviceWrapper(rolesServices.getSingle, {
+		transaction: false,
+		defaultError: {
 			type: "basic",
 			name: T("method_error_name", {
 				name: T("role"),
@@ -38,8 +23,23 @@ const getSingleController: RouteController<
 			}),
 			message: T("default_error_message"),
 			status: 500,
-		});
-	}
+		},
+	})(
+		{
+			db: request.server.config.db.client,
+			config: request.server.config,
+		},
+		{
+			id: Number.parseInt(request.params.id, 10),
+		},
+	);
+	if (role.error) throw new LucidAPIError(role.error);
+
+	reply.status(200).send(
+		await buildResponse(request, {
+			data: role.data,
+		}),
+	);
 };
 
 export default {

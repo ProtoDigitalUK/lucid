@@ -5,9 +5,9 @@ import {
 	swaggerHeaders,
 } from "../../utils/swagger-helpers.js";
 import emailServices from "../../services/email/index.js";
-import serviceWrapper from "../../utils/service-wrapper.js";
 import buildResponse from "../../utils/build-response.js";
-import { ensureThrowAPIError } from "../../utils/error-helpers.js";
+import serviceWrapper from "../../libs/services/service-wrapper.js";
+import { LucidAPIError } from "../../utils/error-handler.js";
 import type { RouteController } from "../../types/types.js";
 
 const resendSingleController: RouteController<
@@ -15,24 +15,9 @@ const resendSingleController: RouteController<
 	typeof emailsSchema.resendSingle.body,
 	typeof emailsSchema.resendSingle.query
 > = async (request, reply) => {
-	try {
-		const emailRes = await serviceWrapper(emailServices.resendSingle, true)(
-			{
-				db: request.server.config.db.client,
-				config: request.server.config,
-			},
-			{
-				id: Number.parseInt(request.params.id, 10),
-			},
-		);
-
-		reply.status(200).send(
-			await buildResponse(request, {
-				data: emailRes,
-			}),
-		);
-	} catch (error) {
-		ensureThrowAPIError(error, {
+	const emailRes = await serviceWrapper(emailServices.resendSingle, {
+		transaction: true,
+		defaultError: {
 			type: "basic",
 			name: T("method_error_name", {
 				name: T("email"),
@@ -40,8 +25,23 @@ const resendSingleController: RouteController<
 			}),
 			message: T("default_error_message"),
 			status: 500,
-		});
-	}
+		},
+	})(
+		{
+			db: request.server.config.db.client,
+			config: request.server.config,
+		},
+		{
+			id: Number.parseInt(request.params.id, 10),
+		},
+	);
+	if (emailRes.error) throw new LucidAPIError(emailRes.error);
+
+	reply.status(200).send(
+		await buildResponse(request, {
+			data: emailRes.data,
+		}),
+	);
 };
 
 export default {

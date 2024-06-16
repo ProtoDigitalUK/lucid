@@ -2,10 +2,10 @@ import T from "../../translations/index.js";
 import settingsSchema from "../../schemas/settings.js";
 import { swaggerResponse } from "../../utils/swagger-helpers.js";
 import settingsServices from "../../services/settings/index.js";
-import serviceWrapper from "../../utils/service-wrapper.js";
 import buildResponse from "../../utils/build-response.js";
 import SettingsFormatter from "../../libs/formatters/settings.js";
-import { ensureThrowAPIError } from "../../utils/error-helpers.js";
+import serviceWrapper from "../../libs/services/service-wrapper.js";
+import { LucidAPIError } from "../../utils/error-handler.js";
 import type { RouteController } from "../../types/types.js";
 
 const getSettingsController: RouteController<
@@ -13,22 +13,9 @@ const getSettingsController: RouteController<
 	typeof settingsSchema.getSettings.body,
 	typeof settingsSchema.getSettings.query
 > = async (request, reply) => {
-	try {
-		const settings = await serviceWrapper(
-			settingsServices.getSettings,
-			false,
-		)({
-			db: request.server.config.db.client,
-			config: request.server.config,
-		});
-
-		reply.status(200).send(
-			await buildResponse(request, {
-				data: settings,
-			}),
-		);
-	} catch (error) {
-		ensureThrowAPIError(error, {
+	const settings = await serviceWrapper(settingsServices.getSettings, {
+		transaction: false,
+		defaultError: {
 			type: "basic",
 			name: T("method_error_name", {
 				name: T("settings"),
@@ -36,8 +23,18 @@ const getSettingsController: RouteController<
 			}),
 			message: T("default_error_message"),
 			status: 500,
-		});
-	}
+		},
+	})({
+		db: request.server.config.db.client,
+		config: request.server.config,
+	});
+	if (settings.error) throw new LucidAPIError(settings.error);
+
+	reply.status(200).send(
+		await buildResponse(request, {
+			data: settings.data,
+		}),
+	);
 };
 
 export default {

@@ -1,6 +1,5 @@
 import T from "../../translations/index.js";
-import { LucidAPIError } from "../../utils/error-handler.js";
-import serviceWrapper from "../../utils/service-wrapper.js";
+import serviceWrapper from "../../libs/services/service-wrapper.js";
 import collectionDocumentsServices from "./index.js";
 import collectionDocumentBricksServices from "../collection-document-bricks/index.js";
 import Repository from "../../libs/repositories/index.js";
@@ -8,25 +7,32 @@ import executeHooks from "../../libs/hooks/execute-hooks.js";
 import merge from "lodash.merge";
 import type { BrickSchema } from "../../schemas/collection-bricks.js";
 import type { FieldSchemaType } from "../../schemas/collection-fields.js";
-import type { ServiceConfig } from "../../utils/service-wrapper.js";
+import type { ServiceFn } from "../../libs/services/types.js";
 
-export interface ServiceData {
-	collectionKey: string;
-	userId: number;
+const upsertSingle: ServiceFn<
+	[
+		{
+			collectionKey: string;
+			userId: number;
 
-	documentId?: number;
-	bricks?: Array<BrickSchema>;
-	fields?: Array<FieldSchemaType>;
-}
-
-const upsertSingle = async (
-	serviceConfig: ServiceConfig,
-	data: ServiceData,
-) => {
-	const collectionInstance =
-		await collectionDocumentsServices.checks.checkCollection({
-			key: data.collectionKey,
-		});
+			documentId?: number;
+			bricks?: Array<BrickSchema>;
+			fields?: Array<FieldSchemaType>;
+		},
+	],
+	{
+		documentId: number;
+	}
+> = async (serviceConfig, data) => {
+	const collectionRes = await serviceWrapper(
+		collectionDocumentsServices.checks.checkCollection,
+		{
+			transaction: false,
+		},
+	)(serviceConfig, {
+		key: data.collectionKey,
+	});
+	if (collectionRes.error) return collectionRes;
 
 	const CollectionDocumentsRepo = Repository.get(
 		"collection-documents",
@@ -51,48 +57,54 @@ const upsertSingle = async (
 		});
 
 		if (existingDocument === undefined) {
-			throw new LucidAPIError({
-				type: "basic",
-				name: T("error_not_found_name", {
-					name: T("document"),
-				}),
-				message: T("error_not_found_message", {
-					name: T("document"),
-				}),
-				status: 404,
-			});
+			return {
+				error: {
+					type: "basic",
+					name: T("error_not_found_name", {
+						name: T("document"),
+					}),
+					message: T("error_not_found_message", {
+						name: T("document"),
+					}),
+					status: 404,
+				},
+				data: undefined,
+			};
 		}
 
-		if (collectionInstance.config.locked === true) {
-			throw new LucidAPIError({
-				type: "basic",
-				name: T("error_locked_collection_name"),
-				message: T("error_locked_collection_message", {
-					name: collectionInstance.data.title,
-				}),
-				status: 400,
-			});
+		if (collectionRes.data.config.locked === true) {
+			return {
+				error: {
+					type: "basic",
+					name: T("error_locked_collection_name"),
+					message: T("error_locked_collection_message", {
+						name: collectionRes.data.data.title,
+					}),
+					status: 400,
+				},
+				data: undefined,
+			};
 		}
 	}
 
-	await Promise.all([
-		serviceWrapper(
-			collectionDocumentsServices.checks
-				.checkSingleCollectionDocumentCount,
-			false,
-		)(serviceConfig, {
-			collectionKey: data.collectionKey,
-			collectionMode: collectionInstance.data.mode,
-			documentId: data.documentId,
-		}),
-	]);
+	const checkDocumentCount = await serviceWrapper(
+		collectionDocumentsServices.checks.checkSingleCollectionDocumentCount,
+		{
+			transaction: false,
+		},
+	)(serviceConfig, {
+		collectionKey: data.collectionKey,
+		collectionMode: collectionRes.data.data.mode,
+		documentId: data.documentId,
+	});
+	if (checkDocumentCount.error) return checkDocumentCount;
 
 	const hookResponse = await executeHooks(
 		{
 			service: "collection-documents",
 			event: "beforeUpsert",
 			config: serviceConfig.config,
-			collectionInstance: collectionInstance,
+			collectionInstance: collectionRes.data,
 		},
 		{
 			db: serviceConfig.db,
@@ -114,28 +126,34 @@ const upsertSingle = async (
 	});
 
 	if (document === undefined) {
-		throw new LucidAPIError({
-			type: "basic",
-			status: 400,
-		});
+		return {
+			error: {
+				type: "basic",
+				status: 400,
+			},
+			data: undefined,
+		};
 	}
 
-	await serviceWrapper(
+	const createMultipleBricks = await serviceWrapper(
 		collectionDocumentBricksServices.createMultiple,
-		false,
+		{
+			transaction: false,
+		},
 	)(serviceConfig, {
 		documentId: document.id,
 		bricks: bodyData.bricks,
 		fields: bodyData.fields,
-		collection: collectionInstance,
+		collection: collectionRes.data,
 	});
+	if (createMultipleBricks.error) return createMultipleBricks;
 
 	await executeHooks(
 		{
 			service: "collection-documents",
 			event: "afterUpsert",
 			config: serviceConfig.config,
-			collectionInstance: collectionInstance,
+			collectionInstance: collectionRes.data,
 		},
 		{
 			db: serviceConfig.db,
@@ -151,7 +169,12 @@ const upsertSingle = async (
 		},
 	);
 
-	return document.id;
+	return {
+		error: undefined,
+		data: {
+			documentId: document.id,
+		},
+	};
 };
 
 export default upsertSingle;

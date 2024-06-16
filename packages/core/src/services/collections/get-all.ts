@@ -1,12 +1,16 @@
 import Repository from "../../libs/repositories/index.js";
 import Formatter from "../../libs/formatters/index.js";
-import type { ServiceConfig } from "../../utils/service-wrapper.js";
+import type { ServiceFn } from "../../libs/services/types.js";
+import type { CollectionResponse } from "../../types/response.js";
 
-export interface ServiceData {
-	includeDocumentId?: boolean;
-}
-
-const getAll = async (serviceConfig: ServiceConfig, data: ServiceData) => {
+const getAll: ServiceFn<
+	[
+		{
+			includeDocumentId?: boolean;
+		},
+	],
+	CollectionResponse[]
+> = async (serviceConfig, data) => {
 	const collections = serviceConfig.config.collections ?? [];
 
 	const CollectionsFormatter = Formatter.get("collections");
@@ -37,25 +41,31 @@ const getAll = async (serviceConfig: ServiceConfig, data: ServiceData) => {
 			],
 		});
 
-		return CollectionsFormatter.formatMultiple({
+		return {
+			error: undefined,
+			data: CollectionsFormatter.formatMultiple({
+				collections: collections,
+				include: {
+					bricks: false,
+					fields: false,
+					document_id: true,
+				},
+				documents: documents,
+			}),
+		};
+	}
+
+	return {
+		error: undefined,
+		data: CollectionsFormatter.formatMultiple({
 			collections: collections,
 			include: {
 				bricks: false,
 				fields: false,
-				document_id: true,
+				document_id: false,
 			},
-			documents: documents,
-		});
-	}
-
-	return CollectionsFormatter.formatMultiple({
-		collections: collections,
-		include: {
-			bricks: false,
-			fields: false,
-			document_id: false,
-		},
-	});
+		}),
+	};
 };
 
 export default getAll;

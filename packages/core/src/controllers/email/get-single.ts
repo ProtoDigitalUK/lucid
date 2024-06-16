@@ -2,10 +2,10 @@ import T from "../../translations/index.js";
 import emailsSchema from "../../schemas/email.js";
 import { swaggerResponse } from "../../utils/swagger-helpers.js";
 import emailServices from "../../services/email/index.js";
-import serviceWrapper from "../../utils/service-wrapper.js";
 import buildResponse from "../../utils/build-response.js";
 import EmailsFormatter from "../../libs/formatters/emails.js";
-import { ensureThrowAPIError } from "../../utils/error-helpers.js";
+import serviceWrapper from "../../libs/services/service-wrapper.js";
+import { LucidAPIError } from "../../utils/error-handler.js";
 import type { RouteController } from "../../types/types.js";
 
 const getSingleController: RouteController<
@@ -13,25 +13,9 @@ const getSingleController: RouteController<
 	typeof emailsSchema.getSingle.body,
 	typeof emailsSchema.getSingle.query
 > = async (request, reply) => {
-	try {
-		const email = await serviceWrapper(emailServices.getSingle, false)(
-			{
-				db: request.server.config.db.client,
-				config: request.server.config,
-			},
-			{
-				id: Number.parseInt(request.params.id, 10),
-				renderTemplate: true,
-			},
-		);
-
-		reply.status(200).send(
-			await buildResponse(request, {
-				data: email,
-			}),
-		);
-	} catch (error) {
-		ensureThrowAPIError(error, {
+	const email = await serviceWrapper(emailServices.getSingle, {
+		transaction: false,
+		defaultError: {
 			type: "basic",
 			name: T("method_error_name", {
 				name: T("email"),
@@ -39,8 +23,24 @@ const getSingleController: RouteController<
 			}),
 			message: T("default_error_message"),
 			status: 500,
-		});
-	}
+		},
+	})(
+		{
+			db: request.server.config.db.client,
+			config: request.server.config,
+		},
+		{
+			id: Number.parseInt(request.params.id, 10),
+			renderTemplate: true,
+		},
+	);
+	if (email.error) throw new LucidAPIError(email.error);
+
+	reply.status(200).send(
+		await buildResponse(request, {
+			data: email.data,
+		}),
+	);
 };
 
 export default {

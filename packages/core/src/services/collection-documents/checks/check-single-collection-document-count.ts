@@ -1,25 +1,34 @@
 import T from "../../../translations/index.js";
-import { LucidAPIError } from "../../../utils/error-handler.js";
 import Repository from "../../../libs/repositories/index.js";
-import type { ServiceConfig } from "../../../utils/service-wrapper.js";
+import type { ServiceFn } from "../../../libs/services/types.js";
 
 /*
     Checks:
     - If the collection has multiple set to false, that there is no document created for it yet.
 */
 
-export interface ServiceData {
-	collectionKey: string;
-	collectionMode: "single" | "multiple";
-	documentId?: number;
-}
-
-const checkSingleCollectionDocumentCount = async (
-	serviceConfig: ServiceConfig,
-	data: ServiceData,
-) => {
-	if (data.documentId !== undefined) return;
-	if (data.collectionMode === "multiple") return;
+const checkSingleCollectionDocumentCount: ServiceFn<
+	[
+		{
+			collectionKey: string;
+			collectionMode: "single" | "multiple";
+			documentId?: number;
+		},
+	],
+	undefined
+> = async (serviceConfig, data) => {
+	if (data.documentId !== undefined) {
+		return {
+			error: undefined,
+			data: undefined,
+		};
+	}
+	if (data.collectionMode === "multiple") {
+		return {
+			error: undefined,
+			data: undefined,
+		};
+	}
 
 	const CollectionDocumentsRepo = Repository.get(
 		"collection-documents",
@@ -43,20 +52,30 @@ const checkSingleCollectionDocumentCount = async (
 	});
 
 	if (hasDocument !== undefined) {
-		throw new LucidAPIError({
-			type: "basic",
-			message: T("this_collection_has_a_document_already"),
-			status: 400,
-			errorResponse: {
-				body: {
-					collection_key: {
-						code: "invalid",
-						message: T("this_collection_has_a_document_already"),
+		return {
+			error: {
+				type: "basic",
+				message: T("this_collection_has_a_document_already"),
+				status: 400,
+				errorResponse: {
+					body: {
+						collection_key: {
+							code: "invalid",
+							message: T(
+								"this_collection_has_a_document_already",
+							),
+						},
 					},
 				},
 			},
-		});
+			data: undefined,
+		};
 	}
+
+	return {
+		error: undefined,
+		data: undefined,
+	};
 };
 
 export default checkSingleCollectionDocumentCount;

@@ -1,6 +1,6 @@
-import type { BooleanInt } from "../../libs/db/types.js";
 import Repository from "../../libs/repositories/index.js";
-import type { ServiceConfig } from "../../utils/service-wrapper.js";
+import type { BooleanInt } from "../../libs/db/types.js";
+import type { ServiceFn } from "../../libs/services/types.js";
 import type { GroupInsertItem } from "./helpers/flatten-fields.js";
 
 export interface GroupsResponse {
@@ -11,25 +11,30 @@ export interface GroupsResponse {
 	ref: string;
 }
 
-export interface ServiceData {
-	documentId: number;
-	brickGroups: Array<{
-		brickId: number;
-		groups: GroupInsertItem[];
-	}>;
-}
-
 export interface GroupSimpleResponse {
 	group_id: number;
 	ref: string | null;
 }
 
-const createMultipleGroups = async (
-	serviceConfig: ServiceConfig,
-	data: ServiceData,
-): Promise<GroupSimpleResponse[]> => {
+const createMultipleGroups: ServiceFn<
+	[
+		{
+			documentId: number;
+			brickGroups: Array<{
+				brickId: number;
+				groups: GroupInsertItem[];
+			}>;
+		},
+	],
+	GroupSimpleResponse[]
+> = async (serviceConfig, data) => {
 	const flatGroups = data.brickGroups.flatMap((bg) => bg.groups || []);
-	if (flatGroups.length === 0) return [];
+	if (flatGroups.length === 0) {
+		return {
+			error: undefined,
+			data: [],
+		};
+	}
 
 	const CollectionDocumentGroupsRepo = Repository.get(
 		"collection-document-groups",
@@ -107,7 +112,10 @@ const createMultipleGroups = async (
 		});
 	}
 
-	return groupsRes;
+	return {
+		error: undefined,
+		data: groupsRes,
+	};
 };
 
 export default createMultipleGroups;

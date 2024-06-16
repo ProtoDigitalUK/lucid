@@ -6,6 +6,8 @@ import { LucidAPIError } from "../../utils/error-handler.js";
 import auth from "./index.js";
 import Repository from "../../libs/repositories/index.js";
 
+// TODO: make all functions here use service wrapper and ServiceFn - seperate into own file in refresh token directory
+
 const key = "_refresh";
 
 export const generateRefreshToken = async (

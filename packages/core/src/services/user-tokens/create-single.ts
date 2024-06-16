@@ -1,19 +1,20 @@
 import T from "../../translations/index.js";
-import { LucidAPIError } from "../../utils/error-handler.js";
 import crypto from "node:crypto";
 import Repository from "../../libs/repositories/index.js";
-import type { ServiceConfig } from "../../utils/service-wrapper.js";
+import type { ServiceFn } from "../../libs/services/types.js";
 
-export interface ServiceData {
-	userId: number;
-	tokenType: "password_reset";
-	expiryDate: string;
-}
-
-const createSingle = async (
-	serviceConfig: ServiceConfig,
-	data: ServiceData,
-) => {
+const createSingle: ServiceFn<
+	[
+		{
+			userId: number;
+			tokenType: "password_reset";
+			expiryDate: string;
+		},
+	],
+	{
+		token: string;
+	}
+> = async (serviceConfig, data) => {
 	const UserTokensRepo = Repository.get("user-tokens", serviceConfig.db);
 
 	const token = crypto.randomBytes(32).toString("hex");
@@ -26,14 +27,22 @@ const createSingle = async (
 	});
 
 	if (userToken === undefined) {
-		throw new LucidAPIError({
-			type: "basic",
-			message: T("error_creating_user_token"),
-			status: 500,
-		});
+		return {
+			error: {
+				type: "basic",
+				message: T("error_creating_user_token"),
+				status: 500,
+			},
+			data: undefined,
+		};
 	}
 
-	return userToken;
+	return {
+		error: undefined,
+		data: {
+			token: userToken.token,
+		},
+	};
 };
 
 export default createSingle;

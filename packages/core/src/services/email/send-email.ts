@@ -2,6 +2,7 @@ import emailServices from "./index.js";
 import { getEmailHash } from "../../utils/helpers.js";
 import Repository from "../../libs/repositories/index.js";
 import Formatter from "../../libs/formatters/index.js";
+import serviceWrapper from "../../libs/services/service-wrapper.js";
 import type { ServiceFn } from "../../libs/services/types.js";
 import type { EmailResponse } from "../../types/response.js";
 
@@ -23,22 +24,33 @@ const sendEmail: ServiceFn<
 	const EmailsRepo = Repository.get("emails", service.db);
 	const EmailsFormatter = Formatter.get("emails");
 
-	const emailConfig = emailServices.checks.checkHasEmailConfig({
-		config: service.config,
-	});
+	const emailConfigRes = await serviceWrapper(
+		emailServices.checks.checkHasEmailConfig,
+		{
+			transaction: false,
+		},
+	)(service);
+	if (emailConfigRes.error) return emailConfigRes;
 
-	const html = await emailServices.renderTemplate(data.template, data.data);
+	const html = await serviceWrapper(emailServices.renderTemplate, {
+		transaction: false,
+	})(service, {
+		template: data.template,
+		data: data.data,
+	});
+	if (html.error) return html;
+
 	const emailHash = getEmailHash(data);
 
-	const result = await emailConfig.strategy(
+	const result = await emailConfigRes.data.strategy(
 		{
 			to: data.to,
 			subject: data.subject,
-			from: emailConfig.from,
+			from: emailConfigRes.data.from,
 			cc: data.cc,
 			bcc: data.bcc,
 			replyTo: data.replyTo,
-			html: html,
+			html: html.data,
 		},
 		{
 			data: data.data,
@@ -99,14 +111,14 @@ const sendEmail: ServiceFn<
 			error: undefined,
 			data: EmailsFormatter.formatSingle({
 				email: emailUpdated,
-				html: html,
+				html: html.data,
 			}),
 		};
 	}
 	const newEmail = await EmailsRepo.createSingle({
 		emailHash: emailHash,
-		fromAddress: emailConfig.from.email,
-		fromName: emailConfig.from.name,
+		fromAddress: emailConfigRes.data.from.email,
+		fromName: emailConfigRes.data.from.name,
 		toAddress: data.to,
 		subject: data.subject,
 		template: data.template,
@@ -135,7 +147,7 @@ const sendEmail: ServiceFn<
 		error: undefined,
 		data: EmailsFormatter.formatSingle({
 			email: newEmail,
-			html: html,
+			html: html.data,
 		}),
 	};
 };

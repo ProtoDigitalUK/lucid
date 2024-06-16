@@ -5,10 +5,10 @@ import {
 	swaggerQueryString,
 } from "../../utils/swagger-helpers.js";
 import usersServices from "../../services/users/index.js";
-import serviceWrapper from "../../utils/service-wrapper.js";
 import buildResponse from "../../utils/build-response.js";
 import UsersFormatter from "../../libs/formatters/users.js";
-import { ensureThrowAPIError } from "../../utils/error-helpers.js";
+import serviceWrapper from "../../libs/services/service-wrapper.js";
+import { LucidAPIError } from "../../utils/error-handler.js";
 import type { RouteController } from "../../types/types.js";
 
 const getMultipleController: RouteController<
@@ -16,32 +16,9 @@ const getMultipleController: RouteController<
 	typeof usersSchema.getMultiple.body,
 	typeof usersSchema.getMultiple.query
 > = async (request, reply) => {
-	try {
-		const users = await serviceWrapper(usersServices.getMultiple, false)(
-			{
-				db: request.server.config.db.client,
-				config: request.server.config,
-			},
-			{
-				query: request.query,
-				auth: {
-					id: request.auth.id,
-				},
-			},
-		);
-
-		reply.status(200).send(
-			await buildResponse(request, {
-				data: users.data,
-				pagination: {
-					count: users.count,
-					page: request.query.page,
-					perPage: request.query.perPage,
-				},
-			}),
-		);
-	} catch (error) {
-		ensureThrowAPIError(error, {
+	const users = await serviceWrapper(usersServices.getMultiple, {
+		transaction: false,
+		defaultError: {
 			type: "basic",
 			name: T("method_error_name", {
 				name: T("user"),
@@ -49,8 +26,31 @@ const getMultipleController: RouteController<
 			}),
 			message: T("default_error_message"),
 			status: 500,
-		});
-	}
+		},
+	})(
+		{
+			db: request.server.config.db.client,
+			config: request.server.config,
+		},
+		{
+			query: request.query,
+			auth: {
+				id: request.auth.id,
+			},
+		},
+	);
+	if (users.error) throw new LucidAPIError(users.error);
+
+	reply.status(200).send(
+		await buildResponse(request, {
+			data: users.data.data,
+			pagination: {
+				count: users.data.count,
+				page: request.query.page,
+				perPage: request.query.perPage,
+			},
+		}),
+	);
 };
 
 export default {

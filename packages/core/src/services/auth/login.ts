@@ -1,15 +1,19 @@
 import T from "../../translations/index.js";
-import { LucidAPIError } from "../../utils/error-handler.js";
-import auth from "./index.js";
+import argon2 from "argon2";
 import Repository from "../../libs/repositories/index.js";
-import type { ServiceConfig } from "../../utils/service-wrapper.js";
+import type { ServiceFn } from "../../libs/services/types.js";
 
-export interface ServiceData {
-	usernameOrEmail: string;
-	password: string;
-}
-
-const login = async (serviceConfig: ServiceConfig, data: ServiceData) => {
+const login: ServiceFn<
+	[
+		{
+			usernameOrEmail: string;
+			password: string;
+		},
+	],
+	{
+		id: number;
+	}
+> = async (serviceConfig, data) => {
 	const UsersRepo = Repository.get("users", serviceConfig.db);
 
 	const user = await UsersRepo.selectSingleByEmailUsername({
@@ -21,39 +25,46 @@ const login = async (serviceConfig: ServiceConfig, data: ServiceData) => {
 	});
 
 	if (!user || !user.password) {
-		throw new LucidAPIError({
-			type: "authorisation",
-			name: T("login_error_name"),
-			message: T("login_error_message"),
-			status: 401,
-		});
+		return {
+			error: {
+				type: "authorisation",
+				name: T("login_error_name"),
+				message: T("login_error_message"),
+				status: 401,
+			},
+			data: undefined,
+		};
 	}
 
 	if (user !== undefined && user.is_deleted === 1) {
-		throw new LucidAPIError({
-			type: "authorisation",
-			name: T("login_error_name"),
-			message: T("login_suspended_error_message"),
-			status: 401,
-		});
+		return {
+			error: {
+				type: "authorisation",
+				name: T("login_error_name"),
+				message: T("login_suspended_error_message"),
+				status: 401,
+			},
+			data: undefined,
+		};
 	}
 
-	const passwordValid = await auth.validatePassword({
-		hashedPassword: user.password,
-		password: data.password,
-	});
-
-	if (!passwordValid) {
-		throw new LucidAPIError({
-			type: "authorisation",
-			name: T("login_error_name"),
-			message: T("login_error_message"),
-			status: 401,
-		});
-	}
+	const valid = await argon2.verify(user.password, data.password);
+	if (!valid)
+		return {
+			error: {
+				type: "authorisation",
+				name: T("login_error_name"),
+				message: T("login_error_message"),
+				status: 401,
+			},
+			data: undefined,
+		};
 
 	return {
-		id: user.id,
+		error: undefined,
+		data: {
+			id: user.id,
+		},
 	};
 };
 

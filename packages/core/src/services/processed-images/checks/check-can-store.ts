@@ -1,46 +1,53 @@
-import serviceWrapper from "../../../utils/service-wrapper.js";
+import T from "../../../translations/index.js";
 import optionsServices from "../../options/index.js";
-import type { ServiceConfig } from "../../../utils/service-wrapper.js";
+import serviceWrapper from "../../../libs/services/service-wrapper.js";
+import type { ServiceFn } from "../../../libs/services/types.js";
 
-export interface ServiceData {
-	size: number;
-}
-
-const checkCanStore = async (
-	serviceConfig: ServiceConfig,
-	data: ServiceData,
-): Promise<{
-	success: boolean;
-	proposedSize: number;
-}> => {
+const checkCanStore: ServiceFn<
+	[
+		{
+			size: number;
+		},
+	],
+	{
+		proposedSize: number;
+	}
+> = async (serviceConfig, data) => {
 	const maxFileSize = serviceConfig.config.media.maxSize;
 	const storageLimit = serviceConfig.config.media.storage;
 
 	if (data.size > maxFileSize) {
 		return {
-			success: false,
-			proposedSize: 0,
+			error: undefined,
+			data: {
+				proposedSize: 0,
+			},
 		};
 	}
 
-	const storageUsed = await serviceWrapper(optionsServices.getSingle, false)(
-		serviceConfig,
-		{
-			name: "media_storage_used",
-		},
-	);
+	const storageUsed = await serviceWrapper(optionsServices.getSingle, {
+		transaction: false,
+	})(serviceConfig, {
+		name: "media_storage_used",
+	});
+	if (storageUsed.error) return storageUsed;
 
-	const proposedSize = (storageUsed.valueInt || 0) + data.size;
+	const proposedSize = (storageUsed.data.valueInt || 0) + data.size;
 	if (proposedSize > storageLimit) {
 		return {
-			success: false,
-			proposedSize: proposedSize,
+			error: {
+				type: "basic",
+				message: T("processed_images_size_limit_exceeded"),
+			},
+			data: undefined,
 		};
 	}
 
 	return {
-		success: true,
-		proposedSize: proposedSize,
+		error: undefined,
+		data: {
+			proposedSize: proposedSize,
+		},
 	};
 };
 

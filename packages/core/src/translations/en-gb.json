@@ -161,5 +161,6 @@
 	"field_link_target_error_message": "Please set the target to one of the following: {{valid}}",
 	"generic_field_data_type_mismatch": "The data type is incorrect",
 	"unknown_service_error": "An unknown error occurred",
-	"unknown_service_error_message": "An unknown error occurred. Please try again later."
+	"unknown_service_error_message": "An unknown error occurred. Please try again later.",
+	"processed_images_size_limit_exceeded": "Processed image size limit exceeded."
 }

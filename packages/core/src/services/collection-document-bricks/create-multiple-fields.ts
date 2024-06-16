@@ -1,21 +1,24 @@
 import Repository from "../../libs/repositories/index.js";
-import type { ServiceConfig } from "../../utils/service-wrapper.js";
+import type { ServiceFn } from "../../libs/services/types.js";
 import type {
 	CFInsertItem,
 	FieldTypes,
 } from "../../libs/custom-fields/types.js";
 
-export interface ServiceData {
-	documentId: number;
-	fields: CFInsertItem<FieldTypes>[];
-}
-
-const createMultipleFields = async (
-	serviceConfig: ServiceConfig,
-	data: ServiceData,
-) => {
+const createMultipleFields: ServiceFn<
+	[
+		{
+			documentId: number;
+			fields: CFInsertItem<FieldTypes>[];
+		},
+	],
+	undefined
+> = async (serviceConfig, data) => {
 	if (data.fields.length === 0) {
-		return;
+		return {
+			error: undefined,
+			data: undefined,
+		};
 	}
 
 	const CollectionDocumentFieldsRepo = Repository.get(
@@ -41,6 +44,11 @@ const createMultipleFields = async (
 			};
 		}),
 	});
+
+	return {
+		error: undefined,
+		data: undefined,
+	};
 };
 
 export default createMultipleFields;

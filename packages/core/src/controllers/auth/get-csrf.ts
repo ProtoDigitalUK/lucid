@@ -1,9 +1,7 @@
-import T from "../../translations/index.js";
 import authSchema from "../../schemas/auth.js";
 import { swaggerResponse } from "../../utils/swagger-helpers.js";
 import auth from "../../services/auth/index.js";
 import buildResponse from "../../utils/build-response.js";
-import { ensureThrowAPIError } from "../../utils/error-helpers.js";
 import type { RouteController } from "../../types/types.js";
 
 const getCSRFController: RouteController<
@@ -11,24 +9,15 @@ const getCSRFController: RouteController<
 	typeof authSchema.getCSRF.body,
 	typeof authSchema.getCSRF.query
 > = async (request, reply) => {
-	try {
-		const token = await auth.csrf.generateCSRFToken(request, reply);
+	const token = await auth.csrf.generateCSRFToken(request, reply);
 
-		reply.status(200).send(
-			await buildResponse(request, {
-				data: {
-					_csrf: token,
-				},
-			}),
-		);
-	} catch (error) {
-		ensureThrowAPIError(error, {
-			type: "basic",
-			name: T("default_error_name"),
-			message: T("default_error_message"),
-			status: 500,
-		});
-	}
+	reply.status(200).send(
+		await buildResponse(request, {
+			data: {
+				_csrf: token,
+			},
+		}),
+	);
 };
 
 export default {

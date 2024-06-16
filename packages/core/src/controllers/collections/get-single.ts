@@ -3,9 +3,9 @@ import collectionsSchema from "../../schemas/collections.js";
 import { swaggerResponse } from "../../utils/swagger-helpers.js";
 import collectionsServices from "../../services/collections/index.js";
 import buildResponse from "../../utils/build-response.js";
-import serviceWrapper from "../../utils/service-wrapper.js";
 import CollectionsFormatter from "../../libs/formatters/collections.js";
-import { ensureThrowAPIError } from "../../utils/error-helpers.js";
+import serviceWrapper from "../../libs/services/service-wrapper.js";
+import { LucidAPIError } from "../../utils/error-handler.js";
 import type { RouteController } from "../../types/types.js";
 
 const getSingleController: RouteController<
@@ -13,32 +13,9 @@ const getSingleController: RouteController<
 	typeof collectionsSchema.getSingle.body,
 	typeof collectionsSchema.getSingle.query
 > = async (request, reply) => {
-	try {
-		const collection = await serviceWrapper(
-			collectionsServices.getSingle,
-			false,
-		)(
-			{
-				db: request.server.config.db.client,
-				config: request.server.config,
-			},
-			{
-				key: request.params.key,
-				include: {
-					bricks: true,
-					fields: true,
-					documentId: true,
-				},
-			},
-		);
-
-		reply.status(200).send(
-			await buildResponse(request, {
-				data: collection,
-			}),
-		);
-	} catch (error) {
-		ensureThrowAPIError(error, {
+	const collection = await serviceWrapper(collectionsServices.getSingle, {
+		transaction: false,
+		defaultError: {
 			type: "basic",
 			name: T("method_error_name", {
 				name: T("collection"),
@@ -46,8 +23,28 @@ const getSingleController: RouteController<
 			}),
 			message: T("default_error_message"),
 			status: 500,
-		});
-	}
+		},
+	})(
+		{
+			db: request.server.config.db.client,
+			config: request.server.config,
+		},
+		{
+			key: request.params.key,
+			include: {
+				bricks: true,
+				fields: true,
+				documentId: true,
+			},
+		},
+	);
+	if (collection.error) throw new LucidAPIError(collection.error);
+
+	reply.status(200).send(
+		await buildResponse(request, {
+			data: collection.data,
+		}),
+	);
 };
 
 export default {

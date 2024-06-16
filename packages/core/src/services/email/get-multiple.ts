@@ -2,13 +2,20 @@ import type z from "zod";
 import type emailSchema from "../../schemas/email.js";
 import Repository from "../../libs/repositories/index.js";
 import Formatter from "../../libs/formatters/index.js";
-import type { ServiceConfig } from "../../utils/service-wrapper.js";
+import type { ServiceFn } from "../../libs/services/types.js";
+import type { EmailResponse } from "../../types/response.js";
 
-export interface ServiceData {
-	query: z.infer<typeof emailSchema.getMultiple.query>;
-}
-
-const getMultiple = async (serviceConfig: ServiceConfig, data: ServiceData) => {
+const getMultiple: ServiceFn<
+	[
+		{
+			query: z.infer<typeof emailSchema.getMultiple.query>;
+		},
+	],
+	{
+		data: EmailResponse[];
+		count: number;
+	}
+> = async (serviceConfig, data) => {
 	const EmailsRepo = Repository.get("emails", serviceConfig.db);
 	const EmailsFormatter = Formatter.get("emails");
 
@@ -18,10 +25,13 @@ const getMultiple = async (serviceConfig: ServiceConfig, data: ServiceData) => {
 	});
 
 	return {
-		data: EmailsFormatter.formatMultiple({
-			emails: emails,
-		}),
-		count: Formatter.parseCount(emailsCount?.count),
+		error: undefined,
+		data: {
+			data: EmailsFormatter.formatMultiple({
+				emails: emails,
+			}),
+			count: Formatter.parseCount(emailsCount?.count),
+		},
 	};
 };
 

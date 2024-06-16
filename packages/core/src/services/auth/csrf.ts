@@ -2,6 +2,8 @@ import type { FastifyRequest, FastifyReply } from "fastify";
 import crypto from "node:crypto";
 import constants from "../../constants.js";
 
+// TODO: make all functions here use service wrapper and ServiceFn - seperate into own file in csrf directory
+
 const key = "_csrf";
 
 export const generateCSRFToken = async (

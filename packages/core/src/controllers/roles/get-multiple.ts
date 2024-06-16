@@ -5,10 +5,10 @@ import {
 	swaggerQueryString,
 } from "../../utils/swagger-helpers.js";
 import rolesServices from "../../services/roles/index.js";
-import serviceWrapper from "../../utils/service-wrapper.js";
 import buildResponse from "../../utils/build-response.js";
 import RolesFormatter from "../../libs/formatters/roles.js";
-import { ensureThrowAPIError } from "../../utils/error-helpers.js";
+import serviceWrapper from "../../libs/services/service-wrapper.js";
+import { LucidAPIError } from "../../utils/error-handler.js";
 import type { RouteController } from "../../types/types.js";
 
 const getMultipleController: RouteController<
@@ -16,29 +16,9 @@ const getMultipleController: RouteController<
 	typeof rolesSchema.getMultiple.body,
 	typeof rolesSchema.getMultiple.query
 > = async (request, reply) => {
-	try {
-		const role = await serviceWrapper(rolesServices.getMultiple, false)(
-			{
-				db: request.server.config.db.client,
-				config: request.server.config,
-			},
-			{
-				query: request.query,
-			},
-		);
-
-		reply.status(200).send(
-			await buildResponse(request, {
-				data: role.data,
-				pagination: {
-					count: role.count,
-					page: request.query.page,
-					perPage: request.query.perPage,
-				},
-			}),
-		);
-	} catch (error) {
-		ensureThrowAPIError(error, {
+	const role = await serviceWrapper(rolesServices.getMultiple, {
+		transaction: false,
+		defaultError: {
 			type: "basic",
 			name: T("method_error_name", {
 				name: T("role"),
@@ -46,8 +26,28 @@ const getMultipleController: RouteController<
 			}),
 			message: T("default_error_message"),
 			status: 500,
-		});
-	}
+		},
+	})(
+		{
+			db: request.server.config.db.client,
+			config: request.server.config,
+		},
+		{
+			query: request.query,
+		},
+	);
+	if (role.error) throw new LucidAPIError(role.error);
+
+	reply.status(200).send(
+		await buildResponse(request, {
+			data: role.data.data,
+			pagination: {
+				count: role.data.count,
+				page: request.query.page,
+				perPage: request.query.perPage,
+			},
+		}),
+	);
 };
 
 export default {

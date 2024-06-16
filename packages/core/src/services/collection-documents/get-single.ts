@@ -1,20 +1,23 @@
 import T from "../../translations/index.js";
-import type z from "zod";
-import { LucidAPIError } from "../../utils/error-handler.js";
-import type collectionDocumentsSchema from "../../schemas/collection-documents.js";
 import collectionDocumentBricksServices from "../collection-document-bricks/index.js";
 import collectionsServices from "../collections/index.js";
-import serviceWrapper from "../../utils/service-wrapper.js";
 import Repository from "../../libs/repositories/index.js";
 import Formatter from "../../libs/formatters/index.js";
-import type { ServiceConfig } from "../../utils/service-wrapper.js";
+import serviceWrapper from "../../libs/services/service-wrapper.js";
+import type z from "zod";
+import type { ServiceFn } from "../../libs/services/types.js";
+import type collectionDocumentsSchema from "../../schemas/collection-documents.js";
+import type { CollectionDocumentResponse } from "../../types/response.js";
 
-export interface ServiceData {
-	id: number;
-	query: z.infer<typeof collectionDocumentsSchema.getSingle.query>;
-}
-
-const getSingle = async (serviceConfig: ServiceConfig, data: ServiceData) => {
+const getSingle: ServiceFn<
+	[
+		{
+			id: number;
+			query: z.infer<typeof collectionDocumentsSchema.getSingle.query>;
+		},
+	],
+	CollectionDocumentResponse
+> = async (serviceConfig, data) => {
 	const CollectionDocumentsRepo = Repository.get(
 		"collection-documents",
 		serviceConfig.db,
@@ -27,36 +30,68 @@ const getSingle = async (serviceConfig: ServiceConfig, data: ServiceData) => {
 	});
 
 	if (document === undefined || document.collection_key === null) {
-		throw new LucidAPIError({
-			type: "basic",
-			name: T("error_not_found_name", {
-				name: T("document"),
-			}),
-			message: T("error_not_found_message", {
-				name: T("document"),
-			}),
-			status: 404,
-		});
+		return {
+			error: {
+				type: "basic",
+				name: T("error_not_found_name", {
+					name: T("document"),
+				}),
+				message: T("error_not_found_message", {
+					name: T("document"),
+				}),
+				status: 404,
+			},
+			data: undefined,
+		};
 	}
 
-	const collectionInstance = await collectionsServices.getSingleInstance({
+	const collectionRes = await serviceWrapper(
+		collectionsServices.getSingleInstance,
+		{
+			transaction: false,
+		},
+	)(serviceConfig, {
 		key: document.collection_key,
 	});
+	if (collectionRes.error) return collectionRes;
 
 	if (data.query.include?.includes("bricks")) {
 		const bricksRes = await serviceWrapper(
 			collectionDocumentBricksServices.getMultiple,
-			false,
+			{
+				transaction: false,
+			},
 		)(serviceConfig, {
 			documentId: data.id,
 			collectionKey: document.collection_key,
 		});
+		if (bricksRes.error) return bricksRes;
 
-		return CollectionDocumentsFormatter.formatSingle({
+		return {
+			error: undefined,
+			data: CollectionDocumentsFormatter.formatSingle({
+				document: document,
+				collection: collectionRes.data,
+				bricks: bricksRes.data.bricks,
+				fields: bricksRes.data.fields,
+				host: serviceConfig.config.host,
+				localisation: {
+					locales: serviceConfig.config.localisation.locales.map(
+						(l) => l.code,
+					),
+					default: serviceConfig.config.localisation.defaultLocale,
+				},
+			}),
+		};
+	}
+
+	return {
+		error: undefined,
+		data: CollectionDocumentsFormatter.formatSingle({
 			document: document,
-			collection: collectionInstance,
-			bricks: bricksRes.bricks,
-			fields: bricksRes.fields,
+			collection: collectionRes.data,
+			bricks: [],
+			fields: [],
 			host: serviceConfig.config.host,
 			localisation: {
 				locales: serviceConfig.config.localisation.locales.map(
@@ -64,22 +99,8 @@ const getSingle = async (serviceConfig: ServiceConfig, data: ServiceData) => {
 				),
 				default: serviceConfig.config.localisation.defaultLocale,
 			},
-		});
-	}
-
-	return CollectionDocumentsFormatter.formatSingle({
-		document: document,
-		collection: collectionInstance,
-		bricks: [],
-		fields: [],
-		host: serviceConfig.config.host,
-		localisation: {
-			locales: serviceConfig.config.localisation.locales.map(
-				(l) => l.code,
-			),
-			default: serviceConfig.config.localisation.defaultLocale,
-		},
-	});
+		}),
+	};
 };
 
 export default getSingle;

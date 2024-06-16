@@ -5,8 +5,8 @@ import {
 	swaggerHeaders,
 } from "../../utils/swagger-helpers.js";
 import collectionDocumentsServices from "../../services/collection-documents/index.js";
-import serviceWrapper from "../../utils/service-wrapper.js";
-import { ensureThrowAPIError } from "../../utils/error-helpers.js";
+import serviceWrapper from "../../libs/services/service-wrapper.js";
+import { LucidAPIError } from "../../utils/error-handler.js";
 import type { RouteController } from "../../types/types.js";
 
 const deleteMultipleController: RouteController<
@@ -14,33 +14,36 @@ const deleteMultipleController: RouteController<
 	typeof collectionDocumentsSchema.deleteMultiple.body,
 	typeof collectionDocumentsSchema.deleteMultiple.query
 > = async (request, reply) => {
-	try {
-		await serviceWrapper(collectionDocumentsServices.deleteMultiple, true)(
-			{
-				db: request.server.config.db.client,
-				config: request.server.config,
+	const deleteMultiple = await serviceWrapper(
+		collectionDocumentsServices.deleteMultiple,
+		{
+			transaction: true,
+			defaultError: {
+				type: "basic",
+				name: T("method_error_name", {
+					name: T("document"),
+					method: T("delete"),
+				}),
+				message: T("deletion_error_message", {
+					name: T("document").toLowerCase(),
+				}),
+				status: 500,
 			},
-			{
-				ids: request.body.ids,
-				collectionKey: request.params.collectionKey,
-				userId: request.auth.id,
-			},
-		);
+		},
+	)(
+		{
+			db: request.server.config.db.client,
+			config: request.server.config,
+		},
+		{
+			ids: request.body.ids,
+			collectionKey: request.params.collectionKey,
+			userId: request.auth.id,
+		},
+	);
+	if (deleteMultiple.error) throw new LucidAPIError(deleteMultiple.error);
 
-		reply.status(204).send();
-	} catch (error) {
-		ensureThrowAPIError(error, {
-			type: "basic",
-			name: T("method_error_name", {
-				name: T("document"),
-				method: T("delete"),
-			}),
-			message: T("deletion_error_message", {
-				name: T("document").toLowerCase(),
-			}),
-			status: 500,
-		});
-	}
+	reply.status(204).send();
 };
 
 export default {

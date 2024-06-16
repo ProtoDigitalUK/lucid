@@ -1,16 +1,20 @@
 import T from "../../translations/index.js";
 import emailServices from "./index.js";
-import { LucidAPIError } from "../../utils/error-handler.js";
 import Repository from "../../libs/repositories/index.js";
 import Formatter from "../../libs/formatters/index.js";
-import type { ServiceConfig } from "../../utils/service-wrapper.js";
+import serviceWrapper from "../../libs/services/service-wrapper.js";
+import type { ServiceFn } from "../../libs/services/types.js";
+import type { EmailResponse } from "../../types/response.js";
 
-export interface ServiceData {
-	id: number;
-	renderTemplate: boolean;
-}
-
-const getSingle = async (serviceConfig: ServiceConfig, data: ServiceData) => {
+const getSingle: ServiceFn<
+	[
+		{
+			id: number;
+			renderTemplate: boolean;
+		},
+	],
+	EmailResponse
+> = async (serviceConfig, data) => {
 	const EmailsRepo = Repository.get("emails", serviceConfig.db);
 	const EmailsFormatter = Formatter.get("emails");
 
@@ -19,33 +23,45 @@ const getSingle = async (serviceConfig: ServiceConfig, data: ServiceData) => {
 	});
 
 	if (email === undefined) {
-		throw new LucidAPIError({
-			type: "basic",
-			name: T("error_not_found_name", {
-				name: T("email"),
-			}),
-			message: T("error_not_found_message", {
-				name: T("email"),
-			}),
-			status: 404,
-		});
+		return {
+			error: {
+				type: "basic",
+				name: T("error_not_found_name", {
+					name: T("email"),
+				}),
+				message: T("error_not_found_message", {
+					name: T("email"),
+				}),
+				status: 404,
+			},
+			data: undefined,
+		};
 	}
 
 	if (!data.renderTemplate) {
-		return EmailsFormatter.formatSingle({
-			email: email,
-		});
+		return {
+			error: undefined,
+			data: EmailsFormatter.formatSingle({
+				email: email,
+			}),
+		};
 	}
 
-	const html = await emailServices.renderTemplate(
-		email.template,
-		Formatter.parseJSON<Record<string, unknown>>(email.data),
-	);
-
-	return EmailsFormatter.formatSingle({
-		email: email,
-		html: html,
+	const html = await serviceWrapper(emailServices.renderTemplate, {
+		transaction: false,
+	})(serviceConfig, {
+		template: email.template,
+		data: Formatter.parseJSON<Record<string, unknown>>(email.data),
 	});
+	if (html.error) return html;
+
+	return {
+		error: undefined,
+		data: EmailsFormatter.formatSingle({
+			email: email,
+			html: html.data,
+		}),
+	};
 };
 
 export default getSingle;

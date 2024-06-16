@@ -4,9 +4,9 @@ import {
 	swaggerResponse,
 	swaggerHeaders,
 } from "../../utils/swagger-helpers.js";
-import serviceWrapper from "../../utils/service-wrapper.js";
 import processedImagesServices from "../../services/processed-images/index.js";
-import { ensureThrowAPIError } from "../../utils/error-helpers.js";
+import serviceWrapper from "../../libs/services/service-wrapper.js";
+import { LucidAPIError } from "../../utils/error-handler.js";
 import type { RouteController } from "../../types/types.js";
 
 const clearAllProcessedController: RouteController<
@@ -14,29 +14,29 @@ const clearAllProcessedController: RouteController<
 	typeof mediaSchema.clearAllProcessed.body,
 	typeof mediaSchema.clearAllProcessed.query
 > = async (request, reply) => {
-	try {
-		await serviceWrapper(
-			processedImagesServices.clearAll,
-			true,
-		)({
-			db: request.server.config.db.client,
-			config: request.server.config,
-		});
+	const clearProcessed = await serviceWrapper(
+		processedImagesServices.clearAll,
+		{
+			transaction: true,
+			defaultError: {
+				type: "basic",
+				name: T("method_error_name", {
+					name: T("processed_images"),
+					method: T("delete"),
+				}),
+				message: T("deletion_error_message", {
+					name: T("processed_images").toLowerCase(),
+				}),
+				status: 500,
+			},
+		},
+	)({
+		db: request.server.config.db.client,
+		config: request.server.config,
+	});
+	if (clearProcessed.error) throw new LucidAPIError(clearProcessed.error);
 
-		reply.status(204).send();
-	} catch (error) {
-		ensureThrowAPIError(error, {
-			type: "basic",
-			name: T("method_error_name", {
-				name: T("processed_images"),
-				method: T("delete"),
-			}),
-			message: T("deletion_error_message", {
-				name: T("processed_images").toLowerCase(),
-			}),
-			status: 500,
-		});
-	}
+	reply.status(204).send();
 };
 
 export default {

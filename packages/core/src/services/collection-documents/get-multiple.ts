@@ -1,19 +1,33 @@
-import type z from "zod";
-import type collectionDocumentsSchema from "../../schemas/collection-documents.js";
 import collectionsServices from "../collections/index.js";
 import Repository from "../../libs/repositories/index.js";
 import Formatter from "../../libs/formatters/index.js";
-import type { ServiceConfig } from "../../utils/service-wrapper.js";
+import serviceWrapper from "../../libs/services/service-wrapper.js";
+import type z from "zod";
+import type collectionDocumentsSchema from "../../schemas/collection-documents.js";
+import type { ServiceFn } from "../../libs/services/types.js";
+import type { CollectionDocumentResponse } from "../../types/response.js";
 
-export interface ServiceData {
-	collectionKey: string;
-	query: z.infer<typeof collectionDocumentsSchema.getMultiple.query>;
-}
-
-const getMultiple = async (serviceConfig: ServiceConfig, data: ServiceData) => {
-	const collectionInstance = await collectionsServices.getSingleInstance({
+const getMultiple: ServiceFn<
+	[
+		{
+			collectionKey: string;
+			query: z.infer<typeof collectionDocumentsSchema.getMultiple.query>;
+		},
+	],
+	{
+		data: CollectionDocumentResponse[];
+		count: number;
+	}
+> = async (serviceConfig, data) => {
+	const collectionRes = await serviceWrapper(
+		collectionsServices.getSingleInstance,
+		{
+			transaction: false,
+		},
+	)(serviceConfig, {
 		key: data.collectionKey,
 	});
+	if (collectionRes.error) return collectionRes;
 
 	const CollectionDocumentsRepo = Repository.get(
 		"collection-documents",
@@ -24,23 +38,26 @@ const getMultiple = async (serviceConfig: ServiceConfig, data: ServiceData) => {
 	const [documents, documentCount] =
 		await CollectionDocumentsRepo.selectMultipleFiltered({
 			query: data.query,
-			collection: collectionInstance,
+			collection: collectionRes.data,
 			config: serviceConfig.config,
 		});
 
 	return {
-		data: CollectionDocumentsFormatter.formatMultiple({
-			documents: documents,
-			collection: collectionInstance,
-			host: serviceConfig.config.host,
-			localisation: {
-				locales: serviceConfig.config.localisation.locales.map(
-					(l) => l.code,
-				),
-				default: serviceConfig.config.localisation.defaultLocale,
-			},
-		}),
-		count: Formatter.parseCount(documentCount?.count),
+		error: undefined,
+		data: {
+			data: CollectionDocumentsFormatter.formatMultiple({
+				documents: documents,
+				collection: collectionRes.data,
+				host: serviceConfig.config.host,
+				localisation: {
+					locales: serviceConfig.config.localisation.locales.map(
+						(l) => l.code,
+					),
+					default: serviceConfig.config.localisation.defaultLocale,
+				},
+			}),
+			count: Formatter.parseCount(documentCount?.count),
+		},
 	};
 };
 

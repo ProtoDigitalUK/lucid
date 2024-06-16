@@ -3,18 +3,20 @@ import { add } from "date-fns";
 import constants from "../../constants.js";
 import userTokens from "../user-tokens/index.js";
 import email from "../email/index.js";
-import serviceWrapper from "../../utils/service-wrapper.js";
+import serviceWrapper from "../../libs/services/service-wrapper.js";
 import Repository from "../../libs/repositories/index.js";
-import type { ServiceConfig } from "../../utils/service-wrapper.js";
+import type { ServiceFn } from "../../libs/services/types.js";
 
-export interface ServiceData {
-	email: string;
-}
-
-const sendResetPassword = async (
-	serviceConfig: ServiceConfig,
-	data: ServiceData,
-) => {
+const sendResetPassword: ServiceFn<
+	[
+		{
+			email: string;
+		},
+	],
+	{
+		message: string;
+	}
+> = async (serviceConfig, data) => {
 	const UsersRepo = Repository.get("users", serviceConfig.db);
 
 	const userExists = await UsersRepo.selectSingle({
@@ -30,7 +32,10 @@ const sendResetPassword = async (
 
 	if (userExists === undefined) {
 		return {
-			message: T("if_account_exists_with_email_not_found"),
+			error: undefined,
+			data: {
+				message: T("if_account_exists_with_email_not_found"),
+			},
 		};
 	}
 
@@ -38,16 +43,18 @@ const sendResetPassword = async (
 		minutes: constants.passwordResetTokenExpirationMinutes,
 	}).toISOString();
 
-	const userToken = await serviceWrapper(userTokens.createSingle, false)(
-		serviceConfig,
-		{
-			userId: userExists.id,
-			tokenType: "password_reset",
-			expiryDate: expiryDate,
-		},
-	);
+	const userToken = await serviceWrapper(userTokens.createSingle, {
+		transaction: false,
+	})(serviceConfig, {
+		userId: userExists.id,
+		tokenType: "password_reset",
+		expiryDate: expiryDate,
+	});
+	if (userToken.error) return userToken;
 
-	await serviceWrapper(email.sendEmail, false)(serviceConfig, {
+	const sendEmail = await serviceWrapper(email.sendEmail, {
+		transaction: false,
+	})(serviceConfig, {
 		type: "internal",
 		to: userExists.email,
 		subject: T("reset_password_email_subject"),
@@ -56,12 +63,16 @@ const sendResetPassword = async (
 			firstName: userExists.first_name,
 			lastName: userExists.last_name,
 			email: userExists.email,
-			resetLink: `${serviceConfig.config.host}${constants.locations.resetPassword}?token=${userToken.token}`,
+			resetLink: `${serviceConfig.config.host}${constants.locations.resetPassword}?token=${userToken.data.token}`,
 		},
 	});
+	if (sendEmail.error) return sendEmail;
 
 	return {
-		message: T("if_account_exists_with_email_not_found"),
+		error: undefined,
+		data: {
+			message: T("if_account_exists_with_email_not_found"),
+		},
 	};
 };
 

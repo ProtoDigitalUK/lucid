@@ -5,8 +5,8 @@ import {
 	swaggerHeaders,
 } from "../../utils/swagger-helpers.js";
 import auth from "../../services/auth/index.js";
-import serviceWrapper from "../../utils/service-wrapper.js";
-import { ensureThrowAPIError } from "../../utils/error-helpers.js";
+import serviceWrapper from "../../libs/services/service-wrapper.js";
+import { LucidAPIError } from "../../utils/error-handler.js";
 import type { RouteController } from "../../types/types.js";
 
 const loginController: RouteController<
@@ -14,33 +14,33 @@ const loginController: RouteController<
 	typeof authSchema.login.body,
 	typeof authSchema.login.query
 > = async (request, reply) => {
-	try {
-		const user = await serviceWrapper(auth.login, false)(
-			{
-				db: request.server.config.db.client,
-				config: request.server.config,
-			},
-			{
-				usernameOrEmail: request.body.usernameOrEmail,
-				password: request.body.password,
-			},
-		);
-
-		await Promise.all([
-			auth.refreshToken.generateRefreshToken(reply, request, user.id),
-			auth.accessToken.generateAccessToken(reply, request, user.id),
-		]);
-
-		reply.status(204).send();
-	} catch (error) {
-		ensureThrowAPIError(error, {
+	const user = await serviceWrapper(auth.login, {
+		transaction: false,
+		defaultError: {
 			type: "basic",
 			name: T("default_error_name"),
 			message: T("default_error_message"),
 			code: "login",
 			status: 500,
-		});
-	}
+		},
+	})(
+		{
+			db: request.server.config.db.client,
+			config: request.server.config,
+		},
+		{
+			usernameOrEmail: request.body.usernameOrEmail,
+			password: request.body.password,
+		},
+	);
+	if (user.error) throw new LucidAPIError(user.error);
+
+	await Promise.all([
+		auth.refreshToken.generateRefreshToken(reply, request, user.data.id),
+		auth.accessToken.generateAccessToken(reply, request, user.data.id),
+	]);
+
+	reply.status(204).send();
 };
 
 export default {

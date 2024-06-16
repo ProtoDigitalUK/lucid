@@ -5,10 +5,10 @@ import {
 	swaggerQueryString,
 } from "../../utils/swagger-helpers.js";
 import localesServices from "../../services/locales/index.js";
-import serviceWrapper from "../../utils/service-wrapper.js";
 import buildResponse from "../../utils/build-response.js";
 import LocalesFormatter from "../../libs/formatters/locales.js";
-import { ensureThrowAPIError } from "../../utils/error-helpers.js";
+import serviceWrapper from "../../libs/services/service-wrapper.js";
+import { LucidAPIError } from "../../utils/error-handler.js";
 import type { RouteController } from "../../types/types.js";
 
 const getAllController: RouteController<
@@ -16,22 +16,9 @@ const getAllController: RouteController<
 	typeof localeSchema.getAll.body,
 	typeof localeSchema.getAll.query
 > = async (request, reply) => {
-	try {
-		const locales = await serviceWrapper(
-			localesServices.getAll,
-			false,
-		)({
-			db: request.server.config.db.client,
-			config: request.server.config,
-		});
-
-		reply.status(200).send(
-			await buildResponse(request, {
-				data: locales,
-			}),
-		);
-	} catch (error) {
-		ensureThrowAPIError(error, {
+	const locales = await serviceWrapper(localesServices.getAll, {
+		transaction: false,
+		defaultError: {
 			type: "basic",
 			name: T("method_error_name", {
 				name: T("locale"),
@@ -39,8 +26,18 @@ const getAllController: RouteController<
 			}),
 			message: T("default_error_message"),
 			status: 500,
-		});
-	}
+		},
+	})({
+		db: request.server.config.db.client,
+		config: request.server.config,
+	});
+	if (locales.error) throw new LucidAPIError(locales.error);
+
+	reply.status(200).send(
+		await buildResponse(request, {
+			data: locales.data,
+		}),
+	);
 };
 
 export default {

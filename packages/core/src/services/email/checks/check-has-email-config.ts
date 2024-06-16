@@ -1,22 +1,27 @@
 import T from "../../../translations/index.js";
 import type { Config } from "../../../types/config.js";
-import { LucidAPIError } from "../../../utils/error-handler.js";
+import type { ServiceFn } from "../../../libs/services/types.js";
 
-export interface ServiceData {
-	config: Config;
-}
-
-const checkHasEmailConfig = (data: ServiceData) => {
-	if (data.config.email === undefined) {
-		throw new LucidAPIError({
-			type: "basic",
-			name: T("config_error_name"),
-			message: T("email_not_configured_message"),
-			status: 500,
-		});
+const checkHasEmailConfig: ServiceFn<
+	[],
+	Exclude<Config["email"], undefined>
+> = async (service) => {
+	if (service.config.email === undefined) {
+		return {
+			error: {
+				type: "basic",
+				name: T("config_error_name"),
+				message: T("email_not_configured_message"),
+				status: 500,
+			},
+			data: undefined,
+		};
 	}
 
-	return data.config.email;
+	return {
+		error: undefined,
+		data: service.config.email as Exclude<Config["email"], undefined>,
+	};
 };
 
 export default checkHasEmailConfig;

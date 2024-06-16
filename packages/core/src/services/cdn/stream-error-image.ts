@@ -1,55 +1,73 @@
 import T from "../../translations/index.js";
-import { LucidAPIError } from "../../utils/error-handler.js";
-import { decodeError } from "../../utils/error-helpers.js";
-import getConfig from "../../libs/config/get-config.js";
 import path from "node:path";
-import { getDirName } from "../../utils/helpers.js";
 import fs from "fs-extra";
-import cdnServices from "./index.js";
+import getConfig from "../../libs/config/get-config.js";
+import pipeRemoteUrl from "./helpers/pipe-remote-url.js";
+import { getDirName } from "../../utils/helpers.js";
+import type { ServiceError, ServiceFn } from "../../libs/services/types.js";
 
 const currentDir = getDirName(import.meta.url);
 
-export interface ServiceData {
-	fallback?: "1" | "0";
-	error: Error;
-}
-
-const streamErrorImage = async (data: ServiceData) => {
-	const error = decodeError(data.error);
-
-	if (error.status !== 404) {
-		throw error;
+const streamErrorImage: ServiceFn<
+	[
+		{
+			fallback?: "1" | "0";
+			error: ServiceError;
+		},
+	],
+	{
+		body: fs.ReadStream | Buffer;
+		contentType: string;
+	}
+> = async (_, data) => {
+	if (data.error.status !== 404) {
+		return {
+			error: data.error,
+			data: undefined,
+		};
 	}
 
 	const config = await getConfig();
 	if (config.media?.fallbackImage === false || data.fallback === "0") {
-		throw new LucidAPIError({
-			type: "basic",
-			name: T("error_not_found_name", {
-				name: T("media"),
-			}),
-			message: T("error_not_found_message", {
-				name: T("media"),
-			}),
-			status: 404,
-		});
+		return {
+			error: {
+				type: "basic",
+				name: T("error_not_found_name", {
+					name: T("media"),
+				}),
+				message: T("error_not_found_message", {
+					name: T("media"),
+				}),
+				status: 404,
+			},
+			data: undefined,
+		};
 	}
 
 	if (config.media?.fallbackImage === undefined) {
-		return pipeLocalImage();
+		return {
+			error: undefined,
+			data: pipeLocalImage(),
+		};
 	}
 
 	try {
-		const { buffer, contentType } = await cdnServices.pipeRemoteUrl({
+		const { buffer, contentType } = await pipeRemoteUrl({
 			url: config.media?.fallbackImage as string,
 		});
 
 		return {
-			body: buffer,
-			contentType: contentType || "image/jpeg",
+			error: undefined,
+			data: {
+				body: buffer,
+				contentType: contentType || "image/jpeg",
+			},
 		};
 	} catch (err) {
-		return pipeLocalImage();
+		return {
+			error: undefined,
+			data: pipeLocalImage(),
+		};
 	}
 };
 

@@ -1,13 +1,9 @@
 import https from "node:https";
 
-export interface ServiceData {
+const pipeRemoteUrl = async (data: {
 	url: string;
 	redirections?: number;
-}
-
-const pipeRemoteUrl = async (
-	data: ServiceData,
-): Promise<{
+}): Promise<{
 	buffer: Buffer;
 	contentType: string | undefined;
 }> => {

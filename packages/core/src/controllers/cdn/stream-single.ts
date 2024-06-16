@@ -1,6 +1,7 @@
 import cdnSchema from "../../schemas/cdn.js";
-import serviceWrapper from "../../utils/service-wrapper.js";
+import serviceWrapper from "../../libs/services/service-wrapper.js";
 import cdnServices from "../../services/cdn/index.js";
+import { LucidAPIError } from "../../utils/error-handler.js";
 import type { RouteController } from "../../types/types.js";
 
 const streamSingleController: RouteController<
@@ -8,39 +9,53 @@ const streamSingleController: RouteController<
 	typeof cdnSchema.streamSingle.body,
 	typeof cdnSchema.streamSingle.query
 > = async (request, reply) => {
-	try {
-		const response = await serviceWrapper(cdnServices.streamMedia, false)(
+	const response = await serviceWrapper(cdnServices.streamMedia, {
+		transaction: false,
+	})(
+		{
+			db: request.server.config.db.client,
+			config: request.server.config,
+		},
+		{
+			key: request.params["*"],
+			query: request.query,
+			accept: request.headers.accept,
+		},
+	);
+	if (response.error) {
+		const streamErrorImage = await serviceWrapper(
+			cdnServices.streamErrorImage,
+			{
+				transaction: false,
+			},
+		)(
 			{
 				db: request.server.config.db.client,
 				config: request.server.config,
 			},
 			{
-				key: request.params["*"],
-				query: request.query,
-				accept: request.headers.accept,
+				fallback: request.query?.fallback,
+				error: response.error,
 			},
 		);
+		if (streamErrorImage.error)
+			throw new LucidAPIError(streamErrorImage.error);
 
-		reply.header("Cache-Control", "public, max-age=31536000, immutable");
-		reply.header(
-			"Content-Disposition",
-			`inline; filename="${response.key}"`,
-		);
-		if (response.contentLength)
-			reply.header("Content-Length", response.contentLength);
-		if (response.contentType)
-			reply.header("Content-Type", response.contentType);
-
-		return reply.send(response.body);
-	} catch (error) {
-		const { body, contentType } = await cdnServices.streamErrorImage({
-			fallback: request.query?.fallback,
-			error: error as Error,
-		});
-
-		reply.header("Content-Type", contentType);
-		return reply.send(body);
+		reply.header("Content-Type", streamErrorImage.data.contentType);
+		return reply.send(streamErrorImage.data.body);
 	}
+
+	reply.header("Cache-Control", "public, max-age=31536000, immutable");
+	reply.header(
+		"Content-Disposition",
+		`inline; filename="${response.data.key}"`,
+	);
+	if (response.data.contentLength)
+		reply.header("Content-Length", response.data.contentLength);
+	if (response.data.contentType)
+		reply.header("Content-Type", response.data.contentType);
+
+	return reply.send(response.data.body);
 };
 
 export default {
