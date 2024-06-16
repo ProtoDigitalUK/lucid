@@ -1,13 +1,8 @@
 import Repository from "../../libs/repositories/index.js";
 import Formatter from "../../libs/formatters/index.js";
-import type { ServiceConfig } from "../../utils/service-wrapper.js";
+import type { ServiceFn } from "../../libs/services/types.js";
 
-// export interface ServiceData {}
-
-const getCount = async (
-	serviceConfig: ServiceConfig,
-	// data: ServiceData,
-) => {
+const getCount: ServiceFn<[], number> = async (serviceConfig) => {
 	const ProcessedImagesRepo = Repository.get(
 		"processed-images",
 		serviceConfig.db,
@@ -16,7 +11,10 @@ const getCount = async (
 	const processedImageCount = await ProcessedImagesRepo.count({
 		where: [],
 	});
-	return Formatter.parseCount(processedImageCount?.count);
+	return {
+		error: undefined,
+		data: Formatter.parseCount(processedImageCount?.count),
+	};
 };
 
 export default getCount;

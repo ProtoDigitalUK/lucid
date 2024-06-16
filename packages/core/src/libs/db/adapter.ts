@@ -8,11 +8,11 @@ import {
 } from "kysely";
 import { jsonArrayFrom } from "kysely/helpers/sqlite";
 import { LucidError } from "../../utils/error-handler.js";
-import serviceWrapper from "../../utils/service-wrapper.js";
+import serviceWrapper from "../services/service-wrapper.js";
 import lucidLogger from "../logging/index.js";
 import type { AdapterType, LucidDB } from "./types.js";
 import type { Config } from "../../types/config.js";
-import type { ServiceConfig } from "../../utils/service-wrapper.js";
+import type { ServiceFn } from "../services/types.js";
 // Seeds
 import seedDefaultOptions from "./seed/seed-default-options.js";
 import seedDefaultUser from "./seed/seed-default-user.js";
@@ -72,19 +72,22 @@ export default class DatabaseAdapter {
 		}
 	}
 	async seed(config: Config) {
-		const seedData = async (serviceConfig: ServiceConfig) => {
+		const seedData: ServiceFn<[], undefined> = async (serviceConfig) => {
 			await Promise.allSettled([
 				seedDefaultOptions(serviceConfig),
 				seedDefaultUser(serviceConfig),
 				seedLocales(serviceConfig),
 				seedDefaultRoles(serviceConfig),
 			]);
+			return {
+				error: undefined,
+				data: undefined,
+			};
 		};
 
-		await serviceWrapper(
-			seedData,
-			true,
-		)({
+		await serviceWrapper(seedData, {
+			transaction: true,
+		})({
 			db: this.client,
 			config: config,
 		});

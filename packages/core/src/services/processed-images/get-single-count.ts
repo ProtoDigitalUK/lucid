@@ -1,15 +1,15 @@
 import Repository from "../../libs/repositories/index.js";
 import Formatter from "../../libs/formatters/index.js";
-import type { ServiceConfig } from "../../utils/service-wrapper.js";
+import type { ServiceFn } from "../../libs/services/types.js";
 
-export interface ServiceData {
-	key: string;
-}
-
-const getSingleCount = async (
-	serviceConfig: ServiceConfig,
-	data: ServiceData,
-) => {
+const getSingleCount: ServiceFn<
+	[
+		{
+			key: string;
+		},
+	],
+	number
+> = async (serviceConfig, data) => {
 	const ProcessedImagesRepo = Repository.get(
 		"processed-images",
 		serviceConfig.db,
@@ -25,7 +25,10 @@ const getSingleCount = async (
 		],
 	});
 
-	return Formatter.parseCount(processedImageCount?.count);
+	return {
+		error: undefined,
+		data: Formatter.parseCount(processedImageCount?.count),
+	};
 };
 
 export default getSingleCount;

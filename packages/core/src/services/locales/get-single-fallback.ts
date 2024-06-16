@@ -1,22 +1,33 @@
-import type { Config } from "../../types.js";
+import type { ServiceFn } from "../../libs/services/types.js";
 
-export interface ServiceData {
-	code?: string;
-}
-
-const getSingleFallback = (config: Config, data: ServiceData) => {
-	const configLocale = config.localisation.locales.find(
+const getSingleFallback: ServiceFn<
+	[
+		{
+			code?: string;
+		},
+	],
+	{
+		code: string;
+	}
+> = async (service, data) => {
+	const configLocale = service.config.localisation.locales.find(
 		(locale) => locale.code === data.code,
 	);
 
 	if (configLocale === undefined && !data.code) {
 		return {
-			code: config.localisation.defaultLocale,
+			error: undefined,
+			data: {
+				code: service.config.localisation.defaultLocale,
+			},
 		};
 	}
 
 	return {
-		code: data.code || config.localisation.defaultLocale,
+		error: undefined,
+		data: {
+			code: data.code || service.config.localisation.defaultLocale,
+		},
 	};
 };
 

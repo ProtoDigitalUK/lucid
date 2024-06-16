@@ -1,17 +1,24 @@
-import type z from "zod";
-import type usersSchema from "../../schemas/users.js";
 import Repository from "../../libs/repositories/index.js";
 import Formatter from "../../libs/formatters/index.js";
-import type { ServiceConfig } from "../../utils/service-wrapper.js";
+import type z from "zod";
+import type usersSchema from "../../schemas/users.js";
+import type { ServiceFn } from "../../libs/services/types.js";
+import type { UserResponse } from "../../types/response.js";
 
-export interface ServiceData {
-	query: z.infer<typeof usersSchema.getMultiple.query>;
-	auth: {
-		id: number;
-	};
-}
-
-const getMultiple = async (serviceConfig: ServiceConfig, data: ServiceData) => {
+const getMultiple: ServiceFn<
+	[
+		{
+			query: z.infer<typeof usersSchema.getMultiple.query>;
+			auth: {
+				id: number;
+			};
+		},
+	],
+	{
+		data: UserResponse[];
+		count: number;
+	}
+> = async (serviceConfig, data) => {
 	const UsersRepo = Repository.get("users", serviceConfig.db);
 	const UsersFormatter = Formatter.get("users");
 
@@ -22,10 +29,13 @@ const getMultiple = async (serviceConfig: ServiceConfig, data: ServiceData) => {
 	});
 
 	return {
-		data: UsersFormatter.formatMultiple({
-			users: users,
-		}),
-		count: Formatter.parseCount(count?.count),
+		error: undefined,
+		data: {
+			data: UsersFormatter.formatMultiple({
+				users: users,
+			}),
+			count: Formatter.parseCount(count?.count),
+		},
 	};
 };
 

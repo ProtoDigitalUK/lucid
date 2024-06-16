@@ -1,14 +1,14 @@
 import Repository from "../../libs/repositories/index.js";
-import type { ServiceConfig } from "../../utils/service-wrapper.js";
+import type { ServiceFn } from "../../libs/services/types.js";
 
-export interface ServiceData {
-	ids: Array<number | null>;
-}
-
-const deleteMultiple = async (
-	serviceConfig: ServiceConfig,
-	data: ServiceData,
-) => {
+const deleteMultiple: ServiceFn<
+	[
+		{
+			ids: Array<number | null>;
+		},
+	],
+	undefined
+> = async (serviceConfig, data) => {
 	const TranslationKeysRepo = Repository.get(
 		"translation-keys",
 		serviceConfig.db,
@@ -23,6 +23,11 @@ const deleteMultiple = async (
 			},
 		],
 	});
+
+	return {
+		error: undefined,
+		data: undefined,
+	};
 };
 
 export default deleteMultiple;

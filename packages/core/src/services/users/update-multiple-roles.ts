@@ -1,28 +1,32 @@
 import usersServices from "./index.js";
-import serviceWrapper from "../../utils/service-wrapper.js";
 import Repository from "../../libs/repositories/index.js";
-import type { ServiceConfig } from "../../utils/service-wrapper.js";
+import serviceWrapper from "../../libs/services/service-wrapper.js";
+import type { ServiceFn } from "../../libs/services/types.js";
 
-export interface ServiceData {
-	userId: number;
-	roleIds?: number[];
-}
-
-const updateMultipleRoles = async (
-	serviceConfig: ServiceConfig,
-	data: ServiceData,
-) => {
-	if (data.roleIds === undefined) return;
+const updateMultipleRoles: ServiceFn<
+	[
+		{
+			userId: number;
+			roleIds?: number[];
+		},
+	],
+	undefined
+> = async (serviceConfig, data) => {
+	if (data.roleIds === undefined) {
+		return {
+			error: undefined,
+			data: undefined,
+		};
+	}
 
 	const UserRolesRepo = Repository.get("user-roles", serviceConfig.db);
 
-	await Promise.all([
-		serviceWrapper(usersServices.checks.checkRolesExist, false)(
-			serviceConfig,
-			{
-				roleIds: data.roleIds || [],
-			},
-		),
+	const [roleExistsRes] = await Promise.all([
+		serviceWrapper(usersServices.checks.checkRolesExist, {
+			transaction: false,
+		})(serviceConfig, {
+			roleIds: data.roleIds || [],
+		}),
 		UserRolesRepo.deleteMultiple({
 			where: [
 				{
@@ -33,8 +37,14 @@ const updateMultipleRoles = async (
 			],
 		}),
 	]);
+	if (roleExistsRes.error) return roleExistsRes;
 
-	if (data.roleIds.length === 0) return;
+	if (data.roleIds.length === 0) {
+		return {
+			error: undefined,
+			data: undefined,
+		};
+	}
 
 	await UserRolesRepo.createMultiple({
 		items: data.roleIds.map((r) => ({
@@ -42,6 +52,11 @@ const updateMultipleRoles = async (
 			roleId: r,
 		})),
 	});
+
+	return {
+		error: undefined,
+		data: undefined,
+	};
 };
 
 export default updateMultipleRoles;

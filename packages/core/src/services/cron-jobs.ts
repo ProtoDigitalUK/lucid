@@ -2,7 +2,7 @@ import T from "../translations/index.js";
 import cron from "node-cron";
 import { LucidError } from "../utils/error-handler.js";
 import Repository from "../libs/repositories/index.js";
-import type { ServiceConfig } from "../utils/service-wrapper.js";
+import type { ServiceConfig, ServiceFn } from "../libs/services/types.js";
 
 const clearExpiredTokens = async (serviceConfig: ServiceConfig) => {
 	try {
@@ -73,11 +73,18 @@ const updateMediaStorage = async (serviceConfig: ServiceConfig) => {
 	}
 };
 
-const registerCronJobs = async (serviceConfig: ServiceConfig) => {
+const registerCronJobs: ServiceFn<[], undefined> = async (
+	serviceConfig: ServiceConfig,
+) => {
 	cron.schedule("0 0 * * *", async () => {
 		clearExpiredTokens(serviceConfig);
 		updateMediaStorage(serviceConfig);
 	});
+
+	return {
+		error: undefined,
+		data: undefined,
+	};
 };
 
 export default registerCronJobs;

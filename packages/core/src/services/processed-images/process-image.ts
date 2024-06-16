@@ -1,7 +1,6 @@
 import T from "../../translations/index.js";
 import type z from "zod";
 import type cdnSchema from "../../schemas/cdn.js";
-import { LucidAPIError } from "../../utils/error-handler.js";
 import { PassThrough, type Readable } from "node:stream";
 import processedImageServices from "./index.js";
 import mediaHelpers from "../../utils/media-helpers.js";
@@ -26,12 +25,16 @@ const processImage: ServiceFn<
 		body: Readable;
 	}
 > = async (serviceConfig, data) => {
-	const mediaStrategy = mediaServices.checks.checkHasMediaStrategy({
-		config: serviceConfig.config,
-	});
+	const mediaStrategyRes = await serviceWrapper(
+		mediaServices.checks.checkHasMediaStrategy,
+		{
+			transaction: false,
+		},
+	)(serviceConfig);
+	if (mediaStrategyRes.error) return mediaStrategyRes;
 
 	// get og image
-	const res = await mediaStrategy.stream(data.key);
+	const res = await mediaStrategyRes.data.stream(data.key);
 
 	// If there is no response
 	if (!res.success || !res.response) {
@@ -64,7 +67,7 @@ const processImage: ServiceFn<
 	}
 
 	// Optimise image
-	const [imageRes, processedCount] = await Promise.all([
+	const [imageRes, processedCountRes] = await Promise.all([
 		processedImageServices.optimiseImage(serviceConfig, {
 			buffer: await mediaHelpers.streamToBuffer(res.response.body),
 			options: data.options,
@@ -74,7 +77,7 @@ const processImage: ServiceFn<
 		}),
 	]);
 
-	if (!imageRes.success || !imageRes.data) {
+	if (imageRes.error || processedCountRes.error || !imageRes.data) {
 		return {
 			error: undefined,
 			data: {
@@ -90,7 +93,7 @@ const processImage: ServiceFn<
 	stream.end(Buffer.from(imageRes.data.buffer));
 
 	// Check if the processed image limit has been reached for this key, if so return processed image without saving
-	if (processedCount >= serviceConfig.config.media.processed.limit) {
+	if (processedCountRes.data >= serviceConfig.config.media.processed.limit) {
 		return {
 			error: undefined,
 			data: {
@@ -135,7 +138,7 @@ const processImage: ServiceFn<
 				mediaKey: data.key,
 				fileSize: imageRes.data.size,
 			}),
-			mediaStrategy.uploadSingle({
+			mediaStrategyRes.data.uploadSingle({
 				key: data.processKey,
 				data: imageRes.data.buffer,
 				meta: {

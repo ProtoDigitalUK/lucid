@@ -2,30 +2,24 @@ import type z from "zod";
 import type cdnSchema from "../../schemas/cdn.js";
 import sharp from "sharp";
 import mime from "mime-types";
-import type { ServiceConfig } from "../../utils/service-wrapper.js";
+import type { ServiceFn } from "../../libs/services/types.js";
 
-export interface ServiceData {
-	buffer: Buffer;
-	options: z.infer<typeof cdnSchema.streamSingle.query>;
-}
-
-export interface ProcessImageSuccessRes {
-	success: boolean;
-	error?: string;
-	data?: {
+const optimiseImage: ServiceFn<
+	[
+		{
+			buffer: Buffer;
+			options: z.infer<typeof cdnSchema.streamSingle.query>;
+		},
+	],
+	{
 		buffer: Buffer;
 		mimeType: string;
 		size: number;
 		width: number | null;
 		height: number | null;
 		extension: string;
-	};
-}
-
-const optimiseImage = async (
-	serviceConfig: ServiceConfig,
-	data: ServiceData,
-): Promise<ProcessImageSuccessRes> => {
+	}
+> = async (_, data) => {
 	try {
 		const transform = sharp(data.buffer);
 
@@ -55,7 +49,7 @@ const optimiseImage = async (
 			mime.lookup(data.options.format || "jpg") || "image/jpeg";
 
 		return {
-			success: true,
+			error: undefined,
 			data: {
 				buffer: outputBuffer,
 				mimeType: mimeType,
@@ -67,8 +61,14 @@ const optimiseImage = async (
 		};
 	} catch (error) {
 		return {
-			success: false,
-			error: (error as Error).message,
+			error: {
+				type: "basic",
+				message:
+					// @ts-expect-error
+					error?.message ||
+					"An error occurred while optimising the image",
+			},
+			data: undefined,
 		};
 	}
 };

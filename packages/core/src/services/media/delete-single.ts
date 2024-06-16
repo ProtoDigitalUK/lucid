@@ -1,22 +1,25 @@
 import T from "../../translations/index.js";
-import { LucidAPIError } from "../../utils/error-handler.js";
 import mediaServices from "./index.js";
-import serviceWrapper from "../../utils/service-wrapper.js";
 import translationsServices from "../translations/index.js";
 import Repository from "../../libs/repositories/index.js";
-import type { ServiceConfig } from "../../utils/service-wrapper.js";
+import serviceWrapper from "../../libs/services/service-wrapper.js";
+import type { ServiceFn } from "../../libs/services/types.js";
 
-export interface ServiceData {
-	id: number;
-}
-
-const deleteSingle = async (
-	serviceConfig: ServiceConfig,
-	data: ServiceData,
-) => {
-	const mediaStrategy = mediaServices.checks.checkHasMediaStrategy({
-		config: serviceConfig.config,
-	});
+const deleteSingle: ServiceFn<
+	[
+		{
+			id: number;
+		},
+	],
+	undefined
+> = async (serviceConfig, data) => {
+	const mediaStrategyRes = await serviceWrapper(
+		mediaServices.checks.checkHasMediaStrategy,
+		{
+			transaction: false,
+		},
+	)(serviceConfig);
+	if (mediaStrategyRes.error) return mediaStrategyRes;
 
 	const MediaRepo = Repository.get("media", serviceConfig.db);
 	const ProcessedImagesRepo = Repository.get(
@@ -36,16 +39,19 @@ const deleteSingle = async (
 	});
 
 	if (getMedia === undefined) {
-		throw new LucidAPIError({
-			type: "basic",
-			name: T("error_not_found_name", {
-				name: T("media"),
-			}),
-			message: T("error_not_found_message", {
-				name: T("media"),
-			}),
-			status: 404,
-		});
+		return {
+			error: {
+				type: "basic",
+				name: T("error_not_found_name", {
+					name: T("media"),
+				}),
+				message: T("error_not_found_message", {
+					name: T("media"),
+				}),
+				status: 404,
+			},
+			data: undefined,
+		};
 	}
 
 	const allProcessedImages = await ProcessedImagesRepo.selectMultiple({
@@ -69,35 +75,45 @@ const deleteSingle = async (
 	});
 
 	if (deleteMedia === undefined) {
-		throw new LucidAPIError({
-			type: "basic",
-			status: 500,
-		});
+		return {
+			error: {
+				type: "basic",
+				status: 500,
+			},
+			data: undefined,
+		};
 	}
 
-	await Promise.all([
-		mediaStrategy.deleteMultiple(allProcessedImages.map((i) => i.key)),
-		serviceWrapper(mediaServices.storage.deleteObject, false)(
-			serviceConfig,
-			{
-				key: deleteMedia.key,
-				size: deleteMedia.file_size,
-				processedSize: allProcessedImages.reduce(
-					(acc, i) => acc + i.file_size,
-					0,
-				),
-			},
+	const [_, deleteObjectRes, deleteTranslationsRes] = await Promise.all([
+		mediaStrategyRes.data.deleteMultiple(
+			allProcessedImages.map((i) => i.key),
 		),
-		serviceWrapper(translationsServices.deleteMultiple, false)(
-			serviceConfig,
-			{
-				ids: [
-					deleteMedia.title_translation_key_id,
-					deleteMedia.alt_translation_key_id,
-				],
-			},
-		),
+		serviceWrapper(mediaServices.storage.deleteObject, {
+			transaction: false,
+		})(serviceConfig, {
+			key: deleteMedia.key,
+			size: deleteMedia.file_size,
+			processedSize: allProcessedImages.reduce(
+				(acc, i) => acc + i.file_size,
+				0,
+			),
+		}),
+		serviceWrapper(translationsServices.deleteMultiple, {
+			transaction: false,
+		})(serviceConfig, {
+			ids: [
+				deleteMedia.title_translation_key_id,
+				deleteMedia.alt_translation_key_id,
+			],
+		}),
 	]);
+	if (deleteObjectRes.error) return deleteObjectRes;
+	if (deleteTranslationsRes.error) return deleteTranslationsRes;
+
+	return {
+		error: undefined,
+		data: undefined,
+	};
 };
 
 export default deleteSingle;

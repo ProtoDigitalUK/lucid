@@ -1,19 +1,23 @@
 import T from "../../../translations/index.js";
-import { LucidAPIError } from "../../../utils/error-handler.js";
 import Repository from "../../../libs/repositories/index.js";
-import type { ServiceConfig } from "../../../utils/service-wrapper.js";
+import type { ServiceFn } from "../../../libs/services/types.js";
 
-export interface ServiceData {
-	localeCodes: string[];
-}
-
-const checkLocalesExist = async (
-	serviceConfig: ServiceConfig,
-	data: ServiceData,
-) => {
+const checkLocalesExist: ServiceFn<
+	[
+		{
+			localeCodes: string[];
+		},
+	],
+	undefined
+> = async (serviceConfig, data) => {
 	const localeCodes = Array.from(new Set(data.localeCodes));
 
-	if (localeCodes.length === 0) return;
+	if (localeCodes.length === 0) {
+		return {
+			error: undefined,
+			data: undefined,
+		};
+	}
 
 	const LocalesRepo = Repository.get("locales", serviceConfig.db);
 
@@ -34,19 +38,29 @@ const checkLocalesExist = async (
 	});
 
 	if (locales.length !== localeCodes.length) {
-		throw new LucidAPIError({
-			type: "basic",
-			status: 400,
-			errorResponse: {
-				body: {
-					translations: {
-						code: "invalid",
-						message: T("make_sure_all_translations_locales_exist"),
+		return {
+			error: {
+				type: "basic",
+				status: 400,
+				errorResponse: {
+					body: {
+						translations: {
+							code: "invalid",
+							message: T(
+								"make_sure_all_translations_locales_exist",
+							),
+						},
 					},
 				},
 			},
-		});
+			data: undefined,
+		};
 	}
+
+	return {
+		error: undefined,
+		data: undefined,
+	};
 };
 
 export default checkLocalesExist;

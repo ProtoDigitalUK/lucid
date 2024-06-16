@@ -1,11 +1,11 @@
 import T from "../../../translations/index.js";
 import constants from "../../../constants.js";
 import { LucidError } from "../../../utils/error-handler.js";
-import serviceWrapper from "../../../utils/service-wrapper.js";
+import serviceWrapper from "../../services/service-wrapper.js";
 import rolesServices from "../../../services/roles/index.js";
 import Repository from "../../repositories/index.js";
 import Formatter from "../../formatters/index.js";
-import type { ServiceConfig } from "../../../utils/service-wrapper.js";
+import type { ServiceConfig } from "../../services/types.js";
 
 const seedDefaultRoles = async (serviceConfig: ServiceConfig) => {
 	try {
@@ -17,14 +17,13 @@ const seedDefaultRoles = async (serviceConfig: ServiceConfig) => {
 		const rolePromises = [];
 		for (const role of constants.seedDefaults.roles) {
 			rolePromises.push(
-				serviceWrapper(rolesServices.createSingle, false)(
-					serviceConfig,
-					{
-						name: role.name,
-						description: role.description,
-						permissions: role.permissions,
-					},
-				),
+				serviceWrapper(rolesServices.createSingle, {
+					transaction: false,
+				})(serviceConfig, {
+					name: role.name,
+					description: role.description,
+					permissions: role.permissions,
+				}),
 			);
 		}
 		await Promise.all(rolePromises);

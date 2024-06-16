@@ -1,21 +1,27 @@
 import Repository from "../../libs/repositories/index.js";
 import mediaServices from "../media/index.js";
-import type { ServiceConfig } from "../../utils/service-wrapper.js";
-import serviceWrapper from "../../utils/service-wrapper.js";
 import optionsServices from "../options/index.js";
+import serviceWrapper from "../../libs/services/service-wrapper.js";
+import type { ServiceFn } from "../../libs/services/types.js";
 
-const clearAll = async (serviceConfig: ServiceConfig) => {
-	const mediaStrategy = mediaServices.checks.checkHasMediaStrategy({
-		config: serviceConfig.config,
-	});
+const clearAll: ServiceFn<[], undefined> = async (serviceConfig) => {
+	const mediaStrategyRes = await serviceWrapper(
+		mediaServices.checks.checkHasMediaStrategy,
+		{
+			transaction: false,
+		},
+	)(serviceConfig);
+	if (mediaStrategyRes.error) return mediaStrategyRes;
 
 	const ProcessedImagesRepo = Repository.get(
 		"processed-images",
 		serviceConfig.db,
 	);
 
-	const [storageUsed, processedImages] = await Promise.all([
-		serviceWrapper(optionsServices.getSingle, false)(serviceConfig, {
+	const [storageUsedRes, processedImages] = await Promise.all([
+		serviceWrapper(optionsServices.getSingle, {
+			transaction: false,
+		})(serviceConfig, {
 			name: "media_storage_used",
 		}),
 		ProcessedImagesRepo.selectMultiple({
@@ -23,22 +29,37 @@ const clearAll = async (serviceConfig: ServiceConfig) => {
 			where: [],
 		}),
 	]);
+	if (storageUsedRes.error) return storageUsedRes;
 
-	if (processedImages.length === 0) return;
+	if (processedImages.length === 0) {
+		return {
+			error: undefined,
+			data: undefined,
+		};
+	}
 
 	const totalSize = processedImages.reduce((acc, i) => acc + i.file_size, 0);
-	const newStorageUsed = (storageUsed.valueInt || 0) - totalSize;
+	const newStorageUsed = (storageUsedRes.data.valueInt || 0) - totalSize;
 
-	await Promise.all([
-		mediaStrategy.deleteMultiple(processedImages.map((i) => i.key)),
+	const [_, __, updateStorageRes] = await Promise.all([
+		mediaStrategyRes.data.deleteMultiple(processedImages.map((i) => i.key)),
 		ProcessedImagesRepo.deleteMultiple({
 			where: [],
 		}),
-		serviceWrapper(optionsServices.updateSingle, false)(serviceConfig, {
+		serviceWrapper(optionsServices.updateSingle, {
+			transaction: false,
+		})(serviceConfig, {
 			name: "media_storage_used",
 			valueInt: newStorageUsed < 0 ? 0 : newStorageUsed,
 		}),
 	]);
+
+	if (updateStorageRes.error) return updateStorageRes;
+
+	return {
+		error: undefined,
+		data: undefined,
+	};
 };
 
 export default clearAll;

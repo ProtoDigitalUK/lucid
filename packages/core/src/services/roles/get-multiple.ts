@@ -1,14 +1,21 @@
-import type z from "zod";
-import type rolesSchema from "../../schemas/roles.js";
 import Repository from "../../libs/repositories/index.js";
 import Formatter from "../../libs/formatters/index.js";
-import type { ServiceConfig } from "../../utils/service-wrapper.js";
+import type z from "zod";
+import type rolesSchema from "../../schemas/roles.js";
+import type { ServiceFn } from "../../libs/services/types.js";
+import type { RoleResponse } from "../../types/response.js";
 
-export interface ServiceData {
-	query: z.infer<typeof rolesSchema.getMultiple.query>;
-}
-
-const getMultiple = async (serviceConfig: ServiceConfig, data: ServiceData) => {
+const getMultiple: ServiceFn<
+	[
+		{
+			query: z.infer<typeof rolesSchema.getMultiple.query>;
+		},
+	],
+	{
+		data: RoleResponse[];
+		count: number;
+	}
+> = async (serviceConfig, data) => {
 	const RolesRepo = Repository.get("roles", serviceConfig.db);
 	const RolesFormatter = Formatter.get("roles");
 
@@ -18,10 +25,13 @@ const getMultiple = async (serviceConfig: ServiceConfig, data: ServiceData) => {
 	});
 
 	return {
-		data: RolesFormatter.formatMultiple({
-			roles: roles,
-		}),
-		count: Formatter.parseCount(rolesCount?.count),
+		error: undefined,
+		data: {
+			data: RolesFormatter.formatMultiple({
+				roles: roles,
+			}),
+			count: Formatter.parseCount(rolesCount?.count),
+		},
 	};
 };
 

@@ -1,14 +1,17 @@
 import T from "../../translations/index.js";
-import { LucidAPIError } from "../../utils/error-handler.js";
 import Repository from "../../libs/repositories/index.js";
 import Formatter from "../../libs/formatters/index.js";
-import type { ServiceConfig } from "../../utils/service-wrapper.js";
+import type { ServiceFn } from "../../libs/services/types.js";
+import type { LocalesResponse } from "../../types/response.js";
 
-export interface ServiceData {
-	code: string;
-}
-
-const getSingle = async (serviceConfig: ServiceConfig, data: ServiceData) => {
+const getSingle: ServiceFn<
+	[
+		{
+			code: string;
+		},
+	],
+	LocalesResponse
+> = async (serviceConfig, data) => {
 	const LocalesRepo = Repository.get("locales", serviceConfig.db);
 	const LocalesFormatter = Formatter.get("locales");
 
@@ -17,16 +20,19 @@ const getSingle = async (serviceConfig: ServiceConfig, data: ServiceData) => {
 	);
 
 	if (!configLocale) {
-		throw new LucidAPIError({
-			type: "basic",
-			name: T("error_not_found_name", {
-				name: T("locale"),
-			}),
-			message: T("error_not_found_message", {
-				name: T("locale"),
-			}),
-			status: 404,
-		});
+		return {
+			error: {
+				type: "basic",
+				name: T("error_not_found_name", {
+					name: T("locale"),
+				}),
+				message: T("error_not_found_message", {
+					name: T("locale"),
+				}),
+				status: 404,
+			},
+			data: undefined,
+		};
 	}
 
 	const locale = await LocalesRepo.selectSingle({
@@ -52,23 +58,29 @@ const getSingle = async (serviceConfig: ServiceConfig, data: ServiceData) => {
 	});
 
 	if (locale === undefined) {
-		throw new LucidAPIError({
-			type: "basic",
-			name: T("error_not_found_name", {
-				name: T("locale"),
-			}),
-			message: T("error_not_found_message", {
-				name: T("locale"),
-			}),
-			status: 404,
-		});
+		return {
+			error: {
+				type: "basic",
+				name: T("error_not_found_name", {
+					name: T("locale"),
+				}),
+				message: T("error_not_found_message", {
+					name: T("locale"),
+				}),
+				status: 404,
+			},
+			data: undefined,
+		};
 	}
 
-	return LocalesFormatter.formatSingle({
-		locale: locale,
-		configLocale: configLocale,
-		defaultLocale: serviceConfig.config.localisation.defaultLocale,
-	});
+	return {
+		error: undefined,
+		data: LocalesFormatter.formatSingle({
+			locale: locale,
+			configLocale: configLocale,
+			defaultLocale: serviceConfig.config.localisation.defaultLocale,
+		}),
+	};
 };
 
 export default getSingle;

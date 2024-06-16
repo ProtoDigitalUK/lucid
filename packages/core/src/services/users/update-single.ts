@@ -1,43 +1,45 @@
 import T from "../../translations/index.js";
-import { LucidAPIError } from "../../utils/error-handler.js";
 import argon2 from "argon2";
 import usersServices from "./index.js";
-import serviceWrapper from "../../utils/service-wrapper.js";
-import type { BooleanInt } from "../../libs/db/types.js";
 import Repository from "../../libs/repositories/index.js";
 import email from "../email/index.js";
+import serviceWrapper from "../../libs/services/service-wrapper.js";
 import constants from "../../constants.js";
-import type { ServiceConfig } from "../../utils/service-wrapper.js";
+import type { BooleanInt } from "../../libs/db/types.js";
+import type { ServiceFn } from "../../libs/services/types.js";
 
-export interface ServiceData {
-	userId: number;
-	firstName?: string;
-	lastName?: string;
-	username?: string;
-	email?: string;
-	password?: string;
-	roleIds?: number[];
-	superAdmin?: BooleanInt;
-	triggerPasswordReset?: BooleanInt;
-	isDeleted?: BooleanInt;
-	auth: {
-		id: number;
-		superAdmin: BooleanInt;
-	};
-}
-
-const updateSingle = async (
-	serviceConfig: ServiceConfig,
-	data: ServiceData,
-) => {
+const updateSingle: ServiceFn<
+	[
+		{
+			userId: number;
+			firstName?: string;
+			lastName?: string;
+			username?: string;
+			email?: string;
+			password?: string;
+			roleIds?: number[];
+			superAdmin?: BooleanInt;
+			triggerPasswordReset?: BooleanInt;
+			isDeleted?: BooleanInt;
+			auth: {
+				id: number;
+				superAdmin: BooleanInt;
+			};
+		},
+	],
+	number
+> = async (serviceConfig, data) => {
 	const UsersRepo = Repository.get("users", serviceConfig.db);
 
 	if (data.auth.id === data.userId) {
-		throw new LucidAPIError({
-			type: "basic",
-			message: T("error_cant_update_yourself"),
-			status: 400,
-		});
+		return {
+			error: {
+				type: "basic",
+				message: T("error_cant_update_yourself"),
+				status: 400,
+			},
+			data: undefined,
+		};
 	}
 
 	const user = await UsersRepo.selectSingle({
@@ -57,16 +59,19 @@ const updateSingle = async (
 	});
 
 	if (!user) {
-		throw new LucidAPIError({
-			type: "basic",
-			name: T("error_not_found_name", {
-				name: T("user"),
-			}),
-			message: T("error_not_found_message", {
-				name: T("user"),
-			}),
-			status: 404,
-		});
+		return {
+			error: {
+				type: "basic",
+				name: T("error_not_found_name", {
+					name: T("user"),
+				}),
+				message: T("error_not_found_message", {
+					name: T("user"),
+				}),
+				status: 404,
+			},
+			data: undefined,
+		};
 	}
 
 	const [emailExists, usernameExists] = await Promise.all([
@@ -97,32 +102,38 @@ const updateSingle = async (
 	]);
 
 	if (data.email !== undefined && emailExists !== undefined) {
-		throw new LucidAPIError({
-			type: "basic",
-			status: 400,
-			errorResponse: {
-				body: {
-					email: {
-						code: "invalid",
-						message: T("this_email_is_already_in_use"),
+		return {
+			error: {
+				type: "basic",
+				status: 400,
+				errorResponse: {
+					body: {
+						email: {
+							code: "invalid",
+							message: T("this_email_is_already_in_use"),
+						},
 					},
 				},
 			},
-		});
+			data: undefined,
+		};
 	}
 	if (data.username !== undefined && usernameExists !== undefined) {
-		throw new LucidAPIError({
-			type: "basic",
-			status: 400,
-			errorResponse: {
-				body: {
-					username: {
-						code: "invalid",
-						message: T("this_username_is_already_in_use"),
+		return {
+			error: {
+				type: "basic",
+				status: 400,
+				errorResponse: {
+					body: {
+						username: {
+							code: "invalid",
+							message: T("this_username_is_already_in_use"),
+						},
 					},
 				},
 			},
-		});
+			data: undefined,
+		};
 	}
 
 	let hashedPassword = undefined;
@@ -130,7 +141,7 @@ const updateSingle = async (
 		hashedPassword = await argon2.hash(data.password);
 	}
 
-	const [updateUser] = await Promise.all([
+	const [updateUser, updateRoelsRes] = await Promise.all([
 		UsersRepo.updateSingle({
 			data: {
 				firstName: data.firstName,
@@ -152,24 +163,29 @@ const updateSingle = async (
 				},
 			],
 		}),
-		serviceWrapper(usersServices.updateMultipleRoles, false)(
-			serviceConfig,
-			{
-				userId: data.userId,
-				roleIds: data.roleIds,
-			},
-		),
+		serviceWrapper(usersServices.updateMultipleRoles, {
+			transaction: false,
+		})(serviceConfig, {
+			userId: data.userId,
+			roleIds: data.roleIds,
+		}),
 	]);
+	if (updateRoelsRes.error) return updateRoelsRes;
 
 	if (updateUser === undefined) {
-		throw new LucidAPIError({
-			type: "basic",
-			status: 500,
-		});
+		return {
+			error: {
+				type: "basic",
+				status: 500,
+			},
+			data: undefined,
+		};
 	}
 
 	if (data.email !== undefined) {
-		await serviceWrapper(email.sendEmail, false)(serviceConfig, {
+		const sendEmailRes = await serviceWrapper(email.sendEmail, {
+			transaction: false,
+		})(serviceConfig, {
 			template: constants.emailTemplates.emailChanged,
 			type: "internal",
 			to: data.email,
@@ -178,9 +194,13 @@ const updateSingle = async (
 				firstName: data.firstName || user.first_name,
 			},
 		});
+		if (sendEmailRes.error) return sendEmailRes;
 	}
 
-	return user.id;
+	return {
+		error: undefined,
+		data: user.id,
+	};
 };
 
 export default updateSingle;

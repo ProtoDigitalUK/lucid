@@ -1,19 +1,25 @@
 import T from "../../translations/index.js";
-import { LucidAPIError } from "../../utils/error-handler.js";
 import getPermissions from "../permissions.js";
 import type { ErrorResult } from "../../types/errors.js";
 import type { Permission } from "../../types/response.js";
-import type { ServiceConfig } from "../../utils/service-wrapper.js";
+import type { ServiceFn } from "../../libs/services/types.js";
 
-export interface ServiceData {
-	permissions: string[];
-}
-
-const validatePermissions = async (
-	serviceConfig: ServiceConfig,
-	data: ServiceData,
-) => {
-	if (data.permissions.length === 0) return [];
+const validatePermissions: ServiceFn<
+	[
+		{
+			permissions: string[];
+		},
+	],
+	{
+		permission: Permission;
+	}[]
+> = async (_, data) => {
+	if (data.permissions.length === 0) {
+		return {
+			error: undefined,
+			data: [],
+		};
+	}
 
 	const permissions = getPermissions();
 
@@ -51,21 +57,30 @@ const validatePermissions = async (
 	}
 
 	if (permErrors.length > 0) {
-		throw new LucidAPIError({
-			type: "basic",
-			status: 500,
-			errorResponse: {
-				body: {
-					permissions: permErrors.reduce<ErrorResult>((acc, e) => {
-						acc[e.key] = e.error;
-						return acc;
-					}, {}),
+		return {
+			error: {
+				type: "basic",
+				status: 500,
+				errorResponse: {
+					body: {
+						permissions: permErrors.reduce<ErrorResult>(
+							(acc, e) => {
+								acc[e.key] = e.error;
+								return acc;
+							},
+							{},
+						),
+					},
 				},
 			},
-		});
+			data: undefined,
+		};
 	}
 
-	return validPerms;
+	return {
+		error: undefined,
+		data: validPerms,
+	};
 };
 
 export default validatePermissions;

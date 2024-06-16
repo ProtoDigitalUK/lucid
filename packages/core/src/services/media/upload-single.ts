@@ -1,53 +1,57 @@
-import { LucidAPIError } from "../../utils/error-handler.js";
-import type { MultipartFile } from "@fastify/multipart";
 import localesServices from "../locales/index.js";
-import serviceWrapper from "../../utils/service-wrapper.js";
 import mediaServices from "./index.js";
 import translationsServices from "../translations/index.js";
 import {
 	mergeTranslationGroups,
 	getUniquelocaleCodes,
 } from "../../utils/translation-helpers.js";
-import type { BooleanInt } from "../../libs/db/types.js";
 import Repository from "../../libs/repositories/index.js";
-import type { ServiceConfig } from "../../utils/service-wrapper.js";
+import serviceWrapper from "../../libs/services/service-wrapper.js";
+import type { BooleanInt } from "../../libs/db/types.js";
+import type { MultipartFile } from "@fastify/multipart";
+import type { ServiceFn } from "../../libs/services/types.js";
 
-export interface ServiceData {
-	fileData: MultipartFile | undefined;
-	titleTranslations?: {
-		localeCode: string;
-		value: string | null;
-	}[];
-	altTranslations?: {
-		localeCode: string;
-		value: string | null;
-	}[];
-	visible?: BooleanInt;
-}
-
-const uploadSingle = async (
-	serviceConfig: ServiceConfig,
-	data: ServiceData,
-) => {
+const uploadSingle: ServiceFn<
+	[
+		{
+			fileData: MultipartFile | undefined;
+			titleTranslations?: {
+				localeCode: string;
+				value: string | null;
+			}[];
+			altTranslations?: {
+				localeCode: string;
+				value: string | null;
+			}[];
+			visible?: BooleanInt;
+		},
+	],
+	number
+> = async (serviceConfig, data) => {
 	let objectStored = false;
 	let objectKey = undefined;
 
 	try {
 		const MediaRepo = Repository.get("media", serviceConfig.db);
 
-		await serviceWrapper(localesServices.checks.checkLocalesExist, false)(
-			serviceConfig,
+		const localeExistsRes = await serviceWrapper(
+			localesServices.checks.checkLocalesExist,
 			{
-				localeCodes: getUniquelocaleCodes([
-					data.titleTranslations || [],
-					data.altTranslations || [],
-				]),
+				transaction: false,
 			},
-		);
+		)(serviceConfig, {
+			localeCodes: getUniquelocaleCodes([
+				data.titleTranslations || [],
+				data.altTranslations || [],
+			]),
+		});
+		if (localeExistsRes.error) return localeExistsRes;
 
 		const translationKeyIdPromise = serviceWrapper(
 			translationsServices.createMultiple,
-			false,
+			{
+				transaction: false,
+			},
 		)(serviceConfig, {
 			keys: ["title", "alt"],
 			translations: mergeTranslationGroups([
@@ -63,46 +67,63 @@ const uploadSingle = async (
 		});
 		const uploadObjectPromise = serviceWrapper(
 			mediaServices.storage.uploadObject,
-			false,
+			{
+				transaction: false,
+			},
 		)(serviceConfig, {
 			fileData: data.fileData,
 		});
 
-		const [translationKeyIds, uploadObjectRes] = await Promise.all([
+		const [translationKeyIdsRes, uploadObjectRes] = await Promise.all([
 			translationKeyIdPromise,
 			uploadObjectPromise,
 		]);
+		if (translationKeyIdsRes.error) return translationKeyIdsRes;
+		if (uploadObjectRes.error) return uploadObjectRes;
 
 		objectStored = true;
-		objectKey = uploadObjectRes.key;
+		objectKey = uploadObjectRes.data.key;
 
 		const mediaRes = await MediaRepo.createSingle({
-			key: uploadObjectRes.key,
-			eTag: uploadObjectRes.etag,
+			key: uploadObjectRes.data.key,
+			eTag: uploadObjectRes.data.etag,
 			visible: data.visible ?? 1,
-			type: uploadObjectRes.type,
-			mimeType: uploadObjectRes.mimeType,
-			fileExtension: uploadObjectRes.fileExtension,
-			fileSize: uploadObjectRes.size,
-			width: uploadObjectRes.width,
-			height: uploadObjectRes.height,
-			titleTranslationKeyId: translationKeyIds.title,
-			altTranslationKeyId: translationKeyIds.alt,
+			type: uploadObjectRes.data.type,
+			mimeType: uploadObjectRes.data.mimeType,
+			fileExtension: uploadObjectRes.data.fileExtension,
+			fileSize: uploadObjectRes.data.size,
+			width: uploadObjectRes.data.width,
+			height: uploadObjectRes.data.height,
+			titleTranslationKeyId: translationKeyIdsRes.data.title,
+			altTranslationKeyId: translationKeyIdsRes.data.alt,
 		});
 
 		if (mediaRes === undefined) {
-			throw new LucidAPIError({
-				type: "basic",
-				status: 500,
-			});
+			return {
+				error: {
+					type: "basic",
+					status: 500,
+				},
+				data: undefined,
+			};
 		}
 
-		return mediaRes.id;
+		return {
+			error: undefined,
+			data: mediaRes.id,
+		};
 	} catch (e) {
 		if (objectStored && objectKey !== undefined) {
 			serviceConfig.config.media?.strategy?.deleteSingle(objectKey);
 		}
-		throw e;
+
+		return {
+			error: {
+				type: "basic",
+				status: 500,
+			},
+			data: undefined,
+		};
 	}
 };
 

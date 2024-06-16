@@ -25,9 +25,13 @@ const streamMedia: ServiceFn<
 > = async (serviceConfig, data) => {
 	const format = mediaHelpers.chooseFormat(data.accept, data.query.format);
 
-	const mediaStrategy = mediaServices.checks.checkHasMediaStrategy({
-		config: serviceConfig.config,
-	});
+	const mediaStrategyRes = await serviceWrapper(
+		mediaServices.checks.checkHasMediaStrategy,
+		{
+			transaction: false,
+		},
+	)(serviceConfig);
+	if (mediaStrategyRes.error) return mediaStrategyRes;
 
 	// ------------------------------
 	// OG Image
@@ -37,7 +41,7 @@ const streamMedia: ServiceFn<
 		data.query?.height === undefined &&
 		data.query?.quality === undefined
 	) {
-		const res = await mediaStrategy.stream(data.key);
+		const res = await mediaStrategyRes.data.stream(data.key);
 
 		if (!res.success || !res.response) {
 			return {
@@ -78,7 +82,7 @@ const streamMedia: ServiceFn<
 	});
 
 	// Try and stream the processed media (may already exist)
-	const res = await mediaStrategy.stream(processKey);
+	const res = await mediaStrategyRes.data.stream(processKey);
 
 	if (res.success && res.response) {
 		return {

@@ -1,6 +1,9 @@
-import { LucidAPIError } from "../../utils/error-handler.js";
 import Repository from "../../libs/repositories/index.js";
-import type { ServiceConfig } from "../../utils/service-wrapper.js";
+import type {
+	ServiceFn,
+	ServiceConfig,
+	ServiceResponse,
+} from "../../libs/services/types.js";
 
 export interface ServiceData<K extends string> {
 	keys: K[];
@@ -11,15 +14,21 @@ export interface ServiceData<K extends string> {
 	}>;
 }
 
-const createMultiple = async <K extends string>(
+const createMultiple: ServiceFn<
+	[ServiceData<string>],
+	Record<string, number>
+> = async <K extends string>(
 	serviceConfig: ServiceConfig,
 	data: ServiceData<K>,
-) => {
+): ServiceResponse<Record<K, number>> => {
 	if (data.keys.length === 0) {
-		throw new LucidAPIError({
-			type: "basic",
-			status: 400,
-		});
+		return {
+			error: {
+				type: "basic",
+				status: 400,
+			},
+			data: undefined,
+		};
 	}
 
 	const TranslationKeysRepo = Repository.get(
@@ -32,10 +41,13 @@ const createMultiple = async <K extends string>(
 	);
 
 	if (translationKeyEntries.length !== data.keys.length) {
-		throw new LucidAPIError({
-			type: "basic",
-			status: 400,
-		});
+		return {
+			error: {
+				type: "basic",
+				status: 400,
+			},
+			data: undefined,
+		};
 	}
 
 	const keys: Record<K, number> = data.keys.reduce(
@@ -51,7 +63,10 @@ const createMultiple = async <K extends string>(
 	);
 
 	if (data.translations.length === 0) {
-		return keys;
+		return {
+			error: undefined,
+			data: keys,
+		};
 	}
 
 	const TranslationsRepo = Repository.get("translations", serviceConfig.db);
@@ -66,7 +81,10 @@ const createMultiple = async <K extends string>(
 		}),
 	);
 
-	return keys;
+	return {
+		error: undefined,
+		data: keys,
+	};
 };
 
 export default createMultiple;

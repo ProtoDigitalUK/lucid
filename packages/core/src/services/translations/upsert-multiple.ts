@@ -1,4 +1,3 @@
-import serviceWrapper from "../../utils/service-wrapper.js";
 import localesServices from "../locales/index.js";
 import {
 	shouldUpdateTranslations,
@@ -7,7 +6,8 @@ import {
 	getUniquelocaleCodes,
 } from "../../utils/translation-helpers.js";
 import Repository from "../../libs/repositories/index.js";
-import type { ServiceConfig } from "../../utils/service-wrapper.js";
+import serviceWrapper from "../../libs/services/service-wrapper.js";
+import type { ServiceConfig, ServiceFn } from "../../libs/services/types.js";
 
 export interface ServiceData<K extends string> {
 	keys: Record<K, number | null>;
@@ -17,19 +17,24 @@ export interface ServiceData<K extends string> {
 	}>;
 }
 
-const upsertMultiple = async <K extends string>(
+const upsertMultiple: ServiceFn<[ServiceData<string>], undefined> = async <
+	K extends string,
+>(
 	serviceConfig: ServiceConfig,
 	data: ServiceData<K>,
 ) => {
 	if (shouldUpdateTranslations(data.items.map((item) => item.translations))) {
-		await serviceWrapper(localesServices.checks.checkLocalesExist, false)(
-			serviceConfig,
+		const localeExistsRes = await serviceWrapper(
+			localesServices.checks.checkLocalesExist,
 			{
-				localeCodes: getUniquelocaleCodes(
-					data.items.map((item) => item.translations || []),
-				),
+				transaction: false,
 			},
-		);
+		)(serviceConfig, {
+			localeCodes: getUniquelocaleCodes(
+				data.items.map((item) => item.translations || []),
+			),
+		});
+		if (localeExistsRes.error) return localeExistsRes;
 
 		const translations = mergeTranslationGroups<K>(data.items)
 			.map((translation) => {
@@ -39,6 +44,7 @@ const upsertMultiple = async <K extends string>(
 					translationKeyId: data.keys[translation.key] ?? null,
 				};
 			})
+			// TODO: remove as when Typescript 5.5 is released
 			.filter(
 				(translation) => translation.translationKeyId !== null,
 			) as Array<{
@@ -48,7 +54,10 @@ const upsertMultiple = async <K extends string>(
 		}>;
 
 		if (translations.length === 0) {
-			return;
+			return {
+				error: undefined,
+				data: undefined,
+			};
 		}
 
 		const TranslationsRepo = Repository.get(
@@ -57,7 +66,17 @@ const upsertMultiple = async <K extends string>(
 		);
 
 		await TranslationsRepo.upsertMultiple(translations);
+
+		return {
+			error: undefined,
+			data: undefined,
+		};
 	}
+
+	return {
+		error: undefined,
+		data: undefined,
+	};
 };
 
 export default upsertMultiple;

@@ -1,31 +1,36 @@
-import serviceWrapper from "../../utils/service-wrapper.js";
 import optionsServices from "../options/index.js";
 import processedImagesServices from "../processed-images/index.js";
 import Formatter from "../../libs/formatters/index.js";
-import type { ServiceConfig } from "../../utils/service-wrapper.js";
+import serviceWrapper from "../../libs/services/service-wrapper.js";
+import type { ServiceFn } from "../../libs/services/types.js";
+import type { SettingsResponse } from "../../types/response.js";
 
-// export interface ServiceData {}
-
-const getSettings = async (
-	serviceConfig: ServiceConfig,
-	// data: ServiceData,
-) => {
-	const [mediaStorageUsed, processedImageCount] = await Promise.all([
-		serviceWrapper(optionsServices.getSingle, false)(serviceConfig, {
+const getSettings: ServiceFn<[], SettingsResponse> = async (serviceConfig) => {
+	const [mediaStorageUsedRes, processedImageCountRes] = await Promise.all([
+		serviceWrapper(optionsServices.getSingle, {
+			transaction: false,
+		})(serviceConfig, {
 			name: "media_storage_used",
 		}),
-		serviceWrapper(processedImagesServices.getCount, false)(serviceConfig),
+		serviceWrapper(processedImagesServices.getCount, {
+			transaction: false,
+		})(serviceConfig),
 	]);
+	if (mediaStorageUsedRes.error) return mediaStorageUsedRes;
+	if (processedImageCountRes.error) return processedImageCountRes;
 
 	const SettingsFormatter = Formatter.get("settings");
 
-	return SettingsFormatter.formatSingle({
-		settings: {
-			mediaStorageUsed: mediaStorageUsed.valueInt || 0,
-			processedImageCount: processedImageCount,
-		},
-		config: serviceConfig.config,
-	});
+	return {
+		error: undefined,
+		data: SettingsFormatter.formatSingle({
+			settings: {
+				mediaStorageUsed: mediaStorageUsedRes.data.valueInt || 0,
+				processedImageCount: processedImageCountRes.data,
+			},
+			config: serviceConfig.config,
+		}),
+	};
 };
 
 export default getSettings;

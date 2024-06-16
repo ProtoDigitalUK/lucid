@@ -1,17 +1,21 @@
 import T from "../../../translations/index.js";
-import { LucidAPIError } from "../../../utils/error-handler.js";
 import Repository from "../../../libs/repositories/index.js";
-import type { ServiceConfig } from "../../../utils/service-wrapper.js";
+import type { ServiceFn } from "../../../libs/services/types.js";
 
-export interface ServiceData {
-	roleIds: number[];
-}
-
-const checkRolesExist = async (
-	serviceConfig: ServiceConfig,
-	data: ServiceData,
-) => {
-	if (data.roleIds.length === 0) return;
+const checkRolesExist: ServiceFn<
+	[
+		{
+			roleIds: number[];
+		},
+	],
+	undefined
+> = async (serviceConfig, data) => {
+	if (data.roleIds.length === 0) {
+		return {
+			error: undefined,
+			data: undefined,
+		};
+	}
 
 	const RolesRepo = Repository.get("roles", serviceConfig.db);
 	const roles = await RolesRepo.selectMultiple({
@@ -26,23 +30,29 @@ const checkRolesExist = async (
 	});
 
 	if (roles.length !== data.roleIds.length) {
-		throw new LucidAPIError({
-			type: "basic",
-			status: 400,
-			errorResponse: {
-				body: {
-					role_ids: {
-						code: "invalid",
-						message: T("error_not_found_message", {
-							name: T("role"),
-						}),
+		return {
+			error: {
+				type: "basic",
+				status: 400,
+				errorResponse: {
+					body: {
+						role_ids: {
+							code: "invalid",
+							message: T("error_not_found_message", {
+								name: T("role"),
+							}),
+						},
 					},
 				},
 			},
-		});
+			data: undefined,
+		};
 	}
 
-	return;
+	return {
+		error: undefined,
+		data: undefined,
+	};
 };
 
 export default checkRolesExist;

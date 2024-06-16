@@ -1,29 +1,28 @@
 import T from "../../translations/index.js";
-import { LucidAPIError } from "../../utils/error-handler.js";
-import type { MultipartFile } from "@fastify/multipart";
-import serviceWrapper from "../../utils/service-wrapper.js";
 import mediaServices from "./index.js";
 import translationsServices from "../translations/index.js";
 import Repository from "../../libs/repositories/index.js";
-import type { ServiceConfig } from "../../utils/service-wrapper.js";
+import serviceWrapper from "../../libs/services/service-wrapper.js";
+import type { MultipartFile } from "@fastify/multipart";
+import type { ServiceFn } from "../../libs/services/types.js";
 
-export interface ServiceData {
-	id: number;
-	fileData: MultipartFile | undefined;
-	titleTranslations?: {
-		localeCode: string;
-		value: string | null;
-	}[];
-	altTranslations?: {
-		localeCode: string;
-		value: string | null;
-	}[];
-}
-
-const updateSingle = async (
-	serviceConfig: ServiceConfig,
-	data: ServiceData,
-) => {
+const updateSingle: ServiceFn<
+	[
+		{
+			id: number;
+			fileData: MultipartFile | undefined;
+			titleTranslations?: {
+				localeCode: string;
+				value: string | null;
+			}[];
+			altTranslations?: {
+				localeCode: string;
+				value: string | null;
+			}[];
+		},
+	],
+	number | undefined
+> = async (serviceConfig, data) => {
 	// if translations are present, insert on conflict update
 	// do translations first so if they throw an error, the file is not uploaded
 	// if the file upload throws an error, the translations are not inserted due to the transaction
@@ -47,50 +46,62 @@ const updateSingle = async (
 	});
 
 	if (media === undefined) {
-		throw new LucidAPIError({
-			type: "basic",
-			name: T("error_not_found_name", {
-				name: T("media"),
-			}),
-			message: T("error_not_found_message", {
-				name: T("media"),
-			}),
-			status: 404,
-		});
+		return {
+			error: {
+				type: "basic",
+				name: T("error_not_found_name", {
+					name: T("media"),
+				}),
+				message: T("error_not_found_message", {
+					name: T("media"),
+				}),
+				status: 404,
+			},
+			data: undefined,
+		};
 	}
 
-	await serviceWrapper(translationsServices.upsertMultiple, false)(
-		serviceConfig,
+	const upsertTranslationsRes = await serviceWrapper(
+		translationsServices.upsertMultiple,
 		{
-			keys: {
-				title: media.title_translation_key_id,
-				alt: media.alt_translation_key_id,
-			},
-			items: [
-				{
-					translations: data.titleTranslations || [],
-					key: "title",
-				},
-				{
-					translations: data.altTranslations || [],
-					key: "alt",
-				},
-			],
+			transaction: false,
 		},
-	);
+	)(serviceConfig, {
+		keys: {
+			title: media.title_translation_key_id,
+			alt: media.alt_translation_key_id,
+		},
+		items: [
+			{
+				translations: data.titleTranslations || [],
+				key: "title",
+			},
+			{
+				translations: data.altTranslations || [],
+				key: "alt",
+			},
+		],
+	});
+	if (upsertTranslationsRes.error) return upsertTranslationsRes;
 
 	if (data.fileData === undefined) {
-		return;
+		return {
+			error: undefined,
+			data: undefined,
+		};
 	}
 
 	const updateObjectRes = await serviceWrapper(
 		mediaServices.storage.updateObject,
-		false,
+		{
+			transaction: false,
+		},
 	)(serviceConfig, {
 		fileData: data.fileData,
 		previousSize: media.file_size,
 		key: media.key,
 	});
+	if (updateObjectRes.error) return updateObjectRes;
 
 	const mediaUpdateRes = await MediaRepo.updateSingle({
 		where: [
@@ -101,26 +112,32 @@ const updateSingle = async (
 			},
 		],
 		data: {
-			key: updateObjectRes.key,
-			eTag: updateObjectRes.etag,
-			type: updateObjectRes.type,
-			mimeType: updateObjectRes.mimeType,
-			fileExtension: updateObjectRes.fileExtension,
-			fileSize: updateObjectRes.size,
-			width: updateObjectRes.width,
-			height: updateObjectRes.height,
+			key: updateObjectRes.data.key,
+			eTag: updateObjectRes.data.etag,
+			type: updateObjectRes.data.type,
+			mimeType: updateObjectRes.data.mimeType,
+			fileExtension: updateObjectRes.data.fileExtension,
+			fileSize: updateObjectRes.data.size,
+			width: updateObjectRes.data.width,
+			height: updateObjectRes.data.height,
 			updatedAt: new Date().toISOString(),
 		},
 	});
 
 	if (mediaUpdateRes === undefined) {
-		throw new LucidAPIError({
-			type: "basic",
-			status: 500,
-		});
+		return {
+			error: {
+				type: "basic",
+				status: 500,
+			},
+			data: undefined,
+		};
 	}
 
-	return mediaUpdateRes.id;
+	return {
+		error: undefined,
+		data: mediaUpdateRes.id,
+	};
 };
 
 export default updateSingle;

@@ -1,41 +1,48 @@
 import T from "../../../translations/index.js";
-import { LucidAPIError } from "../../../utils/error-handler.js";
 import type { MultipartFile } from "@fastify/multipart";
-import serviceWrapper from "../../../utils/service-wrapper.js";
 import mediaHelpers from "../../../utils/media-helpers.js";
 import mediaServices from "../index.js";
 import optionsServices from "../../options/index.js";
-import type { ServiceConfig } from "../../../utils/service-wrapper.js";
+import serviceWrapper from "../../../libs/services/service-wrapper.js";
+import type { ServiceFn } from "../../../libs/services/types.js";
+import type { RouteMediaMetaData } from "../../../utils/media-helpers.js";
 
-export interface ServiceData {
-	fileData: MultipartFile | undefined;
-}
-
-const uploadObject = async (
-	serviceConfig: ServiceConfig,
-	data: ServiceData,
-) => {
+const uploadObject: ServiceFn<
+	[
+		{
+			fileData: MultipartFile | undefined;
+		},
+	],
+	RouteMediaMetaData
+> = async (serviceConfig, data) => {
 	let tempFilePath = undefined;
 
 	try {
 		if (data.fileData === undefined) {
-			throw new LucidAPIError({
-				type: "basic",
-				status: 400,
-				errorResponse: {
-					body: {
-						file: {
-							code: "required",
-							message: T("ensure_file_has_been_uploaded"),
+			return {
+				error: {
+					type: "basic",
+					status: 400,
+					errorResponse: {
+						body: {
+							file: {
+								code: "required",
+								message: T("ensure_file_has_been_uploaded"),
+							},
 						},
 					},
 				},
-			});
+				data: undefined,
+			};
 		}
 
-		const mediaStrategy = mediaServices.checks.checkHasMediaStrategy({
-			config: serviceConfig.config,
-		});
+		const mediaStrategyRes = await serviceWrapper(
+			mediaServices.checks.checkHasMediaStrategy,
+			{
+				transaction: false,
+			},
+		)(serviceConfig);
+		if (mediaStrategyRes.error) return mediaStrategyRes;
 
 		// Save file to temp folder
 		tempFilePath = await mediaHelpers.saveStreamToTempFile(
@@ -50,49 +57,61 @@ const uploadObject = async (
 		});
 
 		// Ensure we available storage space
-		const proposedSize = await serviceWrapper(
+		const proposedSizeRes = await serviceWrapper(
 			mediaServices.checks.checkCanStoreMedia,
-			false,
+			{
+				transaction: false,
+			},
 		)(serviceConfig, {
 			filename: data.fileData.filename,
 			size: metaData.size,
 		});
+		if (proposedSizeRes.error) return proposedSizeRes;
 
 		// Save file to storage
-		const saveObjectRes = await mediaStrategy.uploadSingle({
+		const saveObjectRes = await mediaStrategyRes.data.uploadSingle({
 			key: metaData.key,
 			data: mediaHelpers.streamTempFile(tempFilePath),
 			meta: metaData,
 		});
 
 		if (saveObjectRes.success === false) {
-			throw new LucidAPIError({
-				type: "basic",
-				message: saveObjectRes.message,
-				status: 500,
-				errorResponse: {
-					body: {
-						file: {
-							code: "s3_error",
-							message: saveObjectRes.message,
+			return {
+				error: {
+					type: "basic",
+					message: saveObjectRes.message,
+					status: 500,
+					errorResponse: {
+						body: {
+							file: {
+								code: "s3_error",
+								message: saveObjectRes.message,
+							},
 						},
 					},
 				},
-			});
+				data: undefined,
+			};
 		}
 
 		metaData.etag = saveObjectRes.response?.etag;
 
 		// Update storage usage stats
-		await serviceWrapper(optionsServices.updateSingle, false)(
-			serviceConfig,
+		const updateStorageRes = await serviceWrapper(
+			optionsServices.updateSingle,
 			{
-				name: "media_storage_used",
-				valueInt: proposedSize,
+				transaction: false,
 			},
-		);
+		)(serviceConfig, {
+			name: "media_storage_used",
+			valueInt: proposedSizeRes.data.proposedSize,
+		});
+		if (updateStorageRes.error) return updateStorageRes;
 
-		return metaData;
+		return {
+			error: undefined,
+			data: metaData,
+		};
 	} finally {
 		mediaHelpers.deleteTempFile(tempFilePath);
 	}

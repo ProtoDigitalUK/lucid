@@ -1,31 +1,29 @@
 import T from "../../translations/index.js";
-import { LucidAPIError } from "../../utils/error-handler.js";
 import rolesServices from "./index.js";
-import serviceWrapper from "../../utils/service-wrapper.js";
 import Repository from "../../libs/repositories/index.js";
-import type { ServiceConfig } from "../../utils/service-wrapper.js";
+import serviceWrapper from "../../libs/services/service-wrapper.js";
+import type { ServiceFn } from "../../libs/services/types.js";
 
-export interface ServiceData {
-	id: number;
-	name?: string;
-	description?: string;
-	permissions?: string[];
-}
-
-const updateSingle = async (
-	serviceConfig: ServiceConfig,
-	data: ServiceData,
-) => {
+const updateSingle: ServiceFn<
+	[
+		{
+			id: number;
+			name?: string;
+			description?: string;
+			permissions?: string[];
+		},
+	],
+	undefined
+> = async (serviceConfig, data) => {
 	const RolesRepo = Repository.get("roles", serviceConfig.db);
 
-	const [validatePerms, checkNameIsUnique] = await Promise.all([
+	const [validatePermsRes, checkNameIsUnique] = await Promise.all([
 		data.permissions !== undefined
-			? serviceWrapper(rolesServices.validatePermissions, false)(
-					serviceConfig,
-					{
-						permissions: data.permissions,
-					},
-				)
+			? serviceWrapper(rolesServices.validatePermissions, {
+					transaction: false,
+				})(serviceConfig, {
+					permissions: data.permissions,
+				})
 			: undefined,
 		data.name !== undefined
 			? RolesRepo.selectSingle({
@@ -45,21 +43,25 @@ const updateSingle = async (
 				})
 			: undefined,
 	]);
+	if (validatePermsRes?.error) throw validatePermsRes.error;
 
 	if (data.name !== undefined && checkNameIsUnique !== undefined) {
-		throw new LucidAPIError({
-			type: "basic",
-			message: T("not_unique_error_message"),
-			status: 400,
-			errorResponse: {
-				body: {
-					name: {
-						code: "invalid",
-						message: T("not_unique_error_message"),
+		return {
+			error: {
+				type: "basic",
+				message: T("not_unique_error_message"),
+				status: 400,
+				errorResponse: {
+					body: {
+						name: {
+							code: "invalid",
+							message: T("not_unique_error_message"),
+						},
 					},
 				},
 			},
-		});
+			data: undefined,
+		};
 	}
 	const updateRoleRes = await RolesRepo.updateSingle({
 		data: {
@@ -77,13 +79,16 @@ const updateSingle = async (
 	});
 
 	if (updateRoleRes === undefined) {
-		throw new LucidAPIError({
-			type: "basic",
-			status: 400,
-		});
+		return {
+			error: {
+				type: "basic",
+				status: 400,
+			},
+			data: undefined,
+		};
 	}
 
-	if (validatePerms !== undefined) {
+	if (validatePermsRes?.data !== undefined) {
 		const RolePermissionsRepo = Repository.get(
 			"role-permissions",
 			serviceConfig.db,
@@ -99,15 +104,20 @@ const updateSingle = async (
 			],
 		});
 
-		if (validatePerms.length > 0) {
+		if (validatePermsRes.data.length > 0) {
 			await RolePermissionsRepo.createMultiple({
-				items: validatePerms.map((p) => ({
+				items: validatePermsRes.data.map((p) => ({
 					roleId: data.id,
 					permission: p.permission,
 				})),
 			});
 		}
 	}
+
+	return {
+		error: undefined,
+		data: undefined,
+	};
 };
 
 export default updateSingle;

@@ -1,14 +1,17 @@
 import T from "../../translations/index.js";
-import { LucidAPIError } from "../../utils/error-handler.js";
 import Repository from "../../libs/repositories/index.js";
 import Formatter from "../../libs/formatters/index.js";
-import type { ServiceConfig } from "../../utils/service-wrapper.js";
+import type { ServiceFn } from "../../libs/services/types.js";
+import type { MediaResponse } from "../../types/response.js";
 
-export interface ServiceData {
-	id: number;
-}
-
-const getSingle = async (serviceConfig: ServiceConfig, data: ServiceData) => {
+const getSingle: ServiceFn<
+	[
+		{
+			id: number;
+		},
+	],
+	MediaResponse
+> = async (serviceConfig, data) => {
 	const MediaRepo = Repository.get("media", serviceConfig.db);
 	const MediaFormatter = Formatter.get("media");
 
@@ -18,22 +21,28 @@ const getSingle = async (serviceConfig: ServiceConfig, data: ServiceData) => {
 	});
 
 	if (media === undefined) {
-		throw new LucidAPIError({
-			type: "basic",
-			name: T("error_not_found_name", {
-				name: T("media"),
-			}),
-			message: T("error_not_found_message", {
-				name: T("media"),
-			}),
-			status: 404,
-		});
+		return {
+			error: {
+				type: "basic",
+				name: T("error_not_found_name", {
+					name: T("media"),
+				}),
+				message: T("error_not_found_message", {
+					name: T("media"),
+				}),
+				status: 404,
+			},
+			data: undefined,
+		};
 	}
 
-	return MediaFormatter.formatSingle({
-		media: media,
-		host: serviceConfig.config.host,
-	});
+	return {
+		error: undefined,
+		data: MediaFormatter.formatSingle({
+			media: media,
+			host: serviceConfig.config.host,
+		}),
+	};
 };
 
 export default getSingle;

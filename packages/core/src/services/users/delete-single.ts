@@ -1,26 +1,28 @@
 import T from "../../translations/index.js";
-import { LucidAPIError } from "../../utils/error-handler.js";
 import Repository from "../../libs/repositories/index.js";
-import type { ServiceConfig } from "../../utils/service-wrapper.js";
 import UsersServices from "./index.js";
+import type { ServiceFn } from "../../libs/services/types.js";
 
-export interface ServiceData {
-	userId: number;
-	currentUserId: number;
-}
-
-const deleteSingle = async (
-	serviceConfig: ServiceConfig,
-	data: ServiceData,
-) => {
+const deleteSingle: ServiceFn<
+	[
+		{
+			userId: number;
+			currentUserId: number;
+		},
+	],
+	undefined
+> = async (serviceConfig, data) => {
 	const UsersRepo = Repository.get("users", serviceConfig.db);
 
 	if (data.currentUserId === data.userId) {
-		throw new LucidAPIError({
-			type: "basic",
-			message: T("error_cant_delete_yourself"),
-			status: 400,
-		});
+		return {
+			error: {
+				type: "basic",
+				message: T("error_cant_delete_yourself"),
+				status: 400,
+			},
+			data: undefined,
+		};
 	}
 
 	await UsersServices.checks.checkNotLastUser(serviceConfig);
@@ -41,11 +43,19 @@ const deleteSingle = async (
 	});
 
 	if (deleteUserRes === undefined) {
-		throw new LucidAPIError({
-			type: "basic",
-			status: 500,
-		});
+		return {
+			error: {
+				type: "basic",
+				status: 500,
+			},
+			data: undefined,
+		};
 	}
+
+	return {
+		error: undefined,
+		data: undefined,
+	};
 };
 
 export default deleteSingle;
