@@ -5,7 +5,7 @@ import {
 	swaggerHeaders,
 } from "../../utils/swagger-helpers.js";
 import serviceWrapper from "../../libs/services/service-wrapper.js";
-import account from "../../services/account/index.js";
+import LucidServices from "../../services/index.js";
 import { LucidAPIError } from "../../utils/error-handler.js";
 import type { RouteController } from "../../types/types.js";
 
@@ -14,7 +14,7 @@ const updateMeController: RouteController<
 	typeof accountSchema.updateMe.body,
 	typeof accountSchema.updateMe.query
 > = async (request, reply) => {
-	const updateMe = await serviceWrapper(account.updateMe, {
+	const updateMe = await serviceWrapper(LucidServices.account.updateMe, {
 		transaction: true,
 		defaultError: {
 			type: "basic",

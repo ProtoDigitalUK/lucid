@@ -1,8 +1,7 @@
 import T from "../../../translations/index.js";
-import type { MultipartFile } from "@fastify/multipart";
 import mediaHelpers from "../../../utils/media-helpers.js";
-import mediaServices from "../index.js";
-import optionsServices from "../../options/index.js";
+import LucidServices from "../../index.js";
+import type { MultipartFile } from "@fastify/multipart";
 import type { ServiceFn } from "../../../libs/services/types.js";
 import type { RouteMediaMetaData } from "../../../utils/media-helpers.js";
 
@@ -36,7 +35,7 @@ const uploadObject: ServiceFn<
 		}
 
 		const mediaStrategyRes =
-			await mediaServices.checks.checkHasMediaStrategy(service);
+			await LucidServices.media.checks.checkHasMediaStrategy(service);
 		if (mediaStrategyRes.error) return mediaStrategyRes;
 
 		// Save file to temp folder
@@ -52,13 +51,11 @@ const uploadObject: ServiceFn<
 		});
 
 		// Ensure we available storage space
-		const proposedSizeRes = await mediaServices.checks.checkCanStoreMedia(
-			service,
-			{
+		const proposedSizeRes =
+			await LucidServices.media.checks.checkCanStoreMedia(service, {
 				filename: data.fileData.filename,
 				size: metaData.size,
-			},
-		);
+			});
 		if (proposedSizeRes.error) return proposedSizeRes;
 
 		// Save file to storage
@@ -90,10 +87,13 @@ const uploadObject: ServiceFn<
 		metaData.etag = saveObjectRes.response?.etag;
 
 		// Update storage usage stats
-		const updateStorageRes = await optionsServices.updateSingle(service, {
-			name: "media_storage_used",
-			valueInt: proposedSizeRes.data.proposedSize,
-		});
+		const updateStorageRes = await LucidServices.option.updateSingle(
+			service,
+			{
+				name: "media_storage_used",
+				valueInt: proposedSizeRes.data.proposedSize,
+			},
+		);
 		if (updateStorageRes.error) return updateStorageRes;
 
 		return {

@@ -1,6 +1,6 @@
 import T from "../../translations/index.js";
 import Repository from "../../libs/repositories/index.js";
-import collectionDocumentsServices from "./index.js";
+import LucidServices from "../index.js";
 import executeHooks from "../../libs/hooks/execute-hooks.js";
 import type { ServiceFn } from "../../libs/services/types.js";
 
@@ -22,9 +22,12 @@ const deleteMultiple: ServiceFn<
 	}
 
 	const collectionRes =
-		await collectionDocumentsServices.checks.checkCollection(service, {
-			key: data.collectionKey,
-		});
+		await LucidServices.collection.document.checks.checkCollection(
+			service,
+			{
+				key: data.collectionKey,
+			},
+		);
 	if (collectionRes.error) return collectionRes;
 
 	if (collectionRes.data.config.locked === true) {

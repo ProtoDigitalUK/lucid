@@ -4,7 +4,7 @@ import {
 	swaggerResponse,
 	swaggerHeaders,
 } from "../../utils/swagger-helpers.js";
-import mediaServices from "../../services/media/index.js";
+import LucidServices from "../../services/index.js";
 import serviceWrapper from "../../libs/services/service-wrapper.js";
 import { LucidAPIError } from "../../utils/error-handler.js";
 import type { RouteController } from "../../types/types.js";
@@ -14,20 +14,23 @@ const deleteSingleController: RouteController<
 	typeof mediaSchema.deleteSingle.body,
 	typeof mediaSchema.deleteSingle.query
 > = async (request, reply) => {
-	const deleteSingel = await serviceWrapper(mediaServices.deleteSingle, {
-		transaction: true,
-		defaultError: {
-			type: "basic",
-			name: T("method_error_name", {
-				name: T("media"),
-				method: T("delete"),
-			}),
-			message: T("deletion_error_message", {
-				name: T("media").toLowerCase(),
-			}),
-			status: 500,
+	const deleteSingel = await serviceWrapper(
+		LucidServices.media.deleteSingle,
+		{
+			transaction: true,
+			defaultError: {
+				type: "basic",
+				name: T("method_error_name", {
+					name: T("media"),
+					method: T("delete"),
+				}),
+				message: T("deletion_error_message", {
+					name: T("media").toLowerCase(),
+				}),
+				status: 500,
+			},
 		},
-	})(
+	)(
 		{
 			db: request.server.config.db.client,
 			config: request.server.config,

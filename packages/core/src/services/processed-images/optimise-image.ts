@@ -1,7 +1,7 @@
-import type z from "zod";
-import type cdnSchema from "../../schemas/cdn.js";
 import sharp from "sharp";
 import mime from "mime-types";
+import type z from "zod";
+import type cdnSchema from "../../schemas/cdn.js";
 import type { ServiceFn } from "../../libs/services/types.js";
 
 const optimiseImage: ServiceFn<

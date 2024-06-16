@@ -4,7 +4,7 @@ import {
 	swaggerResponse,
 	swaggerHeaders,
 } from "../../utils/swagger-helpers.js";
-import rolesServices from "../../services/roles/index.js";
+import LucidServices from "../../services/index.js";
 import buildResponse from "../../utils/build-response.js";
 import RolesFormatter from "../../libs/formatters/roles.js";
 import serviceWrapper from "../../libs/services/service-wrapper.js";
@@ -16,7 +16,7 @@ const createSingleController: RouteController<
 	typeof rolesSchema.createSingle.body,
 	typeof rolesSchema.createSingle.query
 > = async (request, reply) => {
-	const roleId = await serviceWrapper(rolesServices.createSingle, {
+	const roleId = await serviceWrapper(LucidServices.role.createSingle, {
 		transaction: true,
 		defaultError: {
 			type: "basic",
@@ -42,7 +42,7 @@ const createSingleController: RouteController<
 	);
 	if (roleId.error) throw new LucidAPIError(roleId.error);
 
-	const role = await serviceWrapper(rolesServices.getSingle, {
+	const role = await serviceWrapper(LucidServices.role.getSingle, {
 		transaction: false,
 		defaultError: {
 			type: "basic",

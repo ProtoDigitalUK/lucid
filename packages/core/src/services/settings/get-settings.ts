@@ -1,5 +1,5 @@
 import optionsServices from "../options/index.js";
-import processedImagesServices from "../processed-images/index.js";
+import LucidServices from "../index.js";
 import Formatter from "../../libs/formatters/index.js";
 import type { ServiceFn } from "../../libs/services/types.js";
 import type { SettingsResponse } from "../../types/response.js";
@@ -9,7 +9,7 @@ const getSettings: ServiceFn<[], SettingsResponse> = async (service) => {
 		optionsServices.getSingle(service, {
 			name: "media_storage_used",
 		}),
-		processedImagesServices.getCount(service),
+		LucidServices.processedImage.getCount(service),
 	]);
 	if (mediaStorageUsedRes.error) return mediaStorageUsedRes;
 	if (processedImageCountRes.error) return processedImageCountRes;

@@ -2,11 +2,9 @@ import T from "../../translations/index.js";
 import type z from "zod";
 import type cdnSchema from "../../schemas/cdn.js";
 import { PassThrough, type Readable } from "node:stream";
-import processedImageServices from "./index.js";
+import LucidServices from "../index.js";
 import mediaHelpers from "../../utils/media-helpers.js";
 import Repository from "../../libs/repositories/index.js";
-import mediaServices from "../media/index.js";
-import optionsServices from "../options/index.js";
 import type { ServiceFn } from "../../libs/services/types.js";
 
 const processImage: ServiceFn<
@@ -25,7 +23,7 @@ const processImage: ServiceFn<
 	}
 > = async (service, data) => {
 	const mediaStrategyRes =
-		await mediaServices.checks.checkHasMediaStrategy(service);
+		await LucidServices.media.checks.checkHasMediaStrategy(service);
 	if (mediaStrategyRes.error) return mediaStrategyRes;
 
 	// get og image
@@ -63,11 +61,11 @@ const processImage: ServiceFn<
 
 	// Optimise image
 	const [imageRes, processedCountRes] = await Promise.all([
-		processedImageServices.optimiseImage(service, {
+		LucidServices.processedImage.optimiseImage(service, {
 			buffer: await mediaHelpers.streamToBuffer(res.response.body),
 			options: data.options,
 		}),
-		processedImageServices.getSingleCount(service, {
+		LucidServices.processedImage.getSingleCount(service, {
 			key: data.key,
 		}),
 	]);
@@ -101,7 +99,7 @@ const processImage: ServiceFn<
 	}
 
 	// Check if we can store it
-	const canStoreRes = await processedImageServices.checks.checkCanStore(
+	const canStoreRes = await LucidServices.processedImage.checks.checkCanStore(
 		service,
 		{
 			size: imageRes.data.size,
@@ -141,7 +139,7 @@ const processImage: ServiceFn<
 					key: data.processKey,
 				},
 			}),
-			optionsServices.updateSingle(service, {
+			LucidServices.option.updateSingle(service, {
 				name: "media_storage_used",
 				valueInt: canStoreRes.data.proposedSize,
 			}),

@@ -1,5 +1,5 @@
 import T from "../../../translations/index.js";
-import optionsServices from "../../options/index.js";
+import LucidServices from "../../index.js";
 import type { ServiceFn } from "../../../libs/services/types.js";
 
 const checkCanUpdateMedia: ServiceFn<
@@ -43,7 +43,7 @@ const checkCanUpdateMedia: ServiceFn<
 		};
 	}
 
-	const storageUsedRes = await optionsServices.getSingle(service, {
+	const storageUsedRes = await LucidServices.option.getSingle(service, {
 		name: "media_storage_used",
 	});
 	if (storageUsedRes.error) return storageUsedRes;

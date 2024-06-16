@@ -1,4 +1,4 @@
-import usersServices from "./index.js";
+import LucidServices from "../index.js";
 import Repository from "../../libs/repositories/index.js";
 import type { ServiceFn } from "../../libs/services/types.js";
 
@@ -21,7 +21,7 @@ const updateMultipleRoles: ServiceFn<
 	const UserRolesRepo = Repository.get("user-roles", service.db);
 
 	const [roleExistsRes] = await Promise.all([
-		usersServices.checks.checkRolesExist(service, {
+		LucidServices.user.checks.checkRolesExist(service, {
 			roleIds: data.roleIds || [],
 		}),
 		UserRolesRepo.deleteMultiple({

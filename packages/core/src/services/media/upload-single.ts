@@ -1,6 +1,4 @@
-import localesServices from "../locales/index.js";
-import mediaServices from "./index.js";
-import translationsServices from "../translations/index.js";
+import LucidServices from "../index.js";
 import {
 	mergeTranslationGroups,
 	getUniquelocaleCodes,
@@ -33,19 +31,17 @@ const uploadSingle: ServiceFn<
 	try {
 		const MediaRepo = Repository.get("media", service.db);
 
-		const localeExistsRes = await localesServices.checks.checkLocalesExist(
-			service,
-			{
+		const localeExistsRes =
+			await LucidServices.locale.checks.checkLocalesExist(service, {
 				localeCodes: getUniquelocaleCodes([
 					data.titleTranslations || [],
 					data.altTranslations || [],
 				]),
-			},
-		);
+			});
 		if (localeExistsRes.error) return localeExistsRes;
 
 		const [translationKeyIdsRes, uploadObjectRes] = await Promise.all([
-			translationsServices.createMultiple(service, {
+			LucidServices.translation.createMultiple(service, {
 				keys: ["title", "alt"],
 				translations: mergeTranslationGroups([
 					{
@@ -58,7 +54,7 @@ const uploadSingle: ServiceFn<
 					},
 				]),
 			}),
-			mediaServices.storage.uploadObject(service, {
+			LucidServices.media.storage.uploadObject(service, {
 				fileData: data.fileData,
 			}),
 		]);

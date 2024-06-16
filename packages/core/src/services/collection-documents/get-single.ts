@@ -1,6 +1,5 @@
 import T from "../../translations/index.js";
-import collectionDocumentBricksServices from "../collection-document-bricks/index.js";
-import collectionsServices from "../collections/index.js";
+import LucidServices from "../index.js";
 import Repository from "../../libs/repositories/index.js";
 import Formatter from "../../libs/formatters/index.js";
 import type z from "zod";
@@ -44,19 +43,20 @@ const getSingle: ServiceFn<
 		};
 	}
 
-	const collectionRes = await collectionsServices.getSingleInstance(service, {
-		key: document.collection_key,
-	});
+	const collectionRes = await LucidServices.collection.getSingleInstance(
+		service,
+		{
+			key: document.collection_key,
+		},
+	);
 	if (collectionRes.error) return collectionRes;
 
 	if (data.query.include?.includes("bricks")) {
-		const bricksRes = await collectionDocumentBricksServices.getMultiple(
-			service,
-			{
+		const bricksRes =
+			await LucidServices.collection.document.brick.getMultiple(service, {
 				documentId: data.id,
 				collectionKey: document.collection_key,
-			},
-		);
+			});
 		if (bricksRes.error) return bricksRes;
 
 		return {

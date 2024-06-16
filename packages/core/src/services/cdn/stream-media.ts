@@ -1,11 +1,10 @@
 import T from "../../translations/index.js";
+import mediaHelpers from "../../utils/media-helpers.js";
+import LucidServices from "../index.js";
 import type { z } from "zod";
 import type { Readable } from "node:stream";
 import type cdnSchema from "../../schemas/cdn.js";
-import mediaHelpers from "../../utils/media-helpers.js";
-import processedImageServices from "../processed-images/index.js";
 import type { ServiceFn } from "../../libs/services/types.js";
-import mediaServices from "../media/index.js";
 
 const streamMedia: ServiceFn<
 	[
@@ -25,7 +24,7 @@ const streamMedia: ServiceFn<
 	const format = mediaHelpers.chooseFormat(data.accept, data.query.format);
 
 	const mediaStrategyRes =
-		await mediaServices.checks.checkHasMediaStrategy(service);
+		await LucidServices.media.checks.checkHasMediaStrategy(service);
 	if (mediaStrategyRes.error) return mediaStrategyRes;
 
 	// ------------------------------
@@ -92,7 +91,7 @@ const streamMedia: ServiceFn<
 	}
 
 	// Process
-	return await processedImageServices.processImage(service, {
+	return await LucidServices.processedImage.processImage(service, {
 		key: data.key,
 		processKey: processKey,
 		options: {

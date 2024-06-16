@@ -1,4 +1,4 @@
-import localesServices from "../locales/index.js";
+import LucidServices from "../index.js";
 import {
 	shouldUpdateTranslations,
 	mergeTranslationGroups,
@@ -23,14 +23,12 @@ const upsertMultiple: ServiceFn<[ServiceData<string>], undefined> = async <
 	data: ServiceData<K>,
 ) => {
 	if (shouldUpdateTranslations(data.items.map((item) => item.translations))) {
-		const localeExistsRes = await localesServices.checks.checkLocalesExist(
-			service,
-			{
+		const localeExistsRes =
+			await LucidServices.locale.checks.checkLocalesExist(service, {
 				localeCodes: getUniquelocaleCodes(
 					data.items.map((item) => item.translations || []),
 				),
-			},
-		);
+			});
 		if (localeExistsRes.error) return localeExistsRes;
 
 		const translations = mergeTranslationGroups<K>(data.items)

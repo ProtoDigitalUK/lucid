@@ -1,7 +1,7 @@
 import T from "../../translations/index.js";
 import collectionsSchema from "../../schemas/collections.js";
 import { swaggerResponse } from "../../utils/swagger-helpers.js";
-import collectionsServices from "../../services/collections/index.js";
+import LucidServices from "../../services/index.js";
 import buildResponse from "../../utils/build-response.js";
 import CollectionsFormatter from "../../libs/formatters/collections.js";
 import serviceWrapper from "../../libs/services/service-wrapper.js";
@@ -13,18 +13,21 @@ const getSingleController: RouteController<
 	typeof collectionsSchema.getSingle.body,
 	typeof collectionsSchema.getSingle.query
 > = async (request, reply) => {
-	const collection = await serviceWrapper(collectionsServices.getSingle, {
-		transaction: false,
-		defaultError: {
-			type: "basic",
-			name: T("method_error_name", {
-				name: T("collection"),
-				method: T("fetch"),
-			}),
-			message: T("default_error_message"),
-			status: 500,
+	const collection = await serviceWrapper(
+		LucidServices.collection.getSingle,
+		{
+			transaction: false,
+			defaultError: {
+				type: "basic",
+				name: T("method_error_name", {
+					name: T("collection"),
+					method: T("fetch"),
+				}),
+				message: T("default_error_message"),
+				status: 500,
+			},
 		},
-	})(
+	)(
 		{
 			db: request.server.config.db.client,
 			config: request.server.config,

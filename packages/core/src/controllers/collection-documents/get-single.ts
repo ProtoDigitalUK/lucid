@@ -4,7 +4,7 @@ import {
 	swaggerResponse,
 	swaggerQueryString,
 } from "../../utils/swagger-helpers.js";
-import collectionDocumentsServices from "../../services/collection-documents/index.js";
+import LucidServices from "../../services/index.js";
 import buildResponse from "../../utils/build-response.js";
 import CollectionDocumentsFormatter from "../../libs/formatters/collection-documents.js";
 import serviceWrapper from "../../libs/services/service-wrapper.js";
@@ -17,7 +17,7 @@ const getSingleController: RouteController<
 	typeof collectionDocumentsSchema.getSingle.query
 > = async (request, reply) => {
 	const document = await serviceWrapper(
-		collectionDocumentsServices.getSingle,
+		LucidServices.collection.document.getSingle,
 		{
 			transaction: false,
 			defaultError: {

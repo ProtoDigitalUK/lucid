@@ -1,4 +1,4 @@
-import emailServices from "./index.js";
+import LucidServices from "../index.js";
 import { getEmailHash } from "../../utils/helpers.js";
 import Repository from "../../libs/repositories/index.js";
 import Formatter from "../../libs/formatters/index.js";
@@ -24,10 +24,10 @@ const sendEmail: ServiceFn<
 	const EmailsFormatter = Formatter.get("emails");
 
 	const emailConfigRes =
-		await emailServices.checks.checkHasEmailConfig(service);
+		await LucidServices.email.checks.checkHasEmailConfig(service);
 	if (emailConfigRes.error) return emailConfigRes;
 
-	const html = await emailServices.renderTemplate(service, {
+	const html = await LucidServices.email.renderTemplate(service, {
 		template: data.template,
 		data: data.data,
 	});

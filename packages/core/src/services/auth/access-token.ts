@@ -2,7 +2,7 @@ import T from "../../translations/index.js";
 import type { FastifyRequest, FastifyReply } from "fastify";
 import constants from "../../constants.js";
 import jwt from "jsonwebtoken";
-import usersServices from "../users/index.js";
+import LucidServices from "../index.js";
 import { LucidAPIError } from "../../utils/error-handler.js";
 
 // TODO: make all functions here use service wrapper and ServiceFn - seperate into own file in access token directory
@@ -15,7 +15,7 @@ export const generateAccessToken = async (
 	userId: number,
 ) => {
 	try {
-		const user = await usersServices.getSingle(
+		const user = await LucidServices.user.getSingle(
 			{
 				db: request.server.config.db.client,
 				config: request.server.config,

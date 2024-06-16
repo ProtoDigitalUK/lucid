@@ -4,7 +4,7 @@ import {
 	swaggerResponse,
 	swaggerHeaders,
 } from "../../utils/swagger-helpers.js";
-import mediaServices from "../../services/media/index.js";
+import LucidServices from "../../services/index.js";
 import buildResponse from "../../utils/build-response.js";
 import MediaFormatter from "../../libs/formatters/media.js";
 import serviceWrapper from "../../libs/services/service-wrapper.js";
@@ -16,7 +16,7 @@ const uploadSingleController: RouteController<
 	typeof mediaSchema.uploadSingle.body,
 	typeof mediaSchema.uploadSingle.query
 > = async (request, reply) => {
-	const mediaId = await serviceWrapper(mediaServices.uploadSingle, {
+	const mediaId = await serviceWrapper(LucidServices.media.uploadSingle, {
 		transaction: true,
 		defaultError: {
 			type: "basic",
@@ -43,7 +43,7 @@ const uploadSingleController: RouteController<
 	);
 	if (mediaId.error) throw new LucidAPIError(mediaId.error);
 
-	const media = await serviceWrapper(mediaServices.getSingle, {
+	const media = await serviceWrapper(LucidServices.media.getSingle, {
 		transaction: false,
 		defaultError: {
 			type: "basic",

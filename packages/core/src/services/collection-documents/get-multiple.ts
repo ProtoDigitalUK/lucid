@@ -1,4 +1,4 @@
-import collectionsServices from "../collections/index.js";
+import LucidServices from "../index.js";
 import Repository from "../../libs/repositories/index.js";
 import Formatter from "../../libs/formatters/index.js";
 import type z from "zod";
@@ -18,9 +18,12 @@ const getMultiple: ServiceFn<
 		count: number;
 	}
 > = async (service, data) => {
-	const collectionRes = await collectionsServices.getSingleInstance(service, {
-		key: data.collectionKey,
-	});
+	const collectionRes = await LucidServices.collection.getSingleInstance(
+		service,
+		{
+			key: data.collectionKey,
+		},
+	);
 	if (collectionRes.error) return collectionRes;
 
 	const CollectionDocumentsRepo = Repository.get(

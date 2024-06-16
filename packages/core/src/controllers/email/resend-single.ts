@@ -4,7 +4,7 @@ import {
 	swaggerResponse,
 	swaggerHeaders,
 } from "../../utils/swagger-helpers.js";
-import emailServices from "../../services/email/index.js";
+import LucidServices from "../../services/index.js";
 import buildResponse from "../../utils/build-response.js";
 import serviceWrapper from "../../libs/services/service-wrapper.js";
 import { LucidAPIError } from "../../utils/error-handler.js";
@@ -15,7 +15,7 @@ const resendSingleController: RouteController<
 	typeof emailsSchema.resendSingle.body,
 	typeof emailsSchema.resendSingle.query
 > = async (request, reply) => {
-	const emailRes = await serviceWrapper(emailServices.resendSingle, {
+	const emailRes = await serviceWrapper(LucidServices.email.resendSingle, {
 		transaction: true,
 		defaultError: {
 			type: "basic",

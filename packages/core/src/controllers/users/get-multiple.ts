@@ -4,7 +4,7 @@ import {
 	swaggerResponse,
 	swaggerQueryString,
 } from "../../utils/swagger-helpers.js";
-import usersServices from "../../services/users/index.js";
+import LucidServices from "../../services/index.js";
 import buildResponse from "../../utils/build-response.js";
 import UsersFormatter from "../../libs/formatters/users.js";
 import serviceWrapper from "../../libs/services/service-wrapper.js";
@@ -16,7 +16,7 @@ const getMultipleController: RouteController<
 	typeof usersSchema.getMultiple.body,
 	typeof usersSchema.getMultiple.query
 > = async (request, reply) => {
-	const users = await serviceWrapper(usersServices.getMultiple, {
+	const users = await serviceWrapper(LucidServices.user.getMultiple, {
 		transaction: false,
 		defaultError: {
 			type: "basic",

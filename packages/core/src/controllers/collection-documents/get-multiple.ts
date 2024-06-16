@@ -5,7 +5,7 @@ import {
 	swaggerQueryString,
 	swaggerHeaders,
 } from "../../utils/swagger-helpers.js";
-import collectionDocumentsServices from "../../services/collection-documents/index.js";
+import LucidServices from "../../services/index.js";
 import buildResponse from "../../utils/build-response.js";
 import CollectionDocumentsFormatter from "../../libs/formatters/collection-documents.js";
 import serviceWrapper from "../../libs/services/service-wrapper.js";
@@ -18,7 +18,7 @@ const getMultipleController: RouteController<
 	typeof collectionDocumentsSchema.getMultiple.query
 > = async (request, reply) => {
 	const documents = await serviceWrapper(
-		collectionDocumentsServices.getMultiple,
+		LucidServices.collection.document.getMultiple,
 		{
 			transaction: false,
 			defaultError: {

@@ -2,7 +2,7 @@ import Repository from "../../libs/repositories/index.js";
 import formatInsertBricks from "./helpers/format-insert-bricks.js";
 import formatPostInsertBricks from "./helpers/format-post-insert-bricks.js";
 import formatInsertFields from "./helpers/format-insert-fields.js";
-import collectionBricksServices from "./index.js";
+import LucidServices from "../index.js";
 import type { ServiceFn } from "../../libs/services/types.js";
 import type CollectionBuilder from "../../libs/builders/collection-builder/index.js";
 import type { BrickSchema } from "../../schemas/collection-bricks.js";
@@ -43,11 +43,13 @@ const createMultiple: ServiceFn<
 	// -------------------------------------------------------------------------------
 	// validation
 	const checkBrickOrder =
-		collectionBricksServices.checks.checkDuplicateOrder(bricks);
+		LucidServices.collection.document.brick.checks.checkDuplicateOrder(
+			bricks,
+		);
 	if (checkBrickOrder.error) return checkBrickOrder;
 
 	const checkValidateBricksFields =
-		await collectionBricksServices.checks.checkValidateBricksFields(
+		await LucidServices.collection.document.brick.checks.checkValidateBricksFields(
 			service,
 			{
 				collection: data.collection,
@@ -58,16 +60,17 @@ const createMultiple: ServiceFn<
 
 	// -------------------------------------------------------------------------------
 	// delete all bricks
-	const deleteAllBricks = await collectionBricksServices.deleteMultipleBricks(
-		service,
-		{
-			documentId: data.documentId,
-			apply: {
-				bricks: data.bricks !== undefined,
-				collectionFields: data.fields !== undefined,
+	const deleteAllBricks =
+		await LucidServices.collection.document.brick.deleteMultipleBricks(
+			service,
+			{
+				documentId: data.documentId,
+				apply: {
+					bricks: data.bricks !== undefined,
+					collectionFields: data.fields !== undefined,
+				},
 			},
-		},
-	);
+		);
 	if (deleteAllBricks.error) return deleteAllBricks;
 
 	// -------------------------------------------------------------------------------
@@ -86,33 +89,35 @@ const createMultiple: ServiceFn<
 
 	// -------------------------------------------------------------------------------
 	// create groups
-	const groups = await collectionBricksServices.createMultipleGroups(
-		service,
-		{
-			documentId: data.documentId,
-			brickGroups: postInsertBricks.map((b) => ({
-				brickId: b.id,
-				groups: b.groups,
-			})),
-		},
-	);
+	const groups =
+		await LucidServices.collection.document.brick.createMultipleGroups(
+			service,
+			{
+				documentId: data.documentId,
+				brickGroups: postInsertBricks.map((b) => ({
+					brickId: b.id,
+					groups: b.groups,
+				})),
+			},
+		);
 	if (groups.error) return groups;
 
 	// -------------------------------------------------------------------------------
 	// create fields
-	const fields = await collectionBricksServices.createMultipleFields(
-		service,
-		{
-			documentId: data.documentId,
-			fields: postInsertBricks.flatMap((b) =>
-				formatInsertFields({
-					groups: groups.data,
-					brick: b,
-					collection: data.collection,
-				}),
-			),
-		},
-	);
+	const fields =
+		await LucidServices.collection.document.brick.createMultipleFields(
+			service,
+			{
+				documentId: data.documentId,
+				fields: postInsertBricks.flatMap((b) =>
+					formatInsertFields({
+						groups: groups.data,
+						brick: b,
+						collection: data.collection,
+					}),
+				),
+			},
+		);
 	if (fields.error) return fields;
 
 	return {

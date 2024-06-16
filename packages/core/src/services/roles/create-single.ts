@@ -1,5 +1,5 @@
 import T from "../../translations/index.js";
-import rolesServices from "./index.js";
+import LucidServices from "../index.js";
 import Repository from "../../libs/repositories/index.js";
 import type { ServiceFn } from "../../libs/services/types.js";
 
@@ -16,7 +16,7 @@ const createSingle: ServiceFn<
 	const RolesRepo = Repository.get("roles", service.db);
 
 	const [validatePermsRes, checkNameIsUnique] = await Promise.all([
-		rolesServices.validatePermissions(service, {
+		LucidServices.role.validatePermissions(service, {
 			permissions: data.permissions,
 		}),
 		RolesRepo.selectSingle({

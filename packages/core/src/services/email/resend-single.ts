@@ -1,5 +1,5 @@
 import T from "../../translations/index.js";
-import emailServices from "./index.js";
+import LucidServices from "../index.js";
 import Repository from "../../libs/repositories/index.js";
 import type { ServiceFn } from "../../libs/services/types.js";
 
@@ -15,7 +15,7 @@ const resendSingle: ServiceFn<
 	}
 > = async (service, data) => {
 	const emailConfigRes =
-		await emailServices.checks.checkHasEmailConfig(service);
+		await LucidServices.email.checks.checkHasEmailConfig(service);
 	if (emailConfigRes.error) return emailConfigRes;
 
 	const EmailsRepo = Repository.get("emails", service.db);
@@ -42,7 +42,7 @@ const resendSingle: ServiceFn<
 
 	const templateData = (email.data ?? {}) as Record<string, unknown>;
 
-	const html = await emailServices.renderTemplate(service, {
+	const html = await LucidServices.email.renderTemplate(service, {
 		template: email.template,
 		data: templateData,
 	});

@@ -3,7 +3,7 @@ import type { FastifyRequest, FastifyReply } from "fastify";
 import constants from "../../constants.js";
 import jwt from "jsonwebtoken";
 import { LucidAPIError } from "../../utils/error-handler.js";
-import auth from "./index.js";
+import LucidServices from "../index.js";
 import Repository from "../../libs/repositories/index.js";
 
 // TODO: make all functions here use service wrapper and ServiceFn - seperate into own file in refresh token directory
@@ -110,7 +110,7 @@ export const verifyRefreshToken = async (
 	} catch (err) {
 		await Promise.all([
 			clearRefreshToken(request, reply),
-			auth.accessToken.clearAccessToken(reply),
+			LucidServices.auth.accessToken.clearAccessToken(reply),
 		]);
 		throw new LucidAPIError({
 			type: "authorisation",

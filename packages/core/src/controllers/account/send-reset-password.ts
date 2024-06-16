@@ -5,7 +5,7 @@ import {
 	swaggerHeaders,
 } from "../../utils/swagger-helpers.js";
 import buildResponse from "../../utils/build-response.js";
-import account from "../../services/account/index.js";
+import LucidServices from "../../services/index.js";
 import serviceWrapper from "../../libs/services/service-wrapper.js";
 import { LucidAPIError } from "../../utils/error-handler.js";
 import type { RouteController } from "../../types/types.js";
@@ -15,15 +15,18 @@ const sendResetPasswordController: RouteController<
 	typeof accountSchema.sendResetPassword.body,
 	typeof accountSchema.sendResetPassword.query
 > = async (request, reply) => {
-	const resetPassword = await serviceWrapper(account.sendResetPassword, {
-		transaction: true,
-		defaultError: {
-			type: "basic",
-			name: T("default_error_name"),
-			message: T("default_error_message"),
-			status: 500,
+	const resetPassword = await serviceWrapper(
+		LucidServices.account.sendResetPassword,
+		{
+			transaction: true,
+			defaultError: {
+				type: "basic",
+				name: T("default_error_name"),
+				message: T("default_error_message"),
+				status: 500,
+			},
 		},
-	})(
+	)(
 		{
 			db: request.server.config.db.client,
 			config: request.server.config,

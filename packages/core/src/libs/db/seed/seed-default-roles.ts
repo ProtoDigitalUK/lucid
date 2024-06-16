@@ -2,7 +2,7 @@ import T from "../../../translations/index.js";
 import constants from "../../../constants.js";
 import { LucidError } from "../../../utils/error-handler.js";
 import serviceWrapper from "../../services/service-wrapper.js";
-import rolesServices from "../../../services/roles/index.js";
+import LucidServices from "../../../services/index.js";
 import Repository from "../../repositories/index.js";
 import Formatter from "../../formatters/index.js";
 import type { ServiceConfig } from "../../services/types.js";
@@ -17,7 +17,7 @@ const seedDefaultRoles = async (service: ServiceConfig) => {
 		const rolePromises = [];
 		for (const role of constants.seedDefaults.roles) {
 			rolePromises.push(
-				serviceWrapper(rolesServices.createSingle, {
+				serviceWrapper(LucidServices.role.createSingle, {
 					transaction: false,
 				})(service, {
 					name: role.name,

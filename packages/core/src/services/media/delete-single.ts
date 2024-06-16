@@ -1,6 +1,5 @@
 import T from "../../translations/index.js";
-import mediaServices from "./index.js";
-import translationsServices from "../translations/index.js";
+import LucidServices from "../index.js";
 import Repository from "../../libs/repositories/index.js";
 import type { ServiceFn } from "../../libs/services/types.js";
 
@@ -13,7 +12,7 @@ const deleteSingle: ServiceFn<
 	undefined
 > = async (service, data) => {
 	const mediaStrategyRes =
-		await mediaServices.checks.checkHasMediaStrategy(service);
+		await LucidServices.media.checks.checkHasMediaStrategy(service);
 	if (mediaStrategyRes.error) return mediaStrategyRes;
 
 	const MediaRepo = Repository.get("media", service.db);
@@ -80,7 +79,7 @@ const deleteSingle: ServiceFn<
 		mediaStrategyRes.data.deleteMultiple(
 			allProcessedImages.map((i) => i.key),
 		),
-		mediaServices.storage.deleteObject(service, {
+		LucidServices.media.storage.deleteObject(service, {
 			key: deleteMedia.key,
 			size: deleteMedia.file_size,
 			processedSize: allProcessedImages.reduce(
@@ -88,7 +87,7 @@ const deleteSingle: ServiceFn<
 				0,
 			),
 		}),
-		translationsServices.deleteMultiple(service, {
+		LucidServices.translation.deleteMultiple(service, {
 			ids: [
 				deleteMedia.title_translation_key_id,
 				deleteMedia.alt_translation_key_id,

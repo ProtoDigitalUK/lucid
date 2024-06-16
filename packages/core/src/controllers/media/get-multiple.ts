@@ -5,7 +5,7 @@ import {
 	swaggerHeaders,
 	swaggerQueryString,
 } from "../../utils/swagger-helpers.js";
-import mediaServices from "../../services/media/index.js";
+import LucidServices from "../../services/index.js";
 import buildResponse from "../../utils/build-response.js";
 import MediaFormatter from "../../libs/formatters/media.js";
 import serviceWrapper from "../../libs/services/service-wrapper.js";
@@ -17,7 +17,7 @@ const getMultipleController: RouteController<
 	typeof mediaSchema.getMultiple.body,
 	typeof mediaSchema.getMultiple.query
 > = async (request, reply) => {
-	const media = await serviceWrapper(mediaServices.getMultiple, {
+	const media = await serviceWrapper(LucidServices.media.getMultiple, {
 		transaction: false,
 		defaultError: {
 			type: "basic",

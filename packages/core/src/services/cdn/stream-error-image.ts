@@ -1,7 +1,6 @@
 import T from "../../translations/index.js";
 import path from "node:path";
 import fs from "fs-extra";
-import getConfig from "../../libs/config/get-config.js";
 import pipeRemoteUrl from "./helpers/pipe-remote-url.js";
 import { getDirName } from "../../utils/helpers.js";
 import type { ServiceError, ServiceFn } from "../../libs/services/types.js";
@@ -19,7 +18,7 @@ const streamErrorImage: ServiceFn<
 		body: fs.ReadStream | Buffer;
 		contentType: string;
 	}
-> = async (_, data) => {
+> = async (service, data) => {
 	if (data.error.status !== 404) {
 		return {
 			error: data.error,
@@ -27,8 +26,10 @@ const streamErrorImage: ServiceFn<
 		};
 	}
 
-	const config = await getConfig();
-	if (config.media?.fallbackImage === false || data.fallback === "0") {
+	if (
+		service.config.media?.fallbackImage === false ||
+		data.fallback === "0"
+	) {
 		return {
 			error: {
 				type: "basic",
@@ -44,7 +45,7 @@ const streamErrorImage: ServiceFn<
 		};
 	}
 
-	if (config.media?.fallbackImage === undefined) {
+	if (service.config.media?.fallbackImage === undefined) {
 		return {
 			error: undefined,
 			data: pipeLocalImage(),
@@ -53,7 +54,7 @@ const streamErrorImage: ServiceFn<
 
 	try {
 		const { buffer, contentType } = await pipeRemoteUrl({
-			url: config.media?.fallbackImage as string,
+			url: service.config.media?.fallbackImage as string,
 		});
 
 		return {

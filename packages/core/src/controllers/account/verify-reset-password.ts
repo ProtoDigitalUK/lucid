@@ -2,7 +2,7 @@ import T from "../../translations/index.js";
 import accountSchema from "../../schemas/account.js";
 import { swaggerResponse } from "../../utils/swagger-helpers.js";
 import serviceWrapper from "../../libs/services/service-wrapper.js";
-import userTokens from "../../services/user-tokens/index.js";
+import LucidServices from "../../services/index.js";
 import { LucidAPIError } from "../../utils/error-handler.js";
 import type { RouteController } from "../../types/types.js";
 
@@ -11,7 +11,7 @@ const verifyResetPasswordController: RouteController<
 	typeof accountSchema.verifyResetPassword.body,
 	typeof accountSchema.verifyResetPassword.query
 > = async (request, reply) => {
-	const token = await serviceWrapper(userTokens.getSingle, {
+	const token = await serviceWrapper(LucidServices.user.token.getSingle, {
 		transaction: false,
 		defaultError: {
 			type: "basic",

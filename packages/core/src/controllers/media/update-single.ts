@@ -4,7 +4,7 @@ import {
 	swaggerResponse,
 	swaggerHeaders,
 } from "../../utils/swagger-helpers.js";
-import mediaServices from "../../services/media/index.js";
+import LucidServices from "../../services/index.js";
 import serviceWrapper from "../../libs/services/service-wrapper.js";
 import { LucidAPIError } from "../../utils/error-handler.js";
 import type { RouteController } from "../../types/types.js";
@@ -14,7 +14,7 @@ const updateSingleController: RouteController<
 	typeof mediaSchema.updateSingle.body,
 	typeof mediaSchema.updateSingle.query
 > = async (request, reply) => {
-	const updateMedia = await serviceWrapper(mediaServices.updateSingle, {
+	const updateMedia = await serviceWrapper(LucidServices.media.updateSingle, {
 		transaction: true,
 		defaultError: {
 			type: "basic",

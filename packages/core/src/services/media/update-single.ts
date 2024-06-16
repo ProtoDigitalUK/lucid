@@ -1,6 +1,5 @@
 import T from "../../translations/index.js";
-import mediaServices from "./index.js";
-import translationsServices from "../translations/index.js";
+import LucidServices from "../index.js";
 import Repository from "../../libs/repositories/index.js";
 import type { MultipartFile } from "@fastify/multipart";
 import type { ServiceFn } from "../../libs/services/types.js";
@@ -60,9 +59,8 @@ const updateSingle: ServiceFn<
 		};
 	}
 
-	const upsertTranslationsRes = await translationsServices.upsertMultiple(
-		service,
-		{
+	const upsertTranslationsRes =
+		await LucidServices.translation.upsertMultiple(service, {
 			keys: {
 				title: media.title_translation_key_id,
 				alt: media.alt_translation_key_id,
@@ -77,8 +75,7 @@ const updateSingle: ServiceFn<
 					key: "alt",
 				},
 			],
-		},
-	);
+		});
 	if (upsertTranslationsRes.error) return upsertTranslationsRes;
 
 	if (data.fileData === undefined) {
@@ -88,11 +85,14 @@ const updateSingle: ServiceFn<
 		};
 	}
 
-	const updateObjectRes = await mediaServices.storage.updateObject(service, {
-		fileData: data.fileData,
-		previousSize: media.file_size,
-		key: media.key,
-	});
+	const updateObjectRes = await LucidServices.media.storage.updateObject(
+		service,
+		{
+			fileData: data.fileData,
+			previousSize: media.file_size,
+			key: media.key,
+		},
+	);
 	if (updateObjectRes.error) return updateObjectRes;
 
 	const mediaUpdateRes = await MediaRepo.updateSingle({

@@ -4,7 +4,7 @@ import {
 	swaggerResponse,
 	swaggerHeaders,
 } from "../../utils/swagger-helpers.js";
-import processedImagesServices from "../../services/processed-images/index.js";
+import LucidServices from "../../services/index.js";
 import serviceWrapper from "../../libs/services/service-wrapper.js";
 import { LucidAPIError } from "../../utils/error-handler.js";
 import type { RouteController } from "../../types/types.js";
@@ -15,7 +15,7 @@ const clearSingleProcessedController: RouteController<
 	typeof mediaSchema.clearSingleProcessed.query
 > = async (request, reply) => {
 	const clearProcessed = await serviceWrapper(
-		processedImagesServices.clearSingle,
+		LucidServices.processedImage.clearSingle,
 		{
 			transaction: true,
 			defaultError: {

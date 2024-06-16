@@ -16,9 +16,9 @@ import routes from "./routes/index.js";
 import { getDirName } from "./utils/helpers.js";
 import getConfig from "./libs/config/get-config.js";
 import { decodeError } from "./utils/error-helpers.js";
-import registerCronJobs from "./services/cron-jobs.js";
 import lucidLogger from "./libs/logging/index.js";
 import serviceWrapper from "./libs/services/service-wrapper.js";
+import LucidServices from "./services/index.js";
 
 const currentDir = getDirName(import.meta.url);
 
@@ -87,7 +87,7 @@ const lucidPlugin = async (fastify: FastifyInstance) => {
 		// ------------------------------------
 		// Initialise
 		await config.db.seed(config);
-		await serviceWrapper(registerCronJobs, {
+		await serviceWrapper(LucidServices.cronJobs, {
 			transaction: false,
 		})({
 			db: config.db.client,

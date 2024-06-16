@@ -4,7 +4,7 @@ import {
 	swaggerResponse,
 	swaggerQueryString,
 } from "../../utils/swagger-helpers.js";
-import localesServices from "../../services/locales/index.js";
+import LucidServices from "../../services/index.js";
 import buildResponse from "../../utils/build-response.js";
 import LocalesFormatter from "../../libs/formatters/locales.js";
 import serviceWrapper from "../../libs/services/service-wrapper.js";
@@ -16,7 +16,7 @@ const getAllController: RouteController<
 	typeof localeSchema.getAll.body,
 	typeof localeSchema.getAll.query
 > = async (request, reply) => {
-	const locales = await serviceWrapper(localesServices.getAll, {
+	const locales = await serviceWrapper(LucidServices.locale.getAll, {
 		transaction: false,
 		defaultError: {
 			type: "basic",
