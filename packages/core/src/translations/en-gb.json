@@ -183,5 +183,6 @@
 	"user_not_found_message": "The user you are trying to access does not exist.",
 	"error_saving_bricks": "Error Saving Bricks",
 	"error_saving_page_duplicate_order": "Duplicate builder orders found: {{order}}.",
-	"login_error_message": "The username/email or password you entered is incorrect."
+	"login_error_message": "The username/email or password you entered is incorrect.",
+	"cron_job_error": "An error occurred while running/registering the cron jobs."
 }

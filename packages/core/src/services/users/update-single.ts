@@ -2,7 +2,7 @@ import T from "../../translations/index.js";
 import argon2 from "argon2";
 import LucidServices from "../index.js";
 import Repository from "../../libs/repositories/index.js";
-import constants from "../../constants.js";
+import constants from "../../constants/constants.js";
 import type { BooleanInt } from "../../libs/db/types.js";
 import type { ServiceFn } from "../../libs/services/types.js";
 

@@ -1,6 +1,6 @@
 import T from "../../translations/index.js";
 import type { FastifyRequest, FastifyReply } from "fastify";
-import constants from "../../constants.js";
+import constants from "../../constants/constants.js";
 import jwt from "jsonwebtoken";
 import { LucidAPIError } from "../../utils/error-handler.js";
 import LucidServices from "../index.js";

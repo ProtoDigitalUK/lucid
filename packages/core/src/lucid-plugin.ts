@@ -87,12 +87,21 @@ const lucidPlugin = async (fastify: FastifyInstance) => {
 		// ------------------------------------
 		// Initialise
 		await config.db.seed(config);
-		await serviceWrapper(LucidServices.cronJobs, {
-			transaction: false,
-		})({
+		//! TODO: register probably should be wrapped in a service wrapper as it means a database transaction being created on Lucid start
+		const cronJobRes = await serviceWrapper(
+			LucidServices.crons.registerCronJobs,
+			{
+				transaction: true,
+			},
+		)({
 			db: config.db.client,
 			config: config,
 		});
+		if (cronJobRes.error) {
+			lucidLogger("error", {
+				message: cronJobRes.error.message || T("cron_job_error"),
+			});
+		}
 
 		const cmsEntryFile = await fs.readFile(
 			path.resolve(currentDir, "../cms/index.html"),

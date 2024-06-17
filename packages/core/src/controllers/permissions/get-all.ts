@@ -1,7 +1,7 @@
 import permissionsSchema from "../../schemas/permissions.js";
 import { swaggerResponse } from "../../utils/swagger-helpers.js";
 import buildResponse from "../../utils/build-response.js";
-import { permissionGroups } from "../../services/permissions.js";
+import permissionGroups from "../../constants/permission-groups.js";
 import Formatter from "../../libs/formatters/index.js";
 import PermissionsFormatter from "../../libs/formatters/permissions.js";
 import type { RouteController } from "../../types/types.js";

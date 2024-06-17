@@ -3,7 +3,7 @@ import z from "zod";
 import CustomField from "../custom-field.js";
 import zodSafeParse from "../utils/zod-safe-parse.js";
 import Formatter from "../../formatters/index.js";
-import constants from "../../../constants.js";
+import constants from "../../../constants/constants.js";
 import type { LinkValue } from "../../../types.js";
 import type {
 	CFConfig,

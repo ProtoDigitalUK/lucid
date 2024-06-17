@@ -1,7 +1,7 @@
 import { expect, test } from "vitest";
 import T from "../../../translations/index.js";
 import z, { boolean } from "zod";
-import constants from "../../../constants.js";
+import constants from "../../../constants/constants.js";
 import CollectionBuilder from "../../../libs/builders/collection-builder/index.js";
 import flattenFields from "../helpers/flatten-fields.js";
 import {

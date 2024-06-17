@@ -1,5 +1,5 @@
 import T from "../../../translations/index.js";
-import constants from "../../../constants.js";
+import constants from "../../../constants/constants.js";
 import { LucidError } from "../../../utils/error-handler.js";
 import serviceWrapper from "../../services/service-wrapper.js";
 import LucidServices from "../../../services/index.js";

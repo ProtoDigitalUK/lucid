@@ -1,6 +1,6 @@
 import T from "../../translations/index.js";
 import { add } from "date-fns";
-import constants from "../../constants.js";
+import constants from "../../constants/constants.js";
 import LucidServices from "../index.js";
 import Repository from "../../libs/repositories/index.js";
 import type { ServiceFn } from "../../libs/services/types.js";

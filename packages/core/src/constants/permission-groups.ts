@@ -1,7 +1,6 @@
 import type { PermissionGroupKey, PermissionGroup } from "../types/response.js";
-import Formatter from "../libs/formatters/index.js";
 
-export const permissionGroups: Record<PermissionGroupKey, PermissionGroup> = {
+const permissionGroups: Record<PermissionGroupKey, PermissionGroup> = {
 	users: {
 		key: "users_permissions",
 		permissions: ["create_user", "update_user", "delete_user"],
@@ -28,14 +27,4 @@ export const permissionGroups: Record<PermissionGroupKey, PermissionGroup> = {
 	},
 };
 
-const getPermissions = () => {
-	const PermissionsFormatter = Formatter.get("permissions");
-
-	const formattedPermissions = PermissionsFormatter.formatMultiple({
-		permissions: permissionGroups,
-	});
-
-	return formattedPermissions.flatMap((group) => group.permissions);
-};
-
-export default getPermissions;
+export default permissionGroups;

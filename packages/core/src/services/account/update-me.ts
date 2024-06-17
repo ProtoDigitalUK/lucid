@@ -1,7 +1,7 @@
 import T from "../../translations/index.js";
 import Repository from "../../libs/repositories/index.js";
 import LucidServices from "../index.js";
-import constants from "../../constants.js";
+import constants from "../../constants/constants.js";
 import type { FastifyRequest } from "fastify";
 import type { ServiceFn } from "../../libs/services/types.js";
 

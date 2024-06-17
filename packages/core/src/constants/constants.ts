@@ -1,5 +1,5 @@
-import T from "./translations/index.js";
-import { permissionGroups } from "./services/permissions.js";
+import T from "../translations/index.js";
+import permissionGroups from "./permission-groups.js";
 
 export default {
 	seedDefaults: {
@@ -63,6 +63,7 @@ export default {
 		passwordResetSuccess: "password-reset-success",
 		emailChanged: "email-changed",
 	},
+	cronSchedule: "0 0 * * *",
 	csrfExpiration: 604800, // 7 days in seconds
 	refreshTokenExpiration: 604800, // 7 days in seconds
 	accessTokenExpiration: 300, // 5 minutes in seconds

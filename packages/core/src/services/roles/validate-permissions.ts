@@ -13,7 +13,7 @@ const validatePermissions: ServiceFn<
 	{
 		permission: Permission;
 	}[]
-> = async (_, data) => {
+> = async (service, data) => {
 	if (data.permissions.length === 0) {
 		return {
 			error: undefined,
@@ -21,7 +21,8 @@ const validatePermissions: ServiceFn<
 		};
 	}
 
-	const permissions = LucidServices.permission();
+	const permissionsRes = await LucidServices.permission.getAll(service);
+	if (permissionsRes.error) return permissionsRes;
 
 	const permErrors: Array<{
 		key: string;
@@ -34,7 +35,7 @@ const validatePermissions: ServiceFn<
 	for (let i = 0; i < data.permissions.length; i++) {
 		const permission = data.permissions[i] as Permission;
 
-		if (!permissions.includes(permission)) {
+		if (!permissionsRes.data.includes(permission)) {
 			const findError = permErrors.find((e) => e.key === permission);
 			if (!findError) {
 				permErrors.push({

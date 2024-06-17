@@ -1,5 +1,5 @@
 import projectPackage from "../../../package.json";
-import constants from "../../constants.js";
+import constants from "../../constants/constants.js";
 
 const bgYellow = "\x1b[43m";
 const textYellow = "\x1b[33m";

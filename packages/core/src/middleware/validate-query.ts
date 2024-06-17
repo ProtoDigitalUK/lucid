@@ -1,7 +1,7 @@
 import T from "../translations/index.js";
 import type { FastifyRequest } from "fastify";
 import z, { type ZodTypeAny } from "zod";
-import constants from "../constants.js";
+import constants from "../constants/constants.js";
 import { LucidAPIError } from "../utils/error-handler.js";
 
 export interface RequestQueryParsed {

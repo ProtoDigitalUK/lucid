@@ -14,9 +14,8 @@ import settings from "./settings/index.js";
 import translations from "./translations/index.js";
 import users from "./users/index.js";
 import userTokens from "./user-tokens/index.js";
-// TODO: move these to be in their own folder
-import cronJobs from "./cron-jobs.js";
-import permissions from "./permissions.js";
+import permissions from "./permissions/index.js";
+import crons from "./crons/index.js";
 
 const LucidServices = {
 	auth: auth,
@@ -41,7 +40,7 @@ const LucidServices = {
 	cdn: cdn,
 	locale: locales,
 	translation: translations,
-	cronJobs: cronJobs,
+	crons: crons,
 	permission: permissions,
 };
 

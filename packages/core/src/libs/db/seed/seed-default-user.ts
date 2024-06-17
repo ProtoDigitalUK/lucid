@@ -1,6 +1,6 @@
 import T from "../../../translations/index.js";
 import argon2 from "argon2";
-import constants from "../../../constants.js";
+import constants from "../../../constants/constants.js";
 import { LucidError } from "../../../utils/error-handler.js";
 import Repository from "../../repositories/index.js";
 import Formatter from "../../formatters/index.js";

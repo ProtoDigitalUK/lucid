@@ -1,5 +1,5 @@
 import { LucidAPIError } from "./error-handler.js";
-import constants from "../constants.js";
+import constants from "../constants/constants.js";
 
 export const decodeError = (error: Error) => {
 	if (error instanceof LucidAPIError) {
