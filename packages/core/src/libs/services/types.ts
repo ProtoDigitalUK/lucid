@@ -18,10 +18,11 @@ export type ServiceWrapperConfig = {
 	schema?: ZodType<unknown>;
 	schemaArgIndex?: number; //* The index of the argument to parse the schema against
 	defaultError?: Omit<Partial<ServiceError>, "zod" | "errorResponse">;
+	logError?: boolean;
 };
 
 export type ServiceError = {
-	type: "validation" | "basic" | "forbidden" | "authorisation";
+	type: "validation" | "basic" | "forbidden" | "authorisation" | "cron";
 
 	name?: string;
 	message?: string;

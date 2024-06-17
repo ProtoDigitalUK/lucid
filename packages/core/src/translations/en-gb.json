@@ -11,6 +11,7 @@
 	"user_error_occured_saving_default": "An error occurred while saving the default user.",
 	"locale_error_occured_saving_default": "An error occurred while saving the default locales.",
 	"an_error_occurred_clearing_expired_tokens": "An error occurred while clearing expired tokens.",
+	"an_error_occurred_clearing_expired_locales": "An error occurred while clearing expired locales.",
 	"swagger_response_200": "Successfull response",
 	"swagger_response_201": "Resource created response",
 	"swagger_response_204": "No content response",
@@ -184,5 +185,7 @@
 	"error_saving_bricks": "Error Saving Bricks",
 	"error_saving_page_duplicate_order": "Duplicate builder orders found: {{order}}.",
 	"login_error_message": "The username/email or password you entered is incorrect.",
-	"cron_job_error": "An error occurred while running/registering the cron jobs."
+	"cron_job_error_name": "Cron Job Error",
+	"cron_job_error_message": "An error occurred while running/registering the cron jobs.",
+	"running_cron_jobs": "Running cron jobs..."
 }

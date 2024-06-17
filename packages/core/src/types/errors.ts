@@ -1,7 +1,7 @@
 import type z from "zod";
 
 export interface LucidAPIErrorData {
-	type: "validation" | "basic" | "forbidden" | "authorisation";
+	type: "validation" | "basic" | "forbidden" | "authorisation" | "cron";
 
 	name?: string;
 	message?: string;

@@ -17,8 +17,7 @@ import { getDirName } from "./utils/helpers.js";
 import getConfig from "./libs/config/get-config.js";
 import { decodeError } from "./utils/error-helpers.js";
 import lucidLogger from "./libs/logging/index.js";
-import serviceWrapper from "./libs/services/service-wrapper.js";
-import LucidServices from "./services/index.js";
+import registerCronJobs from "./libs/crons/register-cron-jobs.js";
 
 const currentDir = getDirName(import.meta.url);
 
@@ -87,28 +86,14 @@ const lucidPlugin = async (fastify: FastifyInstance) => {
 		// ------------------------------------
 		// Initialise
 		await config.db.seed(config);
-		//! TODO: register probably should be wrapped in a service wrapper as it means a database transaction being created on Lucid start
-		const cronJobRes = await serviceWrapper(
-			LucidServices.crons.registerCronJobs,
-			{
-				transaction: true,
-			},
-		)({
+		registerCronJobs({
 			db: config.db.client,
 			config: config,
 		});
-		if (cronJobRes.error) {
-			lucidLogger("error", {
-				message: cronJobRes.error.message || T("cron_job_error"),
-			});
-		}
-
-		const cmsEntryFile = await fs.readFile(
-			path.resolve(currentDir, "../cms/index.html"),
-		);
-		const landingPageFile = await fs.readFile(
-			path.resolve(currentDir, "../assets/landing.html"),
-		);
+		const [cmsEntryFile, landingPageFile] = await Promise.all([
+			fs.readFile(path.resolve(currentDir, "../cms/index.html")),
+			fs.readFile(path.resolve(currentDir, "../assets/landing.html")),
+		]);
 
 		// ------------------------------------
 		// Routes

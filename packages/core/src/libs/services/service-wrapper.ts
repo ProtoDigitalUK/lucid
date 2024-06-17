@@ -1,5 +1,7 @@
+import T from "../../translations/index.js";
 import TransactionError from "./utils/transaction-error.js";
 import mergeServiceError from "./utils/merge-errors.js";
+import lucidLogger from "../logging/index.js";
 import type {
 	ServiceConfig,
 	ServiceWrapperConfig,
@@ -56,6 +58,13 @@ const serviceWrapper =
 				return result;
 			});
 		} catch (error) {
+			if (wrapperConfig.logError) {
+				lucidLogger("error", {
+					// @ts-expect-error
+					message: error?.message ?? T("an_unknown_error_occurred"),
+				});
+			}
+
 			if (error instanceof TransactionError) {
 				return {
 					error: mergeServiceError(
