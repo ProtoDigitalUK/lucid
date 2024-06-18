@@ -187,5 +187,8 @@
 	"login_error_message": "The username/email or password you entered is incorrect.",
 	"cron_job_error_name": "Cron Job Error",
 	"cron_job_error_message": "An error occurred while running/registering the cron jobs.",
-	"running_cron_jobs": "Running cron jobs..."
+	"running_cron_jobs": "Running cron jobs...",
+	"seed_error_name": "Seed Error",
+	"seed_error_message": "An error occurred while seeding the database.",
+	"running_database_seed_jobs": "Running database seed jobs..."
 }

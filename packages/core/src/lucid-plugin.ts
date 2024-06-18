@@ -17,7 +17,7 @@ import { getDirName } from "./utils/helpers.js";
 import getConfig from "./libs/config/get-config.js";
 import { decodeError } from "./utils/error-helpers.js";
 import lucidLogger from "./libs/logging/index.js";
-import registerCronJobs from "./libs/crons/register-cron-jobs.js";
+import registerCronJobs from "./libs/actions/register-cron-jobs.js";
 
 const currentDir = getDirName(import.meta.url);
 

@@ -16,6 +16,7 @@ import users from "./users/index.js";
 import userTokens from "./user-tokens/index.js";
 import permissions from "./permissions/index.js";
 import crons from "./crons/index.js";
+import seed from "./seed/index.js";
 
 const LucidServices = {
 	auth: auth,
@@ -42,6 +43,7 @@ const LucidServices = {
 	translation: translations,
 	crons: crons,
 	permission: permissions,
+	seed: seed,
 };
 
 export default LucidServices;

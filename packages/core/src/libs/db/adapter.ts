@@ -10,14 +10,9 @@ import { jsonArrayFrom } from "kysely/helpers/sqlite";
 import { LucidError } from "../../utils/error-handler.js";
 import serviceWrapper from "../services/service-wrapper.js";
 import lucidLogger from "../logging/index.js";
+import LucidServices from "../../services/index.js";
 import type { AdapterType, LucidDB } from "./types.js";
 import type { Config } from "../../types/config.js";
-import type { ServiceFn } from "../services/types.js";
-// Seeds
-import seedDefaultOptions from "./seed/seed-default-options.js";
-import seedDefaultUser from "./seed/seed-default-user.js";
-import seedLocales from "./seed/seed-locales.js";
-import seedDefaultRoles from "./seed/seed-default-roles.js";
 // Migrations
 import Migration00000001 from "./migrations/00000001-locales.js";
 import Migration00000002 from "./migrations/00000002-translations.js";
@@ -64,7 +59,12 @@ export default class DatabaseAdapter {
 		}
 
 		if (error) {
-			// TODO: improve error handling, return message to user
+			if (error instanceof Error) {
+				lucidLogger("error", {
+					message: error.message,
+				});
+			}
+
 			throw new LucidError({
 				message: T("db_migration_failed"),
 				kill: true,
@@ -72,25 +72,62 @@ export default class DatabaseAdapter {
 		}
 	}
 	async seed(config: Config) {
-		const seedData: ServiceFn<[], undefined> = async (service) => {
-			await Promise.allSettled([
-				seedDefaultOptions(service),
-				seedDefaultUser(service),
-				seedLocales(service),
-				seedDefaultRoles(service),
-			]);
-			return {
-				error: undefined,
-				data: undefined,
-			};
-		};
+		try {
+			lucidLogger("info", {
+				message: T("running_database_seed_jobs"),
+			});
 
-		await serviceWrapper(seedData, {
-			transaction: true,
-		})({
-			db: this.client,
-			config: config,
-		});
+			await Promise.all([
+				serviceWrapper(LucidServices.seed.defaultOptions, {
+					transaction: true,
+					logError: true,
+					defaultError: {
+						name: T("seed_error_name"),
+						message: T("option_error_occured_saving_default"),
+					},
+				})({
+					db: this.client,
+					config: config,
+				}),
+				serviceWrapper(LucidServices.seed.defaultRoles, {
+					transaction: true,
+					logError: true,
+					defaultError: {
+						name: T("seed_error_name"),
+						message: T("roles_error_occured_saving_default"),
+					},
+				})({
+					db: this.client,
+					config: config,
+				}),
+				serviceWrapper(LucidServices.seed.defaultUser, {
+					transaction: true,
+					logError: true,
+					defaultError: {
+						name: T("seed_error_name"),
+						message: T("user_error_occured_saving_default"),
+					},
+				})({
+					db: this.client,
+					config: config,
+				}),
+				serviceWrapper(LucidServices.seed.syncLocales, {
+					transaction: true,
+					logError: true,
+					defaultError: {
+						name: T("seed_error_name"),
+						message: T("locale_error_occured_saving_default"),
+					},
+				})({
+					db: this.client,
+					config: config,
+				}),
+			]);
+		} catch (error) {
+			lucidLogger("error", {
+				message: T("seed_error_message"),
+			});
+		}
 	}
 	// getters
 	get client() {
