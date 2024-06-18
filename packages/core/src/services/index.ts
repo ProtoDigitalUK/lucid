@@ -18,7 +18,7 @@ import permissions from "./permissions/index.js";
 import crons from "./crons/index.js";
 import seed from "./seed/index.js";
 
-const LucidServices = {
+const lucidServices = {
 	auth: auth,
 	collection: {
 		...collections,
@@ -46,4 +46,4 @@ const LucidServices = {
 	seed: seed,
 };
 
-export default LucidServices;
+export default lucidServices;

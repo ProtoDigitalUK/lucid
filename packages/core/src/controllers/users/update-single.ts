@@ -1,7 +1,7 @@
 import T from "../../translations/index.js";
 import usersSchema from "../../schemas/users.js";
 import { swaggerResponse } from "../../utils/swagger-helpers.js";
-import LucidServices from "../../services/index.js";
+import lucidServices from "../../services/index.js";
 import serviceWrapper from "../../libs/services/service-wrapper.js";
 import { LucidAPIError } from "../../utils/error-handler.js";
 import type { RouteController } from "../../types/types.js";
@@ -11,7 +11,7 @@ const updateSingleController: RouteController<
 	typeof usersSchema.updateSingle.body,
 	typeof usersSchema.updateSingle.query
 > = async (request, reply) => {
-	const updateUser = await serviceWrapper(LucidServices.user.updateSingle, {
+	const updateUser = await serviceWrapper(lucidServices.user.updateSingle, {
 		transaction: true,
 		defaultError: {
 			type: "basic",

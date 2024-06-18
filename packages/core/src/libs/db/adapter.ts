@@ -10,7 +10,7 @@ import { jsonArrayFrom } from "kysely/helpers/sqlite";
 import { LucidError } from "../../utils/error-handler.js";
 import serviceWrapper from "../services/service-wrapper.js";
 import lucidLogger from "../logging/index.js";
-import LucidServices from "../../services/index.js";
+import lucidServices from "../../services/index.js";
 import type { AdapterType, LucidDB } from "./types.js";
 import type { Config } from "../../types/config.js";
 // Migrations
@@ -75,7 +75,7 @@ export default class DatabaseAdapter {
 			});
 
 			await Promise.all([
-				serviceWrapper(LucidServices.seed.defaultOptions, {
+				serviceWrapper(lucidServices.seed.defaultOptions, {
 					transaction: true,
 					logError: true,
 					defaultError: {
@@ -86,7 +86,7 @@ export default class DatabaseAdapter {
 					db: this.client,
 					config: config,
 				}),
-				serviceWrapper(LucidServices.seed.defaultRoles, {
+				serviceWrapper(lucidServices.seed.defaultRoles, {
 					transaction: true,
 					logError: true,
 					defaultError: {
@@ -97,7 +97,7 @@ export default class DatabaseAdapter {
 					db: this.client,
 					config: config,
 				}),
-				serviceWrapper(LucidServices.seed.defaultUser, {
+				serviceWrapper(lucidServices.seed.defaultUser, {
 					transaction: true,
 					logError: true,
 					defaultError: {
@@ -108,7 +108,7 @@ export default class DatabaseAdapter {
 					db: this.client,
 					config: config,
 				}),
-				serviceWrapper(LucidServices.seed.syncLocales, {
+				serviceWrapper(lucidServices.seed.syncLocales, {
 					transaction: true,
 					logError: true,
 					defaultError: {

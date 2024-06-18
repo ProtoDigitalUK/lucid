@@ -4,7 +4,7 @@ import {
 	swaggerResponse,
 	swaggerHeaders,
 } from "../../utils/swagger-helpers.js";
-import LucidServices from "../../services/index.js";
+import lucidServices from "../../services/index.js";
 import serviceWrapper from "../../libs/services/service-wrapper.js";
 import { LucidAPIError } from "../../utils/error-handler.js";
 import type { RouteController } from "../../types/types.js";
@@ -14,7 +14,7 @@ const loginController: RouteController<
 	typeof authSchema.login.body,
 	typeof authSchema.login.query
 > = async (request, reply) => {
-	const user = await serviceWrapper(LucidServices.auth.login, {
+	const user = await serviceWrapper(lucidServices.auth.login, {
 		transaction: false,
 		defaultError: {
 			type: "basic",
@@ -36,12 +36,12 @@ const loginController: RouteController<
 	if (user.error) throw new LucidAPIError(user.error);
 
 	await Promise.all([
-		LucidServices.auth.refreshToken.generateRefreshToken(
+		lucidServices.auth.refreshToken.generateRefreshToken(
 			reply,
 			request,
 			user.data.id,
 		),
-		LucidServices.auth.accessToken.generateAccessToken(
+		lucidServices.auth.accessToken.generateAccessToken(
 			reply,
 			request,
 			user.data.id,

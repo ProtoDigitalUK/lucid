@@ -4,7 +4,7 @@ import {
 	swaggerResponse,
 	swaggerQueryString,
 } from "../../utils/swagger-helpers.js";
-import LucidServices from "../../services/index.js";
+import lucidServices from "../../services/index.js";
 import buildResponse from "../../utils/build-response.js";
 import EmailsFormatter from "../../libs/formatters/emails.js";
 import serviceWrapper from "../../libs/services/service-wrapper.js";
@@ -16,7 +16,7 @@ const getMultipleController: RouteController<
 	typeof emailsSchema.getMultiple.body,
 	typeof emailsSchema.getMultiple.query
 > = async (request, reply) => {
-	const emails = await serviceWrapper(LucidServices.email.getMultiple, {
+	const emails = await serviceWrapper(lucidServices.email.getMultiple, {
 		transaction: false,
 		defaultError: {
 			type: "basic",

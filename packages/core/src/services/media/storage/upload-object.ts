@@ -1,6 +1,6 @@
 import T from "../../../translations/index.js";
 import mediaHelpers from "../../../utils/media-helpers.js";
-import LucidServices from "../../index.js";
+import lucidServices from "../../index.js";
 import type { MultipartFile } from "@fastify/multipart";
 import type { ServiceFn } from "../../../libs/services/types.js";
 import type { RouteMediaMetaData } from "../../../utils/media-helpers.js";
@@ -35,7 +35,7 @@ const uploadObject: ServiceFn<
 		}
 
 		const mediaStrategyRes =
-			await LucidServices.media.checks.checkHasMediaStrategy(service);
+			await lucidServices.media.checks.checkHasMediaStrategy(service);
 		if (mediaStrategyRes.error) return mediaStrategyRes;
 
 		// Save file to temp folder
@@ -52,7 +52,7 @@ const uploadObject: ServiceFn<
 
 		// Ensure we available storage space
 		const proposedSizeRes =
-			await LucidServices.media.checks.checkCanStoreMedia(service, {
+			await lucidServices.media.checks.checkCanStoreMedia(service, {
 				size: metaData.size,
 			});
 		if (proposedSizeRes.error) return proposedSizeRes;
@@ -86,7 +86,7 @@ const uploadObject: ServiceFn<
 		metaData.etag = saveObjectRes.response?.etag;
 
 		// Update storage usage stats
-		const updateStorageRes = await LucidServices.option.updateSingle(
+		const updateStorageRes = await lucidServices.option.updateSingle(
 			service,
 			{
 				name: "media_storage_used",

@@ -1,6 +1,6 @@
 import T from "../../translations/index.js";
 import Repository from "../../libs/repositories/index.js";
-import LucidServices from "../index.js";
+import lucidServices from "../index.js";
 import type { ServiceFn } from "../../libs/services/types.js";
 
 const deleteSingle: ServiceFn<
@@ -25,7 +25,7 @@ const deleteSingle: ServiceFn<
 		};
 	}
 
-	await LucidServices.user.checks.checkNotLastUser(service);
+	await lucidServices.user.checks.checkNotLastUser(service);
 
 	const deleteUserRes = await UsersRepo.updateSingle({
 		data: {

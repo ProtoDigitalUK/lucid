@@ -1,4 +1,4 @@
-import LucidServices from "../index.js";
+import lucidServices from "../index.js";
 import serviceWrapper from "../../libs/services/service-wrapper.js";
 import getConfig from "../../libs/config/get-config.js";
 
@@ -14,7 +14,7 @@ const sendExternal = async (data: {
 	};
 }) => {
 	const config = await getConfig();
-	return serviceWrapper(LucidServices.email.sendEmail, {
+	return serviceWrapper(lucidServices.email.sendEmail, {
 		transaction: true,
 	})(
 		{

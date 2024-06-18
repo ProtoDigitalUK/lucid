@@ -4,7 +4,7 @@ import {
 	swaggerResponse,
 	swaggerHeaders,
 } from "../../utils/swagger-helpers.js";
-import LucidServices from "../../services/index.js";
+import lucidServices from "../../services/index.js";
 import serviceWrapper from "../../libs/services/service-wrapper.js";
 import { LucidAPIError } from "../../utils/error-handler.js";
 import type { RouteController } from "../../types/types.js";
@@ -15,7 +15,7 @@ const deleteSingleController: RouteController<
 	typeof collectionDocumentsSchema.deleteSingle.query
 > = async (request, reply) => {
 	const deleteSingle = await serviceWrapper(
-		LucidServices.collection.document.deleteSingle,
+		lucidServices.collection.document.deleteSingle,
 		{
 			transaction: true,
 			defaultError: {

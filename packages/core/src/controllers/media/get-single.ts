@@ -1,7 +1,7 @@
 import T from "../../translations/index.js";
 import mediaSchema from "../../schemas/media.js";
 import { swaggerResponse } from "../../utils/swagger-helpers.js";
-import LucidServices from "../../services/index.js";
+import lucidServices from "../../services/index.js";
 import buildResponse from "../../utils/build-response.js";
 import MediaFormatter from "../../libs/formatters/media.js";
 import serviceWrapper from "../../libs/services/service-wrapper.js";
@@ -13,7 +13,7 @@ const getSingleController: RouteController<
 	typeof mediaSchema.getSingle.body,
 	typeof mediaSchema.getSingle.query
 > = async (request, reply) => {
-	const media = await serviceWrapper(LucidServices.media.getSingle, {
+	const media = await serviceWrapper(lucidServices.media.getSingle, {
 		transaction: false,
 		defaultError: {
 			type: "basic",

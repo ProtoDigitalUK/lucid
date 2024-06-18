@@ -1,7 +1,7 @@
 import T from "../../translations/index.js";
 import emailsSchema from "../../schemas/email.js";
 import { swaggerResponse } from "../../utils/swagger-helpers.js";
-import LucidServices from "../../services/index.js";
+import lucidServices from "../../services/index.js";
 import buildResponse from "../../utils/build-response.js";
 import EmailsFormatter from "../../libs/formatters/emails.js";
 import serviceWrapper from "../../libs/services/service-wrapper.js";
@@ -13,7 +13,7 @@ const getSingleController: RouteController<
 	typeof emailsSchema.getSingle.body,
 	typeof emailsSchema.getSingle.query
 > = async (request, reply) => {
-	const email = await serviceWrapper(LucidServices.email.getSingle, {
+	const email = await serviceWrapper(lucidServices.email.getSingle, {
 		transaction: false,
 		defaultError: {
 			type: "basic",

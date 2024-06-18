@@ -1,7 +1,7 @@
 import T from "../../translations/index.js";
 import settingsSchema from "../../schemas/settings.js";
 import { swaggerResponse } from "../../utils/swagger-helpers.js";
-import LucidServices from "../../services/index.js";
+import lucidServices from "../../services/index.js";
 import buildResponse from "../../utils/build-response.js";
 import SettingsFormatter from "../../libs/formatters/settings.js";
 import serviceWrapper from "../../libs/services/service-wrapper.js";
@@ -13,7 +13,7 @@ const getSettingsController: RouteController<
 	typeof settingsSchema.getSettings.body,
 	typeof settingsSchema.getSettings.query
 > = async (request, reply) => {
-	const settings = await serviceWrapper(LucidServices.setting.getSettings, {
+	const settings = await serviceWrapper(lucidServices.setting.getSettings, {
 		transaction: false,
 		defaultError: {
 			type: "basic",

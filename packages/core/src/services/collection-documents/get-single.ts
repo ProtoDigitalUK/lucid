@@ -1,5 +1,5 @@
 import T from "../../translations/index.js";
-import LucidServices from "../index.js";
+import lucidServices from "../index.js";
 import Repository from "../../libs/repositories/index.js";
 import Formatter from "../../libs/formatters/index.js";
 import type z from "zod";
@@ -38,7 +38,7 @@ const getSingle: ServiceFn<
 		};
 	}
 
-	const collectionRes = await LucidServices.collection.getSingleInstance(
+	const collectionRes = await lucidServices.collection.getSingleInstance(
 		service,
 		{
 			key: document.collection_key,
@@ -48,7 +48,7 @@ const getSingle: ServiceFn<
 
 	if (data.query.include?.includes("bricks")) {
 		const bricksRes =
-			await LucidServices.collection.document.brick.getMultiple(service, {
+			await lucidServices.collection.document.brick.getMultiple(service, {
 				documentId: data.id,
 				collectionKey: document.collection_key,
 			});

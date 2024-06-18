@@ -1,5 +1,5 @@
 import T from "../../translations/index.js";
-import LucidServices from "../index.js";
+import lucidServices from "../index.js";
 import Repository from "../../libs/repositories/index.js";
 import { add } from "date-fns";
 import constants from "../../constants/constants.js";
@@ -30,7 +30,7 @@ const createSingle: ServiceFn<
 				email: data.email,
 			},
 		}),
-		LucidServices.user.checks.checkRolesExist(service, {
+		lucidServices.user.checks.checkRolesExist(service, {
 			roleIds: data.roleIds,
 		}),
 	]);
@@ -92,14 +92,14 @@ const createSingle: ServiceFn<
 		minutes: constants.userInviteTokenExpirationMinutes,
 	}).toISOString();
 
-	const userTokenRes = await LucidServices.user.token.createSingle(service, {
+	const userTokenRes = await lucidServices.user.token.createSingle(service, {
 		userId: newUser.id,
 		tokenType: "password_reset",
 		expiryDate: expiryDate,
 	});
 	if (userTokenRes.error) return userTokenRes;
 
-	const sendEmailRes = await LucidServices.email.sendEmail(service, {
+	const sendEmailRes = await lucidServices.email.sendEmail(service, {
 		type: "internal",
 		to: data.email,
 		subject: T("user_invite_email_subject"),

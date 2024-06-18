@@ -1,5 +1,5 @@
 import T from "../../translations/index.js";
-import LucidServices from "../index.js";
+import lucidServices from "../index.js";
 import Repository from "../../libs/repositories/index.js";
 import type { MultipartFile } from "@fastify/multipart";
 import type { ServiceFn } from "../../libs/services/types.js";
@@ -55,7 +55,7 @@ const updateSingle: ServiceFn<
 	}
 
 	const upsertTranslationsRes =
-		await LucidServices.translation.upsertMultiple(service, {
+		await lucidServices.translation.upsertMultiple(service, {
 			keys: {
 				title: media.title_translation_key_id,
 				alt: media.alt_translation_key_id,
@@ -80,7 +80,7 @@ const updateSingle: ServiceFn<
 		};
 	}
 
-	const updateObjectRes = await LucidServices.media.storage.updateObject(
+	const updateObjectRes = await lucidServices.media.storage.updateObject(
 		service,
 		{
 			fileData: data.fileData,

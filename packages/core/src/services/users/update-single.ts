@@ -1,6 +1,6 @@
 import T from "../../translations/index.js";
 import argon2 from "argon2";
-import LucidServices from "../index.js";
+import lucidServices from "../index.js";
 import Repository from "../../libs/repositories/index.js";
 import constants from "../../constants/constants.js";
 import type { BooleanInt } from "../../libs/db/types.js";
@@ -156,7 +156,7 @@ const updateSingle: ServiceFn<
 				},
 			],
 		}),
-		LucidServices.user.updateMultipleRoles(service, {
+		lucidServices.user.updateMultipleRoles(service, {
 			userId: data.userId,
 			roleIds: data.roleIds,
 		}),
@@ -174,7 +174,7 @@ const updateSingle: ServiceFn<
 	}
 
 	if (data.email !== undefined) {
-		const sendEmailRes = await LucidServices.email.sendEmail(service, {
+		const sendEmailRes = await lucidServices.email.sendEmail(service, {
 			template: constants.emailTemplates.emailChanged,
 			type: "internal",
 			to: data.email,

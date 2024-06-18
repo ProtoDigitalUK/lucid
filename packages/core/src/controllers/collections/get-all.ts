@@ -1,7 +1,7 @@
 import T from "../../translations/index.js";
 import collectionsSchema from "../../schemas/collections.js";
 import { swaggerResponse } from "../../utils/swagger-helpers.js";
-import LucidServices from "../../services/index.js";
+import lucidServices from "../../services/index.js";
 import buildResponse from "../../utils/build-response.js";
 import CollectionsFormatter from "../../libs/formatters/collections.js";
 import serviceWrapper from "../../libs/services/service-wrapper.js";
@@ -13,7 +13,7 @@ const getAllController: RouteController<
 	typeof collectionsSchema.getAll.body,
 	typeof collectionsSchema.getAll.query
 > = async (request, reply) => {
-	const collections = await serviceWrapper(LucidServices.collection.getAll, {
+	const collections = await serviceWrapper(lucidServices.collection.getAll, {
 		transaction: false,
 		defaultError: {
 			type: "basic",

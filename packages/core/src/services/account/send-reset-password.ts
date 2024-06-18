@@ -1,7 +1,7 @@
 import T from "../../translations/index.js";
 import { add } from "date-fns";
 import constants from "../../constants/constants.js";
-import LucidServices from "../index.js";
+import lucidServices from "../index.js";
 import Repository from "../../libs/repositories/index.js";
 import type { ServiceFn } from "../../libs/services/types.js";
 
@@ -41,14 +41,14 @@ const sendResetPassword: ServiceFn<
 		minutes: constants.passwordResetTokenExpirationMinutes,
 	}).toISOString();
 
-	const userToken = await LucidServices.user.token.createSingle(service, {
+	const userToken = await lucidServices.user.token.createSingle(service, {
 		userId: userExists.id,
 		tokenType: "password_reset",
 		expiryDate: expiryDate,
 	});
 	if (userToken.error) return userToken;
 
-	const sendEmail = await LucidServices.email.sendEmail(service, {
+	const sendEmail = await lucidServices.email.sendEmail(service, {
 		type: "internal",
 		to: userExists.email,
 		subject: T("reset_password_email_subject"),

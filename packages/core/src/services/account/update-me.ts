@@ -1,6 +1,6 @@
 import T from "../../translations/index.js";
 import Repository from "../../libs/repositories/index.js";
-import LucidServices from "../index.js";
+import lucidServices from "../index.js";
 import constants from "../../constants/constants.js";
 import type { FastifyRequest } from "fastify";
 import type { ServiceFn } from "../../libs/services/types.js";
@@ -80,7 +80,7 @@ const updateMe: ServiceFn<
 						],
 					})
 				: undefined,
-			LucidServices.account.checks.checkUpdatePassword(service, {
+			lucidServices.account.checks.checkUpdatePassword(service, {
 				password: getUser.password,
 				currentPassword: data.currentPassword,
 				newPassword: data.newPassword,
@@ -156,7 +156,7 @@ const updateMe: ServiceFn<
 	}
 
 	if (data.email !== undefined) {
-		const sendEmail = await LucidServices.email.sendEmail(service, {
+		const sendEmail = await lucidServices.email.sendEmail(service, {
 			template: constants.emailTemplates.emailChanged,
 			type: "internal",
 			to: data.email,

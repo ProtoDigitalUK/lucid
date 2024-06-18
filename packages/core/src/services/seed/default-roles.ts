@@ -2,7 +2,7 @@ import Repository from "../../libs/repositories/index.js";
 import Formatter from "../../libs/formatters/index.js";
 import constants from "../../constants/constants.js";
 import serviceWrapper from "../../libs/services/service-wrapper.js";
-import LucidServices from "../index.js";
+import lucidServices from "../index.js";
 import type { ServiceConfig, ServiceFn } from "../../libs/services/types.js";
 
 const defaultRoles: ServiceFn<[], undefined> = async (
@@ -21,7 +21,7 @@ const defaultRoles: ServiceFn<[], undefined> = async (
 	const rolePromises = [];
 	for (const role of constants.seedDefaults.roles) {
 		rolePromises.push(
-			serviceWrapper(LucidServices.role.createSingle, {
+			serviceWrapper(lucidServices.role.createSingle, {
 				transaction: false,
 			})(service, {
 				name: role.name,

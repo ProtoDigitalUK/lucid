@@ -4,7 +4,7 @@ import {
 	swaggerResponse,
 	swaggerHeaders,
 } from "../../utils/swagger-helpers.js";
-import LucidServices from "../../services/index.js";
+import lucidServices from "../../services/index.js";
 import { swaggerBodyBricksObj } from "../../schemas/collection-bricks.js";
 import { swaggerFieldObj } from "../../schemas/collection-fields.js";
 import buildResponse from "../../utils/build-response.js";
@@ -18,7 +18,7 @@ const upsertSingleController: RouteController<
 	typeof collectionDocumentsSchema.upsertSingle.query
 > = async (request, reply) => {
 	const documentId = await serviceWrapper(
-		LucidServices.collection.document.upsertSingle,
+		lucidServices.collection.document.upsertSingle,
 		{
 			transaction: true,
 			defaultError: {

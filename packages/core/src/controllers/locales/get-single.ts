@@ -1,7 +1,7 @@
 import T from "../../translations/index.js";
 import localeSchema from "../../schemas/locales.js";
 import { swaggerResponse } from "../../utils/swagger-helpers.js";
-import LucidServices from "../../services/index.js";
+import lucidServices from "../../services/index.js";
 import buildResponse from "../../utils/build-response.js";
 import LocalesFormatter from "../../libs/formatters/locales.js";
 import serviceWrapper from "../../libs/services/service-wrapper.js";
@@ -13,7 +13,7 @@ const getSingleController: RouteController<
 	typeof localeSchema.getSingle.body,
 	typeof localeSchema.getSingle.query
 > = async (request, reply) => {
-	const localeRes = await serviceWrapper(LucidServices.locale.getSingle, {
+	const localeRes = await serviceWrapper(lucidServices.locale.getSingle, {
 		transaction: false,
 		defaultError: {
 			type: "basic",

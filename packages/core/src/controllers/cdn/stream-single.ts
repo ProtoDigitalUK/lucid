@@ -1,6 +1,6 @@
 import cdnSchema from "../../schemas/cdn.js";
 import serviceWrapper from "../../libs/services/service-wrapper.js";
-import LucidServices from "../../services/index.js";
+import lucidServices from "../../services/index.js";
 import { LucidAPIError } from "../../utils/error-handler.js";
 import type { RouteController } from "../../types/types.js";
 
@@ -9,7 +9,7 @@ const streamSingleController: RouteController<
 	typeof cdnSchema.streamSingle.body,
 	typeof cdnSchema.streamSingle.query
 > = async (request, reply) => {
-	const response = await serviceWrapper(LucidServices.cdn.streamMedia, {
+	const response = await serviceWrapper(lucidServices.cdn.streamMedia, {
 		transaction: false,
 	})(
 		{
@@ -24,7 +24,7 @@ const streamSingleController: RouteController<
 	);
 	if (response.error) {
 		const streamErrorImage = await serviceWrapper(
-			LucidServices.cdn.streamErrorImage,
+			lucidServices.cdn.streamErrorImage,
 			{
 				transaction: false,
 			},

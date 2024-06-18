@@ -1,6 +1,6 @@
 import T from "../../translations/index.js";
 import cron from "node-cron";
-import LucidServices from "../../services/index.js";
+import lucidServices from "../../services/index.js";
 import constants from "../../constants/constants.js";
 import lucidLogger from "../logging/index.js";
 import serviceWrapper from "../services/service-wrapper.js";
@@ -13,7 +13,7 @@ const registerCronJobs = async (service: ServiceConfig) => {
 				message: T("running_cron_jobs"),
 			});
 
-			serviceWrapper(LucidServices.crons.clearExpiredLocales, {
+			serviceWrapper(lucidServices.crons.clearExpiredLocales, {
 				transaction: true,
 				logError: true,
 				defaultError: {
@@ -22,7 +22,7 @@ const registerCronJobs = async (service: ServiceConfig) => {
 					message: T("an_error_occurred_clearing_expired_locales"),
 				},
 			})(service);
-			serviceWrapper(LucidServices.crons.clearExpiredTokens, {
+			serviceWrapper(lucidServices.crons.clearExpiredTokens, {
 				transaction: true,
 				logError: true,
 				defaultError: {
@@ -31,7 +31,7 @@ const registerCronJobs = async (service: ServiceConfig) => {
 					message: T("an_error_occurred_clearing_expired_tokens"),
 				},
 			})(service);
-			serviceWrapper(LucidServices.crons.updateMediaStorage, {
+			serviceWrapper(lucidServices.crons.updateMediaStorage, {
 				transaction: true,
 				logError: true,
 				defaultError: {

@@ -1,5 +1,5 @@
 import T from "../../translations/index.js";
-import LucidServices from "../index.js";
+import lucidServices from "../index.js";
 import Repository from "../../libs/repositories/index.js";
 import executeHooks from "../../libs/hooks/execute-hooks.js";
 import merge from "lodash.merge";
@@ -21,7 +21,7 @@ const upsertSingle: ServiceFn<
 	number
 > = async (service, data) => {
 	const collectionRes =
-		await LucidServices.collection.document.checks.checkCollection(
+		await lucidServices.collection.document.checks.checkCollection(
 			service,
 			{
 				key: data.collectionKey,
@@ -76,7 +76,7 @@ const upsertSingle: ServiceFn<
 	}
 
 	const checkDocumentCount =
-		await LucidServices.collection.document.checks.checkSingleCollectionDocumentCount(
+		await lucidServices.collection.document.checks.checkSingleCollectionDocumentCount(
 			service,
 			{
 				collectionKey: data.collectionKey,
@@ -123,7 +123,7 @@ const upsertSingle: ServiceFn<
 	}
 
 	const createMultipleBricks =
-		await LucidServices.collection.document.brick.createMultiple(service, {
+		await lucidServices.collection.document.brick.createMultiple(service, {
 			documentId: document.id,
 			bricks: bodyData.bricks,
 			fields: bodyData.fields,

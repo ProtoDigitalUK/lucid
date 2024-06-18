@@ -1,5 +1,5 @@
 import T from "../../translations/index.js";
-import LucidServices from "../index.js";
+import lucidServices from "../index.js";
 import type { ErrorResult } from "../../types/errors.js";
 import type { Permission } from "../../types/response.js";
 import type { ServiceFn } from "../../libs/services/types.js";
@@ -21,7 +21,7 @@ const validatePermissions: ServiceFn<
 		};
 	}
 
-	const permissionsRes = await LucidServices.permission.getAll(service);
+	const permissionsRes = await lucidServices.permission.getAll(service);
 	if (permissionsRes.error) return permissionsRes;
 
 	const permErrors: Array<{

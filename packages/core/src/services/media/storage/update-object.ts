@@ -1,7 +1,7 @@
 import T from "../../../translations/index.js";
 import type { MultipartFile } from "@fastify/multipart";
 import mediaHelpers from "../../../utils/media-helpers.js";
-import LucidServices from "../../index.js";
+import lucidServices from "../../index.js";
 import type { ServiceFn } from "../../../libs/services/types.js";
 import type { RouteMediaMetaData } from "../../../utils/media-helpers.js";
 
@@ -37,7 +37,7 @@ const updateObject: ServiceFn<
 		}
 
 		const mediaStrategyRes =
-			await LucidServices.media.checks.checkHasMediaStrategy(service);
+			await lucidServices.media.checks.checkHasMediaStrategy(service);
 		if (mediaStrategyRes.error) return mediaStrategyRes;
 
 		// Save file to temp folder
@@ -54,7 +54,7 @@ const updateObject: ServiceFn<
 
 		// Ensure we available storage space
 		const proposedSizeRes =
-			await LucidServices.media.checks.checkCanUpdateMedia(service, {
+			await lucidServices.media.checks.checkCanUpdateMedia(service, {
 				size: metaData.size,
 				previousSize: data.previousSize,
 			});
@@ -90,11 +90,11 @@ const updateObject: ServiceFn<
 		}
 
 		const [storageRes, clearProcessRes] = await Promise.all([
-			LucidServices.option.updateSingle(service, {
+			lucidServices.option.updateSingle(service, {
 				name: "media_storage_used",
 				valueInt: proposedSizeRes.data.proposedSize,
 			}),
-			LucidServices.processedImage.clearSingle(service, {
+			lucidServices.processedImage.clearSingle(service, {
 				key: data.key,
 			}),
 		]);

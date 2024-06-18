@@ -1,4 +1,4 @@
-import LucidServices from "../services/index.js";
+import lucidServices from "../services/index.js";
 import serviceWrapper from "../libs/services/service-wrapper.js";
 import { LucidAPIError } from "../utils/error-handler.js";
 import type { FastifyRequest } from "fastify";
@@ -7,7 +7,7 @@ const contentLocale = async (request: FastifyRequest) => {
 	const contentLocale = request.headers["lucid-content-locale"];
 
 	const localeRes = await serviceWrapper(
-		LucidServices.locale.getSingleFallback,
+		lucidServices.locale.getSingleFallback,
 		{
 			transaction: false,
 		},

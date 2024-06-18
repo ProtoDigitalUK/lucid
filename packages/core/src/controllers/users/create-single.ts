@@ -1,7 +1,7 @@
 import T from "../../translations/index.js";
 import usersSchema from "../../schemas/users.js";
 import { swaggerResponse } from "../../utils/swagger-helpers.js";
-import LucidServices from "../../services/index.js";
+import lucidServices from "../../services/index.js";
 import buildResponse from "../../utils/build-response.js";
 import UsersFormatter from "../../libs/formatters/users.js";
 import serviceWrapper from "../../libs/services/service-wrapper.js";
@@ -13,7 +13,7 @@ const createSingleController: RouteController<
 	typeof usersSchema.createSingle.body,
 	typeof usersSchema.createSingle.query
 > = async (request, reply) => {
-	const userId = await serviceWrapper(LucidServices.user.createSingle, {
+	const userId = await serviceWrapper(lucidServices.user.createSingle, {
 		transaction: true,
 		defaultError: {
 			type: "basic",
@@ -38,7 +38,7 @@ const createSingleController: RouteController<
 	);
 	if (userId.error) throw new LucidAPIError(userId.error);
 
-	const user = await serviceWrapper(LucidServices.user.getSingle, {
+	const user = await serviceWrapper(lucidServices.user.getSingle, {
 		transaction: false,
 		defaultError: {
 			type: "basic",

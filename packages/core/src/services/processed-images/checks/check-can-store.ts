@@ -1,5 +1,5 @@
 import T from "../../../translations/index.js";
-import LucidServices from "../../index.js";
+import lucidServices from "../../index.js";
 import type { ServiceFn } from "../../../libs/services/types.js";
 
 const checkCanStore: ServiceFn<
@@ -24,7 +24,7 @@ const checkCanStore: ServiceFn<
 		};
 	}
 
-	const storageUsed = await LucidServices.option.getSingle(service, {
+	const storageUsed = await lucidServices.option.getSingle(service, {
 		name: "media_storage_used",
 	});
 	if (storageUsed.error) return storageUsed;

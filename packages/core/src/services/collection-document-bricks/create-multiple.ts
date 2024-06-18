@@ -2,7 +2,7 @@ import Repository from "../../libs/repositories/index.js";
 import formatInsertBricks from "./helpers/format-insert-bricks.js";
 import formatPostInsertBricks from "./helpers/format-post-insert-bricks.js";
 import formatInsertFields from "./helpers/format-insert-fields.js";
-import LucidServices from "../index.js";
+import lucidServices from "../index.js";
 import type { ServiceFn } from "../../libs/services/types.js";
 import type CollectionBuilder from "../../libs/builders/collection-builder/index.js";
 import type { BrickSchema } from "../../schemas/collection-bricks.js";
@@ -43,13 +43,13 @@ const createMultiple: ServiceFn<
 	// -------------------------------------------------------------------------------
 	// validation
 	const checkBrickOrder =
-		LucidServices.collection.document.brick.checks.checkDuplicateOrder(
+		lucidServices.collection.document.brick.checks.checkDuplicateOrder(
 			bricks,
 		);
 	if (checkBrickOrder.error) return checkBrickOrder;
 
 	const checkValidateBricksFields =
-		await LucidServices.collection.document.brick.checks.checkValidateBricksFields(
+		await lucidServices.collection.document.brick.checks.checkValidateBricksFields(
 			service,
 			{
 				collection: data.collection,
@@ -61,7 +61,7 @@ const createMultiple: ServiceFn<
 	// -------------------------------------------------------------------------------
 	// delete all bricks
 	const deleteAllBricks =
-		await LucidServices.collection.document.brick.deleteMultipleBricks(
+		await lucidServices.collection.document.brick.deleteMultipleBricks(
 			service,
 			{
 				documentId: data.documentId,
@@ -90,7 +90,7 @@ const createMultiple: ServiceFn<
 	// -------------------------------------------------------------------------------
 	// create groups
 	const groups =
-		await LucidServices.collection.document.brick.createMultipleGroups(
+		await lucidServices.collection.document.brick.createMultipleGroups(
 			service,
 			{
 				documentId: data.documentId,
@@ -105,7 +105,7 @@ const createMultiple: ServiceFn<
 	// -------------------------------------------------------------------------------
 	// create fields
 	const fields =
-		await LucidServices.collection.document.brick.createMultipleFields(
+		await lucidServices.collection.document.brick.createMultipleFields(
 			service,
 			{
 				documentId: data.documentId,
