@@ -130,6 +130,7 @@ export class LucidError extends Error {
 		message: string;
 		scope?: string;
 		kill?: boolean;
+		data?: Record<string, unknown>;
 	}) {
 		super(data.message);
 		this.scope = data.scope;
@@ -138,6 +139,7 @@ export class LucidError extends Error {
 		lucidLogger("error", {
 			message: this.message,
 			scope: this.scope,
+			data: data.data ?? undefined,
 		});
 
 		if (this.kill) process.exit(1);

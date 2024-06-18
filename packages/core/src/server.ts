@@ -13,14 +13,7 @@ const start = async () => {
 			port: Number(process.env.PORT) || 8393,
 			host: process.env.HOST || "localhost",
 		},
-		(err, address) => {
-			if (err) {
-				console.error(err);
-				process.exit(1);
-			}
-
-			serverStartLog(address, startTime);
-		},
+		(err, address) => serverStartLog(address, startTime),
 	);
 };
 

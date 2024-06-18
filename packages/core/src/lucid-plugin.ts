@@ -18,6 +18,7 @@ import getConfig from "./libs/config/get-config.js";
 import { decodeError } from "./utils/error-helpers.js";
 import lucidLogger from "./libs/logging/index.js";
 import registerCronJobs from "./libs/actions/register-cron-jobs.js";
+import { LucidError } from "./utils/error-handler.js";
 
 const currentDir = getDirName(import.meta.url);
 
@@ -163,10 +164,12 @@ const lucidPlugin = async (fastify: FastifyInstance) => {
 			reply.status(status ?? 500).send(response);
 		});
 	} catch (error) {
-		// TODO: improve error handling, return message to user
-		lucidLogger("error", {
+		throw new LucidError({
+			scope: "lucid",
 			message:
-				"An error occurred during the initialisation of the lucid server",
+				// @ts-expect-error
+				error?.message || T("lucid_server_unknow_error"),
+			kill: true,
 		});
 	}
 };

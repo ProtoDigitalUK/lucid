@@ -59,14 +59,11 @@ export default class DatabaseAdapter {
 		}
 
 		if (error) {
-			if (error instanceof Error) {
-				lucidLogger("error", {
-					message: error.message,
-				});
-			}
-
 			throw new LucidError({
-				message: T("db_migration_failed"),
+				// @ts-expect-error
+				message: error?.message || T("db_migration_failed"),
+				// @ts-expect-error
+				data: error.errors,
 				kill: true,
 			});
 		}

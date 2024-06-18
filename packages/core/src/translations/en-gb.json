@@ -190,5 +190,6 @@
 	"running_cron_jobs": "Running cron jobs...",
 	"seed_error_name": "Seed Error",
 	"seed_error_message": "An error occurred while seeding the database.",
-	"running_database_seed_jobs": "Running database seed jobs..."
+	"running_database_seed_jobs": "Running database seed jobs...",
+	"lucid_server_unknow_error": "An error occurred during the initialisation of the Lucid server"
 }
