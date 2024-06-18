@@ -1,16 +1,17 @@
-import type { Config } from "../../types.js";
 import serviceWrapper from "../services/service-wrapper.js";
+import getConfig from "../config/get-config.js";
 import type { ServiceFn } from "../services/types.js";
 
 export type ExtractServiceArgs<T> = T extends ServiceFn<infer Args, unknown>
 	? Args
 	: never;
 
-const toolkitWrapper = <T extends unknown[], R>(props: {
-	config: Config;
+const toolkitWrapper = async <T extends unknown[], R>(props: {
 	fn: ServiceFn<T, R>;
 	data: T;
 }) => {
+	const config = await getConfig();
+
 	return serviceWrapper(props.fn, {
 		transaction: false,
 		defaultError: {
@@ -21,8 +22,8 @@ const toolkitWrapper = <T extends unknown[], R>(props: {
 		},
 	})(
 		{
-			db: props.config.db.client,
-			config: props.config,
+			db: config.db.client,
+			config: config,
 		},
 		...props.data,
 	);
