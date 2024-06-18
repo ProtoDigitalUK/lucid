@@ -4,18 +4,18 @@ import lucidServices from "../../services/index.js";
 
 // TODO: return to this and wrapper to flesh it out
 
-const config = await getConfig();
+// const config = await getConfig();
 
 const toolkit = {
 	email: {
-		sendEmail: (
-			...data: ExtractServiceArgs<typeof lucidServices.email.sendEmail>
-		) =>
-			toolkitWrapper({
-				config: config,
-				fn: lucidServices.email.sendEmail,
-				data: data,
-			}),
+		// sendEmail: (
+		// 	...data: ExtractServiceArgs<typeof lucidServices.email.sendEmail>
+		// ) =>
+		// 	toolkitWrapper({
+		// 		config: config,
+		// 		fn: lucidServices.email.sendEmail,
+		// 		data: data,
+		// 	}),
 	},
 };
 
