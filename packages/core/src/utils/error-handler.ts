@@ -1,17 +1,17 @@
 import T from "../translations/index.js";
-import type z from "zod";
-import type { ErrorResult, LucidAPIErrorData } from "../types/errors.js";
 import lucidLogger from "../libs/logging/index.js";
+import type z from "zod";
+import type { ErrorResult, LucidErrorData } from "../types/errors.js";
 
 /**
  * The LucidAPIError class should be used to throw errors within the API request lifecycle. This will be caught by Fastify's error handler and will return a formatted error response. If the error is a Zod error, it will be formatted into a more readable format.
  * @class
  * @extends Error
- * @param {LucidAPIErrorData["type"]} data.type - The type of error
+ * @param {LucidErrorData["type"]} data.type - The type of error
  * @param {string} [data.name] - The error name
  * @param {string} [data.message] - The error message
  * @param {number} [data.status] - The HTTP status code
- * @param {LucidAPIErrorData["code"]} [data.code] - The error code
+ * @param {LucidErrorData["code"]} [data.code] - The error code
  * @param {z.ZodError} [data.zod] - The Zod error object - this is formatted and stored in the errors property
  * @param {ErrorResult} [data.errorResponse] - The error result object - this is returned in the response
  * @returns {void}
@@ -38,13 +38,12 @@ import lucidLogger from "../libs/logging/index.js";
  *    },
  * });
  */
-// TODO: update to use service wrapper error type
 export class LucidAPIError extends Error {
-	type: LucidAPIErrorData["type"] = "basic";
-	code: LucidAPIErrorData["code"];
-	errorResponse: LucidAPIErrorData["errorResponse"];
-	status: LucidAPIErrorData["status"];
-	constructor(data: LucidAPIErrorData) {
+	type: LucidErrorData["type"] = "basic";
+	code: LucidErrorData["code"];
+	errorResponse: LucidErrorData["errorResponse"];
+	status: LucidErrorData["status"];
+	constructor(data: LucidErrorData) {
 		super(data.message);
 		this.type = data.type;
 		this.code = data.code;
@@ -80,29 +79,6 @@ export class LucidAPIError extends Error {
 				break;
 			}
 		}
-	}
-	// public methods
-	// TODO: remove
-	setMissingValues(data: Partial<LucidAPIErrorData>) {
-		if (
-			(this.name === undefined || this.name === "") &&
-			data.name !== undefined
-		)
-			this.name = data.name;
-		if (
-			(this.message === undefined || this.message === "") &&
-			data.message !== undefined
-		)
-			this.message = data.message;
-		if (this.status === undefined && data.status !== undefined)
-			this.status = data.status;
-		if (this.code === undefined && data.code !== undefined)
-			this.code = data.code;
-		if (
-			this.errorResponse === undefined &&
-			data.errorResponse !== undefined
-		)
-			this.errorResponse = data.errorResponse;
 	}
 	// static
 	static formatZodErrors(error: z.ZodIssue[]) {

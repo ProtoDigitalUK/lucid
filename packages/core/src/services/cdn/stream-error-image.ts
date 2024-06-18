@@ -3,7 +3,8 @@ import path from "node:path";
 import fs from "fs-extra";
 import pipeRemoteUrl from "./helpers/pipe-remote-url.js";
 import { getDirName } from "../../utils/helpers.js";
-import type { ServiceError, ServiceFn } from "../../libs/services/types.js";
+import type { ServiceFn } from "../../libs/services/types.js";
+import type { LucidErrorData } from "../../types/errors.js";
 
 const currentDir = getDirName(import.meta.url);
 
@@ -11,7 +12,7 @@ const streamErrorImage: ServiceFn<
 	[
 		{
 			fallback?: "1" | "0";
-			error: ServiceError;
+			error: LucidErrorData;
 		},
 	],
 	{

@@ -1,10 +1,10 @@
 import T from "../../../translations/index.js";
-import type { ServiceError } from "../types.js";
+import type { LucidErrorData } from "../../../types/errors.js";
 
 const mergeServiceError = (
-	error: ServiceError,
-	defaultError?: Omit<Partial<ServiceError>, "zod" | "errorResponse">,
-): ServiceError => {
+	error: LucidErrorData,
+	defaultError?: Omit<Partial<LucidErrorData>, "zod" | "errorResponse">,
+): LucidErrorData => {
 	return {
 		type: "basic",
 		name: error.name ?? defaultError?.name ?? T("unknown_service_error"),
