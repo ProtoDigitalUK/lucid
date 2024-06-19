@@ -1,15 +1,12 @@
-import toolkitWrapper, { type ExtractServiceArgs } from "./toolkit-wrapper.js";
+import toolkitWrapper from "./toolkit-wrapper.js";
 import lucidServices from "../../services/index.js";
+import type { ExtractServiceFnArgs } from "../services/types.js";
 
 const toolkit = {
 	email: {
 		sendEmail: (
-			...data: ExtractServiceArgs<typeof lucidServices.email.sendEmail>
-		) =>
-			toolkitWrapper({
-				fn: lucidServices.email.sendEmail,
-				data: data,
-			}),
+			...data: ExtractServiceFnArgs<typeof lucidServices.email.sendEmail>
+		) => toolkitWrapper(lucidServices.email.sendEmail, data),
 	},
 };
 
