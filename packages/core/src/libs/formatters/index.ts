@@ -1,5 +1,5 @@
 import T from "../../translations/index.js";
-import { LucidError } from "../../utils/error-handler.js";
+import { LucidError } from "../../utils/errors/index.js";
 // Formatters
 import UsersFormatter from "./users.js";
 import UserPermissionsFormatter from "./user-permissions.js";

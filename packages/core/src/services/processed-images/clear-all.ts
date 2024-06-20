@@ -1,6 +1,6 @@
 import Repository from "../../libs/repositories/index.js";
 import lucidServices from "../index.js";
-import type { ServiceFn } from "../../libs/services/types.js";
+import type { ServiceFn } from "../../utils/services/types.js";
 
 const clearAll: ServiceFn<[], undefined> = async (service) => {
 	const mediaStrategyRes =

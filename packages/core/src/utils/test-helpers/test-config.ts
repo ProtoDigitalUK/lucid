@@ -1,6 +1,6 @@
-import getConfig from "../config/get-config.js";
 import path from "node:path";
-import { getDirName } from "../../utils/helpers.js";
+import getConfig from "../../libs/config/get-config.js";
+import { getDirName } from "../../utils/helpers/index.js";
 
 const currentDir = getDirName(import.meta.url);
 

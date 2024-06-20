@@ -3,7 +3,7 @@ import lucidServices from "../index.js";
 import Repository from "../../libs/repositories/index.js";
 import Formatter from "../../libs/formatters/index.js";
 import type z from "zod";
-import type { ServiceFn } from "../../libs/services/types.js";
+import type { ServiceFn } from "../../utils/services/types.js";
 import type collectionDocumentsSchema from "../../schemas/collection-documents.js";
 import type { CollectionDocumentResponse } from "../../types/response.js";
 

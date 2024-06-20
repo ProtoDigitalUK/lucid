@@ -1,10 +1,8 @@
 import { format, getHours } from "date-fns";
 import crypto from "node:crypto";
-import { fileURLToPath } from "node:url";
-import { dirname } from "node:path";
-import Formatter from "../libs/formatters/index.js";
+import Formatter from "../../libs/formatters/index.js";
 
-export const getEmailHash = (data: {
+const genEmailHash = (data: {
 	to: string;
 	template: string;
 	data: Record<string, unknown>;
@@ -18,6 +16,4 @@ export const getEmailHash = (data: {
 	return crypto.createHash("sha256").update(hashString).digest("hex");
 };
 
-export const getDirName = (metaUrl: string) => {
-	return dirname(fileURLToPath(metaUrl));
-};
+export default genEmailHash;

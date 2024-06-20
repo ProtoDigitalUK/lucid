@@ -1,9 +1,9 @@
 import T from "../../translations/index.js";
 import accountSchema from "../../schemas/account.js";
-import { swaggerResponse } from "../../utils/swagger-helpers.js";
-import serviceWrapper from "../../libs/services/service-wrapper.js";
+import { swaggerResponse } from "../../utils/swagger/index.js";
+import serviceWrapper from "../../utils/services/service-wrapper.js";
 import lucidServices from "../../services/index.js";
-import { LucidAPIError } from "../../utils/error-handler.js";
+import { LucidAPIError } from "../../utils/errors/index.js";
 import type { RouteController } from "../../types/types.js";
 
 const verifyResetPasswordController: RouteController<

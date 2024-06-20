@@ -3,7 +3,7 @@ import formatInsertBricks from "./helpers/format-insert-bricks.js";
 import formatPostInsertBricks from "./helpers/format-post-insert-bricks.js";
 import formatInsertFields from "./helpers/format-insert-fields.js";
 import lucidServices from "../index.js";
-import type { ServiceFn } from "../../libs/services/types.js";
+import type { ServiceFn } from "../../utils/services/types.js";
 import type CollectionBuilder from "../../libs/builders/collection-builder/index.js";
 import type { BrickSchema } from "../../schemas/collection-bricks.js";
 import type { FieldSchemaType } from "../../schemas/collection-fields.js";

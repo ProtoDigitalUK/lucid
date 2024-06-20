@@ -1,7 +1,7 @@
 import collectionsServices from "../collections/index.js";
 import Repository from "../../libs/repositories/index.js";
 import Formatter from "../../libs/formatters/index.js";
-import type { ServiceFn } from "../../libs/services/types.js";
+import type { ServiceFn } from "../../utils/services/types.js";
 import type { BrickResponse, FieldResponse } from "../../types/response.js";
 
 const getMultiple: ServiceFn<

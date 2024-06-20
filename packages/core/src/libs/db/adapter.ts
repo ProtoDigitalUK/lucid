@@ -7,9 +7,9 @@ import {
 	type KyselyPlugin,
 } from "kysely";
 import { jsonArrayFrom } from "kysely/helpers/sqlite";
-import { LucidError } from "../../utils/error-handler.js";
-import serviceWrapper from "../services/service-wrapper.js";
-import lucidLogger from "../logging/index.js";
+import { LucidError } from "../../utils/errors/index.js";
+import serviceWrapper from "../../utils/services/service-wrapper.js";
+import lucidLogger from "../../utils/logging/index.js";
 import lucidServices from "../../services/index.js";
 import type { AdapterType, LucidDB } from "./types.js";
 import type { Config } from "../../types/config.js";

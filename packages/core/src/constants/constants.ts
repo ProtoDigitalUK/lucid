@@ -2,6 +2,7 @@ import T from "../translations/index.js";
 import permissionGroups from "./permission-groups.js";
 
 export default {
+	tempDir: "./tmp",
 	seedDefaults: {
 		user: {
 			firstName: "Lucid",

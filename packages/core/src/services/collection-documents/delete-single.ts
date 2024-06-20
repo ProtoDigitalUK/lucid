@@ -1,8 +1,8 @@
 import T from "../../translations/index.js";
 import Repository from "../../libs/repositories/index.js";
 import lucidServices from "../index.js";
-import executeHooks from "../../libs/hooks/execute-hooks.js";
-import type { ServiceFn } from "../../libs/services/types.js";
+import executeHooks from "../../utils/hooks/execute-hooks.js";
+import type { ServiceFn } from "../../utils/services/types.js";
 
 const deleteSingle: ServiceFn<
 	[

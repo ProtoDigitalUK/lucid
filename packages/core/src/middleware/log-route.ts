@@ -1,5 +1,5 @@
 import type { FastifyRequest, FastifyReply } from "fastify";
-import lucidLogger from "../libs/logging/index.js";
+import lucidLogger from "../utils/logging/index.js";
 
 const logRoute =
 	(hook: "prehandler" | "onResponse") =>

@@ -2,7 +2,7 @@ import T from "../../translations/index.js";
 import type { FastifyRequest, FastifyReply } from "fastify";
 import constants from "../../constants/constants.js";
 import jwt from "jsonwebtoken";
-import { LucidAPIError } from "../../utils/error-handler.js";
+import { LucidAPIError } from "../../utils/errors/index.js";
 import lucidServices from "../index.js";
 import Repository from "../../libs/repositories/index.js";
 

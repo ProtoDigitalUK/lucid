@@ -1,8 +1,8 @@
 import lucidServices from "../index.js";
-import { getEmailHash } from "../../utils/helpers.js";
+import { genEmailHash } from "../../utils/helpers/index.js";
 import Repository from "../../libs/repositories/index.js";
 import Formatter from "../../libs/formatters/index.js";
-import type { ServiceFn } from "../../libs/services/types.js";
+import type { ServiceFn } from "../../utils/services/types.js";
 import type { EmailResponse } from "../../types/response.js";
 
 const sendEmail: ServiceFn<
@@ -33,7 +33,7 @@ const sendEmail: ServiceFn<
 	});
 	if (html.error) return html;
 
-	const emailHash = getEmailHash(data);
+	const emailHash = genEmailHash(data);
 
 	const result = await emailConfigRes.data.strategy(
 		{

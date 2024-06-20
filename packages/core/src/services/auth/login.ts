@@ -1,7 +1,7 @@
 import T from "../../translations/index.js";
 import argon2 from "argon2";
 import Repository from "../../libs/repositories/index.js";
-import type { ServiceFn } from "../../libs/services/types.js";
+import type { ServiceFn } from "../../utils/services/types.js";
 
 const login: ServiceFn<
 	[

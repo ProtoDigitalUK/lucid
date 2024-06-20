@@ -1,6 +1,6 @@
 import Fastify from "fastify";
 import lucidPlugin from "./lucid-plugin.js";
-import serverStartLog from "./libs/logging/server-start-log.js";
+import serverStartLog from "./utils/logging/server-start-log.js";
 
 const startTime = process.hrtime();
 const fastify = Fastify();

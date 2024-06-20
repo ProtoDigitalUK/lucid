@@ -2,9 +2,9 @@ import fs from "fs-extra";
 import Handlebars from "handlebars";
 import mjml2html from "mjml";
 import path from "node:path";
-import { getDirName } from "../../utils/helpers.js";
+import { getDirName } from "../../utils/helpers/index.js";
 import type { Config } from "../../types/config.js";
-import type { ServiceFn, ServiceResponse } from "../../libs/services/types.js";
+import type { ServiceFn, ServiceResponse } from "../../utils/services/types.js";
 
 const currentDir = getDirName(import.meta.url);
 

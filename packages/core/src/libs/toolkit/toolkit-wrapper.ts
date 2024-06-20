@@ -1,6 +1,6 @@
-import serviceWrapper from "../services/service-wrapper.js";
+import serviceWrapper from "../../utils/services/service-wrapper.js";
 import getConfig from "../config/get-config.js";
-import type { ServiceFn } from "../services/types.js";
+import type { ServiceFn } from "../../utils/services/types.js";
 
 const toolkitWrapper = async <T extends unknown[], R>(
 	fn: ServiceFn<T, R>,

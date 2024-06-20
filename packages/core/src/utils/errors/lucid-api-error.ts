@@ -1,7 +1,6 @@
-import T from "../translations/index.js";
-import lucidLogger from "../libs/logging/index.js";
+import T from "../../translations/index.js";
 import type z from "zod";
-import type { ErrorResult, LucidErrorData } from "../types/errors.js";
+import type { ErrorResult, LucidErrorData } from "../../types/errors.js";
 
 /**
  * The LucidAPIError class should be used to throw errors within the API request lifecycle. This will be caught by Fastify's error handler and will return a formatted error response. If the error is a Zod error, it will be formatted into a more readable format.
@@ -38,7 +37,7 @@ import type { ErrorResult, LucidErrorData } from "../types/errors.js";
  *    },
  * });
  */
-export class LucidAPIError extends Error {
+class LucidAPIError extends Error {
 	type: LucidErrorData["type"] = "basic";
 	code: LucidErrorData["code"];
 	errorResponse: LucidErrorData["errorResponse"];
@@ -108,40 +107,4 @@ export class LucidAPIError extends Error {
 	}
 }
 
-/**
- * The LucidError class should be used to throw errors in functions that sit outside of API request lifecycle. This class will log the error and optionally kill the process.
- * @class
- * @extends Error
- * @param {string} data.message - The error message
- * @param {string} [data.scope] - Used to identify the scope of the logged error
- * @param {boolean} [data.kill] - If true, the process will exit with code 1
- * @returns {void}
- * @example
- * throw new LucidError({
- *     message: "Cannot set a value to a read-only property",
- *     scope: "plugin-name",
- *     kill: true,
- * });
- */
-export class LucidError extends Error {
-	scope?: string;
-	kill?: boolean;
-	constructor(data: {
-		message: string;
-		scope?: string;
-		kill?: boolean;
-		data?: Record<string, unknown>;
-	}) {
-		super(data.message);
-		this.scope = data.scope;
-		this.kill = data.kill;
-
-		lucidLogger("error", {
-			message: this.message,
-			scope: this.scope,
-			data: data.data ?? undefined,
-		});
-
-		if (this.kill) process.exit(1);
-	}
-}
+export default LucidAPIError;

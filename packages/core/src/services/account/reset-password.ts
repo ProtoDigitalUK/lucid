@@ -3,7 +3,7 @@ import argon2 from "argon2";
 import constants from "../../constants/constants.js";
 import Repository from "../../libs/repositories/index.js";
 import lucidServices from "../index.js";
-import type { ServiceFn } from "../../libs/services/types.js";
+import type { ServiceFn } from "../../utils/services/types.js";
 
 const resetPassword: ServiceFn<
 	[

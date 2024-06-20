@@ -2,7 +2,7 @@ import publicPagesSchema from "../../../schemas/public-pages.js";
 import {
 	swaggerResponse,
 	swaggerQueryString,
-} from "../../../utils/swagger-helpers.js";
+} from "../../../utils/swagger/index.js";
 import type { RouteController } from "../../../types/types.js";
 
 const getSingleController: RouteController<

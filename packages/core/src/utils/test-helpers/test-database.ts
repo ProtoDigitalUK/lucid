@@ -1,7 +1,7 @@
 import fs from "fs-extra";
 import path from "node:path";
 import testConfig from "./test-config.js";
-import { getDirName } from "../../utils/helpers.js";
+import { getDirName } from "../../utils/helpers/index.js";
 
 const currentDir = getDirName(import.meta.url);
 

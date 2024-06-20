@@ -3,7 +3,7 @@ import Repository from "../../libs/repositories/index.js";
 import lucidServices from "../index.js";
 import constants from "../../constants/constants.js";
 import type { FastifyRequest } from "fastify";
-import type { ServiceFn } from "../../libs/services/types.js";
+import type { ServiceFn } from "../../utils/services/types.js";
 
 const updateMe: ServiceFn<
 	[

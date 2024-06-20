@@ -1,8 +1,8 @@
 import T from "../../../translations/index.js";
 import z from "zod";
 import CustomField from "../custom-field.js";
-import mediaHelpers from "../../../utils/media-helpers.js";
 import keyToTitle from "../utils/key-to-title.js";
+import { createCdnUrl } from "../../../utils/media/index.js";
 import zodSafeParse from "../utils/zod-safe-parse.js";
 import type { MediaType } from "../../../types.js";
 import type {
@@ -47,10 +47,7 @@ class MediaCustomField extends CustomField<"media"> {
 			value: props.data?.media_id ?? null,
 			meta: {
 				id: props.data?.media_id ?? null,
-				url: mediaHelpers.createURL(
-					props.host,
-					props.data?.media_key ?? "",
-				),
+				url: createCdnUrl(props.host, props.data?.media_key ?? ""),
 				key: props.data?.media_key ?? null,
 				mimeType: props.data?.media_mime_type ?? null,
 				fileExtension: props.data?.media_file_extension ?? null,

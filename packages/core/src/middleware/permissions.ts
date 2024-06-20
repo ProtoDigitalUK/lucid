@@ -1,6 +1,6 @@
 import T from "../translations/index.js";
 import type { FastifyRequest } from "fastify";
-import { LucidAPIError } from "../utils/error-handler.js";
+import { LucidAPIError } from "../utils/errors/index.js";
 import type { Permission } from "../types/response.js";
 
 const throwPermissionError = () => {

@@ -2,11 +2,11 @@ import lucidServices from "../index.js";
 import {
 	shouldUpdateTranslations,
 	mergeTranslationGroups,
-	type TranslationsObj,
-	getUniquelocaleCodes,
-} from "../../utils/translation-helpers.js";
+	getUniqueLocaleCodes,
+} from "../../utils/translations/index.js";
 import Repository from "../../libs/repositories/index.js";
-import type { ServiceConfig, ServiceFn } from "../../libs/services/types.js";
+import type { ServiceConfig, ServiceFn } from "../../utils/services/types.js";
+import type { TranslationsObj } from "../../types/shared.js";
 
 export interface ServiceData<K extends string> {
 	keys: Record<K, number | null>;
@@ -25,7 +25,7 @@ const upsertMultiple: ServiceFn<[ServiceData<string>], undefined> = async <
 	if (shouldUpdateTranslations(data.items.map((item) => item.translations))) {
 		const localeExistsRes =
 			await lucidServices.locale.checks.checkLocalesExist(service, {
-				localeCodes: getUniquelocaleCodes(
+				localeCodes: getUniqueLocaleCodes(
 					data.items.map((item) => item.translations || []),
 				),
 			});

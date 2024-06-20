@@ -1,10 +1,10 @@
-import T from "../../translations/index.js";
+import T from "../translations/index.js";
 import cron from "node-cron";
-import lucidServices from "../../services/index.js";
-import constants from "../../constants/constants.js";
-import lucidLogger from "../logging/index.js";
-import serviceWrapper from "../services/service-wrapper.js";
-import type { ServiceConfig } from "../services/types.js";
+import lucidServices from "../services/index.js";
+import constants from "../constants/constants.js";
+import lucidLogger from "../utils/logging/index.js";
+import serviceWrapper from "../utils/services/service-wrapper.js";
+import type { ServiceConfig } from "../utils/services/types.js";
 
 const registerCronJobs = async (service: ServiceConfig) => {
 	try {

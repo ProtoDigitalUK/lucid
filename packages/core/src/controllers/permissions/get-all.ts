@@ -1,5 +1,5 @@
 import permissionsSchema from "../../schemas/permissions.js";
-import { swaggerResponse } from "../../utils/swagger-helpers.js";
+import { swaggerResponse } from "../../utils/swagger/index.js";
 import buildResponse from "../../utils/build-response.js";
 import permissionGroups from "../../constants/permission-groups.js";
 import Formatter from "../../libs/formatters/index.js";

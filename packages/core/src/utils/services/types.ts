@@ -1,6 +1,6 @@
 import type { ZodType } from "zod";
 import type { Config } from "../../types/config.js";
-import type { KyselyDB } from "../db/types.js";
+import type { KyselyDB } from "../../libs/db/types.js";
 import type { LucidErrorData } from "../../types/errors.js";
 
 export type ServiceConfig = {

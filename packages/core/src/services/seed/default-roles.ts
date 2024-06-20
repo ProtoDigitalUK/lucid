@@ -1,9 +1,9 @@
 import Repository from "../../libs/repositories/index.js";
 import Formatter from "../../libs/formatters/index.js";
 import constants from "../../constants/constants.js";
-import serviceWrapper from "../../libs/services/service-wrapper.js";
+import serviceWrapper from "../../utils/services/service-wrapper.js";
 import lucidServices from "../index.js";
-import type { ServiceConfig, ServiceFn } from "../../libs/services/types.js";
+import type { ServiceConfig, ServiceFn } from "../../utils/services/types.js";
 
 const defaultRoles: ServiceFn<[], undefined> = async (
 	service: ServiceConfig,

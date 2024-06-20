@@ -1,7 +1,7 @@
+import merge from "lodash.merge";
 import type { Config } from "../../types/config.js";
 import type { HookServiceHandlers, ArgumentsType } from "../../types/hooks.js";
-import type CollectionBuilder from "../builders/collection-builder/index.js";
-import merge from "lodash.merge";
+import type CollectionBuilder from "../../libs/builders/collection-builder/index.js";
 
 const executeHooks = async <
 	S extends keyof HookServiceHandlers,

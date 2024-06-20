@@ -1,5 +1,5 @@
 import Repository from "../../libs/repositories/index.js";
-import type { ServiceFn } from "../../libs/services/types.js";
+import type { ServiceFn } from "../../utils/services/types.js";
 
 /*
     Periodically re-count the media storage usage.

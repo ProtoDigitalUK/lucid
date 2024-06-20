@@ -2,7 +2,7 @@ import T from "../../translations/index.js";
 import lucidServices from "../index.js";
 import type { ErrorResult } from "../../types/errors.js";
 import type { Permission } from "../../types/response.js";
-import type { ServiceFn } from "../../libs/services/types.js";
+import type { ServiceFn } from "../../utils/services/types.js";
 
 const validatePermissions: ServiceFn<
 	[

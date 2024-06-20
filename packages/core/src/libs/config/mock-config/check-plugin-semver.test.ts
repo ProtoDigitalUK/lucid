@@ -2,8 +2,8 @@ import { expect, test, vi } from "vitest";
 import T from "../../../translations/index.js";
 import path from "node:path";
 import getConfig from "../get-config.js";
-import logger from "../../logging/logger.js";
-import { messageFormat } from "../../logging/index.js";
+import logger from "../../../utils/logging/logger.js";
+import { messageFormat } from "../../../utils/logging/index.js";
 import packageJson from "../../../../package.json";
 import semver from "semver";
 

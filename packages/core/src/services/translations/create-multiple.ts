@@ -3,7 +3,7 @@ import type {
 	ServiceFn,
 	ServiceConfig,
 	ServiceResponse,
-} from "../../libs/services/types.js";
+} from "../../utils/services/types.js";
 
 export interface ServiceData<K extends string> {
 	keys: K[];

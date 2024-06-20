@@ -2,7 +2,7 @@ import type z from "zod";
 import Repository from "../../libs/repositories/index.js";
 import Formatter from "../../libs/formatters/index.js";
 import type mediaSchema from "../../schemas/media.js";
-import type { ServiceFn } from "../../libs/services/types.js";
+import type { ServiceFn } from "../../utils/services/types.js";
 import type { MediaResponse } from "../../types/response.js";
 
 const getMultiple: ServiceFn<

@@ -1,7 +1,7 @@
 import T from "../translations/index.js";
 import type { FastifyRequest } from "fastify";
 import z, { type ZodTypeAny } from "zod";
-import { LucidAPIError } from "../utils/error-handler.js";
+import { LucidAPIError } from "../utils/errors/index.js";
 
 const validateParams =
 	(schema: ZodTypeAny) => async (request: FastifyRequest) => {

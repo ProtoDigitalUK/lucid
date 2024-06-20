@@ -1,12 +1,12 @@
 import lucidServices from "../index.js";
 import {
 	mergeTranslationGroups,
-	getUniquelocaleCodes,
-} from "../../utils/translation-helpers.js";
+	getUniqueLocaleCodes,
+} from "../../utils/translations/index.js";
 import Repository from "../../libs/repositories/index.js";
 import type { BooleanInt } from "../../libs/db/types.js";
 import type { MultipartFile } from "@fastify/multipart";
-import type { ServiceFn } from "../../libs/services/types.js";
+import type { ServiceFn } from "../../utils/services/types.js";
 
 const uploadSingle: ServiceFn<
 	[
@@ -33,7 +33,7 @@ const uploadSingle: ServiceFn<
 
 		const localeExistsRes =
 			await lucidServices.locale.checks.checkLocalesExist(service, {
-				localeCodes: getUniquelocaleCodes([
+				localeCodes: getUniqueLocaleCodes([
 					data.titleTranslations || [],
 					data.altTranslations || [],
 				]),

@@ -2,8 +2,8 @@ import T from "../../translations/index.js";
 import path from "node:path";
 import fs from "fs-extra";
 import pipeRemoteUrl from "./helpers/pipe-remote-url.js";
-import { getDirName } from "../../utils/helpers.js";
-import type { ServiceFn } from "../../libs/services/types.js";
+import { getDirName } from "../../utils/helpers/index.js";
+import type { ServiceFn } from "../../utils/services/types.js";
 import type { LucidErrorData } from "../../types/errors.js";
 
 const currentDir = getDirName(import.meta.url);

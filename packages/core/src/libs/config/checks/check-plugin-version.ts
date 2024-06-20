@@ -1,5 +1,5 @@
 import T from "../../../translations/index.js";
-import { LucidError } from "../../../utils/error-handler.js";
+import { LucidError } from "../../../utils/errors/index.js";
 import packageJson from "../../../../package.json";
 import semver from "semver";
 

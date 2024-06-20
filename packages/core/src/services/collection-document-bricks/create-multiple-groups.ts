@@ -1,6 +1,6 @@
 import Repository from "../../libs/repositories/index.js";
 import type { BooleanInt } from "../../libs/db/types.js";
-import type { ServiceFn } from "../../libs/services/types.js";
+import type { ServiceFn } from "../../utils/services/types.js";
 import type { GroupInsertItem } from "./helpers/flatten-fields.js";
 
 export interface GroupsResponse {

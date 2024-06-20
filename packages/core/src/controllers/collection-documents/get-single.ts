@@ -3,12 +3,12 @@ import collectionDocumentsSchema from "../../schemas/collection-documents.js";
 import {
 	swaggerResponse,
 	swaggerQueryString,
-} from "../../utils/swagger-helpers.js";
+} from "../../utils/swagger/index.js";
 import lucidServices from "../../services/index.js";
 import buildResponse from "../../utils/build-response.js";
 import CollectionDocumentsFormatter from "../../libs/formatters/collection-documents.js";
-import serviceWrapper from "../../libs/services/service-wrapper.js";
-import { LucidAPIError } from "../../utils/error-handler.js";
+import serviceWrapper from "../../utils/services/service-wrapper.js";
+import { LucidAPIError } from "../../utils/errors/index.js";
 import type { RouteController } from "../../types/types.js";
 
 const getSingleController: RouteController<

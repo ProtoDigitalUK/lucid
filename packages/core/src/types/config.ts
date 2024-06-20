@@ -3,7 +3,7 @@ import type CollectionBuilder from "../libs/builders/collection-builder/index.js
 import type DatabaseAdapter from "../libs/db/adapter.js";
 import type ConfigSchema from "../libs/config/config-schema.js";
 import type { Readable } from "node:stream";
-import type { RouteMediaMetaData } from "../utils/media-helpers.js";
+import type { RouteMediaMetaData } from "../types/types.js";
 import type { AllHooks } from "./hooks.js";
 
 export type LucidPlugin = (config: Config) => Promise<{

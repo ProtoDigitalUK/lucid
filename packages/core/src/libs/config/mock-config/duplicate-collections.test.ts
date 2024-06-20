@@ -2,8 +2,8 @@ import { expect, test, vi } from "vitest";
 import T from "../../../translations/index.js";
 import path from "node:path";
 import getConfig from "../get-config.js";
-import logger from "../../logging/logger.js";
-import { messageFormat, LoggerScopes } from "../../logging/index.js";
+import logger from "../../../utils/logging/logger.js";
+import { messageFormat, LoggerScopes } from "../../../utils/logging/index.js";
 
 test("should throw duplicate collection key error", async () => {
 	const consoleLogSpy = vi

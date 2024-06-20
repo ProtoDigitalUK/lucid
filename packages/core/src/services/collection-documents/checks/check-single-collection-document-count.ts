@@ -1,6 +1,6 @@
 import T from "../../../translations/index.js";
 import Repository from "../../../libs/repositories/index.js";
-import type { ServiceFn } from "../../../libs/services/types.js";
+import type { ServiceFn } from "../../../utils/services/types.js";
 
 /*
     Checks:

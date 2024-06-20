@@ -1,5 +1,5 @@
 import T from "../../../translations/index.js";
-import lucidLogger from "../../../libs/logging/index.js";
+import lucidLogger from "../../../utils/logging/index.js";
 import Repository from "../../../libs/repositories/index.js";
 import type { FieldErrors } from "../../../types/errors.js";
 import type {
@@ -10,7 +10,10 @@ import type {
 import type { FieldInsertItem } from "../helpers/flatten-fields.js";
 import type BrickBuilder from "../../../libs/builders/brick-builder/index.js";
 import type CollectionBuilder from "../../../libs/builders/collection-builder/index.js";
-import type { ServiceConfig, ServiceFn } from "../../../libs/services/types.js";
+import type {
+	ServiceConfig,
+	ServiceFn,
+} from "../../../utils/services/types.js";
 import type { BrickInsertItem } from "../helpers/format-insert-bricks.js";
 
 const checkValidateBricksFields: ServiceFn<

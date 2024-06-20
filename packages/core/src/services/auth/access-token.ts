@@ -3,7 +3,7 @@ import type { FastifyRequest, FastifyReply } from "fastify";
 import constants from "../../constants/constants.js";
 import jwt from "jsonwebtoken";
 import lucidServices from "../index.js";
-import { LucidAPIError } from "../../utils/error-handler.js";
+import { LucidAPIError } from "../../utils/errors/index.js";
 
 // TODO: make all functions here use service wrapper and ServiceFn - seperate into own file in access token directory
 

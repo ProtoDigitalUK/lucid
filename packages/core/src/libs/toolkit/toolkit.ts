@@ -1,6 +1,6 @@
 import toolkitWrapper from "./toolkit-wrapper.js";
 import lucidServices from "../../services/index.js";
-import type { ExtractServiceFnArgs } from "../services/types.js";
+import type { ExtractServiceFnArgs } from "../../utils/services/types.js";
 
 const toolkit = {
 	email: {

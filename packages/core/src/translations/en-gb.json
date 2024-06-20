@@ -191,5 +191,6 @@
 	"seed_error_name": "Seed Error",
 	"seed_error_message": "An error occurred while seeding the database.",
 	"running_database_seed_jobs": "Running database seed jobs...",
-	"lucid_server_unknow_error": "An error occurred during the initialisation of the Lucid server"
+	"lucid_server_unknow_error": "An error occurred during the initialisation of the Lucid server",
+	"media_error_getting_metadata": "An error occurred while getting the media metadata."
 }

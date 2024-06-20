@@ -6,8 +6,8 @@ import CollectionBuilder from "./libs/builders/collection-builder/index.js";
 import LibSQLAdapter from "./libs/db/adapters/libsql/index.js";
 import PostgresAdapter from "./libs/db/adapters/postgres/index.js";
 import SQLiteAdapter from "./libs/db/adapters/sqlite/index.js";
-import { LucidAPIError, LucidError } from "./utils/error-handler.js";
-import lucidLogger from "./libs/logging/index.js";
+import { LucidAPIError, LucidError } from "./utils/errors/index.js";
+import lucidLogger from "./utils/logging/index.js";
 import toolkit from "./libs/toolkit/toolkit.js";
 
 export {

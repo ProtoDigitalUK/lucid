@@ -1,9 +1,14 @@
 import T from "../../../translations/index.js";
-import mediaHelpers from "../../../utils/media-helpers.js";
 import lucidServices from "../../index.js";
+import {
+	saveStreamToTempFile,
+	getFileMetaData,
+	streamTempFile,
+	deleteTempFile,
+} from "../../../utils/media/index.js";
 import type { MultipartFile } from "@fastify/multipart";
-import type { ServiceFn } from "../../../libs/services/types.js";
-import type { RouteMediaMetaData } from "../../../utils/media-helpers.js";
+import type { ServiceFn } from "../../../utils/services/types.js";
+import type { RouteMediaMetaData } from "../../../types/types.js";
 
 const uploadObject: ServiceFn<
 	[
@@ -39,29 +44,30 @@ const uploadObject: ServiceFn<
 		if (mediaStrategyRes.error) return mediaStrategyRes;
 
 		// Save file to temp folder
-		tempFilePath = await mediaHelpers.saveStreamToTempFile(
+		tempFilePath = await saveStreamToTempFile(
 			data.fileData.file,
 			data.fileData.filename,
 		);
 		// Get meta data from file
-		const metaData = await mediaHelpers.getMetaData({
+		const metaDataRes = await getFileMetaData({
 			filePath: tempFilePath,
 			mimeType: data.fileData.mimetype,
 			fileName: data.fileData.filename,
 		});
+		if (metaDataRes.error) return metaDataRes;
 
 		// Ensure we available storage space
 		const proposedSizeRes =
 			await lucidServices.media.checks.checkCanStoreMedia(service, {
-				size: metaData.size,
+				size: metaDataRes.data.size,
 			});
 		if (proposedSizeRes.error) return proposedSizeRes;
 
 		// Save file to storage
 		const saveObjectRes = await mediaStrategyRes.data.uploadSingle({
-			key: metaData.key,
-			data: mediaHelpers.streamTempFile(tempFilePath),
-			meta: metaData,
+			key: metaDataRes.data.key,
+			data: streamTempFile(tempFilePath),
+			meta: metaDataRes.data,
 		});
 
 		if (saveObjectRes.success === false) {
@@ -83,7 +89,7 @@ const uploadObject: ServiceFn<
 			};
 		}
 
-		metaData.etag = saveObjectRes.response?.etag;
+		metaDataRes.data.etag = saveObjectRes.response?.etag;
 
 		// Update storage usage stats
 		const updateStorageRes = await lucidServices.option.updateSingle(
@@ -97,10 +103,10 @@ const uploadObject: ServiceFn<
 
 		return {
 			error: undefined,
-			data: metaData,
+			data: metaDataRes.data,
 		};
 	} finally {
-		mediaHelpers.deleteTempFile(tempFilePath);
+		deleteTempFile(tempFilePath);
 	}
 };
 

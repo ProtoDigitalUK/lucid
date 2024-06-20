@@ -1,7 +1,7 @@
-import { LucidAPIError } from "./error-handler.js";
-import constants from "../constants/constants.js";
+import { LucidAPIError } from "./index.js";
+import constants from "../../constants/constants.js";
 
-export const decodeError = (error: Error) => {
+const decodeError = (error: Error) => {
 	if (error instanceof LucidAPIError) {
 		return {
 			name: error.name,
@@ -20,3 +20,5 @@ export const decodeError = (error: Error) => {
 		code: constants.errors.code,
 	};
 };
+
+export default decodeError;

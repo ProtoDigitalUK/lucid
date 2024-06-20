@@ -1,5 +1,5 @@
 import Repository from "../../libs/repositories/index.js";
-import type { ServiceConfig, ServiceFn } from "../../libs/services/types.js";
+import type { ServiceConfig, ServiceFn } from "../../utils/services/types.js";
 
 const defaultRoles: ServiceFn<[], undefined> = async (
 	service: ServiceConfig,

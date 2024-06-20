@@ -1,5 +1,5 @@
 import authSchema from "../../schemas/auth.js";
-import { swaggerResponse } from "../../utils/swagger-helpers.js";
+import { swaggerResponse } from "../../utils/swagger/index.js";
 import auth from "../../services/auth/index.js";
 import buildResponse from "../../utils/build-response.js";
 import type { RouteController } from "../../types/types.js";

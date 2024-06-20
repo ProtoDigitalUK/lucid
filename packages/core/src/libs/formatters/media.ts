@@ -1,6 +1,6 @@
-import type { MediaResponse, MediaType } from "../../types/response.js";
-import mediaHelpers from "../../utils/media-helpers.js";
 import Formatter from "./index.js";
+import { createCdnUrl } from "../../utils/media/index.js";
+import type { MediaResponse, MediaType } from "../../types/response.js";
 
 interface MediaPropsT {
 	id: number;
@@ -47,7 +47,7 @@ export default class MediaFormatter {
 		return {
 			id: props.media.id,
 			key: props.media.key,
-			url: mediaHelpers.createURL(props.host, props.media.key),
+			url: createCdnUrl(props.host, props.media.key),
 			titleTranslations:
 				props.media.title_translations?.map((t) => ({
 					value: t.value,

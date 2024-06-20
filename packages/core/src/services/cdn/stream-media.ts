@@ -1,10 +1,13 @@
 import T from "../../translations/index.js";
-import mediaHelpers from "../../utils/media-helpers.js";
 import lucidServices from "../index.js";
+import {
+	chooseAcceptHeaderFormat,
+	generateProcessKey,
+} from "../../utils/media/index.js";
 import type { z } from "zod";
 import type { Readable } from "node:stream";
 import type cdnSchema from "../../schemas/cdn.js";
-import type { ServiceFn } from "../../libs/services/types.js";
+import type { ServiceFn } from "../../utils/services/types.js";
 
 const streamMedia: ServiceFn<
 	[
@@ -21,7 +24,7 @@ const streamMedia: ServiceFn<
 		body: Readable;
 	}
 > = async (service, data) => {
-	const format = mediaHelpers.chooseFormat(data.accept, data.query.format);
+	const format = chooseAcceptHeaderFormat(data.accept, data.query.format);
 
 	const mediaStrategyRes =
 		await lucidServices.media.checks.checkHasMediaStrategy(service);
@@ -60,7 +63,7 @@ const streamMedia: ServiceFn<
 
 	// ------------------------------
 	// Processed Image
-	const processKey = mediaHelpers.generateProcessKey({
+	const processKey = generateProcessKey({
 		key: data.key,
 		options: {
 			format,

@@ -1,10 +1,10 @@
 import T from "../../translations/index.js";
 import accountSchema from "../../schemas/account.js";
-import { swaggerResponse } from "../../utils/swagger-helpers.js";
+import { swaggerResponse } from "../../utils/swagger/index.js";
 import buildResponse from "../../utils/build-response.js";
 import UsersFormatter from "../../libs/formatters/users.js";
-import serviceWrapper from "../../libs/services/service-wrapper.js";
-import { LucidAPIError } from "../../utils/error-handler.js";
+import serviceWrapper from "../../utils/services/service-wrapper.js";
+import { LucidAPIError } from "../../utils/errors/index.js";
 import lucidServices from "../../services/index.js";
 import type { RouteController } from "../../types/types.js";
 

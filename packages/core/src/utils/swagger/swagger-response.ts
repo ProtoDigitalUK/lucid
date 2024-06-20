@@ -1,5 +1,5 @@
-import T from "../translations/index.js";
-import constants from "../constants/constants.js";
+import T from "../../translations/index.js";
+import constants from "../../constants/constants.js";
 
 const metaObject = {
 	type: "object",
@@ -67,7 +67,7 @@ interface SwaggerResponseParams {
 	noPropertise?: boolean;
 }
 
-export const swaggerResponse = (params: SwaggerResponseParams) => {
+const swaggerResponse = (params: SwaggerResponseParams) => {
 	let description = T("swagger_response_200");
 	const headers: {
 		_access?: unknown;
@@ -123,107 +123,4 @@ export const swaggerResponse = (params: SwaggerResponseParams) => {
 	};
 };
 
-interface SwaggerHeaders {
-	// undefine means dont include in the schema, boolean means required or not
-	csrf?: boolean;
-	contentLocale?: boolean;
-}
-
-export const swaggerHeaders = (headers: SwaggerHeaders) => {
-	const propertise: {
-		_csrf?: {
-			type: string;
-			description: string;
-		};
-		"lucid-content-locale"?: {
-			type: string;
-			description: string;
-		};
-	} = {};
-	const required: string[] = [];
-
-	if (headers.csrf !== undefined) {
-		propertise._csrf = {
-			type: "string",
-			description: T("swagger_csrf_header_description"),
-		};
-		if (headers.csrf) {
-			required.push("_csrf");
-		}
-	}
-
-	if (headers.contentLocale !== undefined) {
-		propertise["lucid-content-locale"] = {
-			type: "string",
-			description: T("swagger_content_locale_header_description"),
-		};
-	}
-
-	return {
-		type: "object",
-		properties: propertise,
-		required: required,
-	};
-};
-
-interface SwaggerQueryStringConfig {
-	include?: string[];
-	filters?: {
-		key: string;
-		enum?: string[];
-	}[];
-	sorts?: string[];
-	page?: boolean;
-	perPage?: boolean;
-}
-export const swaggerQueryString = (config: SwaggerQueryStringConfig) => {
-	const queryString: {
-		type: string;
-		properties: Record<string, unknown>;
-	} = {
-		type: "object",
-		properties: {},
-	};
-
-	if (config.include && config.include.length > 0) {
-		queryString.properties.include = {
-			type: "string",
-			enum: config.include,
-			description: T("swagger_query_string_include_description"),
-		};
-	}
-
-	if (config.filters && config.filters.length > 0) {
-		for (const filter of config.filters) {
-			queryString.properties[`filter[${filter.key}]`] = {
-				type: "string",
-				enum: filter.enum,
-				description: T("swagger_query_string_filter_description"),
-			};
-		}
-	}
-
-	if (config.sorts && config.sorts.length > 0) {
-		queryString.properties.sort = {
-			type: "string",
-			enum: config.sorts,
-			description: T("swagger_query_string_sort_description"),
-		};
-	}
-
-	if (config.page) {
-		queryString.properties.page = {
-			type: "number",
-			description: T("swagger_query_string_page_description"),
-		};
-	}
-
-	if (config.perPage) {
-		queryString.properties.perPage = {
-			type: "number",
-			description: T("swagger_query_string_per_page_description"),
-		};
-	}
-
-	return queryString;
-};
+export default swaggerResponse;

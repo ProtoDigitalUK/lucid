@@ -4,12 +4,12 @@ import {
 	swaggerResponse,
 	swaggerHeaders,
 	swaggerQueryString,
-} from "../../utils/swagger-helpers.js";
+} from "../../utils/swagger/index.js";
 import lucidServices from "../../services/index.js";
 import buildResponse from "../../utils/build-response.js";
 import MediaFormatter from "../../libs/formatters/media.js";
-import serviceWrapper from "../../libs/services/service-wrapper.js";
-import { LucidAPIError } from "../../utils/error-handler.js";
+import serviceWrapper from "../../utils/services/service-wrapper.js";
+import { LucidAPIError } from "../../utils/errors/index.js";
 import type { RouteController } from "../../types/types.js";
 
 const getMultipleController: RouteController<

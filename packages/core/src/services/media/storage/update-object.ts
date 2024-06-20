@@ -1,9 +1,14 @@
 import T from "../../../translations/index.js";
-import type { MultipartFile } from "@fastify/multipart";
-import mediaHelpers from "../../../utils/media-helpers.js";
 import lucidServices from "../../index.js";
-import type { ServiceFn } from "../../../libs/services/types.js";
-import type { RouteMediaMetaData } from "../../../utils/media-helpers.js";
+import {
+	saveStreamToTempFile,
+	getFileMetaData,
+	streamTempFile,
+	deleteTempFile,
+} from "../../../utils/media/index.js";
+import type { MultipartFile } from "@fastify/multipart";
+import type { ServiceFn } from "../../../utils/services/types.js";
+import type { RouteMediaMetaData } from "../../../types/types.js";
 
 const updateObject: ServiceFn<
 	[
@@ -41,21 +46,22 @@ const updateObject: ServiceFn<
 		if (mediaStrategyRes.error) return mediaStrategyRes;
 
 		// Save file to temp folder
-		tempFilePath = await mediaHelpers.saveStreamToTempFile(
+		tempFilePath = await saveStreamToTempFile(
 			data.fileData.file,
 			data.fileData.filename,
 		);
 		// Get meta data from file
-		const metaData = await mediaHelpers.getMetaData({
+		const metaDataRes = await getFileMetaData({
 			filePath: tempFilePath,
 			mimeType: data.fileData.mimetype,
 			fileName: data.fileData.filename,
 		});
+		if (metaDataRes.error) return metaDataRes;
 
 		// Ensure we available storage space
 		const proposedSizeRes =
 			await lucidServices.media.checks.checkCanUpdateMedia(service, {
-				size: metaData.size,
+				size: metaDataRes.data.size,
 				previousSize: data.previousSize,
 			});
 		if (proposedSizeRes.error) return proposedSizeRes;
@@ -64,9 +70,9 @@ const updateObject: ServiceFn<
 		const updateObjectRes = await mediaStrategyRes.data.updateSingle(
 			data.key,
 			{
-				key: metaData.key,
-				data: mediaHelpers.streamTempFile(tempFilePath),
-				meta: metaData,
+				key: metaDataRes.data.key,
+				data: streamTempFile(tempFilePath),
+				meta: metaDataRes.data,
 			},
 		);
 
@@ -101,14 +107,14 @@ const updateObject: ServiceFn<
 		if (storageRes.error) return storageRes;
 		if (clearProcessRes.error) return clearProcessRes;
 
-		metaData.etag = updateObjectRes.response?.etag;
+		metaDataRes.data.etag = updateObjectRes.response?.etag;
 
 		return {
 			error: undefined,
-			data: metaData,
+			data: metaDataRes.data,
 		};
 	} finally {
-		mediaHelpers.deleteTempFile(tempFilePath);
+		deleteTempFile(tempFilePath);
 	}
 };
 

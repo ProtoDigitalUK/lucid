@@ -1,7 +1,7 @@
 import cdnSchema from "../../schemas/cdn.js";
-import serviceWrapper from "../../libs/services/service-wrapper.js";
+import serviceWrapper from "../../utils/services/service-wrapper.js";
 import lucidServices from "../../services/index.js";
-import { LucidAPIError } from "../../utils/error-handler.js";
+import { LucidAPIError } from "../../utils/errors/index.js";
 import type { RouteController } from "../../types/types.js";
 
 const streamSingleController: RouteController<

@@ -3,7 +3,7 @@ import { add } from "date-fns";
 import constants from "../../constants/constants.js";
 import lucidServices from "../index.js";
 import Repository from "../../libs/repositories/index.js";
-import type { ServiceFn } from "../../libs/services/types.js";
+import type { ServiceFn } from "../../utils/services/types.js";
 
 const sendResetPassword: ServiceFn<
 	[

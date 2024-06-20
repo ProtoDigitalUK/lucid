@@ -1,6 +1,6 @@
 import T from "../../../translations/index.js";
 import type { BrickInsertItem } from "../helpers/format-insert-bricks.js";
-import type { ServiceResponse } from "../../../libs/services/types.js";
+import type { ServiceResponse } from "../../../utils/services/types.js";
 
 const checkDuplicateOrder = (
 	bricks: Array<BrickInsertItem>,

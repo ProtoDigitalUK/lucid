@@ -1,11 +1,11 @@
 import T from "../../translations/index.js";
+import lucidServices from "../index.js";
+import Repository from "../../libs/repositories/index.js";
+import { streamToBuffer } from "../../utils/media/index.js";
+import { PassThrough, type Readable } from "node:stream";
 import type z from "zod";
 import type cdnSchema from "../../schemas/cdn.js";
-import { PassThrough, type Readable } from "node:stream";
-import lucidServices from "../index.js";
-import mediaHelpers from "../../utils/media-helpers.js";
-import Repository from "../../libs/repositories/index.js";
-import type { ServiceFn } from "../../libs/services/types.js";
+import type { ServiceFn } from "../../utils/services/types.js";
 
 const processImage: ServiceFn<
 	[
@@ -57,7 +57,7 @@ const processImage: ServiceFn<
 	// Optimise image
 	const [imageRes, processedCountRes] = await Promise.all([
 		lucidServices.processedImage.optimiseImage(service, {
-			buffer: await mediaHelpers.streamToBuffer(res.response.body),
+			buffer: await streamToBuffer(res.response.body),
 			options: data.options,
 		}),
 		lucidServices.processedImage.getSingleCount(service, {

@@ -7,9 +7,9 @@ import mergeConfig from "./merge-config.js";
 import defaultConfig from "./default-config.js";
 import CollectionConfigSchema from "../builders/collection-builder/schema.js";
 import BrickConfigSchema from "../builders/brick-builder/schema.js";
-import { LucidError } from "../../utils/error-handler.js";
+import { LucidError } from "../../utils/errors/index.js";
 import CustomFieldSchema from "../custom-fields/schema.js";
-import lucidLogger, { LoggerScopes } from "../logging/index.js";
+import lucidLogger, { LoggerScopes } from "../../utils/logging/index.js";
 
 const lucidConfig = async (config: LucidConfig) => {
 	let configRes = mergeConfig(config, defaultConfig);

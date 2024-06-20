@@ -2,7 +2,7 @@ import Repository from "../../libs/repositories/index.js";
 import Formatter from "../../libs/formatters/index.js";
 import constants from "../../constants/constants.js";
 import argon2 from "argon2";
-import type { ServiceConfig, ServiceFn } from "../../libs/services/types.js";
+import type { ServiceConfig, ServiceFn } from "../../utils/services/types.js";
 
 const defaultUser: ServiceFn<[], undefined> = async (
 	service: ServiceConfig,

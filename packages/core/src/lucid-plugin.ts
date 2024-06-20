@@ -13,12 +13,12 @@ import fastifyMultipart from "@fastify/multipart";
 import fastifySwagger from "@fastify/swagger";
 import fastifySwaggerUi from "@fastify/swagger-ui";
 import routes from "./routes/index.js";
-import { getDirName } from "./utils/helpers.js";
+import { getDirName } from "./utils/helpers/index.js";
 import getConfig from "./libs/config/get-config.js";
-import { decodeError } from "./utils/error-helpers.js";
-import lucidLogger from "./libs/logging/index.js";
-import registerCronJobs from "./libs/actions/register-cron-jobs.js";
-import { LucidError } from "./utils/error-handler.js";
+import { decodeError } from "./utils/errors/index.js";
+import lucidLogger from "./utils/logging/index.js";
+import registerCronJobs from "./actions/register-cron-jobs.js";
+import { LucidError } from "./utils/errors/index.js";
 
 const currentDir = getDirName(import.meta.url);
 
