@@ -39,7 +39,6 @@ const formatPostInsertBricks = (
 				fields: brick.fields,
 			};
 		})
-		// TODO: remove as when Typescript 5.5 is released
 		.filter((b) => b !== null) as {
 		id: number;
 		key: string | undefined;

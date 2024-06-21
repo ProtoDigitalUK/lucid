@@ -39,7 +39,6 @@ const upsertMultiple: ServiceFn<[ServiceData<string>], undefined> = async <
 					translationKeyId: data.keys[translation.key] ?? null,
 				};
 			})
-			// TODO: remove as when Typescript 5.5 is released
 			.filter(
 				(translation) => translation.translationKeyId !== null,
 			) as Array<{

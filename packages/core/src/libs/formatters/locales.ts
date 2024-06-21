@@ -8,24 +8,21 @@ export default class LocalesFormatter {
 		locales: Select<HeadlessLocales>[];
 		localisation: Config["localisation"];
 	}) => {
-		return (
-			props.locales
-				.map((l) => {
-					const configLocale = props.localisation.locales.find(
-						(locale) => locale.code === l.code,
-					);
-					if (!configLocale) {
-						return null;
-					}
-					return this.formatSingle({
-						locale: l,
-						configLocale: configLocale,
-						defaultLocale: props.localisation.defaultLocale,
-					});
-				})
-				// TODO: remove as when Typescript 5.5 is released
-				.filter((l) => l !== null) as LocalesResponse[]
-		);
+		return props.locales
+			.map((l) => {
+				const configLocale = props.localisation.locales.find(
+					(locale) => locale.code === l.code,
+				);
+				if (!configLocale) {
+					return null;
+				}
+				return this.formatSingle({
+					locale: l,
+					configLocale: configLocale,
+					defaultLocale: props.localisation.defaultLocale,
+				});
+			})
+			.filter((l) => l !== null) as LocalesResponse[];
 	};
 	formatSingle = (props: {
 		locale: Select<HeadlessLocales>;

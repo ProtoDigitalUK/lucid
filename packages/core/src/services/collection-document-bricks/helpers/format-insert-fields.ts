@@ -17,28 +17,25 @@ const formatInsertFields = (props: {
 	groups: GroupSimpleResponse[];
 	collection: CollectionBuilder;
 }): CFInsertItem<FieldTypes>[] => {
-	return (
-		props.brick.fields
-			.map((field) => {
-				const fieldInstance = getFieldInstance({
-					collection: props.collection,
-					brick: props.brick,
-					fieldKey: field.key,
-				});
-				if (!fieldInstance) return null;
+	return props.brick.fields
+		.map((field) => {
+			const fieldInstance = getFieldInstance({
+				collection: props.collection,
+				brick: props.brick,
+				fieldKey: field.key,
+			});
+			if (!fieldInstance) return null;
 
-				const targetGroup = props.groups.find(
-					(g) => g.ref === field.groupRef,
-				);
-				return fieldInstance.getInsertField({
-					item: field,
-					brickId: props.brick.id,
-					groupId: targetGroup?.group_id ?? null,
-				});
-			})
-			// TODO: remove as when Typescript 5.5 is released
-			.filter((f) => f !== null) as CFInsertItem<FieldTypes>[]
-	);
+			const targetGroup = props.groups.find(
+				(g) => g.ref === field.groupRef,
+			);
+			return fieldInstance.getInsertField({
+				item: field,
+				brickId: props.brick.id,
+				groupId: targetGroup?.group_id ?? null,
+			});
+		})
+		.filter((f) => f !== null) as CFInsertItem<FieldTypes>[];
 };
 
 const getFieldInstance = (props: {

@@ -23,12 +23,7 @@
 		"lint:fix": "biome lint --apply ./src",
 		"clear-db:postgres": "node ./scripts/clear-db-pg.js"
 	},
-	"files": [
-		"dist",
-		"cms",
-		"templates",
-		"assets"
-	],
+	"files": ["dist", "cms", "templates", "assets"],
 	"author": "Proto Digital",
 	"repository": {
 		"type": "git",
@@ -63,7 +58,7 @@
 		"@types/slug": "^5.0.7",
 		"@types/uuid": "^9.0.8",
 		"tsup": "^8.0.2",
-		"typescript": "^5.4.4"
+		"typescript": "^5.5.2"
 	},
 	"dependencies": {
 		"@fastify/cookie": "^9.3.1",
