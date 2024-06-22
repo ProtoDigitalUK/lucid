@@ -5,6 +5,7 @@ import testDatabase from "../test-helpers/test-database.js";
 import serviceWrapper from "./service-wrapper.js";
 import type { ServiceResponse, ServiceFn } from "./types.js";
 import mergeServiceError from "./utils/merge-errors.js";
+import lucidServices from "../../services/index.js";
 
 const CONSTANTS = {
 	error: {
@@ -68,6 +69,7 @@ test("basic - one level deep service wrapper success and error", async () => {
 			{
 				db: config.db.client,
 				config: config,
+				services: lucidServices,
 			},
 			{
 				data: {
@@ -82,6 +84,7 @@ test("basic - one level deep service wrapper success and error", async () => {
 			{
 				db: config.db.client,
 				config: config,
+				services: lucidServices,
 			},
 			{
 				data: {
@@ -158,6 +161,7 @@ test("basic - two level deep service wrapper success and error", async () => {
 			{
 				db: config.db.client,
 				config: config,
+				services: lucidServices,
 			},
 			{
 				data: {
@@ -172,6 +176,7 @@ test("basic - two level deep service wrapper success and error", async () => {
 			{
 				db: config.db.client,
 				config: config,
+				services: lucidServices,
 			},
 			{
 				data: {
@@ -236,6 +241,7 @@ test("transaction - one level deep service wrapper success and error", async () 
 			{
 				db: config.db.client,
 				config: config,
+				services: lucidServices,
 			},
 			{
 				collectionKey: successCollectionKey,
@@ -248,6 +254,7 @@ test("transaction - one level deep service wrapper success and error", async () 
 			{
 				db: config.db.client,
 				config: config,
+				services: lucidServices,
 			},
 			{
 				collectionKey: errorCollectionKey,
@@ -336,6 +343,7 @@ test("transaction - two level deep service wrapper success and error", async () 
 			{
 				db: config.db.client,
 				config: config,
+				services: lucidServices,
 			},
 			{
 				collectionKey: successCollectionKey,
@@ -352,6 +360,7 @@ test("transaction - two level deep service wrapper success and error", async () 
 			{
 				db: config.db.client,
 				config: config,
+				services: lucidServices,
 			},
 			{
 				collectionKey: errorCollectionKey,
@@ -412,6 +421,7 @@ test("service wrapper schema validation", async () => {
 			{
 				db: config.db.client,
 				config: config,
+				services: lucidServices,
 			},
 			{
 				key: "test",
@@ -425,6 +435,7 @@ test("service wrapper schema validation", async () => {
 			{
 				db: config.db.client,
 				config: config,
+				services: lucidServices,
 			},
 			{
 				key: "test",

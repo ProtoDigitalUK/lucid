@@ -1,4 +1,3 @@
-import lucidServices from "../index.js";
 import {
 	mergeTranslationGroups,
 	getUniqueLocaleCodes,
@@ -24,15 +23,15 @@ const uploadSingle: ServiceFn<
 		},
 	],
 	number
-> = async (service, data) => {
+> = async (context, data) => {
 	let objectStored = false;
 	let objectKey = undefined;
 
 	try {
-		const MediaRepo = Repository.get("media", service.db);
+		const MediaRepo = Repository.get("media", context.db);
 
 		const localeExistsRes =
-			await lucidServices.locale.checks.checkLocalesExist(service, {
+			await context.services.locale.checks.checkLocalesExist(context, {
 				localeCodes: getUniqueLocaleCodes([
 					data.titleTranslations || [],
 					data.altTranslations || [],
@@ -41,7 +40,7 @@ const uploadSingle: ServiceFn<
 		if (localeExistsRes.error) return localeExistsRes;
 
 		const [translationKeyIdsRes, uploadObjectRes] = await Promise.all([
-			lucidServices.translation.createMultiple(service, {
+			context.services.translation.createMultiple(context, {
 				keys: ["title", "alt"],
 				translations: mergeTranslationGroups([
 					{
@@ -54,7 +53,7 @@ const uploadSingle: ServiceFn<
 					},
 				]),
 			}),
-			lucidServices.media.storage.uploadObject(service, {
+			context.services.media.storage.uploadObject(context, {
 				fileData: data.fileData,
 			}),
 		]);
@@ -94,7 +93,7 @@ const uploadSingle: ServiceFn<
 		};
 	} catch (e) {
 		if (objectStored && objectKey !== undefined) {
-			service.config.media?.strategy?.deleteSingle(objectKey);
+			context.config.media?.strategy?.deleteSingle(objectKey);
 		}
 
 		return {

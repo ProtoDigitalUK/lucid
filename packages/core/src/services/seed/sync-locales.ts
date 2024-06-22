@@ -1,12 +1,12 @@
 import Repository from "../../libs/repositories/index.js";
-import type { ServiceConfig, ServiceFn } from "../../utils/services/types.js";
+import type { ServiceContext, ServiceFn } from "../../utils/services/types.js";
 
 const defaultRoles: ServiceFn<[], undefined> = async (
-	service: ServiceConfig,
+	context: ServiceContext,
 ) => {
 	// Responsible for syncing locales config with the database
-	const LocalesRepo = Repository.get("locales", service.db);
-	const localeCodes = service.config.localisation.locales.map(
+	const LocalesRepo = Repository.get("locales", context.db);
+	const localeCodes = context.config.localisation.locales.map(
 		(locale) => locale.code,
 	);
 

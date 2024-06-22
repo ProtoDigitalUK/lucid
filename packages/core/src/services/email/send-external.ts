@@ -2,6 +2,8 @@ import lucidServices from "../index.js";
 import serviceWrapper from "../../utils/services/service-wrapper.js";
 import getConfig from "../../libs/config/get-config.js";
 
+// TODO: move this to toolkit?
+
 const sendExternal = async (data: {
 	to: string;
 	subject: string;
@@ -20,6 +22,7 @@ const sendExternal = async (data: {
 		{
 			db: config.db.client,
 			config: config,
+			services: lucidServices,
 		},
 		{
 			type: "external",

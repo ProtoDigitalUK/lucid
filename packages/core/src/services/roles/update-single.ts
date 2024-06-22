@@ -1,5 +1,4 @@
 import T from "../../translations/index.js";
-import lucidServices from "../index.js";
 import Repository from "../../libs/repositories/index.js";
 import type { ServiceFn } from "../../utils/services/types.js";
 
@@ -13,12 +12,12 @@ const updateSingle: ServiceFn<
 		},
 	],
 	undefined
-> = async (service, data) => {
-	const RolesRepo = Repository.get("roles", service.db);
+> = async (context, data) => {
+	const RolesRepo = Repository.get("roles", context.db);
 
 	const [validatePermsRes, checkNameIsUnique] = await Promise.all([
 		data.permissions !== undefined
-			? lucidServices.role.validatePermissions(service, {
+			? context.services.role.validatePermissions(context, {
 					permissions: data.permissions,
 				})
 			: undefined,
@@ -88,7 +87,7 @@ const updateSingle: ServiceFn<
 	if (validatePermsRes?.data !== undefined) {
 		const RolePermissionsRepo = Repository.get(
 			"role-permissions",
-			service.db,
+			context.db,
 		);
 
 		await RolePermissionsRepo.deleteMultiple({

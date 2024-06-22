@@ -1,5 +1,4 @@
 import T from "../../translations/index.js";
-import lucidServices from "../index.js";
 import Repository from "../../libs/repositories/index.js";
 import type { MultipartFile } from "@fastify/multipart";
 import type { ServiceFn } from "../../utils/services/types.js";
@@ -20,11 +19,11 @@ const updateSingle: ServiceFn<
 		},
 	],
 	number | undefined
-> = async (service, data) => {
+> = async (context, data) => {
 	// if translations are present, insert on conflict update
 	// do translations first so if they throw an error, the file is not uploaded
 	// if the file upload throws an error, the translations are not inserted due to the transaction
-	const MediaRepo = Repository.get("media", service.db);
+	const MediaRepo = Repository.get("media", context.db);
 
 	const media = await MediaRepo.selectSingle({
 		select: [
@@ -55,7 +54,7 @@ const updateSingle: ServiceFn<
 	}
 
 	const upsertTranslationsRes =
-		await lucidServices.translation.upsertMultiple(service, {
+		await context.services.translation.upsertMultiple(context, {
 			keys: {
 				title: media.title_translation_key_id,
 				alt: media.alt_translation_key_id,
@@ -80,8 +79,8 @@ const updateSingle: ServiceFn<
 		};
 	}
 
-	const updateObjectRes = await lucidServices.media.storage.updateObject(
-		service,
+	const updateObjectRes = await context.services.media.storage.updateObject(
+		context,
 		{
 			fileData: data.fileData,
 			previousSize: media.file_size,

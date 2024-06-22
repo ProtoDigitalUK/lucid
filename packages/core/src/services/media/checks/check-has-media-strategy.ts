@@ -5,8 +5,8 @@ import type { ServiceFn } from "../../../utils/services/types.js";
 const checkHasMediaStrategy: ServiceFn<
 	[],
 	Exclude<Config["media"]["strategy"], undefined>
-> = async (service) => {
-	if (service.config.media?.strategy === undefined) {
+> = async (context) => {
+	if (context.config.media?.strategy === undefined) {
 		return {
 			error: {
 				type: "basic",
@@ -20,7 +20,7 @@ const checkHasMediaStrategy: ServiceFn<
 
 	return {
 		error: undefined,
-		data: service.config.media.strategy as Exclude<
+		data: context.config.media.strategy as Exclude<
 			Config["media"]["strategy"],
 			undefined
 		>,

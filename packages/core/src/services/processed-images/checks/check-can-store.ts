@@ -1,5 +1,4 @@
 import T from "../../../translations/index.js";
-import lucidServices from "../../index.js";
 import type { ServiceFn } from "../../../utils/services/types.js";
 
 const checkCanStore: ServiceFn<
@@ -11,9 +10,9 @@ const checkCanStore: ServiceFn<
 	{
 		proposedSize: number;
 	}
-> = async (service, data) => {
-	const maxFileSize = service.config.media.maxSize;
-	const storageLimit = service.config.media.storage;
+> = async (context, data) => {
+	const maxFileSize = context.config.media.maxSize;
+	const storageLimit = context.config.media.storage;
 
 	if (data.size > maxFileSize) {
 		return {
@@ -24,7 +23,7 @@ const checkCanStore: ServiceFn<
 		};
 	}
 
-	const storageUsed = await lucidServices.option.getSingle(service, {
+	const storageUsed = await context.services.option.getSingle(context, {
 		name: "media_storage_used",
 	});
 	if (storageUsed.error) return storageUsed;

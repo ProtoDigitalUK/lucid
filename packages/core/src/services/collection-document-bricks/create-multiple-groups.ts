@@ -27,7 +27,7 @@ const createMultipleGroups: ServiceFn<
 		},
 	],
 	GroupSimpleResponse[]
-> = async (service, data) => {
+> = async (context, data) => {
 	const flatGroups = data.brickGroups.flatMap((bg) => bg.groups || []);
 	if (flatGroups.length === 0) {
 		return {
@@ -38,7 +38,7 @@ const createMultipleGroups: ServiceFn<
 
 	const CollectionDocumentGroupsRepo = Repository.get(
 		"collection-document-groups",
-		service.db,
+		context.db,
 	);
 
 	// -------------------------------------------------------------------------------

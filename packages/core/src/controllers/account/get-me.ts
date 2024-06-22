@@ -5,7 +5,6 @@ import buildResponse from "../../utils/build-response.js";
 import UsersFormatter from "../../libs/formatters/users.js";
 import serviceWrapper from "../../utils/services/service-wrapper.js";
 import { LucidAPIError } from "../../utils/errors/index.js";
-import lucidServices from "../../services/index.js";
 import type { RouteController } from "../../types/types.js";
 
 const getMeController: RouteController<
@@ -13,7 +12,7 @@ const getMeController: RouteController<
 	typeof accountSchema.getMe.body,
 	typeof accountSchema.getMe.query
 > = async (request, reply) => {
-	const user = await serviceWrapper(lucidServices.user.getSingle, {
+	const user = await serviceWrapper(request.server.services.user.getSingle, {
 		transaction: false,
 		defaultError: {
 			type: "basic",
@@ -25,6 +24,7 @@ const getMeController: RouteController<
 		{
 			db: request.server.config.db.client,
 			config: request.server.config,
+			services: request.server.services,
 		},
 		{
 			userId: request.auth.id,

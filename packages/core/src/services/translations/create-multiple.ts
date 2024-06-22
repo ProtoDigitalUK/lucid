@@ -1,7 +1,7 @@
 import Repository from "../../libs/repositories/index.js";
 import type {
 	ServiceFn,
-	ServiceConfig,
+	ServiceContext,
 	ServiceResponse,
 } from "../../utils/services/types.js";
 
@@ -18,7 +18,7 @@ const createMultiple: ServiceFn<
 	[ServiceData<string>],
 	Record<string, number>
 > = async <K extends string>(
-	service: ServiceConfig,
+	context: ServiceContext,
 	data: ServiceData<K>,
 ): ServiceResponse<Record<K, number>> => {
 	if (data.keys.length === 0) {
@@ -31,7 +31,7 @@ const createMultiple: ServiceFn<
 		};
 	}
 
-	const TranslationKeysRepo = Repository.get("translation-keys", service.db);
+	const TranslationKeysRepo = Repository.get("translation-keys", context.db);
 
 	const translationKeyEntries = await TranslationKeysRepo.createMultiple(
 		data.keys.map((k) => ({ createdAt: new Date().toISOString() })),
@@ -66,7 +66,7 @@ const createMultiple: ServiceFn<
 		};
 	}
 
-	const TranslationsRepo = Repository.get("translations", service.db);
+	const TranslationsRepo = Repository.get("translations", context.db);
 
 	await TranslationsRepo.upsertMultiple(
 		data.translations.map((translation) => {

@@ -1,7 +1,6 @@
 import T from "../../translations/index.js";
 import { add } from "date-fns";
 import constants from "../../constants/constants.js";
-import lucidServices from "../index.js";
 import Repository from "../../libs/repositories/index.js";
 import type { ServiceFn } from "../../utils/services/types.js";
 
@@ -14,8 +13,8 @@ const sendResetPassword: ServiceFn<
 	{
 		message: string;
 	}
-> = async (service, data) => {
-	const UsersRepo = Repository.get("users", service.db);
+> = async (context, data) => {
+	const UsersRepo = Repository.get("users", context.db);
 
 	const userExists = await UsersRepo.selectSingle({
 		select: ["id", "first_name", "last_name", "email"],
@@ -41,14 +40,14 @@ const sendResetPassword: ServiceFn<
 		minutes: constants.passwordResetTokenExpirationMinutes,
 	}).toISOString();
 
-	const userToken = await lucidServices.user.token.createSingle(service, {
+	const userToken = await context.services.user.token.createSingle(context, {
 		userId: userExists.id,
 		tokenType: "password_reset",
 		expiryDate: expiryDate,
 	});
 	if (userToken.error) return userToken;
 
-	const sendEmail = await lucidServices.email.sendEmail(service, {
+	const sendEmail = await context.services.email.sendEmail(context, {
 		type: "internal",
 		to: userExists.email,
 		subject: T("reset_password_email_subject"),
@@ -57,7 +56,7 @@ const sendResetPassword: ServiceFn<
 			firstName: userExists.first_name,
 			lastName: userExists.last_name,
 			email: userExists.email,
-			resetLink: `${service.config.host}${constants.locations.resetPassword}?token=${userToken.data.token}`,
+			resetLink: `${context.config.host}${constants.locations.resetPassword}?token=${userToken.data.token}`,
 		},
 	});
 	if (sendEmail.error) return sendEmail;

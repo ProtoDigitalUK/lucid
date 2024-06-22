@@ -1,7 +1,6 @@
 import T from "../../translations/index.js";
 import usersSchema from "../../schemas/users.js";
 import { swaggerResponse, swaggerHeaders } from "../../utils/swagger/index.js";
-import lucidServices from "../../services/index.js";
 import serviceWrapper from "../../utils/services/service-wrapper.js";
 import { LucidAPIError } from "../../utils/errors/index.js";
 import type { RouteController } from "../../types/types.js";
@@ -11,18 +10,22 @@ const deleteSingleController: RouteController<
 	typeof usersSchema.deleteSingle.body,
 	typeof usersSchema.deleteSingle.query
 > = async (request, reply) => {
-	const deleteSingle = await serviceWrapper(lucidServices.user.deleteSingle, {
-		transaction: true,
-		defaultError: {
-			type: "basic",
-			name: T("route_user_delete_error_name"),
-			message: T("route_user_delete_error_message"),
-			status: 500,
+	const deleteSingle = await serviceWrapper(
+		request.server.services.user.deleteSingle,
+		{
+			transaction: true,
+			defaultError: {
+				type: "basic",
+				name: T("route_user_delete_error_name"),
+				message: T("route_user_delete_error_message"),
+				status: 500,
+			},
 		},
-	})(
+	)(
 		{
 			db: request.server.config.db.client,
 			config: request.server.config,
+			services: request.server.services,
 		},
 		{
 			userId: Number.parseInt(request.params.id),

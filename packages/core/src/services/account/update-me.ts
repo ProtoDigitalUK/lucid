@@ -1,6 +1,5 @@
 import T from "../../translations/index.js";
 import Repository from "../../libs/repositories/index.js";
-import lucidServices from "../index.js";
 import constants from "../../constants/constants.js";
 import type { FastifyRequest } from "fastify";
 import type { ServiceFn } from "../../utils/services/types.js";
@@ -19,8 +18,8 @@ const updateMe: ServiceFn<
 		},
 	],
 	undefined
-> = async (service, data) => {
-	const UsersRepo = Repository.get("users", service.db);
+> = async (context, data) => {
+	const UsersRepo = Repository.get("users", context.db);
 
 	const getUser = await UsersRepo.selectSingle({
 		select: ["super_admin", "password", "first_name"],
@@ -80,7 +79,7 @@ const updateMe: ServiceFn<
 						],
 					})
 				: undefined,
-			lucidServices.account.checks.checkUpdatePassword(service, {
+			context.services.account.checks.checkUpdatePassword(context, {
 				password: getUser.password,
 				currentPassword: data.currentPassword,
 				newPassword: data.newPassword,
@@ -156,7 +155,7 @@ const updateMe: ServiceFn<
 	}
 
 	if (data.email !== undefined) {
-		const sendEmail = await lucidServices.email.sendEmail(service, {
+		const sendEmail = await context.services.email.sendEmail(context, {
 			template: constants.emailTemplates.emailChanged,
 			type: "internal",
 			to: data.email,

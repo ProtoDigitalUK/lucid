@@ -15,13 +15,13 @@ const getSingle: ServiceFn<
 		},
 	],
 	UserResponse
-> = async (service, data) => {
-	const UsersRepo = Repository.get("users", service.db);
+> = async (context, data) => {
+	const UsersRepo = Repository.get("users", context.db);
 	const UsersFormatter = Formatter.get("users");
 
 	const user = await UsersRepo.selectSingleById({
 		id: data.userId,
-		config: service.config,
+		config: context.config,
 	});
 
 	if (!user) {

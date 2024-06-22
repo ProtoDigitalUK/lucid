@@ -10,7 +10,7 @@ import { jsonArrayFrom } from "kysely/helpers/sqlite";
 import { LucidError } from "../../utils/errors/index.js";
 import serviceWrapper from "../../utils/services/service-wrapper.js";
 import lucidLogger from "../../utils/logging/index.js";
-import lucidServices from "../../services/index.js";
+import type lucidServices from "../../services/index.js";
 import type { AdapterType, LucidDB } from "./types.js";
 import type { Config } from "../../types/config.js";
 // Migrations
@@ -68,14 +68,14 @@ export default class DatabaseAdapter {
 			});
 		}
 	}
-	async seed(config: Config) {
+	async seed(config: Config, services: typeof lucidServices) {
 		try {
 			lucidLogger("info", {
 				message: T("running_database_seed_jobs"),
 			});
 
 			await Promise.all([
-				serviceWrapper(lucidServices.seed.defaultOptions, {
+				serviceWrapper(services.seed.defaultOptions, {
 					transaction: true,
 					logError: true,
 					defaultError: {
@@ -85,8 +85,9 @@ export default class DatabaseAdapter {
 				})({
 					db: this.client,
 					config: config,
+					services: services,
 				}),
-				serviceWrapper(lucidServices.seed.defaultRoles, {
+				serviceWrapper(services.seed.defaultRoles, {
 					transaction: true,
 					logError: true,
 					defaultError: {
@@ -96,8 +97,9 @@ export default class DatabaseAdapter {
 				})({
 					db: this.client,
 					config: config,
+					services: services,
 				}),
-				serviceWrapper(lucidServices.seed.defaultUser, {
+				serviceWrapper(services.seed.defaultUser, {
 					transaction: true,
 					logError: true,
 					defaultError: {
@@ -107,8 +109,9 @@ export default class DatabaseAdapter {
 				})({
 					db: this.client,
 					config: config,
+					services: services,
 				}),
-				serviceWrapper(lucidServices.seed.syncLocales, {
+				serviceWrapper(services.seed.syncLocales, {
 					transaction: true,
 					logError: true,
 					defaultError: {
@@ -118,6 +121,7 @@ export default class DatabaseAdapter {
 				})({
 					db: this.client,
 					config: config,
+					services: services,
 				}),
 			]);
 		} catch (error) {

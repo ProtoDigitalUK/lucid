@@ -1,5 +1,4 @@
 import T from "../../translations/index.js";
-import lucidServices from "../index.js";
 import Repository from "../../libs/repositories/index.js";
 import Formatter from "../../libs/formatters/index.js";
 import type { ServiceFn } from "../../utils/services/types.js";
@@ -13,8 +12,8 @@ const getSingle: ServiceFn<
 		},
 	],
 	EmailResponse
-> = async (service, data) => {
-	const EmailsRepo = Repository.get("emails", service.db);
+> = async (context, data) => {
+	const EmailsRepo = Repository.get("emails", context.db);
 	const EmailsFormatter = Formatter.get("emails");
 
 	const email = await EmailsRepo.selectSingleById({
@@ -41,7 +40,7 @@ const getSingle: ServiceFn<
 		};
 	}
 
-	const html = await lucidServices.email.renderTemplate(service, {
+	const html = await context.services.email.renderTemplate(context, {
 		template: email.template,
 		data: Formatter.parseJSON<Record<string, unknown>>(email.data),
 	});

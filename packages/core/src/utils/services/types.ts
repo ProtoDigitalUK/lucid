@@ -2,13 +2,15 @@ import type { ZodType } from "zod";
 import type { Config } from "../../types/config.js";
 import type { KyselyDB } from "../../libs/db/types.js";
 import type { LucidErrorData } from "../../types/errors.js";
+import type lucidServices from "../../services/index.js";
 
-export type ServiceConfig = {
+export type ServiceContext = {
 	db: KyselyDB;
 	config: Config;
+	services: typeof lucidServices;
 };
 export type ServiceProps<T> = {
-	serviceConfig?: ServiceConfig;
+	serviceConfig?: ServiceContext;
 	data?: T;
 	[key: string]: unknown;
 };
@@ -26,7 +28,7 @@ export type ServiceResponse<T> = Promise<
 >;
 
 export type ServiceFn<T extends unknown[], R> = (
-	service: ServiceConfig,
+	service: ServiceContext,
 	...args: T
 ) => ServiceResponse<R>;
 

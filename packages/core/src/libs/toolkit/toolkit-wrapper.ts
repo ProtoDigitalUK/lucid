@@ -1,5 +1,6 @@
 import serviceWrapper from "../../utils/services/service-wrapper.js";
 import getConfig from "../config/get-config.js";
+import lucidServices from "../../services/index.js";
 import type { ServiceFn } from "../../utils/services/types.js";
 
 const toolkitWrapper = async <T extends unknown[], R>(
@@ -20,6 +21,7 @@ const toolkitWrapper = async <T extends unknown[], R>(
 		{
 			db: config.db.client,
 			config: config,
+			services: lucidServices,
 		},
 		...data,
 	);

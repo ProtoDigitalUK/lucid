@@ -1,5 +1,4 @@
 import T from "../../translations/index.js";
-import lucidServices from "../index.js";
 import Repository from "../../libs/repositories/index.js";
 import Formatter from "../../libs/formatters/index.js";
 import type z from "zod";
@@ -15,16 +14,16 @@ const getSingle: ServiceFn<
 		},
 	],
 	CollectionDocumentResponse
-> = async (service, data) => {
+> = async (context, data) => {
 	const CollectionDocumentsRepo = Repository.get(
 		"collection-documents",
-		service.db,
+		context.db,
 	);
 	const CollectionDocumentsFormatter = Formatter.get("collection-documents");
 
 	const document = await CollectionDocumentsRepo.selectSingleById({
 		id: data.id,
-		config: service.config,
+		config: context.config,
 	});
 
 	if (document === undefined || document.collection_key === null) {
@@ -38,8 +37,8 @@ const getSingle: ServiceFn<
 		};
 	}
 
-	const collectionRes = await lucidServices.collection.getSingleInstance(
-		service,
+	const collectionRes = await context.services.collection.getSingleInstance(
+		context,
 		{
 			key: document.collection_key,
 		},
@@ -48,10 +47,13 @@ const getSingle: ServiceFn<
 
 	if (data.query.include?.includes("bricks")) {
 		const bricksRes =
-			await lucidServices.collection.document.brick.getMultiple(service, {
-				documentId: data.id,
-				collectionKey: document.collection_key,
-			});
+			await context.services.collection.document.brick.getMultiple(
+				context,
+				{
+					documentId: data.id,
+					collectionKey: document.collection_key,
+				},
+			);
 		if (bricksRes.error) return bricksRes;
 
 		return {
@@ -61,12 +63,12 @@ const getSingle: ServiceFn<
 				collection: collectionRes.data,
 				bricks: bricksRes.data.bricks,
 				fields: bricksRes.data.fields,
-				host: service.config.host,
+				host: context.config.host,
 				localisation: {
-					locales: service.config.localisation.locales.map(
+					locales: context.config.localisation.locales.map(
 						(l) => l.code,
 					),
-					default: service.config.localisation.defaultLocale,
+					default: context.config.localisation.defaultLocale,
 				},
 			}),
 		};
@@ -79,10 +81,10 @@ const getSingle: ServiceFn<
 			collection: collectionRes.data,
 			bricks: [],
 			fields: [],
-			host: service.config.host,
+			host: context.config.host,
 			localisation: {
-				locales: service.config.localisation.locales.map((l) => l.code),
-				default: service.config.localisation.defaultLocale,
+				locales: context.config.localisation.locales.map((l) => l.code),
+				default: context.config.localisation.defaultLocale,
 			},
 		}),
 	};

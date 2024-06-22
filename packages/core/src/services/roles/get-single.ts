@@ -11,13 +11,13 @@ const getSingle: ServiceFn<
 		},
 	],
 	RoleResponse
-> = async (service, data) => {
-	const RolesRepo = Repository.get("roles", service.db);
+> = async (context, data) => {
+	const RolesRepo = Repository.get("roles", context.db);
 	const RolesFormatter = Formatter.get("roles");
 
 	const role = await RolesRepo.selectSingleById({
 		id: data.id,
-		config: service.config,
+		config: context.config,
 	});
 
 	if (role === undefined) {

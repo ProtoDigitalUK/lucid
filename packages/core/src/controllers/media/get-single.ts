@@ -1,7 +1,6 @@
 import T from "../../translations/index.js";
 import mediaSchema from "../../schemas/media.js";
 import { swaggerResponse } from "../../utils/swagger/index.js";
-import lucidServices from "../../services/index.js";
 import buildResponse from "../../utils/build-response.js";
 import MediaFormatter from "../../libs/formatters/media.js";
 import serviceWrapper from "../../utils/services/service-wrapper.js";
@@ -13,18 +12,22 @@ const getSingleController: RouteController<
 	typeof mediaSchema.getSingle.body,
 	typeof mediaSchema.getSingle.query
 > = async (request, reply) => {
-	const media = await serviceWrapper(lucidServices.media.getSingle, {
-		transaction: false,
-		defaultError: {
-			type: "basic",
-			name: T("route_media_fetch_error_name"),
-			message: T("route_media_fetch_error_message"),
-			status: 500,
+	const media = await serviceWrapper(
+		request.server.services.media.getSingle,
+		{
+			transaction: false,
+			defaultError: {
+				type: "basic",
+				name: T("route_media_fetch_error_name"),
+				message: T("route_media_fetch_error_message"),
+				status: 500,
+			},
 		},
-	})(
+	)(
 		{
 			db: request.server.config.db.client,
 			config: request.server.config,
+			services: request.server.services,
 		},
 		{
 			id: Number.parseInt(request.params.id),

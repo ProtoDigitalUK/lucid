@@ -1,5 +1,4 @@
 import T from "../../../translations/index.js";
-import lucidServices from "../../index.js";
 import {
 	saveStreamToTempFile,
 	getFileMetaData,
@@ -17,7 +16,7 @@ const uploadObject: ServiceFn<
 		},
 	],
 	RouteMediaMetaData
-> = async (service, data) => {
+> = async (context, data) => {
 	let tempFilePath = undefined;
 
 	try {
@@ -40,7 +39,7 @@ const uploadObject: ServiceFn<
 		}
 
 		const mediaStrategyRes =
-			await lucidServices.media.checks.checkHasMediaStrategy(service);
+			await context.services.media.checks.checkHasMediaStrategy(context);
 		if (mediaStrategyRes.error) return mediaStrategyRes;
 
 		// Save file to temp folder
@@ -58,7 +57,7 @@ const uploadObject: ServiceFn<
 
 		// Ensure we available storage space
 		const proposedSizeRes =
-			await lucidServices.media.checks.checkCanStoreMedia(service, {
+			await context.services.media.checks.checkCanStoreMedia(context, {
 				size: metaDataRes.data.size,
 			});
 		if (proposedSizeRes.error) return proposedSizeRes;
@@ -92,8 +91,8 @@ const uploadObject: ServiceFn<
 		metaDataRes.data.etag = saveObjectRes.response?.etag;
 
 		// Update storage usage stats
-		const updateStorageRes = await lucidServices.option.updateSingle(
-			service,
+		const updateStorageRes = await context.services.option.updateSingle(
+			context,
 			{
 				name: "media_storage_used",
 				valueInt: proposedSizeRes.data.proposedSize,

@@ -5,10 +5,10 @@ import type { ServiceFn } from "../../utils/services/types.js";
     Periodically re-count the media storage usage.
 */
 
-const updateMediaStorage: ServiceFn<[], undefined> = async (service) => {
-	const MediaRepo = Repository.get("media", service.db);
-	const ProcessedImagesRepo = Repository.get("processed-images", service.db);
-	const OptionsRepo = Repository.get("options", service.db);
+const updateMediaStorage: ServiceFn<[], undefined> = async (context) => {
+	const MediaRepo = Repository.get("media", context.db);
+	const ProcessedImagesRepo = Repository.get("processed-images", context.db);
+	const OptionsRepo = Repository.get("options", context.db);
 
 	const [mediaItems, processeddImagesItems] = await Promise.all([
 		MediaRepo.selectMultiple({

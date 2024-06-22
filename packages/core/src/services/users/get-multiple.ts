@@ -18,13 +18,13 @@ const getMultiple: ServiceFn<
 		data: UserResponse[];
 		count: number;
 	}
-> = async (service, data) => {
-	const UsersRepo = Repository.get("users", service.db);
+> = async (context, data) => {
+	const UsersRepo = Repository.get("users", context.db);
 	const UsersFormatter = Formatter.get("users");
 
 	const [users, count] = await UsersRepo.selectMultipleFiltered({
 		query: data.query,
-		config: service.config,
+		config: context.config,
 		authId: data.auth.id,
 	});
 

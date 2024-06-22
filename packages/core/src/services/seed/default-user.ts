@@ -2,12 +2,12 @@ import Repository from "../../libs/repositories/index.js";
 import Formatter from "../../libs/formatters/index.js";
 import constants from "../../constants/constants.js";
 import argon2 from "argon2";
-import type { ServiceConfig, ServiceFn } from "../../utils/services/types.js";
+import type { ServiceContext, ServiceFn } from "../../utils/services/types.js";
 
 const defaultUser: ServiceFn<[], undefined> = async (
-	service: ServiceConfig,
+	context: ServiceContext,
 ) => {
-	const UsersRepo = Repository.get("users", service.db);
+	const UsersRepo = Repository.get("users", context.db);
 
 	const totalUserCount = await UsersRepo.count();
 	if (Formatter.parseCount(totalUserCount?.count) > 0) {

@@ -3,8 +3,8 @@ import Formatter from "../../libs/formatters/index.js";
 import type { ServiceFn } from "../../utils/services/types.js";
 import type { LocalesResponse } from "../../types/response.js";
 
-const getAll: ServiceFn<[], LocalesResponse[]> = async (service) => {
-	const LocalesRepo = Repository.get("locales", service.db);
+const getAll: ServiceFn<[], LocalesResponse[]> = async (context) => {
+	const LocalesRepo = Repository.get("locales", context.db);
 	const LocalesFormatter = Formatter.get("locales");
 
 	const locales = await LocalesRepo.selectMultiple({
@@ -28,7 +28,7 @@ const getAll: ServiceFn<[], LocalesResponse[]> = async (service) => {
 		error: undefined,
 		data: LocalesFormatter.formatMultiple({
 			locales: locales,
-			localisation: service.config.localisation,
+			localisation: context.config.localisation,
 		}),
 	};
 };

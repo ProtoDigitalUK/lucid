@@ -1,7 +1,6 @@
 import T from "../../../translations/index.js";
 import jwt from "jsonwebtoken";
 import constants from "../../../constants/constants.js";
-import lucidServices from "../../index.js";
 import Repository from "../../../libs/repositories/index.js";
 import type { FastifyRequest, FastifyReply } from "fastify";
 import type { ServiceResponse } from "../../../utils/services/types.js";
@@ -83,8 +82,11 @@ const verifyToken = async (
 		};
 	} catch (err) {
 		const [refreshRes, accessRes] = await Promise.all([
-			lucidServices.auth.refreshToken.clearToken(request, reply),
-			lucidServices.auth.accessToken.clearToken(reply),
+			request.server.services.auth.refreshToken.clearToken(
+				request,
+				reply,
+			),
+			request.server.services.auth.accessToken.clearToken(reply),
 		]);
 		if (refreshRes.error) return refreshRes;
 		if (accessRes.error) return accessRes;

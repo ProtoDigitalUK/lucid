@@ -2,7 +2,6 @@ import T from "../../translations/index.js";
 import argon2 from "argon2";
 import constants from "../../constants/constants.js";
 import Repository from "../../libs/repositories/index.js";
-import lucidServices from "../index.js";
 import type { ServiceFn } from "../../utils/services/types.js";
 
 const resetPassword: ServiceFn<
@@ -13,11 +12,11 @@ const resetPassword: ServiceFn<
 		},
 	],
 	undefined
-> = async (service, data) => {
-	const UserTokensRepo = Repository.get("user-tokens", service.db);
-	const UsersRepo = Repository.get("users", service.db);
+> = async (context, data) => {
+	const UserTokensRepo = Repository.get("user-tokens", context.db);
+	const UsersRepo = Repository.get("users", context.db);
 
-	const token = await lucidServices.user.token.getSingle(service, {
+	const token = await context.services.user.token.getSingle(context, {
 		token: data.token,
 		tokenType: "password_reset",
 	});
@@ -59,7 +58,7 @@ const resetPassword: ServiceFn<
 				},
 			],
 		}),
-		lucidServices.email.sendEmail(service, {
+		context.services.email.sendEmail(context, {
 			template: constants.emailTemplates.passwordResetSuccess,
 			type: "internal",
 			to: user.email,

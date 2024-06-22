@@ -1,5 +1,4 @@
 import T from "../../translations/index.js";
-import lucidServices from "../index.js";
 import Repository from "../../libs/repositories/index.js";
 import type { ServiceFn } from "../../utils/services/types.js";
 
@@ -13,12 +12,12 @@ const resendSingle: ServiceFn<
 		success: boolean;
 		message: string;
 	}
-> = async (service, data) => {
+> = async (context, data) => {
 	const emailConfigRes =
-		await lucidServices.email.checks.checkHasEmailConfig(service);
+		await context.services.email.checks.checkHasEmailConfig(context);
 	if (emailConfigRes.error) return emailConfigRes;
 
-	const EmailsRepo = Repository.get("emails", service.db);
+	const EmailsRepo = Repository.get("emails", context.db);
 
 	const email = await EmailsRepo.selectSingleById({
 		id: data.id,
@@ -37,7 +36,7 @@ const resendSingle: ServiceFn<
 
 	const templateData = (email.data ?? {}) as Record<string, unknown>;
 
-	const html = await lucidServices.email.renderTemplate(service, {
+	const html = await context.services.email.renderTemplate(context, {
 		template: email.template,
 		data: templateData,
 	});

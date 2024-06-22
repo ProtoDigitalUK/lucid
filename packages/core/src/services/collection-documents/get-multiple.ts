@@ -1,4 +1,3 @@
-import lucidServices from "../index.js";
 import Repository from "../../libs/repositories/index.js";
 import Formatter from "../../libs/formatters/index.js";
 import type z from "zod";
@@ -17,9 +16,9 @@ const getMultiple: ServiceFn<
 		data: CollectionDocumentResponse[];
 		count: number;
 	}
-> = async (service, data) => {
-	const collectionRes = await lucidServices.collection.getSingleInstance(
-		service,
+> = async (context, data) => {
+	const collectionRes = await context.services.collection.getSingleInstance(
+		context,
 		{
 			key: data.collectionKey,
 		},
@@ -28,7 +27,7 @@ const getMultiple: ServiceFn<
 
 	const CollectionDocumentsRepo = Repository.get(
 		"collection-documents",
-		service.db,
+		context.db,
 	);
 	const CollectionDocumentsFormatter = Formatter.get("collection-documents");
 
@@ -36,7 +35,7 @@ const getMultiple: ServiceFn<
 		await CollectionDocumentsRepo.selectMultipleFiltered({
 			query: data.query,
 			collection: collectionRes.data,
-			config: service.config,
+			config: context.config,
 		});
 
 	return {
@@ -45,12 +44,12 @@ const getMultiple: ServiceFn<
 			data: CollectionDocumentsFormatter.formatMultiple({
 				documents: documents,
 				collection: collectionRes.data,
-				host: service.config.host,
+				host: context.config.host,
 				localisation: {
-					locales: service.config.localisation.locales.map(
+					locales: context.config.localisation.locales.map(
 						(l) => l.code,
 					),
-					default: service.config.localisation.defaultLocale,
+					default: context.config.localisation.defaultLocale,
 				},
 			}),
 			count: Formatter.parseCount(documentCount?.count),

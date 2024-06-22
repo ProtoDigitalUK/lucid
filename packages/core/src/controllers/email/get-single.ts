@@ -1,7 +1,6 @@
 import T from "../../translations/index.js";
 import emailsSchema from "../../schemas/email.js";
 import { swaggerResponse } from "../../utils/swagger/index.js";
-import lucidServices from "../../services/index.js";
 import buildResponse from "../../utils/build-response.js";
 import EmailsFormatter from "../../libs/formatters/emails.js";
 import serviceWrapper from "../../utils/services/service-wrapper.js";
@@ -13,18 +12,22 @@ const getSingleController: RouteController<
 	typeof emailsSchema.getSingle.body,
 	typeof emailsSchema.getSingle.query
 > = async (request, reply) => {
-	const email = await serviceWrapper(lucidServices.email.getSingle, {
-		transaction: false,
-		defaultError: {
-			type: "basic",
-			name: T("route_email_fetch_error_name"),
-			message: T("route_email_fetch_error_message"),
-			status: 500,
+	const email = await serviceWrapper(
+		request.server.services.email.getSingle,
+		{
+			transaction: false,
+			defaultError: {
+				type: "basic",
+				name: T("route_email_fetch_error_name"),
+				message: T("route_email_fetch_error_message"),
+				status: 500,
+			},
 		},
-	})(
+	)(
 		{
 			db: request.server.config.db.client,
 			config: request.server.config,
+			services: request.server.services,
 		},
 		{
 			id: Number.parseInt(request.params.id, 10),

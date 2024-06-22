@@ -1,4 +1,3 @@
-import lucidServices from "../index.js";
 import { genEmailHash } from "../../utils/helpers/index.js";
 import Repository from "../../libs/repositories/index.js";
 import Formatter from "../../libs/formatters/index.js";
@@ -19,15 +18,15 @@ const sendEmail: ServiceFn<
 		},
 	],
 	EmailResponse
-> = async (service, data) => {
-	const EmailsRepo = Repository.get("emails", service.db);
+> = async (context, data) => {
+	const EmailsRepo = Repository.get("emails", context.db);
 	const EmailsFormatter = Formatter.get("emails");
 
 	const emailConfigRes =
-		await lucidServices.email.checks.checkHasEmailConfig(service);
+		await context.services.email.checks.checkHasEmailConfig(context);
 	if (emailConfigRes.error) return emailConfigRes;
 
-	const html = await lucidServices.email.renderTemplate(service, {
+	const html = await context.services.email.renderTemplate(context, {
 		template: data.template,
 		data: data.data,
 	});

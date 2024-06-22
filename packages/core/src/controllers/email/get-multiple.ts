@@ -4,7 +4,6 @@ import {
 	swaggerResponse,
 	swaggerQueryString,
 } from "../../utils/swagger/index.js";
-import lucidServices from "../../services/index.js";
 import buildResponse from "../../utils/build-response.js";
 import EmailsFormatter from "../../libs/formatters/emails.js";
 import serviceWrapper from "../../utils/services/service-wrapper.js";
@@ -16,18 +15,22 @@ const getMultipleController: RouteController<
 	typeof emailsSchema.getMultiple.body,
 	typeof emailsSchema.getMultiple.query
 > = async (request, reply) => {
-	const emails = await serviceWrapper(lucidServices.email.getMultiple, {
-		transaction: false,
-		defaultError: {
-			type: "basic",
-			name: T("route_email_fetch_error_name"),
-			message: T("route_email_fetch_error_message"),
-			status: 500,
+	const emails = await serviceWrapper(
+		request.server.services.email.getMultiple,
+		{
+			transaction: false,
+			defaultError: {
+				type: "basic",
+				name: T("route_email_fetch_error_name"),
+				message: T("route_email_fetch_error_message"),
+				status: 500,
+			},
 		},
-	})(
+	)(
 		{
 			db: request.server.config.db.client,
 			config: request.server.config,
+			services: request.server.services,
 		},
 		{
 			query: request.query,

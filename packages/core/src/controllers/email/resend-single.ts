@@ -1,7 +1,6 @@
 import T from "../../translations/index.js";
 import emailsSchema from "../../schemas/email.js";
 import { swaggerResponse, swaggerHeaders } from "../../utils/swagger/index.js";
-import lucidServices from "../../services/index.js";
 import buildResponse from "../../utils/build-response.js";
 import serviceWrapper from "../../utils/services/service-wrapper.js";
 import { LucidAPIError } from "../../utils/errors/index.js";
@@ -12,18 +11,22 @@ const resendSingleController: RouteController<
 	typeof emailsSchema.resendSingle.body,
 	typeof emailsSchema.resendSingle.query
 > = async (request, reply) => {
-	const emailRes = await serviceWrapper(lucidServices.email.resendSingle, {
-		transaction: true,
-		defaultError: {
-			type: "basic",
-			name: T("route_email_resend_error_name"),
-			message: T("route_email_resend_error_message"),
-			status: 500,
+	const emailRes = await serviceWrapper(
+		request.server.services.email.resendSingle,
+		{
+			transaction: true,
+			defaultError: {
+				type: "basic",
+				name: T("route_email_resend_error_name"),
+				message: T("route_email_resend_error_message"),
+				status: 500,
+			},
 		},
-	})(
+	)(
 		{
 			db: request.server.config.db.client,
 			config: request.server.config,
+			services: request.server.services,
 		},
 		{
 			id: Number.parseInt(request.params.id, 10),

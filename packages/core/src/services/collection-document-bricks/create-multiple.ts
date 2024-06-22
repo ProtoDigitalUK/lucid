@@ -2,7 +2,6 @@ import Repository from "../../libs/repositories/index.js";
 import formatInsertBricks from "./helpers/format-insert-bricks.js";
 import formatPostInsertBricks from "./helpers/format-post-insert-bricks.js";
 import formatInsertFields from "./helpers/format-insert-fields.js";
-import lucidServices from "../index.js";
 import type { ServiceFn } from "../../utils/services/types.js";
 import type CollectionBuilder from "../../libs/builders/collection-builder/index.js";
 import type { BrickSchema } from "../../schemas/collection-bricks.js";
@@ -18,10 +17,10 @@ const createMultiple: ServiceFn<
 		},
 	],
 	undefined
-> = async (service, data) => {
+> = async (context, data) => {
 	const CollectionDocumentBricksRepo = Repository.get(
 		"collection-document-bricks",
-		service.db,
+		context.db,
 	);
 
 	// -------------------------------------------------------------------------------
@@ -30,7 +29,7 @@ const createMultiple: ServiceFn<
 		bricks: data.bricks,
 		fields: data.fields,
 		documentId: data.documentId,
-		localisation: service.config.localisation,
+		localisation: context.config.localisation,
 		collection: data.collection,
 	});
 	if (bricks.length === 0) {
@@ -43,14 +42,14 @@ const createMultiple: ServiceFn<
 	// -------------------------------------------------------------------------------
 	// validation
 	const checkBrickOrder =
-		lucidServices.collection.document.brick.checks.checkDuplicateOrder(
+		context.services.collection.document.brick.checks.checkDuplicateOrder(
 			bricks,
 		);
 	if (checkBrickOrder.error) return checkBrickOrder;
 
 	const checkValidateBricksFields =
-		await lucidServices.collection.document.brick.checks.checkValidateBricksFields(
-			service,
+		await context.services.collection.document.brick.checks.checkValidateBricksFields(
+			context,
 			{
 				collection: data.collection,
 				bricks: bricks,
@@ -61,8 +60,8 @@ const createMultiple: ServiceFn<
 	// -------------------------------------------------------------------------------
 	// delete all bricks
 	const deleteAllBricks =
-		await lucidServices.collection.document.brick.deleteMultipleBricks(
-			service,
+		await context.services.collection.document.brick.deleteMultipleBricks(
+			context,
 			{
 				documentId: data.documentId,
 				apply: {
@@ -90,8 +89,8 @@ const createMultiple: ServiceFn<
 	// -------------------------------------------------------------------------------
 	// create groups
 	const groups =
-		await lucidServices.collection.document.brick.createMultipleGroups(
-			service,
+		await context.services.collection.document.brick.createMultipleGroups(
+			context,
 			{
 				documentId: data.documentId,
 				brickGroups: postInsertBricks.map((b) => ({
@@ -105,8 +104,8 @@ const createMultiple: ServiceFn<
 	// -------------------------------------------------------------------------------
 	// create fields
 	const fields =
-		await lucidServices.collection.document.brick.createMultipleFields(
-			service,
+		await context.services.collection.document.brick.createMultipleFields(
+			context,
 			{
 				documentId: data.documentId,
 				fields: postInsertBricks.flatMap((b) =>

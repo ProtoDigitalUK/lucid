@@ -5,8 +5,8 @@ import type { ServiceFn } from "../../../utils/services/types.js";
 const checkHasEmailConfig: ServiceFn<
 	[],
 	Exclude<Config["email"], undefined>
-> = async (service) => {
-	if (service.config.email === undefined) {
+> = async (context) => {
+	if (context.config.email === undefined) {
 		return {
 			error: {
 				type: "basic",
@@ -20,7 +20,7 @@ const checkHasEmailConfig: ServiceFn<
 
 	return {
 		error: undefined,
-		data: service.config.email as Exclude<Config["email"], undefined>,
+		data: context.config.email as Exclude<Config["email"], undefined>,
 	};
 };
 

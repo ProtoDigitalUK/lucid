@@ -1,5 +1,4 @@
 import T from "../../translations/index.js";
-import lucidServices from "../index.js";
 import {
 	chooseAcceptHeaderFormat,
 	generateProcessKey,
@@ -23,11 +22,11 @@ const streamMedia: ServiceFn<
 		contentType: string | undefined;
 		body: Readable;
 	}
-> = async (service, data) => {
+> = async (context, data) => {
 	const format = chooseAcceptHeaderFormat(data.accept, data.query.format);
 
 	const mediaStrategyRes =
-		await lucidServices.media.checks.checkHasMediaStrategy(service);
+		await context.services.media.checks.checkHasMediaStrategy(context);
 	if (mediaStrategyRes.error) return mediaStrategyRes;
 
 	// ------------------------------
@@ -89,7 +88,7 @@ const streamMedia: ServiceFn<
 	}
 
 	// Process
-	return await lucidServices.processedImage.processImage(service, {
+	return await context.services.processedImage.processImage(context, {
 		key: data.key,
 		processKey: processKey,
 		options: {

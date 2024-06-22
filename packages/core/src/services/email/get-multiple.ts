@@ -15,13 +15,13 @@ const getMultiple: ServiceFn<
 		data: EmailResponse[];
 		count: number;
 	}
-> = async (service, data) => {
-	const EmailsRepo = Repository.get("emails", service.db);
+> = async (context, data) => {
+	const EmailsRepo = Repository.get("emails", context.db);
 	const EmailsFormatter = Formatter.get("emails");
 
 	const [emails, emailsCount] = await EmailsRepo.selectMultipleFiltered({
 		query: data.query,
-		config: service.config,
+		config: context.config,
 	});
 
 	return {

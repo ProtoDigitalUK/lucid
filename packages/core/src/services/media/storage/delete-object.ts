@@ -1,4 +1,3 @@
-import lucidServices from "../../index.js";
 import type { ServiceFn } from "../../../utils/services/types.js";
 
 const deleteObject: ServiceFn<
@@ -10,12 +9,12 @@ const deleteObject: ServiceFn<
 		},
 	],
 	undefined
-> = async (service, data) => {
+> = async (context, data) => {
 	const mediaStrategyRes =
-		await lucidServices.media.checks.checkHasMediaStrategy(service);
+		await context.services.media.checks.checkHasMediaStrategy(context);
 	if (mediaStrategyRes.error) return mediaStrategyRes;
 
-	const storageUsedRes = await lucidServices.option.getSingle(service, {
+	const storageUsedRes = await context.services.option.getSingle(context, {
 		name: "media_storage_used",
 	});
 	if (storageUsedRes.error) return storageUsedRes;
@@ -25,7 +24,7 @@ const deleteObject: ServiceFn<
 
 	const [_, updateStorageRes] = await Promise.all([
 		mediaStrategyRes.data.deleteSingle(data.key),
-		lucidServices.option.updateSingle(service, {
+		context.services.option.updateSingle(context, {
 			name: "media_storage_used",
 			valueInt: newStorageUsed < 0 ? 0 : newStorageUsed,
 		}),

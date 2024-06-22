@@ -1,6 +1,5 @@
 import T from "../../translations/index.js";
 import Repository from "../../libs/repositories/index.js";
-import lucidServices from "../index.js";
 import executeHooks from "../../utils/hooks/execute-hooks.js";
 import type { ServiceFn } from "../../utils/services/types.js";
 
@@ -13,10 +12,10 @@ const deleteSingle: ServiceFn<
 		},
 	],
 	undefined
-> = async (service, data) => {
+> = async (context, data) => {
 	const collectionRes =
-		await lucidServices.collection.document.checks.checkCollection(
-			service,
+		await context.services.collection.document.checks.checkCollection(
+			context,
 			{
 				key: data.collectionKey,
 			},
@@ -37,7 +36,7 @@ const deleteSingle: ServiceFn<
 
 	const CollectionDocumentsRepo = Repository.get(
 		"collection-documents",
-		service.db,
+		context.db,
 	);
 
 	const getDocument = await CollectionDocumentsRepo.selectSingle({
@@ -76,11 +75,11 @@ const deleteSingle: ServiceFn<
 		{
 			service: "collection-documents",
 			event: "beforeDelete",
-			config: service.config,
+			config: context.config,
 			collectionInstance: collectionRes.data,
 		},
 		{
-			db: service.db,
+			db: context.db,
 			meta: {
 				collectionKey: data.collectionKey,
 				userId: data.userId,
@@ -120,11 +119,11 @@ const deleteSingle: ServiceFn<
 		{
 			service: "collection-documents",
 			event: "afterDelete",
-			config: service.config,
+			config: context.config,
 			collectionInstance: collectionRes.data,
 		},
 		{
-			db: service.db,
+			db: context.db,
 			meta: {
 				collectionKey: data.collectionKey,
 				userId: data.userId,

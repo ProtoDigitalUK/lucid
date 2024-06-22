@@ -1,7 +1,6 @@
 import T from "../../translations/index.js";
 import mediaSchema from "../../schemas/media.js";
 import { swaggerResponse, swaggerHeaders } from "../../utils/swagger/index.js";
-import lucidServices from "../../services/index.js";
 import serviceWrapper from "../../utils/services/service-wrapper.js";
 import { LucidAPIError } from "../../utils/errors/index.js";
 import type { RouteController } from "../../types/types.js";
@@ -12,7 +11,7 @@ const deleteSingleController: RouteController<
 	typeof mediaSchema.deleteSingle.query
 > = async (request, reply) => {
 	const deleteSingel = await serviceWrapper(
-		lucidServices.media.deleteSingle,
+		request.server.services.media.deleteSingle,
 		{
 			transaction: true,
 			defaultError: {
@@ -26,6 +25,7 @@ const deleteSingleController: RouteController<
 		{
 			db: request.server.config.db.client,
 			config: request.server.config,
+			services: request.server.services,
 		},
 		{
 			id: Number.parseInt(request.params.id),

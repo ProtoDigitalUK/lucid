@@ -1,5 +1,4 @@
 import T from "../../translations/index.js";
-import lucidServices from "../index.js";
 import type { ErrorResult } from "../../types/errors.js";
 import type { Permission } from "../../types/response.js";
 import type { ServiceFn } from "../../utils/services/types.js";
@@ -13,7 +12,7 @@ const validatePermissions: ServiceFn<
 	{
 		permission: Permission;
 	}[]
-> = async (service, data) => {
+> = async (context, data) => {
 	if (data.permissions.length === 0) {
 		return {
 			error: undefined,
@@ -21,7 +20,7 @@ const validatePermissions: ServiceFn<
 		};
 	}
 
-	const permissionsRes = await lucidServices.permission.getAll(service);
+	const permissionsRes = await context.services.permission.getAll(context);
 	if (permissionsRes.error) return permissionsRes;
 
 	const permErrors: Array<{

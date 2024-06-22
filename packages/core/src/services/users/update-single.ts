@@ -1,6 +1,5 @@
 import T from "../../translations/index.js";
 import argon2 from "argon2";
-import lucidServices from "../index.js";
 import Repository from "../../libs/repositories/index.js";
 import constants from "../../constants/constants.js";
 import type { BooleanInt } from "../../libs/db/types.js";
@@ -26,8 +25,8 @@ const updateSingle: ServiceFn<
 		},
 	],
 	number
-> = async (service, data) => {
-	const UsersRepo = Repository.get("users", service.db);
+> = async (context, data) => {
+	const UsersRepo = Repository.get("users", context.db);
 
 	if (data.auth.id === data.userId) {
 		return {
@@ -156,7 +155,7 @@ const updateSingle: ServiceFn<
 				},
 			],
 		}),
-		lucidServices.user.updateMultipleRoles(service, {
+		context.services.user.updateMultipleRoles(context, {
 			userId: data.userId,
 			roleIds: data.roleIds,
 		}),
@@ -174,7 +173,7 @@ const updateSingle: ServiceFn<
 	}
 
 	if (data.email !== undefined) {
-		const sendEmailRes = await lucidServices.email.sendEmail(service, {
+		const sendEmailRes = await context.services.email.sendEmail(context, {
 			template: constants.emailTemplates.emailChanged,
 			type: "internal",
 			to: data.email,

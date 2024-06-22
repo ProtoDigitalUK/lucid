@@ -2,13 +2,12 @@ import Repository from "../../libs/repositories/index.js";
 import Formatter from "../../libs/formatters/index.js";
 import constants from "../../constants/constants.js";
 import serviceWrapper from "../../utils/services/service-wrapper.js";
-import lucidServices from "../index.js";
-import type { ServiceConfig, ServiceFn } from "../../utils/services/types.js";
+import type { ServiceContext, ServiceFn } from "../../utils/services/types.js";
 
 const defaultRoles: ServiceFn<[], undefined> = async (
-	service: ServiceConfig,
+	context: ServiceContext,
 ) => {
-	const RolesRepo = Repository.get("roles", service.db);
+	const RolesRepo = Repository.get("roles", context.db);
 
 	const totalRoleCount = await RolesRepo.count();
 	if (Formatter.parseCount(totalRoleCount?.count) > 0) {
@@ -21,9 +20,9 @@ const defaultRoles: ServiceFn<[], undefined> = async (
 	const rolePromises = [];
 	for (const role of constants.seedDefaults.roles) {
 		rolePromises.push(
-			serviceWrapper(lucidServices.role.createSingle, {
+			serviceWrapper(context.services.role.createSingle, {
 				transaction: false,
-			})(service, {
+			})(context, {
 				name: role.name,
 				description: role.description,
 				permissions: role.permissions,

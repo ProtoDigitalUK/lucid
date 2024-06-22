@@ -1,6 +1,4 @@
 import("dotenv/config.js");
-import type { FastifyInstance } from "fastify";
-import type { Config } from "./types/config.js";
 import packageJson from "../package.json" assert { type: "json" };
 import path from "node:path";
 import T from "./translations/index.js";
@@ -12,13 +10,15 @@ import fs from "fs-extra";
 import fastifyMultipart from "@fastify/multipart";
 import fastifySwagger from "@fastify/swagger";
 import fastifySwaggerUi from "@fastify/swagger-ui";
+import getConfig from "./libs/config/get-config.js";
 import routes from "./routes/index.js";
 import { getDirName } from "./utils/helpers/index.js";
-import getConfig from "./libs/config/get-config.js";
 import { decodeError } from "./utils/errors/index.js";
 import lucidLogger from "./utils/logging/index.js";
+import lucidServices from "./services/index.js";
 import registerCronJobs from "./actions/register-cron-jobs.js";
 import { LucidError } from "./utils/errors/index.js";
+import type { FastifyInstance } from "fastify";
 
 const currentDir = getDirName(import.meta.url);
 
@@ -26,8 +26,9 @@ const lucidPlugin = async (fastify: FastifyInstance) => {
 	try {
 		const config = await getConfig();
 
-		fastify.decorate<Config>("config", config);
+		fastify.decorate("config", config);
 		fastify.decorate("logger", lucidLogger);
+		fastify.decorate("services", lucidServices);
 
 		// ------------------------------------
 		// Swagger
@@ -86,10 +87,11 @@ const lucidPlugin = async (fastify: FastifyInstance) => {
 
 		// ------------------------------------
 		// Initialise
-		await config.db.seed(config);
+		await config.db.seed(config, lucidServices);
 		registerCronJobs({
 			db: config.db.client,
 			config: config,
+			services: lucidServices,
 		});
 		const [cmsEntryFile, landingPageFile] = await Promise.all([
 			fs.readFile(path.resolve(currentDir, "../cms/index.html")),

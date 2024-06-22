@@ -9,8 +9,8 @@ const checkCollection: ServiceFn<
 		},
 	],
 	CollectionBuilder
-> = async (service, data) => {
-	const collectionInstance = service.config.collections?.find(
+> = async (context, data) => {
+	const collectionInstance = context.config.collections?.find(
 		(c) => c.key === data.key,
 	);
 

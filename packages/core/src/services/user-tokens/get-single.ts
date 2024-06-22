@@ -13,8 +13,8 @@ const getSingle: ServiceFn<
 		id: number;
 		user_id: number | null;
 	}
-> = async (service, data) => {
-	const UserTokensRepo = Repository.get("user-tokens", service.db);
+> = async (context, data) => {
+	const UserTokensRepo = Repository.get("user-tokens", context.db);
 
 	const userToken = await UserTokensRepo.selectSingle({
 		select: ["id", "user_id"],

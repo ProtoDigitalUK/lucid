@@ -11,7 +11,7 @@ import type { FieldInsertItem } from "../helpers/flatten-fields.js";
 import type BrickBuilder from "../../../libs/builders/brick-builder/index.js";
 import type CollectionBuilder from "../../../libs/builders/collection-builder/index.js";
 import type {
-	ServiceConfig,
+	ServiceContext,
 	ServiceFn,
 } from "../../../utils/services/types.js";
 import type { BrickInsertItem } from "../helpers/format-insert-bricks.js";
@@ -24,15 +24,15 @@ const checkValidateBricksFields: ServiceFn<
 		},
 	],
 	undefined
-> = async (service, data) => {
+> = async (context, data) => {
 	const flatFields =
 		data.bricks.flatMap((brick) => {
 			return brick.fields || [];
 		}) || [];
 
 	const [media, users] = await Promise.all([
-		getAllMedia(service, flatFields),
-		getAllUsers(service, flatFields),
+		getAllMedia(context, flatFields),
+		getAllUsers(context, flatFields),
 	]);
 
 	const errors: FieldErrors[] = [];
@@ -246,14 +246,14 @@ const allFieldIdsOfType = <T>(fields: FieldInsertItem[], type: FieldTypes) => {
 };
 
 const getAllMedia = async (
-	service: ServiceConfig,
+	context: ServiceContext,
 	fields: FieldInsertItem[],
 ) => {
 	try {
 		const ids = allFieldIdsOfType<number>(fields, "media");
 		if (ids.length === 0) return [];
 
-		const MediaRepo = Repository.get("media", service.db);
+		const MediaRepo = Repository.get("media", context.db);
 
 		return MediaRepo.selectMultiple({
 			select: ["id", "file_extension", "width", "height", "type"],
@@ -270,14 +270,14 @@ const getAllMedia = async (
 	}
 };
 const getAllUsers = async (
-	service: ServiceConfig,
+	context: ServiceContext,
 	fields: FieldInsertItem[],
 ) => {
 	try {
 		const ids = allFieldIdsOfType<number>(fields, "user");
 		if (ids.length === 0) return [];
 
-		const UsersRepo = Repository.get("users", service.db);
+		const UsersRepo = Repository.get("users", context.db);
 
 		return await UsersRepo.selectMultiple({
 			select: ["id", "username", "email", "first_name", "last_name"],

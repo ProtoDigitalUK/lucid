@@ -1,7 +1,6 @@
 import T from "../../translations/index.js";
 import collectionDocumentsSchema from "../../schemas/collection-documents.js";
 import { swaggerResponse, swaggerHeaders } from "../../utils/swagger/index.js";
-import lucidServices from "../../services/index.js";
 import { swaggerBodyBricksObj } from "../../schemas/collection-bricks.js";
 import { swaggerFieldObj } from "../../schemas/collection-fields.js";
 import buildResponse from "../../utils/build-response.js";
@@ -15,7 +14,7 @@ const upsertSingleController: RouteController<
 	typeof collectionDocumentsSchema.upsertSingle.query
 > = async (request, reply) => {
 	const documentId = await serviceWrapper(
-		lucidServices.collection.document.upsertSingle,
+		request.server.services.collection.document.upsertSingle,
 		{
 			transaction: true,
 			defaultError: {
@@ -33,6 +32,7 @@ const upsertSingleController: RouteController<
 		{
 			db: request.server.config.db.client,
 			config: request.server.config,
+			services: request.server.services,
 		},
 		{
 			collectionKey: request.params.collectionKey,

@@ -2,7 +2,6 @@ import T from "../../translations/index.js";
 import accountSchema from "../../schemas/account.js";
 import { swaggerResponse, swaggerHeaders } from "../../utils/swagger/index.js";
 import serviceWrapper from "../../utils/services/service-wrapper.js";
-import lucidServices from "../../services/index.js";
 import { LucidAPIError } from "../../utils/errors/index.js";
 import type { RouteController } from "../../types/types.js";
 
@@ -12,7 +11,7 @@ const resetPasswordController: RouteController<
 	typeof accountSchema.resetPassword.query
 > = async (request, reply) => {
 	const resetPassword = await serviceWrapper(
-		lucidServices.account.resetPassword,
+		request.server.services.account.resetPassword,
 		{
 			transaction: true,
 			defaultError: {
@@ -26,6 +25,7 @@ const resetPasswordController: RouteController<
 		{
 			db: request.server.config.db.client,
 			config: request.server.config,
+			services: request.server.services,
 		},
 		{
 			token: request.params.token,

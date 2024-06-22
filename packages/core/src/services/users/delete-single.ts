@@ -1,6 +1,5 @@
 import T from "../../translations/index.js";
 import Repository from "../../libs/repositories/index.js";
-import lucidServices from "../index.js";
 import type { ServiceFn } from "../../utils/services/types.js";
 
 const deleteSingle: ServiceFn<
@@ -11,8 +10,8 @@ const deleteSingle: ServiceFn<
 		},
 	],
 	undefined
-> = async (service, data) => {
-	const UsersRepo = Repository.get("users", service.db);
+> = async (context, data) => {
+	const UsersRepo = Repository.get("users", context.db);
 
 	if (data.currentUserId === data.userId) {
 		return {
@@ -25,7 +24,7 @@ const deleteSingle: ServiceFn<
 		};
 	}
 
-	await lucidServices.user.checks.checkNotLastUser(service);
+	await context.services.user.checks.checkNotLastUser(context);
 
 	const deleteUserRes = await UsersRepo.updateSingle({
 		data: {

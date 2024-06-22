@@ -11,13 +11,13 @@ const getSingle: ServiceFn<
 		},
 	],
 	MediaResponse
-> = async (service, data) => {
-	const MediaRepo = Repository.get("media", service.db);
+> = async (context, data) => {
+	const MediaRepo = Repository.get("media", context.db);
 	const MediaFormatter = Formatter.get("media");
 
 	const media = await MediaRepo.selectSingleById({
 		id: data.id,
-		config: service.config,
+		config: context.config,
 	});
 
 	if (media === undefined) {
@@ -35,7 +35,7 @@ const getSingle: ServiceFn<
 		error: undefined,
 		data: MediaFormatter.formatSingle({
 			media: media,
-			host: service.config.host,
+			host: context.config.host,
 		}),
 	};
 };

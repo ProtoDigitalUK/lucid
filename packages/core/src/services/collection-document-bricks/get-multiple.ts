@@ -15,10 +15,10 @@ const getMultiple: ServiceFn<
 		bricks: Array<BrickResponse>;
 		fields: Array<FieldResponse>;
 	}
-> = async (service, data) => {
+> = async (context, data) => {
 	const CollectionDocumentBricksRepo = Repository.get(
 		"collection-document-bricks",
-		service.db,
+		context.db,
 	);
 
 	const CollectionDocumentBricksFormatter = Formatter.get(
@@ -28,9 +28,9 @@ const getMultiple: ServiceFn<
 	const [bricks, collectionRes] = await Promise.all([
 		CollectionDocumentBricksRepo.selectMultipleByDocumentId({
 			documentId: data.documentId,
-			config: service.config,
+			config: context.config,
 		}),
-		collectionsServices.getSingleInstance(service, {
+		collectionsServices.getSingleInstance(context, {
 			key: data.collectionKey,
 		}),
 	]);
@@ -42,24 +42,24 @@ const getMultiple: ServiceFn<
 			bricks: CollectionDocumentBricksFormatter.formatMultiple({
 				bricks: bricks,
 				collection: collectionRes.data,
-				host: service.config.host,
+				host: context.config.host,
 				localisation: {
-					locales: service.config.localisation.locales.map(
+					locales: context.config.localisation.locales.map(
 						(l) => l.code,
 					),
-					default: service.config.localisation.defaultLocale,
+					default: context.config.localisation.defaultLocale,
 				},
 			}),
 			fields: CollectionDocumentBricksFormatter.formatCollectionPseudoBrick(
 				{
 					bricks: bricks,
 					collection: collectionRes.data,
-					host: service.config.host,
+					host: context.config.host,
 					localisation: {
-						locales: service.config.localisation.locales.map(
+						locales: context.config.localisation.locales.map(
 							(l) => l.code,
 						),
-						default: service.config.localisation.defaultLocale,
+						default: context.config.localisation.defaultLocale,
 					},
 				},
 			),

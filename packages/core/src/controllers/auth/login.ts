@@ -1,7 +1,6 @@
 import T from "../../translations/index.js";
 import authSchema from "../../schemas/auth.js";
 import { swaggerResponse, swaggerHeaders } from "../../utils/swagger/index.js";
-import lucidServices from "../../services/index.js";
 import serviceWrapper from "../../utils/services/service-wrapper.js";
 import { LucidAPIError } from "../../utils/errors/index.js";
 import type { RouteController } from "../../types/types.js";
@@ -11,7 +10,7 @@ const loginController: RouteController<
 	typeof authSchema.login.body,
 	typeof authSchema.login.query
 > = async (request, reply) => {
-	const userRes = await serviceWrapper(lucidServices.auth.login, {
+	const userRes = await serviceWrapper(request.server.services.auth.login, {
 		transaction: false,
 		defaultError: {
 			type: "basic",
@@ -24,6 +23,7 @@ const loginController: RouteController<
 		{
 			db: request.server.config.db.client,
 			config: request.server.config,
+			services: request.server.services,
 		},
 		{
 			usernameOrEmail: request.body.usernameOrEmail,
@@ -33,12 +33,12 @@ const loginController: RouteController<
 	if (userRes.error) throw new LucidAPIError(userRes.error);
 
 	const [refreshRes, accessRes] = await Promise.all([
-		lucidServices.auth.refreshToken.generateToken(
+		request.server.services.auth.refreshToken.generateToken(
 			reply,
 			request,
 			userRes.data.id,
 		),
-		lucidServices.auth.accessToken.generateToken(
+		request.server.services.auth.accessToken.generateToken(
 			reply,
 			request,
 			userRes.data.id,

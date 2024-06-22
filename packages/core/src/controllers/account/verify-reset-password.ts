@@ -2,7 +2,6 @@ import T from "../../translations/index.js";
 import accountSchema from "../../schemas/account.js";
 import { swaggerResponse } from "../../utils/swagger/index.js";
 import serviceWrapper from "../../utils/services/service-wrapper.js";
-import lucidServices from "../../services/index.js";
 import { LucidAPIError } from "../../utils/errors/index.js";
 import type { RouteController } from "../../types/types.js";
 
@@ -11,18 +10,22 @@ const verifyResetPasswordController: RouteController<
 	typeof accountSchema.verifyResetPassword.body,
 	typeof accountSchema.verifyResetPassword.query
 > = async (request, reply) => {
-	const token = await serviceWrapper(lucidServices.user.token.getSingle, {
-		transaction: false,
-		defaultError: {
-			type: "basic",
-			name: T("route_verify_password_reset_error_name"),
-			message: T("route_verify_password_reset_error_message"),
-			status: 500,
+	const token = await serviceWrapper(
+		request.server.services.user.token.getSingle,
+		{
+			transaction: false,
+			defaultError: {
+				type: "basic",
+				name: T("route_verify_password_reset_error_name"),
+				message: T("route_verify_password_reset_error_message"),
+				status: 500,
+			},
 		},
-	})(
+	)(
 		{
 			db: request.server.config.db.client,
 			config: request.server.config,
+			services: request.server.services,
 		},
 		{
 			tokenType: "password_reset",

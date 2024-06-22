@@ -1,16 +1,15 @@
 import Repository from "../../libs/repositories/index.js";
-import lucidServices from "../index.js";
 import type { ServiceFn } from "../../utils/services/types.js";
 
-const clearAll: ServiceFn<[], undefined> = async (service) => {
+const clearAll: ServiceFn<[], undefined> = async (context) => {
 	const mediaStrategyRes =
-		await lucidServices.media.checks.checkHasMediaStrategy(service);
+		await context.services.media.checks.checkHasMediaStrategy(context);
 	if (mediaStrategyRes.error) return mediaStrategyRes;
 
-	const ProcessedImagesRepo = Repository.get("processed-images", service.db);
+	const ProcessedImagesRepo = Repository.get("processed-images", context.db);
 
 	const [storageUsedRes, processedImages] = await Promise.all([
-		lucidServices.option.getSingle(service, {
+		context.services.option.getSingle(context, {
 			name: "media_storage_used",
 		}),
 		ProcessedImagesRepo.selectMultiple({
@@ -35,7 +34,7 @@ const clearAll: ServiceFn<[], undefined> = async (service) => {
 		ProcessedImagesRepo.deleteMultiple({
 			where: [],
 		}),
-		lucidServices.option.updateSingle(service, {
+		context.services.option.updateSingle(context, {
 			name: "media_storage_used",
 			valueInt: newStorageUsed < 0 ? 0 : newStorageUsed,
 		}),

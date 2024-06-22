@@ -1,7 +1,6 @@
 import T from "../../translations/index.js";
 import collectionDocumentsSchema from "../../schemas/collection-documents.js";
 import { swaggerResponse, swaggerHeaders } from "../../utils/swagger/index.js";
-import lucidServices from "../../services/index.js";
 import serviceWrapper from "../../utils/services/service-wrapper.js";
 import { LucidAPIError } from "../../utils/errors/index.js";
 import type { RouteController } from "../../types/types.js";
@@ -12,7 +11,7 @@ const deleteMultipleController: RouteController<
 	typeof collectionDocumentsSchema.deleteMultiple.query
 > = async (request, reply) => {
 	const deleteMultiple = await serviceWrapper(
-		lucidServices.collection.document.deleteMultiple,
+		request.server.services.collection.document.deleteMultiple,
 		{
 			transaction: true,
 			defaultError: {
@@ -26,6 +25,7 @@ const deleteMultipleController: RouteController<
 		{
 			db: request.server.config.db.client,
 			config: request.server.config,
+			services: request.server.services,
 		},
 		{
 			ids: request.body.ids,

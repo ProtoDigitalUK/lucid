@@ -68,8 +68,8 @@ const renderTemplate: ServiceFn<
 		},
 	],
 	string
-> = async (service, data) => {
-	const mjmlFile = await getTemplateData(service.config, data.template);
+> = async (context, data) => {
+	const mjmlFile = await getTemplateData(context.config, data.template);
 	if (mjmlFile.error) return mjmlFile;
 
 	const mjmlTemplate = Handlebars.compile(mjmlFile.data);

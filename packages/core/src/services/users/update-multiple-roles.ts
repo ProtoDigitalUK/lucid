@@ -1,4 +1,3 @@
-import lucidServices from "../index.js";
 import Repository from "../../libs/repositories/index.js";
 import type { ServiceFn } from "../../utils/services/types.js";
 
@@ -10,7 +9,7 @@ const updateMultipleRoles: ServiceFn<
 		},
 	],
 	undefined
-> = async (service, data) => {
+> = async (context, data) => {
 	if (data.roleIds === undefined) {
 		return {
 			error: undefined,
@@ -18,10 +17,10 @@ const updateMultipleRoles: ServiceFn<
 		};
 	}
 
-	const UserRolesRepo = Repository.get("user-roles", service.db);
+	const UserRolesRepo = Repository.get("user-roles", context.db);
 
 	const [roleExistsRes] = await Promise.all([
-		lucidServices.user.checks.checkRolesExist(service, {
+		context.services.user.checks.checkRolesExist(context, {
 			roleIds: data.roleIds || [],
 		}),
 		UserRolesRepo.deleteMultiple({

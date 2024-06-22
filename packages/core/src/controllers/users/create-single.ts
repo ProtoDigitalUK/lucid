@@ -1,7 +1,6 @@
 import T from "../../translations/index.js";
 import usersSchema from "../../schemas/users.js";
 import { swaggerResponse } from "../../utils/swagger/index.js";
-import lucidServices from "../../services/index.js";
 import buildResponse from "../../utils/build-response.js";
 import UsersFormatter from "../../libs/formatters/users.js";
 import serviceWrapper from "../../utils/services/service-wrapper.js";
@@ -13,18 +12,22 @@ const createSingleController: RouteController<
 	typeof usersSchema.createSingle.body,
 	typeof usersSchema.createSingle.query
 > = async (request, reply) => {
-	const userId = await serviceWrapper(lucidServices.user.createSingle, {
-		transaction: true,
-		defaultError: {
-			type: "basic",
-			name: T("route_user_create_error_name"),
-			message: T("route_user_create_error_message"),
-			status: 500,
+	const userId = await serviceWrapper(
+		request.server.services.user.createSingle,
+		{
+			transaction: true,
+			defaultError: {
+				type: "basic",
+				name: T("route_user_create_error_name"),
+				message: T("route_user_create_error_message"),
+				status: 500,
+			},
 		},
-	})(
+	)(
 		{
 			db: request.server.config.db.client,
 			config: request.server.config,
+			services: request.server.services,
 		},
 		{
 			email: request.body.email,
@@ -38,7 +41,7 @@ const createSingleController: RouteController<
 	);
 	if (userId.error) throw new LucidAPIError(userId.error);
 
-	const user = await serviceWrapper(lucidServices.user.getSingle, {
+	const user = await serviceWrapper(request.server.services.user.getSingle, {
 		transaction: false,
 		defaultError: {
 			type: "basic",
@@ -50,6 +53,7 @@ const createSingleController: RouteController<
 		{
 			db: request.server.config.db.client,
 			config: request.server.config,
+			services: request.server.services,
 		},
 		{
 			userId: userId.data,

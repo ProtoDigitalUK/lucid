@@ -1,7 +1,6 @@
 import T from "../../translations/index.js";
 import usersSchema from "../../schemas/users.js";
 import { swaggerResponse } from "../../utils/swagger/index.js";
-import lucidServices from "../../services/index.js";
 import buildResponse from "../../utils/build-response.js";
 import UsersFormatter from "../../libs/formatters/users.js";
 import serviceWrapper from "../../utils/services/service-wrapper.js";
@@ -13,7 +12,7 @@ const getSingleController: RouteController<
 	typeof usersSchema.getSingle.body,
 	typeof usersSchema.getSingle.query
 > = async (request, reply) => {
-	const user = await serviceWrapper(lucidServices.user.getSingle, {
+	const user = await serviceWrapper(request.server.services.user.getSingle, {
 		transaction: false,
 		defaultError: {
 			type: "basic",
@@ -25,6 +24,7 @@ const getSingleController: RouteController<
 		{
 			db: request.server.config.db.client,
 			config: request.server.config,
+			services: request.server.services,
 		},
 		{
 			userId: Number.parseInt(request.params.id),

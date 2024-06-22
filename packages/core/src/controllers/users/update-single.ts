@@ -1,7 +1,6 @@
 import T from "../../translations/index.js";
 import usersSchema from "../../schemas/users.js";
 import { swaggerResponse } from "../../utils/swagger/index.js";
-import lucidServices from "../../services/index.js";
 import serviceWrapper from "../../utils/services/service-wrapper.js";
 import { LucidAPIError } from "../../utils/errors/index.js";
 import type { RouteController } from "../../types/types.js";
@@ -11,18 +10,22 @@ const updateSingleController: RouteController<
 	typeof usersSchema.updateSingle.body,
 	typeof usersSchema.updateSingle.query
 > = async (request, reply) => {
-	const updateUser = await serviceWrapper(lucidServices.user.updateSingle, {
-		transaction: true,
-		defaultError: {
-			type: "basic",
-			name: T("route_user_update_error_name"),
-			message: T("route_user_update_error_message"),
-			status: 500,
+	const updateUser = await serviceWrapper(
+		request.server.services.user.updateSingle,
+		{
+			transaction: true,
+			defaultError: {
+				type: "basic",
+				name: T("route_user_update_error_name"),
+				message: T("route_user_update_error_message"),
+				status: 500,
+			},
 		},
-	})(
+	)(
 		{
 			db: request.server.config.db.client,
 			config: request.server.config,
+			services: request.server.services,
 		},
 		{
 			auth: {

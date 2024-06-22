@@ -1,5 +1,4 @@
 import T from "../../translations/index.js";
-import lucidServices from "../index.js";
 import Repository from "../../libs/repositories/index.js";
 import { streamToBuffer } from "../../utils/media/index.js";
 import { PassThrough, type Readable } from "node:stream";
@@ -21,9 +20,9 @@ const processImage: ServiceFn<
 		contentType: string | undefined;
 		body: Readable;
 	}
-> = async (service, data) => {
+> = async (context, data) => {
 	const mediaStrategyRes =
-		await lucidServices.media.checks.checkHasMediaStrategy(service);
+		await context.services.media.checks.checkHasMediaStrategy(context);
 	if (mediaStrategyRes.error) return mediaStrategyRes;
 
 	// get og image
@@ -56,11 +55,11 @@ const processImage: ServiceFn<
 
 	// Optimise image
 	const [imageRes, processedCountRes] = await Promise.all([
-		lucidServices.processedImage.optimiseImage(service, {
+		context.services.processedImage.optimiseImage(context, {
 			buffer: await streamToBuffer(res.response.body),
 			options: data.options,
 		}),
-		lucidServices.processedImage.getSingleCount(service, {
+		context.services.processedImage.getSingleCount(context, {
 			key: data.key,
 		}),
 	]);
@@ -81,7 +80,7 @@ const processImage: ServiceFn<
 	stream.end(Buffer.from(imageRes.data.buffer));
 
 	// Check if the processed image limit has been reached for this key, if so return processed image without saving
-	if (processedCountRes.data >= service.config.media.processed.limit) {
+	if (processedCountRes.data >= context.config.media.processed.limit) {
 		return {
 			error: undefined,
 			data: {
@@ -94,12 +93,10 @@ const processImage: ServiceFn<
 	}
 
 	// Check if we can store it
-	const canStoreRes = await lucidServices.processedImage.checks.checkCanStore(
-		service,
-		{
+	const canStoreRes =
+		await context.services.processedImage.checks.checkCanStore(context, {
 			size: imageRes.data.size,
-		},
-	);
+		});
 	if (canStoreRes.error) {
 		return {
 			error: undefined,
@@ -112,9 +109,9 @@ const processImage: ServiceFn<
 		};
 	}
 
-	const ProcessedImagesRepo = Repository.get("processed-images", service.db);
+	const ProcessedImagesRepo = Repository.get("processed-images", context.db);
 
-	if (service.config.media.processed.store === true) {
+	if (context.config.media.processed.store === true) {
 		Promise.all([
 			ProcessedImagesRepo.createSingle({
 				key: data.processKey,
@@ -134,7 +131,7 @@ const processImage: ServiceFn<
 					key: data.processKey,
 				},
 			}),
-			lucidServices.option.updateSingle(service, {
+			context.services.option.updateSingle(context, {
 				name: "media_storage_used",
 				valueInt: canStoreRes.data.proposedSize,
 			}),

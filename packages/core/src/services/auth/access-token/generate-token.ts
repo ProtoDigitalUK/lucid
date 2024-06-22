@@ -9,11 +9,11 @@ const generateToken = async (
 	userId: number,
 ): ServiceResponse<undefined> => {
 	try {
-		const lucidServices = await import("../../index.js");
-		const userRes = await lucidServices.default.user.getSingle(
+		const userRes = await request.server.services.user.getSingle(
 			{
 				db: request.server.config.db.client,
 				config: request.server.config,
+				services: request.server.services,
 			},
 			{
 				userId: userId,

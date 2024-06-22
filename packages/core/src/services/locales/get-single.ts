@@ -11,11 +11,11 @@ const getSingle: ServiceFn<
 		},
 	],
 	LocalesResponse
-> = async (service, data) => {
-	const LocalesRepo = Repository.get("locales", service.db);
+> = async (context, data) => {
+	const LocalesRepo = Repository.get("locales", context.db);
 	const LocalesFormatter = Formatter.get("locales");
 
-	const configLocale = service.config.localisation.locales.find(
+	const configLocale = context.config.localisation.locales.find(
 		(locale) => locale.code === data.code,
 	);
 
@@ -68,7 +68,7 @@ const getSingle: ServiceFn<
 		data: LocalesFormatter.formatSingle({
 			locale: locale,
 			configLocale: configLocale,
-			defaultLocale: service.config.localisation.defaultLocale,
+			defaultLocale: context.config.localisation.defaultLocale,
 		}),
 	};
 };

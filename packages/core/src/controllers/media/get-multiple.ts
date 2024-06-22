@@ -5,7 +5,6 @@ import {
 	swaggerHeaders,
 	swaggerQueryString,
 } from "../../utils/swagger/index.js";
-import lucidServices from "../../services/index.js";
 import buildResponse from "../../utils/build-response.js";
 import MediaFormatter from "../../libs/formatters/media.js";
 import serviceWrapper from "../../utils/services/service-wrapper.js";
@@ -17,18 +16,22 @@ const getMultipleController: RouteController<
 	typeof mediaSchema.getMultiple.body,
 	typeof mediaSchema.getMultiple.query
 > = async (request, reply) => {
-	const media = await serviceWrapper(lucidServices.media.getMultiple, {
-		transaction: false,
-		defaultError: {
-			type: "basic",
-			name: T("route_media_fetch_error_name"),
-			message: T("route_media_fetch_error_message"),
-			status: 500,
+	const media = await serviceWrapper(
+		request.server.services.media.getMultiple,
+		{
+			transaction: false,
+			defaultError: {
+				type: "basic",
+				name: T("route_media_fetch_error_name"),
+				message: T("route_media_fetch_error_message"),
+				status: 500,
+			},
 		},
-	})(
+	)(
 		{
 			db: request.server.config.db.client,
 			config: request.server.config,
+			services: request.server.services,
 		},
 		{
 			query: request.query,

@@ -1,5 +1,4 @@
 import T from "../../translations/index.js";
-import lucidServices from "../index.js";
 import Repository from "../../libs/repositories/index.js";
 import executeHooks from "../../utils/hooks/execute-hooks.js";
 import merge from "lodash.merge";
@@ -19,10 +18,10 @@ const upsertSingle: ServiceFn<
 		},
 	],
 	number
-> = async (service, data) => {
+> = async (context, data) => {
 	const collectionRes =
-		await lucidServices.collection.document.checks.checkCollection(
-			service,
+		await context.services.collection.document.checks.checkCollection(
+			context,
 			{
 				key: data.collectionKey,
 			},
@@ -31,7 +30,7 @@ const upsertSingle: ServiceFn<
 
 	const CollectionDocumentsRepo = Repository.get(
 		"collection-documents",
-		service.db,
+		context.db,
 	);
 
 	if (data.documentId !== undefined) {
@@ -76,8 +75,8 @@ const upsertSingle: ServiceFn<
 	}
 
 	const checkDocumentCount =
-		await lucidServices.collection.document.checks.checkSingleCollectionDocumentCount(
-			service,
+		await context.services.collection.document.checks.checkSingleCollectionDocumentCount(
+			context,
 			{
 				collectionKey: data.collectionKey,
 				collectionMode: collectionRes.data.data.mode,
@@ -90,11 +89,11 @@ const upsertSingle: ServiceFn<
 		{
 			service: "collection-documents",
 			event: "beforeUpsert",
-			config: service.config,
+			config: context.config,
 			collectionInstance: collectionRes.data,
 		},
 		{
-			db: service.db,
+			db: context.db,
 			meta: {
 				collectionKey: data.collectionKey,
 				userId: data.userId,
@@ -123,23 +122,26 @@ const upsertSingle: ServiceFn<
 	}
 
 	const createMultipleBricks =
-		await lucidServices.collection.document.brick.createMultiple(service, {
-			documentId: document.id,
-			bricks: bodyData.bricks,
-			fields: bodyData.fields,
-			collection: collectionRes.data,
-		});
+		await context.services.collection.document.brick.createMultiple(
+			context,
+			{
+				documentId: document.id,
+				bricks: bodyData.bricks,
+				fields: bodyData.fields,
+				collection: collectionRes.data,
+			},
+		);
 	if (createMultipleBricks.error) return createMultipleBricks;
 
 	await executeHooks(
 		{
 			service: "collection-documents",
 			event: "afterUpsert",
-			config: service.config,
+			config: context.config,
 			collectionInstance: collectionRes.data,
 		},
 		{
-			db: service.db,
+			db: context.db,
 			meta: {
 				collectionKey: data.collectionKey,
 				userId: data.userId,

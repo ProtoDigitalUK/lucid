@@ -12,10 +12,10 @@ const deleteMultipleBricks: ServiceFn<
 		},
 	],
 	undefined
-> = async (service, data) => {
+> = async (context, data) => {
 	const CollectionDocumentBricksRepo = Repository.get(
 		"collection-document-bricks",
-		service.db,
+		context.db,
 	);
 
 	if (data.apply.collectionFields) {

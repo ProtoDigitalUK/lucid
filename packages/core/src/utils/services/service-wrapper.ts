@@ -3,7 +3,7 @@ import TransactionError from "./utils/transaction-error.js";
 import mergeServiceError from "./utils/merge-errors.js";
 import lucidLogger from "../logging/index.js";
 import type {
-	ServiceConfig,
+	ServiceContext,
 	ServiceWrapperConfig,
 	ServiceResponse,
 	ServiceFn,
@@ -14,7 +14,7 @@ const serviceWrapper =
 		fn: ServiceFn<T, R>,
 		wrapperConfig: ServiceWrapperConfig,
 	) =>
-	async (service: ServiceConfig, ...args: T): ServiceResponse<R> => {
+	async (service: ServiceContext, ...args: T): ServiceResponse<R> => {
 		try {
 			//* Validate input if a schema is provided
 			if (wrapperConfig.schema) {

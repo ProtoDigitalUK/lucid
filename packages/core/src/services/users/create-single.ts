@@ -1,5 +1,4 @@
 import T from "../../translations/index.js";
-import lucidServices from "../index.js";
 import Repository from "../../libs/repositories/index.js";
 import { add } from "date-fns";
 import constants from "../../constants/constants.js";
@@ -19,8 +18,8 @@ const createSingle: ServiceFn<
 		},
 	],
 	number
-> = async (service, data) => {
-	const UsersRepo = Repository.get("users", service.db);
+> = async (context, data) => {
+	const UsersRepo = Repository.get("users", context.db);
 
 	const [userExists, roleExistsRes] = await Promise.all([
 		UsersRepo.selectSingleByEmailUsername({
@@ -30,7 +29,7 @@ const createSingle: ServiceFn<
 				email: data.email,
 			},
 		}),
-		lucidServices.user.checks.checkRolesExist(service, {
+		context.services.user.checks.checkRolesExist(context, {
 			roleIds: data.roleIds,
 		}),
 	]);
@@ -92,14 +91,17 @@ const createSingle: ServiceFn<
 		minutes: constants.userInviteTokenExpirationMinutes,
 	}).toISOString();
 
-	const userTokenRes = await lucidServices.user.token.createSingle(service, {
-		userId: newUser.id,
-		tokenType: "password_reset",
-		expiryDate: expiryDate,
-	});
+	const userTokenRes = await context.services.user.token.createSingle(
+		context,
+		{
+			userId: newUser.id,
+			tokenType: "password_reset",
+			expiryDate: expiryDate,
+		},
+	);
 	if (userTokenRes.error) return userTokenRes;
 
-	const sendEmailRes = await lucidServices.email.sendEmail(service, {
+	const sendEmailRes = await context.services.email.sendEmail(context, {
 		type: "internal",
 		to: data.email,
 		subject: T("user_invite_email_subject"),
@@ -108,7 +110,7 @@ const createSingle: ServiceFn<
 			firstName: data.firstName,
 			lastName: data.lastName,
 			email: data.email,
-			resetLink: `${service.config.host}${constants.locations.resetPassword}?token=${userTokenRes.data.token}`,
+			resetLink: `${context.config.host}${constants.locations.resetPassword}?token=${userTokenRes.data.token}`,
 		},
 	});
 	if (sendEmailRes.error) return sendEmailRes;
@@ -121,7 +123,7 @@ const createSingle: ServiceFn<
 		};
 	}
 
-	const UserRolesRepo = Repository.get("user-roles", service.db);
+	const UserRolesRepo = Repository.get("user-roles", context.db);
 
 	await UserRolesRepo.createMultiple({
 		items: data.roleIds.map((r) => ({

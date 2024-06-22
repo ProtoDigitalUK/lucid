@@ -1,7 +1,6 @@
 import T from "../../translations/index.js";
 import rolesSchema from "../../schemas/roles.js";
 import { swaggerResponse } from "../../utils/swagger/index.js";
-import lucidServices from "../../services/index.js";
 import buildResponse from "../../utils/build-response.js";
 import RolesFormatter from "../../libs/formatters/roles.js";
 import serviceWrapper from "../../utils/services/service-wrapper.js";
@@ -13,7 +12,7 @@ const getSingleController: RouteController<
 	typeof rolesSchema.getSingle.body,
 	typeof rolesSchema.getSingle.query
 > = async (request, reply) => {
-	const role = await serviceWrapper(lucidServices.role.getSingle, {
+	const role = await serviceWrapper(request.server.services.role.getSingle, {
 		transaction: false,
 		defaultError: {
 			type: "basic",
@@ -25,6 +24,7 @@ const getSingleController: RouteController<
 		{
 			db: request.server.config.db.client,
 			config: request.server.config,
+			services: request.server.services,
 		},
 		{
 			id: Number.parseInt(request.params.id, 10),

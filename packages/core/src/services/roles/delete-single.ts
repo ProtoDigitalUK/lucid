@@ -8,8 +8,8 @@ const deleteSingle: ServiceFn<
 		},
 	],
 	undefined
-> = async (service, data) => {
-	const RolesRepo = Repository.get("roles", service.db);
+> = async (context, data) => {
+	const RolesRepo = Repository.get("roles", context.db);
 
 	const deleteRoles = await RolesRepo.deleteMultiple({
 		where: [

@@ -19,7 +19,7 @@ const streamErrorImage: ServiceFn<
 		body: fs.ReadStream | Buffer;
 		contentType: string;
 	}
-> = async (service, data) => {
+> = async (context, data) => {
 	if (data.error.status !== 404) {
 		return {
 			error: data.error,
@@ -28,7 +28,7 @@ const streamErrorImage: ServiceFn<
 	}
 
 	if (
-		service.config.media?.fallbackImage === false ||
+		context.config.media?.fallbackImage === false ||
 		data.fallback === "0"
 	) {
 		return {
@@ -41,7 +41,7 @@ const streamErrorImage: ServiceFn<
 		};
 	}
 
-	if (service.config.media?.fallbackImage === undefined) {
+	if (context.config.media?.fallbackImage === undefined) {
 		return {
 			error: undefined,
 			data: pipeLocalImage(),
@@ -50,7 +50,7 @@ const streamErrorImage: ServiceFn<
 
 	try {
 		const { buffer, contentType } = await pipeRemoteUrl({
-			url: service.config.media?.fallbackImage as string,
+			url: context.config.media?.fallbackImage as string,
 		});
 
 		return {

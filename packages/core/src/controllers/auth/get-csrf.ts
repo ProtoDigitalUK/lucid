@@ -1,6 +1,5 @@
 import authSchema from "../../schemas/auth.js";
 import { swaggerResponse } from "../../utils/swagger/index.js";
-import lucidServices from "../../services/index.js";
 import buildResponse from "../../utils/build-response.js";
 import { LucidAPIError } from "../../utils/errors/index.js";
 import type { RouteController } from "../../types/types.js";
@@ -10,7 +9,7 @@ const getCSRFController: RouteController<
 	typeof authSchema.getCSRF.body,
 	typeof authSchema.getCSRF.query
 > = async (request, reply) => {
-	const tokenRes = await lucidServices.auth.csrf.generateToken(
+	const tokenRes = await request.server.services.auth.csrf.generateToken(
 		request,
 		reply,
 	);
