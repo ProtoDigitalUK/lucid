@@ -5,8 +5,10 @@ import type { ExtractServiceFnArgs } from "../../utils/services/types.js";
 const toolkit = {
 	email: {
 		sendEmail: (
-			...data: ExtractServiceFnArgs<typeof lucidServices.email.sendEmail>
-		) => toolkitWrapper(lucidServices.email.sendEmail, data),
+			...data: ExtractServiceFnArgs<
+				typeof lucidServices.email.sendExternal
+			>
+		) => toolkitWrapper(lucidServices.email.sendExternal, data),
 	},
 };
 
