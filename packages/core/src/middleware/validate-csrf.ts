@@ -1,17 +1,10 @@
-import T from "../translations/index.js";
-import type { FastifyRequest } from "fastify";
-import auth from "../services/auth/index.js";
+import lucidServices from "../services/index.js";
 import { LucidAPIError } from "../utils/errors/index.js";
+import type { FastifyRequest } from "fastify";
 
 const validateCSRF = async (request: FastifyRequest) => {
-	const verifyCSRF = auth.csrf.verifyCSRFToken(request);
-	if (!verifyCSRF) {
-		throw new LucidAPIError({
-			type: "forbidden",
-			code: "csrf",
-			message: T("failed_to_validate_csrf_token"),
-		});
-	}
+	const verifyCSRFRes = lucidServices.auth.csrf.verifyToken(request);
+	if (verifyCSRFRes.error) throw new LucidAPIError(verifyCSRFRes.error);
 };
 
 export default validateCSRF;

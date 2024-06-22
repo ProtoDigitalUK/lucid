@@ -11,7 +11,7 @@ const loginController: RouteController<
 	typeof authSchema.login.body,
 	typeof authSchema.login.query
 > = async (request, reply) => {
-	const user = await serviceWrapper(lucidServices.auth.login, {
+	const userRes = await serviceWrapper(lucidServices.auth.login, {
 		transaction: false,
 		defaultError: {
 			type: "basic",
@@ -30,20 +30,22 @@ const loginController: RouteController<
 			password: request.body.password,
 		},
 	);
-	if (user.error) throw new LucidAPIError(user.error);
+	if (userRes.error) throw new LucidAPIError(userRes.error);
 
-	await Promise.all([
-		lucidServices.auth.refreshToken.generateRefreshToken(
+	const [refreshRes, accessRes] = await Promise.all([
+		lucidServices.auth.refreshToken.generateToken(
 			reply,
 			request,
-			user.data.id,
+			userRes.data.id,
 		),
-		lucidServices.auth.accessToken.generateAccessToken(
+		lucidServices.auth.accessToken.generateToken(
 			reply,
 			request,
-			user.data.id,
+			userRes.data.id,
 		),
 	]);
+	if (refreshRes.error) throw new LucidAPIError(refreshRes.error);
+	if (accessRes.error) throw new LucidAPIError(accessRes.error);
 
 	reply.status(204).send();
 };

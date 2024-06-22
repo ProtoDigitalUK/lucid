@@ -1,6 +1,7 @@
 import authSchema from "../../schemas/auth.js";
 import { swaggerResponse, swaggerHeaders } from "../../utils/swagger/index.js";
-import auth from "../../services/auth/index.js";
+import lucidServices from "../../services/index.js";
+import { LucidAPIError } from "../../utils/errors/index.js";
 import type { RouteController } from "../../types/types.js";
 
 const tokenController: RouteController<
@@ -8,23 +9,26 @@ const tokenController: RouteController<
 	typeof authSchema.token.body,
 	typeof authSchema.token.query
 > = async (request, reply) => {
-	const refreshPayload = await auth.refreshToken.verifyRefreshToken(
+	const payloadRes = await lucidServices.auth.refreshToken.verifyToken(
 		request,
 		reply,
 	);
+	if (payloadRes.error) throw new LucidAPIError(payloadRes.error);
 
-	await Promise.all([
-		auth.refreshToken.generateRefreshToken(
+	const [refreshRes, accessRes] = await Promise.all([
+		lucidServices.auth.refreshToken.generateToken(
 			reply,
 			request,
-			refreshPayload.userId as number,
+			payloadRes.data.user_id,
 		),
-		auth.accessToken.generateAccessToken(
+		lucidServices.auth.accessToken.generateToken(
 			reply,
 			request,
-			refreshPayload.userId as number,
+			payloadRes.data.user_id,
 		),
 	]);
+	if (refreshRes.error) throw new LucidAPIError(refreshRes.error);
+	if (accessRes.error) throw new LucidAPIError(accessRes.error);
 
 	reply.status(204).send();
 };

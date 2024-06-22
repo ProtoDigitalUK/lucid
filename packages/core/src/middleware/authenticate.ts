@@ -1,20 +1,11 @@
-import T from "../translations/index.js";
-import type { FastifyRequest } from "fastify";
 import { LucidAPIError } from "../utils/errors/index.js";
-import auth from "../services/auth/index.js";
+import lucidServices from "../services/index.js";
+import type { FastifyRequest } from "fastify";
 
 const authenticate = async (request: FastifyRequest) => {
-	const accessToken = await auth.accessToken.verifyAccessToken(request);
-
-	if (!accessToken.success || !accessToken.data) {
-		throw new LucidAPIError({
-			type: "authorisation",
-			message: T("not_authorised_to_perform_action"),
-			code: "authorisation",
-		});
-	}
-
-	request.auth = accessToken.data;
+	const accessTokenRes = lucidServices.auth.accessToken.verifyToken(request);
+	if (accessTokenRes.error) throw new LucidAPIError(accessTokenRes.error);
+	request.auth = accessTokenRes.data;
 };
 
 export default authenticate;

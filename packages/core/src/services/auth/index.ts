@@ -1,11 +1,11 @@
-import csrf from "./csrf.js";
+import accessToken from "./access-token/index.js";
+import refreshToken from "./refresh-token/index.js";
+import csrf from "./csrf/index.js";
 import login from "./login.js";
-import accessToken from "./access-token.js";
-import refreshToken from "./refresh-token.js";
 
 export default {
-	csrf,
-	login,
 	accessToken,
 	refreshToken,
+	csrf,
+	login,
 };

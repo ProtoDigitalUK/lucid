@@ -3,6 +3,9 @@ import permissionGroups from "./permission-groups.js";
 
 export default {
 	tempDir: "./tmp",
+	accessTokenKey: "_access",
+	csrfKey: "_csrf",
+	refreshTokenKey: "_refresh",
 	seedDefaults: {
 		user: {
 			firstName: "Lucid",
