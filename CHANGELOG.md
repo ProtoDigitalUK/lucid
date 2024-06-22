@@ -1,5 +1,18 @@
 # @lucidcms/core
 
+## v0.5.0-alpha.4
+
+### Features:
+
+- Multiple tests added for custom fields and builders along with new validation rules.
+- Reworked service wrapper to support transactions, schema validation, default errors and errors as values. ([9f12aa4](https://github.com/ProtoDigitalUK/lucid/commit/9f12aa4e3a5ddb9fc93d4a906f6384ca1d574e92))
+- Improved error handling for database migrations and Lucid server. ([131edc0](https://github.com/ProtoDigitalUK/lucid/commit/131edc0885a5986482f5725f37867c930c75f1ec))
+- New cronjob added to clear locales that have been deleted for 30 days. ([3c1b7ea](https://github.com/ProtoDigitalUK/lucid/commit/3c1b7ea45d321b405c219fb12f25b54cd7af8ed8))
+
+### Bug Fixes:
+
+- Fixed issue with media and user validation where if no value was selected it would error regardless of validation rules due to validate method not being called and default valid state being false. ([b3b3e27](https://github.com/ProtoDigitalUK/lucid/commit/b3b3e2792b023b3c130a3627dd6a1256d49e699e))
+
 ## v0.5.0-alpha.3
 
 ### Bug Fixes:
