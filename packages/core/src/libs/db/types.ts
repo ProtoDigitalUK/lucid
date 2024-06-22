@@ -208,6 +208,17 @@ export interface HeadlessCollectionDocumentFields {
 	media_id: number | null;
 }
 
+export interface HeadlessClientIntegrations {
+	id: Generated<number>;
+	name: string;
+	description: string | null;
+	enabled: BooleanInt;
+	api_key: string;
+	secret: string;
+	created_at: TimestampImmutable;
+	updated_at: TimestampMutateable;
+}
+
 // ------------------------------------------------------------------------------
 // Database
 
@@ -228,4 +239,5 @@ export interface LucidDB {
 	lucid_collection_document_bricks: HeadlessCollectionDocumentBricks;
 	lucid_collection_document_groups: HeadlessCollectionDocumentGroups;
 	lucid_collection_document_fields: HeadlessCollectionDocumentFields;
+	lucid_client_integrations: HeadlessClientIntegrations;
 }
