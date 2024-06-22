@@ -20,6 +20,11 @@ const clearExpiredLocales: ServiceFn<[], undefined> = async (context) => {
 				operator: "<",
 				value: thirtyDaysAgoTimestamp,
 			},
+			{
+				key: "is_deleted",
+				operator: "=",
+				value: 1,
+			},
 		],
 	});
 
