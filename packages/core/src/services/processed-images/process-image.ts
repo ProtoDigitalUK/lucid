@@ -112,7 +112,7 @@ const processImage: ServiceFn<
 	const ProcessedImagesRepo = Repository.get("processed-images", context.db);
 
 	if (context.config.media.processed.store === true) {
-		Promise.all([
+		await Promise.all([
 			ProcessedImagesRepo.createSingle({
 				key: data.processKey,
 				mediaKey: data.key,
