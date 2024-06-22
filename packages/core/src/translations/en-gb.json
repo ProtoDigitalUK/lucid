@@ -79,6 +79,7 @@
 	"media_name_invalid_message": "The media name is invalid. Please ensure the media name is a valid string.",
 	"permission_error_name": "Permission Error",
 	"error_locked_collection_name": "Collection Locked",
+	"start_error_name": "Start Task Error",
 	"error_locked_collection_message": "The collection is locked and cannot be updated.",
 	"error_locked_collection_message_delete": "The collection is locked and cannot be deleted.",
 	"config_locales_empty": "Please ensure the locales array is not empty.",

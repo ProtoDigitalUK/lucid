@@ -1,7 +1,7 @@
 import Repository from "../../libs/repositories/index.js";
 import type { ServiceContext, ServiceFn } from "../../utils/services/types.js";
 
-const defaultRoles: ServiceFn<[], undefined> = async (
+const syncLocales: ServiceFn<[], undefined> = async (
 	context: ServiceContext,
 ) => {
 	// Responsible for syncing locales config with the database
@@ -81,4 +81,4 @@ const defaultRoles: ServiceFn<[], undefined> = async (
 	};
 };
 
-export default defaultRoles;
+export default syncLocales;

@@ -116,4 +116,13 @@ export default class LocalesRepo {
 
 		return query.executeTakeFirst();
 	};
+	deleteMultiple = async (props: {
+		where: QueryBuilderWhereT<"lucid_locales">;
+	}) => {
+		let query = this.db.deleteFrom("lucid_locales");
+
+		query = deleteQB(query, props.where);
+
+		return query.execute();
+	};
 }

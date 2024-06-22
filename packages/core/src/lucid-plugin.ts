@@ -16,7 +16,7 @@ import { getDirName } from "./utils/helpers/index.js";
 import { decodeError } from "./utils/errors/index.js";
 import lucidLogger from "./utils/logging/index.js";
 import lucidServices from "./services/index.js";
-import registerCronJobs from "./actions/register-cron-jobs.js";
+import executeStartTasks from "./actions/execute-start-tasks.js";
 import { LucidError } from "./utils/errors/index.js";
 import type { FastifyInstance } from "fastify";
 
@@ -24,7 +24,16 @@ const currentDir = getDirName(import.meta.url);
 
 const lucidPlugin = async (fastify: FastifyInstance) => {
 	try {
-		const config = await getConfig();
+		const [config, cmsEntryFile, landingPageFile] = await Promise.all([
+			getConfig(),
+			fs.readFile(path.resolve(currentDir, "../cms/index.html")),
+			fs.readFile(path.resolve(currentDir, "../assets/landing.html")),
+		]);
+		await executeStartTasks({
+			db: config.db.client,
+			config: config,
+			services: lucidServices,
+		});
 
 		fastify.decorate("config", config);
 		fastify.decorate("logger", lucidLogger);
@@ -80,23 +89,6 @@ const lucidPlugin = async (fastify: FastifyInstance) => {
 				fileSize: config.media.maxSize,
 			},
 		});
-
-		// ------------------------------------
-		// Migrate DB
-		await config.db.migrateToLatest();
-
-		// ------------------------------------
-		// Initialise
-		await config.db.seed(config, lucidServices);
-		registerCronJobs({
-			db: config.db.client,
-			config: config,
-			services: lucidServices,
-		});
-		const [cmsEntryFile, landingPageFile] = await Promise.all([
-			fs.readFile(path.resolve(currentDir, "../cms/index.html")),
-			fs.readFile(path.resolve(currentDir, "../assets/landing.html")),
-		]);
 
 		// ------------------------------------
 		// Routes
