@@ -1,12 +1,12 @@
 import winston from "winston";
 
-const logger = winston.createLogger({
+const winstonLogger = winston.createLogger({
 	level: "info",
 	format: winston.format.json(),
 });
 
 if (process.env.NODE_ENV !== "production") {
-	logger.add(
+	winstonLogger.add(
 		new winston.transports.Console({
 			format: winston.format.combine(
 				winston.format.colorize(),
@@ -16,4 +16,4 @@ if (process.env.NODE_ENV !== "production") {
 	);
 }
 
-export default logger;
+export default winstonLogger;

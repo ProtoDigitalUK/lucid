@@ -8,7 +8,7 @@ import {
 } from "kysely";
 import { jsonArrayFrom } from "kysely/helpers/sqlite";
 import { LucidError } from "../../utils/errors/index.js";
-import lucidLogger from "../../utils/logging/index.js";
+import logger from "../../utils/logging/index.js";
 import type { AdapterType, LucidDB } from "./types.js";
 // Migrations
 import Migration00000001 from "./migrations/00000001-locales.js";
@@ -42,12 +42,12 @@ export default class DatabaseAdapter {
 		if (results) {
 			for (const it of results) {
 				if (it.status === "Success") {
-					lucidLogger("info", {
+					logger("info", {
 						message: `"${it.migrationName}" was executed successfully`,
 						scope: "migration",
 					});
 				} else if (it.status === "Error") {
-					lucidLogger("error", {
+					logger("error", {
 						message: `failed to execute migration "${it.migrationName}"`,
 						scope: "migration",
 					});

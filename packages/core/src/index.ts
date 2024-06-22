@@ -7,12 +7,12 @@ import LibSQLAdapter from "./libs/db/adapters/libsql/index.js";
 import PostgresAdapter from "./libs/db/adapters/postgres/index.js";
 import SQLiteAdapter from "./libs/db/adapters/sqlite/index.js";
 import { LucidAPIError, LucidError } from "./utils/errors/index.js";
-import lucidLogger from "./utils/logging/index.js";
+import logger from "./utils/logging/index.js";
 import toolkit from "./libs/toolkit/toolkit.js";
 
 export {
 	toolkit,
-	lucidLogger,
+	logger,
 	// Builders
 	BrickBuilder,
 	CollectionBuilder,

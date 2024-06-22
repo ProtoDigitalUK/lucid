@@ -1,4 +1,4 @@
-import logger from "./logger.js";
+import winstonLogger from "./logger.js";
 
 export type LogLevel = "error" | "warn" | "info" | "debug";
 
@@ -6,7 +6,7 @@ export enum LoggerScopes {
 	CONFIG = "config",
 }
 
-const lucidLogger = (
+const logger = (
 	level: LogLevel,
 	data: {
 		message: string;
@@ -14,23 +14,23 @@ const lucidLogger = (
 		data?: Record<string, unknown>;
 	},
 ) => {
-	let logFn = logger.error;
+	let logFn = winstonLogger.error;
 
 	switch (level) {
 		case "error":
-			logFn = logger.error;
+			logFn = winstonLogger.error;
 			break;
 		case "warn":
-			logFn = logger.warn;
+			logFn = winstonLogger.warn;
 			break;
 		case "info":
-			logFn = logger.info;
+			logFn = winstonLogger.info;
 			break;
 		case "debug":
-			logFn = logger.debug;
+			logFn = winstonLogger.debug;
 			break;
 		default:
-			logFn = logger.error;
+			logFn = winstonLogger.error;
 			break;
 	}
 
@@ -48,4 +48,4 @@ export const messageFormat = (data: {
 	return data.message;
 };
 
-export default lucidLogger;
+export default logger;

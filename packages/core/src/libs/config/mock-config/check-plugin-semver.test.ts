@@ -2,14 +2,14 @@ import { expect, test, vi } from "vitest";
 import T from "../../../translations/index.js";
 import path from "node:path";
 import getConfig from "../get-config.js";
-import logger from "../../../utils/logging/logger.js";
+import winstonLogger from "../../../utils/logging/logger.js";
 import { messageFormat } from "../../../utils/logging/index.js";
 import packageJson from "../../../../package.json";
 import semver from "semver";
 
 test("should throw lucid version support error", async () => {
 	const consoleLogSpy = vi
-		.spyOn(logger, "error")
+		.spyOn(winstonLogger, "error")
 		// @ts-expect-error
 		.mockImplementation(() => {});
 

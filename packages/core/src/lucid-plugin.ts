@@ -14,7 +14,7 @@ import getConfig from "./libs/config/get-config.js";
 import routes from "./routes/index.js";
 import { getDirName } from "./utils/helpers/index.js";
 import { decodeError } from "./utils/errors/index.js";
-import lucidLogger from "./utils/logging/index.js";
+import logger from "./utils/logging/index.js";
 import lucidServices from "./services/index.js";
 import executeStartTasks from "./actions/execute-start-tasks.js";
 import { LucidError } from "./utils/errors/index.js";
@@ -36,7 +36,7 @@ const lucidPlugin = async (fastify: FastifyInstance) => {
 		});
 
 		fastify.decorate("config", config);
-		fastify.decorate("logger", lucidLogger);
+		fastify.decorate("logger", logger);
 		fastify.decorate("services", lucidServices);
 
 		// ------------------------------------
@@ -133,13 +133,13 @@ const lucidPlugin = async (fastify: FastifyInstance) => {
 			const { name, message, status, errorResponse, code } =
 				decodeError(error);
 
-			lucidLogger("error", {
+			logger("error", {
 				message: message,
 				scope: status?.toString() ?? "500",
 			});
 
 			if (reply.sent) {
-				lucidLogger("error", {
+				logger("error", {
 					message: T("headers_already_sent"),
 				});
 				return;

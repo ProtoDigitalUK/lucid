@@ -1,5 +1,5 @@
 import T from "../../../translations/index.js";
-import lucidLogger from "../../../utils/logging/index.js";
+import logger from "../../../utils/logging/index.js";
 import Repository from "../../../libs/repositories/index.js";
 import type { FieldErrors } from "../../../types/errors.js";
 import type {
@@ -102,7 +102,7 @@ export const validateBrick = (props: {
 	}
 
 	if (!instance) {
-		lucidLogger("error", {
+		logger("error", {
 			message: T("error_saving_page_brick_couldnt_find_brick_config", {
 				key: props.brick.key || "",
 			}),

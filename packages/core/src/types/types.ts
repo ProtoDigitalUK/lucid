@@ -8,12 +8,12 @@ import type {
 	MediaResponse,
 } from "./response.js";
 import type { BooleanInt } from "../libs/db/types.js";
-import type lucidLogger from "../utils/logging/index.js";
+import type logger from "../utils/logging/index.js";
 
 declare module "fastify" {
 	interface FastifyInstance {
 		config: Config;
-		logger: typeof lucidLogger;
+		logger: typeof logger;
 		services: typeof lucidServices;
 	}
 

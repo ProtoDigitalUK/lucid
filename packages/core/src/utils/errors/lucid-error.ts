@@ -1,4 +1,4 @@
-import lucidLogger from "../../utils/logging/index.js";
+import logger from "../../utils/logging/index.js";
 
 /**
  * The LucidError class should be used to throw errors in functions that sit outside of API request lifecycle. This class will log the error and optionally kill the process.
@@ -28,7 +28,7 @@ class LucidError extends Error {
 		this.scope = data.scope;
 		this.kill = data.kill;
 
-		lucidLogger("error", {
+		logger("error", {
 			message: this.message,
 			scope: this.scope,
 			data: data.data ?? undefined,

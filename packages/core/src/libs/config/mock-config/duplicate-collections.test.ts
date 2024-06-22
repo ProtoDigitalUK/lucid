@@ -2,12 +2,12 @@ import { expect, test, vi } from "vitest";
 import T from "../../../translations/index.js";
 import path from "node:path";
 import getConfig from "../get-config.js";
-import logger from "../../../utils/logging/logger.js";
+import winstonLogger from "../../../utils/logging/logger.js";
 import { messageFormat, LoggerScopes } from "../../../utils/logging/index.js";
 
 test("should throw duplicate collection key error", async () => {
 	const consoleLogSpy = vi
-		.spyOn(logger, "error")
+		.spyOn(winstonLogger, "error")
 		// @ts-expect-error
 		.mockImplementation(() => {});
 
