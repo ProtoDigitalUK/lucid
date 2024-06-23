@@ -140,6 +140,10 @@
 	"permissions_create_category": "Create Categories",
 	"permissions_update_category": "Update Categories",
 	"permissions_delete_category": "Delete Categories",
+	"permissions_create_client_integration": "Create Client Integrations",
+	"permissions_update_client_integration": "Update Client Integrations",
+	"permissions_delete_client_integration": "Delete Client Integrations",
+	"permissions_regenerate_client_integration": "Regenerate API Keys",
 	"global_permissions": "Global Permissions",
 	"is_super_admin": "Is super admin",
 	"documentation": "Documentation",
@@ -402,5 +406,6 @@
 	"this_filed_has_errors_in_other_locales": "This field has errors in other locales",
 	"no_emails": "No Emails Found",
 	"no_emails_description": "We cannot find any emails. It doesn't look like any emails have been sent yet.",
-	"option_label": "Option {{count}}"
+	"option_label": "Option {{count}}",
+	"client_integrations": "Client Integrations"
 }
