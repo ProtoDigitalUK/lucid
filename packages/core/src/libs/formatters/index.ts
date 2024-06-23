@@ -14,6 +14,7 @@ import CollectionsFormatter from "./collections.js";
 import CollectionDocumentFieldsFormatter from "./collection-document-fields.js";
 import CollectionDocumentsFormatter from "./collection-documents.js";
 import CollectionDocumentBricksFormatter from "./collection-document-bricks.js";
+import ClientIntegrationsFormatter from "./client-integrations.js";
 
 // biome-ignore lint/complexity/noStaticOnlyClass: <explanation>
 class Formatter {
@@ -47,6 +48,8 @@ class Formatter {
 				return new CollectionDocumentBricksFormatter() as FormatterReturnType<T>;
 			case "collection-document-fields":
 				return new CollectionDocumentFieldsFormatter() as FormatterReturnType<T>;
+			case "client-integrations":
+				return new ClientIntegrationsFormatter() as FormatterReturnType<T>;
 			default:
 				throw new LucidError({
 					message: T("cannot_find_formatter", {
@@ -74,8 +77,12 @@ class Formatter {
 	static stringifyJSON = (
 		json: Record<string, unknown> | null,
 	): string | null => {
-		if (!json) return null;
-		return JSON.stringify(json);
+		try {
+			if (!json) return null;
+			return JSON.stringify(json);
+		} catch (error) {
+			return null;
+		}
 	};
 	static parseCount = (count: string | undefined) => {
 		return Number.parseInt(count || "0") || 0;
@@ -96,6 +103,7 @@ type FormatterClassMap = {
 	"collection-documents": CollectionDocumentsFormatter;
 	"collection-document-bricks": CollectionDocumentBricksFormatter;
 	"collection-document-fields": CollectionDocumentFieldsFormatter;
+	"client-integrations": ClientIntegrationsFormatter;
 };
 
 type FormatterReturnType<T extends keyof FormatterClassMap> =

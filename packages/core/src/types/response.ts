@@ -311,3 +311,14 @@ export type PermissionGroupKey =
 	| "settings"
 	| "emails"
 	| "content";
+
+export interface ClientIntegrationResponse {
+	id: number;
+	name: string;
+	description: string | null;
+	enabled: BooleanInt;
+	// apiKey: string;
+	// secret: string;
+	createdAt: string | null;
+	updatedAt: string | null;
+}

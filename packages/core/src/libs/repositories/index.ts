@@ -18,6 +18,7 @@ import TranslationKeysRepo from "./translation-keys.js";
 import TranslationsRepo from "./translations.js";
 import UserRolesRepo from "./user-roles.js";
 import UsersRepo from "./users.js";
+import ClientIntegrationsRepo from "./client-integrations.js";
 
 // biome-ignore lint/complexity/noStaticOnlyClass: <explanation>
 class Repository {
@@ -66,6 +67,10 @@ class Repository {
 				return new UserRolesRepo(db) as RepositoryReturnType<T>;
 			case "users":
 				return new UsersRepo(db) as RepositoryReturnType<T>;
+			case "client-integrations":
+				return new ClientIntegrationsRepo(
+					db,
+				) as RepositoryReturnType<T>;
 			default:
 				throw new LucidError({
 					message: T("cannot_find_repository", {
@@ -93,6 +98,7 @@ type RepositoryClassMap = {
 	translations: TranslationsRepo;
 	"user-roles": UserRolesRepo;
 	users: UsersRepo;
+	"client-integrations": ClientIntegrationsRepo;
 };
 
 type RepositoryReturnType<T extends keyof RepositoryClassMap> =
