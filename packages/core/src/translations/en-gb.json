@@ -175,6 +175,8 @@
 	"route_settings_fetch_error_message": "An error occurred while fetching the settings.",
 	"route_client_integrations_create_error_name": "Client Integration Create Error",
 	"route_client_integrations_create_error_message": "An error occurred while creating the client integration.",
+	"route_client_integrations_fetch_error_name": "Client Integration(s) Fetch Error",
+	"route_client_integrations_fetch_error_message": "An error occurred while fetching the client integration(s).",
 	"account_not_found_message": "The account you are trying to access does not exist.",
 	"media_not_found_message": "The media you are trying to access does not exist.",
 	"document_not_found_message": "The document you are trying to access does not exist.",

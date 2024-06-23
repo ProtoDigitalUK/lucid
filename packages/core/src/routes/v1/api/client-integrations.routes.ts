@@ -15,6 +15,18 @@ const clientIntegrationRoutes = async (fastify: FastifyInstance) => {
 		zodSchema: clientIntegration.createSingle.zodSchema,
 		controller: clientIntegration.createSingle.controller,
 	});
+
+	// get all
+	r(fastify, {
+		method: "get",
+		url: "",
+		middleware: {
+			authenticate: true,
+		},
+		swaggerSchema: clientIntegration.getAll.swaggerSchema,
+		zodSchema: clientIntegration.getAll.zodSchema,
+		controller: clientIntegration.getAll.controller,
+	});
 };
 
 export default clientIntegrationRoutes;

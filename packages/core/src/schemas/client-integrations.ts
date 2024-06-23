@@ -9,4 +9,9 @@ export default {
 		query: undefined,
 		params: undefined,
 	},
+	getAll: {
+		body: undefined,
+		query: undefined,
+		params: undefined,
+	},
 };

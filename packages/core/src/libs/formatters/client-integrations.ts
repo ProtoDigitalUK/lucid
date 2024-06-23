@@ -8,10 +8,8 @@ export interface ClientIntegrationProp {
 	description: string | null;
 	enabled: BooleanInt;
 	key: string;
-	api_key?: string;
-	// secret: string;
-	created_at: string | null;
-	updated_at: string | null;
+	created_at: Date | string | null;
+	updated_at: Date | string | null;
 }
 
 export default class ClientIntegrationsFormatter {
@@ -54,7 +52,7 @@ export default class ClientIntegrationsFormatter {
 				type: "string",
 			},
 			enabled: {
-				type: "boolean",
+				type: "number",
 			},
 			createdAt: {
 				type: "string",

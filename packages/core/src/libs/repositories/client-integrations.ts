@@ -31,6 +31,22 @@ export default class ClientIntegrationsRepo {
 			Pick<Select<HeadlessClientIntegrations>, K> | undefined
 		>;
 	};
+	selectMultiple = async <
+		K extends keyof Select<HeadlessClientIntegrations>,
+	>(props: {
+		select: K[];
+		where: QueryBuilderWhereT<"lucid_client_integrations">;
+	}) => {
+		let query = this.db
+			.selectFrom("lucid_client_integrations")
+			.select(props.select);
+
+		query = selectQB(query, props.where);
+
+		return query.execute() as Promise<
+			Array<Pick<Select<HeadlessClientIntegrations>, K>>
+		>;
+	};
 	// ----------------------------------------
 	// create
 	createSingle = async (props: {
