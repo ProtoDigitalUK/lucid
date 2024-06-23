@@ -5,6 +5,7 @@ import { Alert } from "@kobalte/core";
 interface ErrorMessageProps {
 	message?: string;
 	theme: "basic" | "background" | "container";
+	classes?: string;
 }
 
 const ErrorMessage: Component<ErrorMessageProps> = (props) => {
@@ -13,12 +14,16 @@ const ErrorMessage: Component<ErrorMessageProps> = (props) => {
 	return (
 		<Show when={props.message}>
 			<Alert.Root
-				class={classNames("", {
-					"bg-container-1 rounded-r-md border-l-4 border-l-error-base p-2.5 border border-border mb-5 last:mb-0":
-						props.theme === "background", // on background colour
-					"bg-container-4 rounded-r-md border-l-4 border-l-error-base p-2.5 bg-opacity-40 border-border border mb-15 last:mb-0":
-						props.theme === "container", // on container colour
-				})}
+				class={classNames(
+					"",
+					{
+						"bg-container-1 rounded-r-md border-l-4 border-l-error-base p-2.5 border border-border mb-5 last:mb-0":
+							props.theme === "background", // on background colour
+						"bg-container-4 rounded-r-md border-l-4 border-l-error-base p-2.5 bg-opacity-40 border-border border mb-15 last:mb-0":
+							props.theme === "container", // on container colour
+					},
+					props.classes,
+				)}
 			>
 				<p
 					class={classNames({

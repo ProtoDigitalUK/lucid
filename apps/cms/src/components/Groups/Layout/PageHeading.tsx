@@ -109,8 +109,7 @@ export const PageHeading: Component<PageHeadingProps> = (props) => {
 						<Match when={props.state?.isLoading}>
 							<div class="w-full">
 								<div class="h-10 skeleton w-1/4" />
-								<div class="h-4 skeleton w-full mt-2" />
-								<div class="h-4 skeleton w-full mt-2" />
+								<div class="h-4 skeleton w-full mt-2.5" />
 							</div>
 						</Match>
 						<Match when={!props.state?.isLoading}>

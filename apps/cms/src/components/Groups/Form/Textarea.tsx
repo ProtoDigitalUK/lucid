@@ -22,6 +22,7 @@ interface TextareaProps {
 	altLocaleHasError?: boolean;
 	noMargin?: boolean;
 	theme?: "basic";
+	rows?: number;
 }
 
 export const Textarea: Component<TextareaProps> = (props) => {
@@ -44,7 +45,7 @@ export const Textarea: Component<TextareaProps> = (props) => {
 							inputFocus() && props.theme !== "basic",
 						"border-error-base":
 							props.errors?.message !== undefined,
-						"bg-container-4 rounded-md border":
+						"bg-container-4 rounded-md border border-border":
 							props.theme !== "basic",
 					},
 				)}
@@ -59,7 +60,7 @@ export const Textarea: Component<TextareaProps> = (props) => {
 				/>
 				<textarea
 					class={classnames(
-						"focus:outline-none text-sm text-title font-medium resize-none w-full h-40 block disabled:cursor-not-allowed disabled:opacity-80",
+						"focus:outline-none text-sm text-title font-medium resize-none w-full block disabled:cursor-not-allowed disabled:opacity-80",
 						{
 							"pt-2": props.copy?.label === undefined,
 							"bg-container-4 border border-border rounded-md mt-1 p-2.5 focus:border-primary-base duration-200 transition-colors":
@@ -90,6 +91,7 @@ export const Textarea: Component<TextareaProps> = (props) => {
 						setInputFocus(false);
 						props.onBlur?.();
 					}}
+					rows={props.rows ?? 6}
 				/>
 			</div>
 			<Form.DescribedBy

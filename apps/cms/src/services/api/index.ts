@@ -8,6 +8,7 @@ import settings from "./settings";
 import email from "./email";
 import locales from "./locales";
 import collections from "./collections";
+import clientIntegrations from "./client-integrations";
 
 const exportObject = {
 	auth,
@@ -20,6 +21,7 @@ const exportObject = {
 	email,
 	locales,
 	collections,
+	clientIntegrations,
 };
 
 export default exportObject;

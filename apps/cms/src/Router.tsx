@@ -10,7 +10,8 @@ import DashboardRoute from "@/routes/Dashboard";
 import MediaListRoute from "@/routes/Media/List";
 import UsersListRoute from "@/routes/Users/List";
 import RolesListRoute from "@/routes/Roles/List";
-import SettingsListRoute from "@/routes/Settings/List";
+import SettingsGeneralRoute from "@/routes/Settings/General";
+import SettingsClientIntegrationRoute from "@/routes/Settings/ClientIntegration";
 import EmailListRoute from "@/routes/Emails/List";
 import AccountRoute from "@/routes/Account";
 import CollectionsListRoute from "@/routes/Collections/List";
@@ -51,10 +52,10 @@ const AppRouter: Component = () => {
 				{/* Emails */}
 				<Route path="/emails" component={EmailListRoute} />
 				{/* Settings */}
-				<Route path="/settings" component={SettingsListRoute} />
+				<Route path="/settings" component={SettingsGeneralRoute} />
 				<Route
-					path="/settings/integrations"
-					component={SettingsListRoute}
+					path="/settings/client-integrations"
+					component={SettingsClientIntegrationRoute}
 				/>
 			</Route>
 			{/* Non authenticated */}

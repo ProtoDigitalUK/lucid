@@ -56,11 +56,12 @@ export const Form: Component<FormProps> = (props) => {
 						{/* Standard Submit */}
 						<Match when={props.type === "standard"}>
 							{props.children}
-							<div class="mt-30 w-full">
+							<div class="mt-15 w-full">
 								<Show when={props.state.errors?.message}>
 									<ErrorMessage
-										theme="container"
+										theme="basic"
 										message={props.state.errors?.message}
+										classes="mb-15"
 									/>
 								</Show>
 
