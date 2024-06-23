@@ -29,6 +29,10 @@ declare module "fastify" {
 			code: LocalesResponse["code"];
 		};
 		server: FastifyInstance;
+		clientIntegrationAuth: {
+			id: number;
+			key: string;
+		};
 	}
 }
 

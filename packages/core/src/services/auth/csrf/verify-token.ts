@@ -1,4 +1,5 @@
 import T from "../../../translations/index.js";
+import constants from "../../../constants/constants.js";
 import type { FastifyRequest } from "fastify";
 import type { ServiceResponse } from "../../../utils/services/types.js";
 
@@ -6,7 +7,7 @@ const verifyToken = (
 	request: FastifyRequest,
 ): Awaited<ServiceResponse<undefined>> => {
 	const cookieCSRF = request.cookies._csrf;
-	const headerCSRF = request.headers._csrf as string;
+	const headerCSRF = request.headers[constants.headers.csrf] as string;
 
 	if (!cookieCSRF || !headerCSRF) {
 		return {

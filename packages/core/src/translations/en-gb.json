@@ -203,5 +203,10 @@
 	"running_database_seed_jobs": "Running database seed jobs...",
 	"lucid_server_unknow_error": "An error occurred during the initialisation of the Lucid server",
 	"media_error_getting_metadata": "An error occurred while getting the media metadata.",
-	"client_integration_key_already_exists": "The unique key for the client integration already exists, please re-send the request"
+	"client_integration_key_already_exists": "The unique key for the client integration already exists, please re-send the request",
+	"client_integration_key_missing": "The client key header is missing",
+	"cannot_find_client_integration": "The client you are trying to authenticate with does not exist",
+	"client_integration_is_disabled": "The client integration is disabled. Please enable it and try again.",
+	"client_integration_api_key_missing": "The client integration API key is missing from the authorisation header.",
+	"invalid_client_integration_api_key": "The client integration API key is invalid. Please ensure it is correct and try again."
 }

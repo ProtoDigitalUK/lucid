@@ -5,7 +5,7 @@ import type { FastifyReply } from "fastify";
 const clearToken = (
 	reply: FastifyReply,
 ): Awaited<ServiceResponse<undefined>> => {
-	reply.clearCookie(constants.accessTokenKey, { path: "/" });
+	reply.clearCookie(constants.headers.accessToken, { path: "/" });
 	return {
 		error: undefined,
 		data: undefined,

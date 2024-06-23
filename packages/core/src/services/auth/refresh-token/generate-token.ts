@@ -28,7 +28,7 @@ const generateToken = async (
 		},
 	);
 
-	reply.setCookie(constants.refreshTokenKey, token, {
+	reply.setCookie(constants.headers.refreshToken, token, {
 		maxAge: constants.refreshTokenExpiration,
 		httpOnly: true,
 		secure: request.protocol === "https",

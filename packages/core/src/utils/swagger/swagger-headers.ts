@@ -7,6 +7,7 @@ interface SwaggerHeaders {
 }
 
 const swaggerHeaders = (headers: SwaggerHeaders) => {
+	//* see constants.headers
 	const propertise: {
 		_csrf?: {
 			type: string;

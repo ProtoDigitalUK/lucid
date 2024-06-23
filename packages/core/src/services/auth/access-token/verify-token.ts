@@ -8,7 +8,7 @@ const verifyToken = (
 	request: FastifyRequest,
 ): Awaited<ServiceResponse<FastifyRequest["auth"]>> => {
 	try {
-		const _access = request.cookies[constants.accessTokenKey];
+		const _access = request.cookies[constants.headers.accessToken];
 
 		if (!_access) {
 			return {

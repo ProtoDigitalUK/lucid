@@ -9,7 +9,7 @@ const generateToken = async (
 ): ServiceResponse<string> => {
 	const token = crypto.randomBytes(32).toString("hex");
 
-	reply.setCookie(constants.csrfKey, token, {
+	reply.setCookie(constants.headers.csrf, token, {
 		maxAge: constants.csrfExpiration,
 		httpOnly: true,
 		secure: request.protocol === "https",

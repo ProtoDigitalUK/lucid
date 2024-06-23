@@ -2,6 +2,7 @@ import("dotenv/config.js");
 import packageJson from "../package.json" assert { type: "json" };
 import path from "node:path";
 import T from "./translations/index.js";
+import constants from "./constants/constants.js";
 import fp from "fastify-plugin";
 import fastifyStatic from "@fastify/static";
 import cors from "@fastify/cors";
@@ -73,11 +74,8 @@ const lucidPlugin = async (fastify: FastifyInstance) => {
 			allowedHeaders: [
 				"Content-Type",
 				"Authorization",
-				"_csrf",
-				"_access",
-				"_refresh",
-				"lucid-content-locale",
 				"Content-Length",
+				...Object.values(constants.headers),
 			],
 			credentials: true,
 		});

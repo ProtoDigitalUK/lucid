@@ -8,7 +8,7 @@ const clearToken = async (
 	request: FastifyRequest,
 	reply: FastifyReply,
 ): ServiceResponse<undefined> => {
-	const _refresh = request.cookies[constants.refreshTokenKey];
+	const _refresh = request.cookies[constants.headers.refreshToken];
 	if (!_refresh) {
 		return {
 			error: undefined,
@@ -28,7 +28,7 @@ const clearToken = async (
 		id: number;
 	};
 
-	reply.clearCookie(constants.refreshTokenKey, { path: "/" });
+	reply.clearCookie(constants.headers.refreshToken, { path: "/" });
 
 	await UserTokensRepo.deleteMultiple({
 		where: [

@@ -10,6 +10,7 @@ import authenticate from "../middleware/authenticate.js";
 import validateCSRF from "../middleware/validate-csrf.js";
 import permissions from "../middleware/permissions.js";
 import contentLocale from "../middleware/content-locale.js";
+import clientAuthentication from "../middleware/client-authenticate.js";
 
 type Route = <
 	ParamsT extends z.ZodTypeAny | undefined,
@@ -25,6 +26,7 @@ type Route = <
 			authenticate?: boolean;
 			validateCSRF?: boolean;
 			contentLocale?: boolean;
+			clientAuthentication?: boolean;
 		};
 		isMultipart?: boolean;
 		zodSchema?: {
@@ -71,6 +73,7 @@ const route: Route = (fastify, opts) => {
 	const preHandler: PreHookT = [logRoute("prehandler")];
 
 	if (middleware?.authenticate) preHandler.push(authenticate);
+	if (middleware?.clientAuthentication) preHandler.push(clientAuthentication);
 	if (middleware?.validateCSRF) preHandler.push(validateCSRF);
 	if (middleware?.contentLocale) preHandler.push(contentLocale);
 

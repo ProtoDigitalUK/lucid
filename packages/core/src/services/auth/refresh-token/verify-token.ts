@@ -12,7 +12,7 @@ const verifyToken = async (
 	user_id: number;
 }> => {
 	try {
-		const _refresh = request.cookies[constants.refreshTokenKey];
+		const _refresh = request.cookies[constants.headers.refreshToken];
 
 		if (!_refresh) {
 			return {

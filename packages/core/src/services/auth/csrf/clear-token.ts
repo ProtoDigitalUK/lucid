@@ -5,7 +5,7 @@ import type { ServiceResponse } from "../../../utils/services/types.js";
 const clearToken = (
 	reply: FastifyReply,
 ): Awaited<ServiceResponse<undefined>> => {
-	reply.clearCookie(constants.csrfKey, { path: "/" });
+	reply.clearCookie(constants.headers.csrf, { path: "/" });
 
 	return {
 		error: undefined,

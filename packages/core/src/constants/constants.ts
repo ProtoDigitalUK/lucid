@@ -3,9 +3,13 @@ import permissionGroups from "./permission-groups.js";
 
 export default {
 	tempDir: "./tmp",
-	accessTokenKey: "_access",
-	csrfKey: "_csrf",
-	refreshTokenKey: "_refresh",
+	headers: {
+		accessToken: "_access",
+		csrf: "_csrf",
+		refreshToken: "_refresh",
+		clientIntegrationKey: "lucid-client-key",
+		contentLocale: "lucid-content-locale",
+	},
 	seedDefaults: {
 		user: {
 			firstName: "Lucid",
