@@ -44,7 +44,7 @@ class LucidAPIError extends Error {
 	status: LucidErrorData["status"];
 	constructor(data: LucidErrorData) {
 		super(data.message);
-		this.type = data.type;
+		this.type = data.type ?? "basic";
 		this.code = data.code;
 		this.errorResponse = data.errorResponse;
 		this.status = data.status;

@@ -3,6 +3,7 @@ import getAll from "./get-all.js";
 import deleteSingle from "./delete-single.js";
 import updateSingle from "./update-single.js";
 import regenerateKeys from "./regenerate-keys.js";
+import verifyApiKey from "./verify-api-key.js";
 
 export default {
 	createSingle,
@@ -10,4 +11,5 @@ export default {
 	deleteSingle,
 	updateSingle,
 	regenerateKeys,
+	verifyApiKey,
 };
