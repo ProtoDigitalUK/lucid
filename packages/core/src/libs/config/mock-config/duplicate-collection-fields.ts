@@ -15,6 +15,7 @@ export default lucid.config({
 		database: async () => new Database("db.sqlite"),
 	}),
 	keys: {
+		encryptionKey: "encryptionKey",
 		cookieSecret: "cookieSecret",
 		refreshTokenSecret: "refreshTokenSecret",
 		accessTokenSecret: "accessTokenSecret",

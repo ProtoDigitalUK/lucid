@@ -18,6 +18,7 @@ import permissions from "./permissions/index.js";
 import crons from "./crons/index.js";
 import seed from "./seed/index.js";
 import start from "./start/index.js";
+import clientIntegrations from "./client-integrations/index.js";
 
 const lucidServices = {
 	auth: auth,
@@ -46,6 +47,7 @@ const lucidServices = {
 	permission: permissions,
 	seed: seed,
 	start: start,
+	clientIntegrations: clientIntegrations,
 };
 
 export default lucidServices;

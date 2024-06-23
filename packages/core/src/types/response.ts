@@ -297,7 +297,10 @@ export type Permission =
 	| "delete_content"
 	| "delete_collection"
 	| "create_collection"
-	| "update_collection";
+	| "update_collection"
+	| "create_client_integration"
+	| "update_client_integration"
+	| "delete_client_integration";
 
 export type PermissionGroup = {
 	key: string;
@@ -310,15 +313,15 @@ export type PermissionGroupKey =
 	| "media"
 	| "settings"
 	| "emails"
-	| "content";
+	| "content"
+	| "client-integrations";
 
 export interface ClientIntegrationResponse {
 	id: number;
+	key: string;
 	name: string;
 	description: string | null;
 	enabled: BooleanInt;
-	// apiKey: string;
-	// secret: string;
 	createdAt: string | null;
 	updatedAt: string | null;
 }

@@ -103,6 +103,7 @@ export interface LucidConfig {
 	db: DatabaseAdapter;
 	host: string;
 	keys: {
+		encryptionKey: string;
 		cookieSecret: string;
 		accessTokenSecret: string;
 		refreshTokenSecret: string;

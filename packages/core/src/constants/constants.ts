@@ -26,6 +26,7 @@ export default {
 					...permissionGroups.settings.permissions,
 					...permissionGroups.emails.permissions,
 					...permissionGroups.content.permissions,
+					...permissionGroups["client-integrations"].permissions,
 				],
 			},
 			{

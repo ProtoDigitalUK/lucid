@@ -7,7 +7,8 @@ export interface ClientIntegrationProp {
 	name: string;
 	description: string | null;
 	enabled: BooleanInt;
-	// api_key: string;
+	key: string;
+	api_key?: string;
 	// secret: string;
 	created_at: string | null;
 	updated_at: string | null;
@@ -28,6 +29,7 @@ export default class ClientIntegrationsFormatter {
 	}): ClientIntegrationResponse => {
 		return {
 			id: props.integration.id,
+			key: props.integration.key,
 			name: props.integration.name,
 			description: props.integration.description,
 			enabled: props.integration.enabled,
@@ -42,6 +44,9 @@ export default class ClientIntegrationsFormatter {
 			id: {
 				type: "number",
 			},
+			key: {
+				type: "string",
+			},
 			name: {
 				type: "string",
 			},
@@ -51,12 +56,6 @@ export default class ClientIntegrationsFormatter {
 			enabled: {
 				type: "boolean",
 			},
-			// apiKey: {
-			// 	type: "string",
-			// },
-			// secret: {
-			// 	type: "string",
-			// },
 			createdAt: {
 				type: "string",
 			},

@@ -27,6 +27,7 @@ export default lucid.config({
 	// 	authToken: process.env.TURSO_AUTH_TOKEN as string,
 	// }),
 	keys: {
+		encryptionKey: process.env.LUCID_ENCRYPTION_KEY as string,
 		cookieSecret: process.env.LUCID_COOKIE_SECRET as string,
 		refreshTokenSecret: process.env.LUCID_REFRESH_TOKEN_SECRET as string,
 		accessTokenSecret: process.env.LUCID_ACCESS_TOKEN_SECRET as string,

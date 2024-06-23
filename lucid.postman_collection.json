@@ -62,8 +62,7 @@
 							{
 								"key": "_csrf",
 								"value": "{{CSRF}}",
-								"type": "text",
-								"uuid": "22839a02-5a0a-4fca-9da9-a6d4fb5606dd"
+								"type": "text"
 							}
 						],
 						"body": {
@@ -97,8 +96,7 @@
 						"header": [
 							{
 								"key": "_csrf",
-								"value": "{{CSRF}}fd",
-								"uuid": "1e569e15-fa78-4f26-8924-278f1b0fce7f"
+								"value": "{{CSRF}}"
 							}
 						],
 						"body": {
@@ -133,8 +131,7 @@
 							{
 								"key": "_csrf",
 								"value": "{{CSRF}}",
-								"type": "text",
-								"uuid": "40c52970-6654-4c9b-ab7e-f23d766981e5"
+								"type": "text"
 							}
 						],
 						"body": {
@@ -198,8 +195,7 @@
 							{
 								"key": "_csrf",
 								"value": "{{CSRF}}",
-								"type": "text",
-								"uuid": "b609d48b-8932-481d-bd06-4fafb799600d"
+								"type": "text"
 							}
 						],
 						"body": {
@@ -305,8 +301,7 @@
 							{
 								"key": "_csrf",
 								"value": "{{CSRF}}",
-								"type": "text",
-								"uuid": "58073230-5b4d-456d-bc05-508b1c4eaf4c"
+								"type": "text"
 							}
 						],
 						"body": {
@@ -342,8 +337,7 @@
 							{
 								"key": "_csrf",
 								"value": "{{CSRF}}",
-								"type": "text",
-								"uuid": "957b6c05-b748-4500-91bd-a60ec7ef53c1"
+								"type": "text"
 							}
 						],
 						"body": {
@@ -383,8 +377,7 @@
 						"header": [
 							{
 								"key": "_csrf",
-								"value": "{{CSRF}}",
-								"uuid": "f27eef04-0e10-4e78-a4be-d188a56290f0"
+								"value": "{{CSRF}}"
 							}
 						],
 						"body": {
@@ -418,13 +411,12 @@
 						"header": [
 							{
 								"key": "_csrf",
-								"value": "{{CSRF}}",
-								"uuid": "d5c0c80f-8747-4ba5-9d86-2609b0c8602a"
+								"value": "{{CSRF}}"
 							}
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    // \"roleIds\": [1],\r\n    // \"superAdmin\": 1\r\n    \"triggerPasswordReset\": 1\r\n    // \"isDeleted\": 0\r\n}",
+							"raw": "{\r\n    \"roleIds\": [100],\r\n    // \"superAdmin\": 1\r\n    \"triggerPasswordReset\": 1\r\n    // \"isDeleted\": 0\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -432,7 +424,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{BASE_URL}}/api/v1/users/1",
+							"raw": "{{BASE_URL}}/api/v1/users/2",
 							"host": [
 								"{{BASE_URL}}"
 							],
@@ -440,7 +432,7 @@
 								"api",
 								"v1",
 								"users",
-								"1"
+								"2"
 							]
 						},
 						"description": "## Description\n\nRecieves config for bricks. This is whats defined with the BrickBuilder class in the project setup."
@@ -545,8 +537,7 @@
 						"header": [
 							{
 								"key": "_csrf",
-								"value": "{{CSRF}}",
-								"uuid": "8d630cf8-6a5f-45b6-9ea0-3911b486ad84"
+								"value": "{{CSRF}}"
 							}
 						],
 						"body": {
@@ -589,8 +580,7 @@
 								"header": [
 									{
 										"key": "_csrf",
-										"value": "{{CSRF}}",
-										"uuid": "4569b783-b817-4adc-a534-dd366a7c4094"
+										"value": "{{CSRF}}"
 									}
 								],
 								"body": {
@@ -681,7 +671,7 @@
 										},
 										{
 											"key": "filter[page_title]",
-											"value": "Homepage - Modified",
+											"value": "Homep",
 											"disabled": true
 										},
 										{
@@ -702,8 +692,7 @@
 									{
 										"key": "_csrf",
 										"value": "{{CSRF}}",
-										"type": "text",
-										"uuid": "58b24c3b-9969-4197-a85a-ec9c8bca9586"
+										"type": "text"
 									}
 								],
 								"body": {
@@ -740,8 +729,7 @@
 									{
 										"key": "_csrf",
 										"value": "{{CSRF}}",
-										"type": "text",
-										"uuid": "40d04870-5698-42b4-b74a-21c21ce4e93f"
+										"type": "text"
 									}
 								],
 								"body": {
@@ -861,8 +849,7 @@
 						"header": [
 							{
 								"key": "_csrf",
-								"value": "{{CSRF}}",
-								"uuid": "e6667495-c69a-49b0-9522-0d17e9f48279"
+								"value": "{{CSRF}}"
 							}
 						],
 						"body": {
@@ -897,8 +884,7 @@
 							{
 								"key": "_csrf",
 								"value": "{{CSRF}}",
-								"type": "text",
-								"uuid": "b943214f-69a7-4439-8f88-57c31054d3a5"
+								"type": "text"
 							}
 						],
 						"body": {
@@ -933,8 +919,7 @@
 							{
 								"key": "_csrf",
 								"value": "{{CSRF}}",
-								"type": "text",
-								"uuid": "e8c00dd2-38fe-48e5-b6e8-ee89803abdb8"
+								"type": "text"
 							}
 						],
 						"body": {
@@ -973,8 +958,7 @@
 							{
 								"key": "_csrf",
 								"value": "{{CSRF}}",
-								"type": "text",
-								"uuid": "456a5647-4fee-47be-915b-211899f22910"
+								"type": "text"
 							}
 						],
 						"body": {
@@ -1159,8 +1143,7 @@
 							{
 								"key": "_csrf",
 								"value": "{{CSRF}}",
-								"type": "text",
-								"uuid": "11bcf267-3d66-4c15-8e92-e71ff80a285f"
+								"type": "text"
 							}
 						],
 						"body": {
@@ -1195,8 +1178,7 @@
 							{
 								"key": "_csrf",
 								"value": "{{CSRF}}",
-								"type": "text",
-								"uuid": "f6c1fa3f-8026-4b66-a07f-7f2c27bfa7f8"
+								"type": "text"
 							}
 						],
 						"body": {
@@ -1253,8 +1235,7 @@
 						"header": [
 							{
 								"key": "_csrf",
-								"value": "{{CSRF}}",
-								"uuid": "3498a2d3-cf8a-46f3-b147-d4b1472c1648"
+								"value": "{{CSRF}}"
 							}
 						],
 						"body": {
@@ -1294,8 +1275,7 @@
 						"header": [
 							{
 								"key": "_csrf",
-								"value": "{{CSRF}}",
-								"uuid": "ca1da9db-5e71-44db-9c53-9626279aae68"
+								"value": "{{CSRF}}"
 							}
 						],
 						"body": {
@@ -1380,8 +1360,7 @@
 							{
 								"key": "_csrf",
 								"value": "{{CSRF}}",
-								"type": "text",
-								"uuid": "dd9017ad-5e65-4d33-bed5-693d20407f71"
+								"type": "text"
 							}
 						],
 						"body": {
@@ -1418,8 +1397,7 @@
 						"header": [
 							{
 								"key": "lucid-content-lang",
-								"value": "{{LUCID_CONTENT_LANG}}",
-								"uuid": "6563af4d-f6db-4cd4-9046-03127038e939"
+								"value": "{{LUCID_CONTENT_LANG}}"
 							}
 						],
 						"body": {
@@ -1490,8 +1468,7 @@
 							{
 								"key": "_csrf",
 								"value": "{{CSRF}}",
-								"type": "text",
-								"uuid": "8f778afd-ee8f-485d-9551-b51309ff9de6"
+								"type": "text"
 							}
 						],
 						"body": {
@@ -1527,8 +1504,7 @@
 							{
 								"key": "_csrf",
 								"value": "{{CSRF}}",
-								"type": "text",
-								"uuid": "a7f6bc0a-c168-46dd-8783-7e53dda102d5"
+								"type": "text"
 							}
 						],
 						"body": {
@@ -1589,6 +1565,46 @@
 			]
 		},
 		{
+			"name": "Client Integrations",
+			"item": [
+				{
+					"name": "Create Single",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "_csrf",
+								"value": "{{CSRF}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Astro Site\",\r\n    \"description\": \"The Astro MPA marketing site\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/client-integrations",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"client-integrations"
+							]
+						},
+						"description": "## Description\n\nRecieves config for bricks. This is whats defined with the BrickBuilder class in the project setup."
+					},
+					"response": []
+				}
+			]
+		},
+		{
 			"name": "CDN",
 			"item": [
 				{
@@ -1606,7 +1622,6 @@
 								"value": "image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8",
 								"description": "Accept AVIF Example",
 								"type": "text",
-								"uuid": "443d170a-d6fe-4165-9c1e-fd5ffcbfc054",
 								"disabled": true
 							},
 							{
@@ -1614,7 +1629,6 @@
 								"value": "image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8",
 								"description": "Accept WebP Example",
 								"type": "text",
-								"uuid": "443d170a-d6fe-4165-9c1e-fd5ffcbfc054",
 								"disabled": true
 							},
 							{
@@ -1622,7 +1636,6 @@
 								"value": "image/apng,image/svg+xml,image/*,*/*;q=0.8",
 								"description": "Accept no new formats",
 								"type": "text",
-								"uuid": "443d170a-d6fe-4165-9c1e-fd5ffcbfc054",
 								"disabled": true
 							}
 						],

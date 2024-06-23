@@ -173,6 +173,8 @@
 	"route_roles_update_error_message": "An error occurred while updating the role.",
 	"route_settings_fetch_error_name": "Settings Fetch Error",
 	"route_settings_fetch_error_message": "An error occurred while fetching the settings.",
+	"route_client_integrations_create_error_name": "Client Integration Create Error",
+	"route_client_integrations_create_error_message": "An error occurred while creating the client integration.",
 	"account_not_found_message": "The account you are trying to access does not exist.",
 	"media_not_found_message": "The media you are trying to access does not exist.",
 	"document_not_found_message": "The document you are trying to access does not exist.",
@@ -193,5 +195,6 @@
 	"seed_error_message": "An error occurred while seeding the database.",
 	"running_database_seed_jobs": "Running database seed jobs...",
 	"lucid_server_unknow_error": "An error occurred during the initialisation of the Lucid server",
-	"media_error_getting_metadata": "An error occurred while getting the media metadata."
+	"media_error_getting_metadata": "An error occurred while getting the media metadata.",
+	"client_integration_key_already_exists": "The unique key for the client integration already exists, please re-send the request"
 }

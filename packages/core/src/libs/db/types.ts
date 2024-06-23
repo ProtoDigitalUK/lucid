@@ -213,6 +213,7 @@ export interface HeadlessClientIntegrations {
 	name: string;
 	description: string | null;
 	enabled: BooleanInt;
+	key: string;
 	api_key: string;
 	secret: string;
 	created_at: TimestampImmutable;

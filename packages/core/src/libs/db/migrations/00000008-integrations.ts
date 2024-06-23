@@ -17,7 +17,8 @@ const Migration00000008: MigrationFn = (adapter) => {
 				.addColumn("name", "text", (col) => col.notNull())
 				.addColumn("description", "text")
 				.addColumn("enabled", "integer", (col) => col.notNull())
-				.addColumn("api_key", "text", (col) => col.notNull().unique())
+				.addColumn("key", "text", (col) => col.notNull().unique())
+				.addColumn("api_key", "text", (col) => col.notNull())
 				.addColumn("secret", "text", (col) => col.notNull())
 				.addColumn("created_at", "timestamp", (col) =>
 					defaultTimestamp(col, adapter),
@@ -28,9 +29,21 @@ const Migration00000008: MigrationFn = (adapter) => {
 				.execute();
 
 			await db.schema
+				.createIndex("idx_lucid_client_integrations_key")
+				.on("lucid_client_integrations")
+				.column("key")
+				.execute();
+
+			await db.schema
 				.createIndex("idx_lucid_client_integrations_api_key")
 				.on("lucid_client_integrations")
 				.column("api_key")
+				.execute();
+
+			await db.schema
+				.createIndex("idx_lucid_client_integrations_secret")
+				.on("lucid_client_integrations")
+				.column("secret")
 				.execute();
 		},
 		async down(db: Kysely<unknown>) {},

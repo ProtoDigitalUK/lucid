@@ -12,6 +12,7 @@ import publicPagesRoutes from "./public-pages.routes.js";
 import collectionRoutes from "./collections.routes.js";
 import collectionDocumentsRoutes from "./collection-documents.routes.js";
 import userRoutes from "./users.routes.js";
+import clientIntegrationRoutes from "./client-integrations.routes.js";
 
 const routes = async (fastify: FastifyInstance) => {
 	fastify.register(authRoutes, {
@@ -46,6 +47,9 @@ const routes = async (fastify: FastifyInstance) => {
 	});
 	fastify.register(mediaRoutes, {
 		prefix: "/media",
+	});
+	fastify.register(clientIntegrationRoutes, {
+		prefix: "/client-integrations",
 	});
 	// Public
 	fastify.register(publicPagesRoutes, {

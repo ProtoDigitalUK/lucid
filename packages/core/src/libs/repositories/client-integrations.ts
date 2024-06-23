@@ -37,6 +37,7 @@ export default class ClientIntegrationsRepo {
 		name: string;
 		description?: string;
 		enabled: BooleanInt;
+		key: string;
 		apiKey: string;
 		secret: string;
 		createdAt: string;
@@ -48,12 +49,13 @@ export default class ClientIntegrationsRepo {
 				name: props.name,
 				description: props.description,
 				enabled: props.enabled,
+				key: props.key,
 				api_key: props.apiKey,
 				secret: props.secret,
 				created_at: props.createdAt,
 				updated_at: props.updatedAt,
 			})
-			.returning("id")
+			.returning(["id", "api_key"])
 			.executeTakeFirst();
 	};
 	// ----------------------------------------

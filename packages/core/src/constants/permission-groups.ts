@@ -25,6 +25,14 @@ const permissionGroups: Record<PermissionGroupKey, PermissionGroup> = {
 		key: "content_permissions",
 		permissions: ["create_content", "update_content", "delete_content"],
 	},
+	"client-integrations": {
+		key: "client-integrations_permissions",
+		permissions: [
+			"create_client_integration",
+			"update_client_integration",
+			"delete_client_integration",
+		],
+	},
 };
 
 export default permissionGroups;

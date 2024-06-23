@@ -14,7 +14,6 @@ const login: ServiceFn<
 		id: number;
 	}
 > = async (context, data) => {
-	console.log("fdsfdsfdsfdsfdfdsfdsfdsf");
 	const UsersRepo = Repository.get("users", context.db);
 
 	const user = await UsersRepo.selectSingleByEmailUsername({
