@@ -1,10 +1,17 @@
 import crypto from "node:crypto";
 
+const encryptionKeyToHex = (encryptionKey: string) =>
+	crypto
+		.createHash("sha512")
+		.update(encryptionKey)
+		.digest("hex")
+		.substring(0, 64);
+
 export const encryptSecret = (secret: string, encryptionKey: string) => {
 	const iv = crypto.randomBytes(16);
 	const cipher = crypto.createCipheriv(
 		"aes-256-cbc",
-		Buffer.from(encryptionKey, "hex"),
+		Buffer.from(encryptionKeyToHex(encryptionKey), "hex"),
 		iv,
 	);
 	let encrypted = cipher.update(secret, "utf8", "hex");
@@ -19,7 +26,7 @@ export const decryptSecret = (
 	const [iv, encrypted] = encryptedSecret.split(":");
 	const decipher = crypto.createDecipheriv(
 		"aes-256-cbc",
-		Buffer.from(encryptionKey, "hex"),
+		Buffer.from(encryptionKeyToHex(encryptionKey), "hex"),
 		Buffer.from(iv as string, "hex"),
 	);
 	let decrypted = decipher.update(encrypted as string, "hex", "utf8");

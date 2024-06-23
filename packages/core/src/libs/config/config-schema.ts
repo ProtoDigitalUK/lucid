@@ -1,21 +1,13 @@
 import z from "zod";
 
-const KeySchema = z
-	.string()
-	.length(64, "Encryption key must be exactly 64 hexadecimal characters long")
-	.regex(
-		/^[a-fA-F0-9]+$/,
-		"Encryption key must contain only hexadecimal characters (0-9 and a-f)",
-	);
-
 const ConfigSchema = z.object({
 	db: z.unknown(),
 	host: z.string(),
 	keys: z.object({
-		encryptionKey: KeySchema,
-		cookieSecret: KeySchema,
-		accessTokenSecret: KeySchema,
-		refreshTokenSecret: KeySchema,
+		encryptionKey: z.string().length(64),
+		cookieSecret: z.string().length(64),
+		accessTokenSecret: z.string().length(64),
+		refreshTokenSecret: z.string().length(64),
 	}),
 	paths: z
 		.object({
