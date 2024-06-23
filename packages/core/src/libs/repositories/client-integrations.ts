@@ -7,6 +7,7 @@ import type {
 import {
 	deleteQB,
 	selectQB,
+	updateQB,
 	type QueryBuilderWhereT,
 } from "../db/query-builder.js";
 
@@ -73,6 +74,35 @@ export default class ClientIntegrationsRepo {
 			})
 			.returning(["id", "api_key"])
 			.executeTakeFirst();
+	};
+	// ----------------------------------------
+	// update
+	updateSingle = async (props: {
+		where: QueryBuilderWhereT<"lucid_client_integrations">;
+		data: {
+			name?: string;
+			description?: string;
+			enabled?: BooleanInt;
+			apiKey?: string;
+			secret?: string;
+			updatedAt?: string;
+		};
+	}) => {
+		let query = this.db
+			.updateTable("lucid_client_integrations")
+			.set({
+				name: props.data.name,
+				description: props.data.description,
+				enabled: props.data.enabled,
+				api_key: props.data.apiKey,
+				secret: props.data.secret,
+				updated_at: props.data.updatedAt,
+			})
+			.returning(["id"]);
+
+		query = updateQB(query, props.where);
+
+		return query.executeTakeFirst();
 	};
 	// ----------------------------------------
 	// delete

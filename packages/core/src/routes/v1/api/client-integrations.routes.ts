@@ -39,6 +39,19 @@ const clientIntegrationRoutes = async (fastify: FastifyInstance) => {
 		zodSchema: clientIntegration.deleteSingle.zodSchema,
 		controller: clientIntegration.deleteSingle.controller,
 	});
+
+	r(fastify, {
+		method: "patch",
+		url: "/:id",
+		middleware: {
+			authenticate: true,
+			validateCSRF: true,
+		},
+		permissions: ["update_client_integration"],
+		swaggerSchema: clientIntegration.updateSingle.swaggerSchema,
+		zodSchema: clientIntegration.updateSingle.zodSchema,
+		controller: clientIntegration.updateSingle.controller,
+	});
 };
 
 export default clientIntegrationRoutes;

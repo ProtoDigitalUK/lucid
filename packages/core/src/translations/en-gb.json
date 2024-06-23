@@ -179,6 +179,8 @@
 	"route_client_integrations_fetch_error_message": "An error occurred while fetching the client integration(s).",
 	"route_client_integrations_delete_error_name": "Client Integration Delete Error",
 	"route_client_integrations_delete_error_message": "An error occurred while deleting the client integration.",
+	"route_client_integrations_update_error_name": "Client Integration Update Error",
+	"route_client_integrations_update_error_message": "An error occurred while updating the client integration.",
 	"account_not_found_message": "The account you are trying to access does not exist.",
 	"media_not_found_message": "The media you are trying to access does not exist.",
 	"document_not_found_message": "The document you are trying to access does not exist.",

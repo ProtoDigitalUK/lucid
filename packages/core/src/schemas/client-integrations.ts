@@ -21,4 +21,15 @@ export default {
 			id: z.string(),
 		}),
 	},
+	updateSingle: {
+		body: z.object({
+			name: z.string().min(2).optional(),
+			description: z.string().optional(),
+			enabled: z.union([z.literal(1), z.literal(0)]).optional(),
+		}),
+		query: undefined,
+		params: z.object({
+			id: z.string(),
+		}),
+	},
 };
