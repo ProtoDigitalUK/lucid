@@ -3,11 +3,10 @@ import Repository from "../../libs/repositories/index.js";
 import generateKeys from "../../utils/client-integrations/generate-keys.js";
 import type { ServiceFn } from "../../utils/services/types.js";
 
-const createSingle: ServiceFn<
+const regenerateKeys: ServiceFn<
 	[
 		{
-			name: string;
-			description?: string;
+			id: number;
 		},
 	],
 	{
@@ -19,42 +18,46 @@ const createSingle: ServiceFn<
 		context.db,
 	);
 
-	const { key, apiKey, apiKeyHash, secret } = await generateKeys(
-		context.config.keys.encryptionKey,
-	);
-
-	const keyExistsRes = await ClientIntegrationsRepo.selectSingle({
+	const checkExists = await ClientIntegrationsRepo.selectSingle({
 		select: ["id"],
 		where: [
 			{
-				key: "key",
+				key: "id",
 				operator: "=",
-				value: key,
+				value: data.id,
 			},
 		],
 	});
-	if (keyExistsRes !== undefined) {
+	if (checkExists === undefined) {
 		return {
 			error: {
 				type: "basic",
-				message: T("client_integration_key_already_exists"),
-				status: 400,
+				message: T("client_integration_not_found_message"),
+				status: 404,
 			},
 			data: undefined,
 		};
 	}
 
-	const newIntegrationRes = await ClientIntegrationsRepo.createSingle({
-		name: data.name,
-		description: data.description,
-		enabled: 1,
-		key: key,
-		secret: secret,
-		apiKey: apiKeyHash,
-		createdAt: new Date().toISOString(),
-		updatedAt: new Date().toISOString(),
+	const { apiKey, apiKeyHash, secret } = await generateKeys(
+		context.config.keys.encryptionKey,
+	);
+
+	const updateKeysRes = await ClientIntegrationsRepo.updateSingle({
+		where: [
+			{
+				key: "id",
+				operator: "=",
+				value: data.id,
+			},
+		],
+		data: {
+			apiKey: apiKeyHash,
+			secret: secret,
+			updatedAt: new Date().toISOString(),
+		},
 	});
-	if (newIntegrationRes === undefined) {
+	if (updateKeysRes === undefined) {
 		return {
 			error: {
 				type: "basic",
@@ -72,4 +75,4 @@ const createSingle: ServiceFn<
 	};
 };
 
-export default createSingle;
+export default regenerateKeys;

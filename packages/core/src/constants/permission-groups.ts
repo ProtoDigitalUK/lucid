@@ -31,6 +31,7 @@ const permissionGroups: Record<PermissionGroupKey, PermissionGroup> = {
 			"create_client_integration",
 			"update_client_integration",
 			"delete_client_integration",
+			"regenerate_client_integration",
 		],
 	},
 };

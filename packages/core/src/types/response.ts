@@ -300,7 +300,8 @@ export type Permission =
 	| "update_collection"
 	| "create_client_integration"
 	| "update_client_integration"
-	| "delete_client_integration";
+	| "delete_client_integration"
+	| "regenerate_client_integration";
 
 export type PermissionGroup = {
 	key: string;

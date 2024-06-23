@@ -32,4 +32,11 @@ export default {
 			id: z.string(),
 		}),
 	},
+	regenerateKeys: {
+		body: undefined,
+		query: undefined,
+		params: z.object({
+			id: z.string(),
+		}),
+	},
 };

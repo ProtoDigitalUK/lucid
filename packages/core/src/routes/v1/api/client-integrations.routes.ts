@@ -52,6 +52,19 @@ const clientIntegrationRoutes = async (fastify: FastifyInstance) => {
 		zodSchema: clientIntegration.updateSingle.zodSchema,
 		controller: clientIntegration.updateSingle.controller,
 	});
+
+	r(fastify, {
+		method: "post",
+		url: "/:id/regenerate-keys",
+		middleware: {
+			authenticate: true,
+			validateCSRF: true,
+		},
+		permissions: ["regenerate_client_integration"],
+		swaggerSchema: clientIntegration.regenerateKeys.swaggerSchema,
+		zodSchema: clientIntegration.regenerateKeys.zodSchema,
+		controller: clientIntegration.regenerateKeys.controller,
+	});
 };
 
 export default clientIntegrationRoutes;
