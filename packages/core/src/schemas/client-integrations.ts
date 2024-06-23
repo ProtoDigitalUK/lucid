@@ -14,4 +14,11 @@ export default {
 		query: undefined,
 		params: undefined,
 	},
+	deleteSingle: {
+		body: undefined,
+		query: undefined,
+		params: z.object({
+			id: z.string(),
+		}),
+	},
 };

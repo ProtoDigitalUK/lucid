@@ -16,7 +16,6 @@ const clientIntegrationRoutes = async (fastify: FastifyInstance) => {
 		controller: clientIntegration.createSingle.controller,
 	});
 
-	// get all
 	r(fastify, {
 		method: "get",
 		url: "",
@@ -26,6 +25,19 @@ const clientIntegrationRoutes = async (fastify: FastifyInstance) => {
 		swaggerSchema: clientIntegration.getAll.swaggerSchema,
 		zodSchema: clientIntegration.getAll.zodSchema,
 		controller: clientIntegration.getAll.controller,
+	});
+
+	r(fastify, {
+		method: "delete",
+		url: "/:id",
+		middleware: {
+			authenticate: true,
+			validateCSRF: true,
+		},
+		permissions: ["delete_client_integration"],
+		swaggerSchema: clientIntegration.deleteSingle.swaggerSchema,
+		zodSchema: clientIntegration.deleteSingle.zodSchema,
+		controller: clientIntegration.deleteSingle.controller,
 	});
 };
 
