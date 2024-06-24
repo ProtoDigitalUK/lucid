@@ -6,7 +6,7 @@ const mergeServiceError = (
 	defaultError?: Omit<Partial<LucidErrorData>, "zod" | "errorResponse">,
 ): LucidErrorData => {
 	return {
-		type: "basic",
+		type: error.type ?? defaultError?.type ?? "basic",
 		name: error.name ?? defaultError?.name ?? T("unknown_service_error"),
 		message:
 			error.message ??

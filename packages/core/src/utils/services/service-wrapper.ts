@@ -37,7 +37,6 @@ const serviceWrapper =
 			}
 
 			//* If transactions are not enabled or the service is already in a transaction via a parent
-
 			if (!wrapperConfig.transaction || service.db.isTransaction) {
 				return await fn(service, ...args);
 			}

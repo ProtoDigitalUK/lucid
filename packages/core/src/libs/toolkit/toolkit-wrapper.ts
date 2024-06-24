@@ -3,6 +3,8 @@ import getConfig from "../config/get-config.js";
 import lucidServices from "../../services/index.js";
 import type { ServiceFn } from "../../utils/services/types.js";
 
+// TODO: add support for passing down wrapperConfig, all toolkits services should ideally validate their input along with setting default error values
+
 const toolkitWrapper = async <T extends unknown[], R>(
 	fn: ServiceFn<T, R>,
 	data: T,

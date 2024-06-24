@@ -37,7 +37,7 @@ const ActionDropdown: Component<ActionDropdownProps> = (props) => {
 					e.stopPropagation();
 				}}
 				class={classNames(
-					"dropdown-trigger pointer-events-auto w-7 h-7 bg-container-3 rounded-md flex justify-center items-center hover:bg-container-4",
+					"dropdown-trigger pointer-events-auto min-w-7 w-7 h-7 bg-container-3 rounded-md flex justify-center items-center hover:bg-container-4",
 					{
 						"border border-border": props.options?.border,
 					},

@@ -150,7 +150,6 @@ const queryBuilder = <DB, Table extends keyof DB, O, T>(
 
 	// -----------------------------------------
 	// Pagination
-
 	if (requestQuery.perPage !== -1) {
 		mainQuery = mainQuery
 			.limit(requestQuery.perPage)

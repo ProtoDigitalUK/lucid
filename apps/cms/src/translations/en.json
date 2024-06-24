@@ -111,6 +111,7 @@
 	"height": "Height",
 	"mime_type": "Mime Type",
 	"users_permissions": "User Permissions",
+	"regenerate_api_key": "Regenerate API Key",
 	"roles_permissions": "Role Permissions",
 	"media_permissions": "Media Permissions",
 	"settings_permissions": "Settings Permissions",
