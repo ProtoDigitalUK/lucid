@@ -1,5 +1,6 @@
 import T from "@/translations";
 import { type Component, createMemo, createSignal, For, Show } from "solid-js";
+import useRowTarget from "@/hooks/useRowTarget";
 import classNames from "classnames";
 import api from "@/services/api";
 import userStore from "@/store/userStore";
@@ -7,10 +8,16 @@ import CreateClientIntegration from "@/components/Forms/ClientIntegrations/Creat
 import InfoRow from "@/components/Blocks/InfoRow";
 import Layout from "@/components/Groups/Layout";
 import ActionDropdown from "@/components/Partials/ActionDropdown";
+import DeleteClientIntegration from "@/components/Modals/ClientIntegrations/DeleteClientIntegration";
 
 const GeneralSettingsRoute: Component = (props) => {
 	// ----------------------------------------
 	// State / Hooks
+	const rowTarget = useRowTarget({
+		triggers: {
+			delete: false,
+		},
+	});
 
 	// ----------------------------------
 	// Queries
@@ -122,7 +129,15 @@ const GeneralSettingsRoute: Component = (props) => {
 										{
 											type: "button",
 											label: T()("delete"),
-											onClick: () => {},
+											onClick: () => {
+												rowTarget.setTargetId(
+													clientIntegration.id,
+												);
+												rowTarget.setTrigger(
+													"delete",
+													true,
+												);
+											},
 											permission: hasDeletePermission(),
 										},
 										{
@@ -138,6 +153,16 @@ const GeneralSettingsRoute: Component = (props) => {
 						)}
 					</For>
 				</InfoRow.Root>
+				{/* Modals */}
+				<DeleteClientIntegration
+					id={rowTarget.getTargetId}
+					state={{
+						open: rowTarget.getTriggers().delete,
+						setOpen: (state: boolean) => {
+							rowTarget.setTrigger("delete", state);
+						},
+					}}
+				/>
 			</Layout.PageContent>
 		</Layout.PageLayout>
 	);
