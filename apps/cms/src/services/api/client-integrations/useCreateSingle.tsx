@@ -25,7 +25,7 @@ export const createSingleReq = (params: Params) => {
 };
 
 interface UseCreateSingleProps {
-	onSuccess?: () => void;
+	onSuccess?: (data: ResponseBody<CreateSingleResponse>) => void;
 	onError?: () => void;
 }
 

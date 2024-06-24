@@ -6,6 +6,7 @@ import spawnToast from "@/utils/spawn-toast";
 import { DropdownMenu } from "@kobalte/core";
 import { A } from "@solidjs/router";
 import DropdownContent from "@/components/Partials/DropdownContent";
+import Spinner from "./Spinner";
 
 export interface ActionDropdownProps {
 	actions: Array<{
@@ -15,6 +16,7 @@ export interface ActionDropdownProps {
 		href?: string;
 		permission?: boolean;
 		hide?: boolean;
+		isLoading?: boolean;
 	}>;
 	options?: {
 		border?: boolean;
@@ -138,9 +140,19 @@ const ActionDropdown: Component<ActionDropdownProps> = (props) => {
 												<span class="line-clamp-1 mr-2.5">
 													{action.label}
 												</span>
-												<FaSolidChevronRight
-													size={14}
-												/>
+												<Show
+													when={
+														action.isLoading !==
+														true
+													}
+												>
+													<FaSolidChevronRight
+														size={14}
+													/>
+												</Show>
+												<Show when={action.isLoading}>
+													<Spinner size="sm" />
+												</Show>
 											</button>
 										</Match>
 									</Switch>

@@ -9,6 +9,7 @@ import InfoRow from "@/components/Blocks/InfoRow";
 import Layout from "@/components/Groups/Layout";
 import ActionDropdown from "@/components/Partials/ActionDropdown";
 import DeleteClientIntegration from "@/components/Modals/ClientIntegrations/DeleteClientIntegration";
+import CopyAPIKey from "@/components/Modals/ClientIntegrations/CopyAPIKey";
 
 const GeneralSettingsRoute: Component = (props) => {
 	// ----------------------------------------
@@ -16,13 +17,24 @@ const GeneralSettingsRoute: Component = (props) => {
 	const rowTarget = useRowTarget({
 		triggers: {
 			delete: false,
+			apiKey: false,
 		},
 	});
+	const [getAPIKey, setAPIKey] = createSignal<string | undefined>();
 
 	// ----------------------------------
 	// Queries
 	const clientIntegrations = api.clientIntegrations.useGetAll({
 		queryParams: {},
+	});
+
+	// ----------------------------------------
+	// Mutations
+	const generateAPIKey = api.clientIntegrations.useRegenerateAPIKey({
+		onSuccess: (data) => {
+			setAPIKey(data.data.apiKey);
+			rowTarget.setTrigger("apiKey", true);
+		},
 	});
 
 	// ----------------------------------------
@@ -78,7 +90,17 @@ const GeneralSettingsRoute: Component = (props) => {
 				>
 					<Show when={hasCreatePermission()}>
 						<InfoRow.Content>
-							<CreateClientIntegration />
+							<CreateClientIntegration
+								state={{
+									setAPIKey: setAPIKey,
+								}}
+								callbacks={{
+									onSuccess: (key: string) => {
+										setAPIKey(key);
+										rowTarget.setTrigger("apiKey", true);
+									},
+								}}
+							/>
 						</InfoRow.Content>
 					</Show>
 					<For each={clientIntegrations.data?.data}>
@@ -107,7 +129,8 @@ const GeneralSettingsRoute: Component = (props) => {
 												},
 											)}
 										>
-											{clientIntegration.name}
+											{clientIntegration.name} (
+											{clientIntegration.key})
 										</h3>
 										<Show
 											when={clientIntegration.description}
@@ -143,7 +166,13 @@ const GeneralSettingsRoute: Component = (props) => {
 										{
 											type: "button",
 											label: T()("regenerate_api_key"),
-											onClick: () => {},
+											onClick: () => {
+												generateAPIKey.action.mutate({
+													id: clientIntegration.id,
+												});
+											},
+											isLoading:
+												generateAPIKey.action.isPending,
 											permission:
 												hasRegeneratePermission(),
 										},
@@ -160,6 +189,20 @@ const GeneralSettingsRoute: Component = (props) => {
 						open: rowTarget.getTriggers().delete,
 						setOpen: (state: boolean) => {
 							rowTarget.setTrigger("delete", state);
+						},
+					}}
+				/>
+				<CopyAPIKey
+					apiKey={getAPIKey()}
+					state={{
+						open: rowTarget.getTriggers().apiKey,
+						setOpen: (state: boolean) => {
+							rowTarget.setTrigger("apiKey", state);
+						},
+					}}
+					callbacks={{
+						onClose: () => {
+							setAPIKey(undefined);
 						},
 					}}
 				/>

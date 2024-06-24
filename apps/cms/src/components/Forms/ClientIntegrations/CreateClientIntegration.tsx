@@ -4,7 +4,18 @@ import { getBodyError } from "@/utils/error-helpers";
 import api from "@/services/api";
 import Form from "@/components/Groups/Form";
 
-const CreateClientIntegration: Component = (props) => {
+interface CreateClientIntegrationProps {
+	state: {
+		setAPIKey: (key: string) => void;
+	};
+	callbacks?: {
+		onSuccess?: (key: string) => void;
+	};
+}
+
+const CreateClientIntegration: Component<CreateClientIntegrationProps> = (
+	props,
+) => {
 	// ----------------------------------------
 	// State
 	const [getName, setName] = createSignal("");
@@ -14,11 +25,14 @@ const CreateClientIntegration: Component = (props) => {
 	// ----------------------------------------
 	// Mutations
 	const createClientIntegration = api.clientIntegrations.useCreateSingle({
-		onSuccess: () => {
+		onSuccess: (data) => {
 			setName("");
 			setDescription("");
 			setEnabled(1);
-			// TODO: show copy api key modal
+			props.state.setAPIKey(data.data.apiKey);
+			if (props.callbacks?.onSuccess) {
+				props.callbacks.onSuccess(data.data.apiKey);
+			}
 		},
 	});
 
