@@ -3,7 +3,7 @@ import classNames from "classnames";
 import Link from "@/components/Partials/Link";
 
 interface ErrorBlockProps {
-	type: "fill" | "page-layout" | "table";
+	type: "fill" | "page-layout" | "table" | "block";
 	content: {
 		image?: string;
 		title: string;
@@ -19,15 +19,13 @@ interface ErrorBlockProps {
 const ErrorBlock: Component<ErrorBlockProps> = (props) => {
 	return (
 		<div
-			class={classNames(
-				"flex items-center justify-center bg-container-3",
-				{
-					"inset-0 absolute z-50": props.type === "fill",
-					"page-layout-full-body": props.type === "page-layout",
-					"border-t border-border page-layout-full-body":
-						props.type === "table",
-				},
-			)}
+			class={classNames("flex items-center justify-center", {
+				"inset-0 absolute z-50 bg-container-3": props.type === "fill",
+				"page-layout-full-body bg-container-3":
+					props.type === "page-layout",
+				"border-t border-border page-layout-full-body bg-container-3":
+					props.type === "table",
+			})}
 		>
 			<div class="text-center max-w-xl w-full flex flex-col items-center p-30">
 				<Show when={props.content.image}>
@@ -38,7 +36,14 @@ const ErrorBlock: Component<ErrorBlockProps> = (props) => {
 					/>
 				</Show>
 				<h2 class="mb-15">{props.content.title}</h2>
-				<p class="max-w-96">{props.content.description}</p>
+				<p
+					class={classNames({
+						"max-w-96": props.type !== "block",
+						"max-w-md": props.type === "block",
+					})}
+				>
+					{props.content.description}
+				</p>
 				<Show when={props.link !== undefined}>
 					<Link
 						theme={"primary"}

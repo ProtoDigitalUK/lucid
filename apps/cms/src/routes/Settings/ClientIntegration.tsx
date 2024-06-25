@@ -1,5 +1,13 @@
 import T from "@/translations";
-import { type Component, createMemo, createSignal, For, Show } from "solid-js";
+import {
+	type Component,
+	createMemo,
+	createSignal,
+	For,
+	Match,
+	Show,
+	Switch,
+} from "solid-js";
 import useRowTarget from "@/hooks/useRowTarget";
 import classNames from "classnames";
 import api from "@/services/api";
@@ -11,6 +19,8 @@ import ActionDropdown from "@/components/Partials/ActionDropdown";
 import DeleteClientIntegration from "@/components/Modals/ClientIntegrations/DeleteClientIntegration";
 import CopyAPIKey from "@/components/Modals/ClientIntegrations/CopyAPIKey";
 import RegenerateAPIKey from "@/components/Modals/ClientIntegrations/RegenerateAPIKey";
+import Button from "@/components/Partials/Button";
+import ErrorBlock from "@/components/Partials/ErrorBlock";
 
 const GeneralSettingsRoute: Component = (props) => {
 	// ----------------------------------------
@@ -24,7 +34,8 @@ const GeneralSettingsRoute: Component = (props) => {
 		},
 	});
 	const [getAPIKey, setAPIKey] = createSignal<string | undefined>();
-	const [openCreateRolePanel, setOpenCreateRolePanel] = createSignal(false);
+	const [openCreateIntegrationPanel, setOpenCreateIntegrationPanel] =
+		createSignal(false);
 
 	// ----------------------------------
 	// Queries
@@ -65,8 +76,8 @@ const GeneralSettingsRoute: Component = (props) => {
 			}}
 			actions={{
 				create: {
-					open: openCreateRolePanel(),
-					setOpen: setOpenCreateRolePanel,
+					open: openCreateIntegrationPanel(),
+					setOpen: setOpenCreateIntegrationPanel,
 					permission: hasCreatePermission(),
 				},
 			}}
@@ -90,95 +101,141 @@ const GeneralSettingsRoute: Component = (props) => {
 					title={T()("client_integrations")}
 					description={T()("client_integration_description")}
 				>
-					<For each={clientIntegrations.data?.data}>
-						{(clientIntegration) => (
-							<div class="bg-container-2 p-15 rounded-md border border-border mb-2.5 last:mb-0 flex items-center justify-between">
-								<div class="flex items-start">
-									<span
-										class={classNames(
-											"w-4 h-4 rounded-full block mr-2.5",
-											{
-												"bg-primary-base":
-													clientIntegration.enabled ===
-													1,
-												"bg-error-base":
-													clientIntegration.enabled ===
-													0,
-											},
-										)}
-									/>
-									<div>
-										<h3
-											class={classNames(
-												"text-base leading-none",
+					<Switch>
+						<Match
+							when={
+								clientIntegrations.data?.data &&
+								clientIntegrations.data?.data.length > 0
+							}
+						>
+							<For each={clientIntegrations.data?.data}>
+								{(clientIntegration) => (
+									<div class="bg-container-2 p-15 rounded-md border border-border mb-2.5 last:mb-0 flex items-center justify-between">
+										<div class="flex items-start">
+											<span
+												class={classNames(
+													"w-4 h-4 rounded-full block mr-2.5",
+													{
+														"bg-primary-base":
+															clientIntegration.enabled ===
+															1,
+														"bg-error-base":
+															clientIntegration.enabled ===
+															0,
+													},
+												)}
+											/>
+											<div>
+												<h3
+													class={classNames(
+														"text-base leading-none",
+														{
+															"mb-2": clientIntegration.description,
+														},
+													)}
+												>
+													{clientIntegration.name} (
+													{clientIntegration.key})
+												</h3>
+												<Show
+													when={
+														clientIntegration.description
+													}
+												>
+													<p class="text-sm mb-0 leading-none">
+														{
+															clientIntegration.description
+														}
+													</p>
+												</Show>
+											</div>
+										</div>
+										<ActionDropdown
+											actions={[
 												{
-													"mb-2": clientIntegration.description,
+													type: "button",
+													label: T()("update"),
+													onClick: () => {
+														rowTarget.setTargetId(
+															clientIntegration.id,
+														);
+														rowTarget.setTrigger(
+															"update",
+															true,
+														);
+													},
+													permission:
+														hasUpdatePermission(),
 												},
-											)}
-										>
-											{clientIntegration.name} (
-											{clientIntegration.key})
-										</h3>
-										<Show
-											when={clientIntegration.description}
-										>
-											<p class="text-sm mb-0 leading-none">
-												{clientIntegration.description}
-											</p>
-										</Show>
+												{
+													type: "button",
+													label: T()("delete"),
+													onClick: () => {
+														rowTarget.setTargetId(
+															clientIntegration.id,
+														);
+														rowTarget.setTrigger(
+															"delete",
+															true,
+														);
+													},
+													permission:
+														hasDeletePermission(),
+												},
+												{
+													type: "button",
+													label: T()(
+														"regenerate_api_key",
+													),
+													onClick: () => {
+														rowTarget.setTargetId(
+															clientIntegration.id,
+														);
+														rowTarget.setTrigger(
+															"regenerateAPIKey",
+															true,
+														);
+													},
+													permission:
+														hasRegeneratePermission(),
+												},
+											]}
+										/>
 									</div>
-								</div>
-								<ActionDropdown
-									actions={[
-										{
-											type: "button",
-											label: T()("update"),
-											onClick: () => {
-												rowTarget.setTargetId(
-													clientIntegration.id,
-												);
-												rowTarget.setTrigger(
-													"update",
-													true,
-												);
-											},
-											permission: hasUpdatePermission(),
-										},
-										{
-											type: "button",
-											label: T()("delete"),
-											onClick: () => {
-												rowTarget.setTargetId(
-													clientIntegration.id,
-												);
-												rowTarget.setTrigger(
-													"delete",
-													true,
-												);
-											},
-											permission: hasDeletePermission(),
-										},
-										{
-											type: "button",
-											label: T()("regenerate_api_key"),
-											onClick: () => {
-												rowTarget.setTargetId(
-													clientIntegration.id,
-												);
-												rowTarget.setTrigger(
-													"regenerateAPIKey",
-													true,
-												);
-											},
-											permission:
-												hasRegeneratePermission(),
-										},
-									]}
-								/>
-							</div>
-						)}
-					</For>
+								)}
+							</For>
+						</Match>
+						<Match
+							when={clientIntegrations.data?.data.length === 0}
+						>
+							<InfoRow.Content>
+								<ErrorBlock
+									type="block"
+									content={{
+										title: T()(
+											"no_client_integrations_found_title",
+										),
+										description: T()(
+											"no_client_integrations_found_descriptions",
+										),
+									}}
+								>
+									<Button
+										type="submit"
+										theme="primary"
+										size="medium"
+										onClick={() => {
+											setOpenCreateIntegrationPanel(true);
+										}}
+									>
+										{T()("create_integration")}
+									</Button>
+								</ErrorBlock>
+							</InfoRow.Content>
+						</Match>
+					</Switch>
 				</InfoRow.Root>
+
 				{/* Panels & Modals */}
 				<DeleteClientIntegration
 					id={rowTarget.getTargetId}
@@ -191,8 +248,8 @@ const GeneralSettingsRoute: Component = (props) => {
 				/>
 				<UpsertClientIntegrationPanel
 					state={{
-						open: openCreateRolePanel(),
-						setOpen: setOpenCreateRolePanel,
+						open: openCreateIntegrationPanel(),
+						setOpen: setOpenCreateIntegrationPanel,
 					}}
 					callbacks={{
 						onCreateSuccess: (key) => {
