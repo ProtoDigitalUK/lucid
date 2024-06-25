@@ -38,7 +38,16 @@ const serviceWrapper =
 
 			//* If transactions are not enabled or the service is already in a transaction via a parent
 			if (!wrapperConfig.transaction || service.db.isTransaction) {
-				return await fn(service, ...args);
+				const result = await fn(service, ...args);
+				if (result.error)
+					return {
+						error: mergeServiceError(
+							result.error,
+							wrapperConfig.defaultError,
+						),
+						data: undefined,
+					};
+				return result;
 			}
 
 			//* If transactions are enabled
@@ -79,7 +88,6 @@ const serviceWrapper =
 				return {
 					error: mergeServiceError(
 						{
-							type: "basic",
 							message: error.message,
 						},
 						wrapperConfig.defaultError,
@@ -91,7 +99,6 @@ const serviceWrapper =
 			return {
 				error: mergeServiceError(
 					{
-						type: "basic",
 						// @ts-expect-error
 						message: error?.message ?? undefined,
 					},
