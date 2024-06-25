@@ -209,5 +209,9 @@
 	"client_integration_is_disabled": "The client integration is disabled. Please enable it and try again.",
 	"client_integration_api_key_missing": "The client integration API key is missing from the authorisation header.",
 	"invalid_client_integration_api_key": "The client integration API key is invalid. Please ensure it is correct and try again.",
-	"client_integration_error": "An error occurred while verifying the client integration API key."
+	"client_integration_error": "An error occurred while verifying the client integration API key.",
+	"rate_limit_error_name": "Rate Limit Error",
+	"route_not_found": "Route Not Found",
+	"route_not_found_message": "The route you are trying to access does not exist.",
+	"page_not_found": "The page you are trying to access does not exist."
 }

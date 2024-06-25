@@ -3,6 +3,7 @@ import permissionGroups from "./permission-groups.js";
 
 export default {
 	tempDir: "./tmp",
+	swaggerRoutePrefix: "/documentation",
 	headers: {
 		accessToken: "_access",
 		csrf: "_csrf",
@@ -63,14 +64,18 @@ export default {
 		name: T("default_error_name"),
 		message: T("default_error_message"),
 		status: 500,
-		code: null,
-		errorResponse: null,
+		code: undefined,
+		errorResponse: undefined,
 	},
 	emailTemplates: {
 		resetPassword: "reset-password",
 		userInvite: "user-invite",
 		passwordResetSuccess: "password-reset-success",
 		emailChanged: "email-changed",
+	},
+	rateLimit: {
+		max: 3,
+		timeWindow: "1 minute", // ms format - https://github.com/vercel/ms
 	},
 	cronSchedule: "0 0 * * *",
 	csrfExpiration: 604800, // 7 days in seconds
