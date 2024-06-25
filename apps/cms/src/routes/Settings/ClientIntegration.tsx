@@ -10,6 +10,7 @@ import Layout from "@/components/Groups/Layout";
 import ActionDropdown from "@/components/Partials/ActionDropdown";
 import DeleteClientIntegration from "@/components/Modals/ClientIntegrations/DeleteClientIntegration";
 import CopyAPIKey from "@/components/Modals/ClientIntegrations/CopyAPIKey";
+import RegenerateAPIKey from "@/components/Modals/ClientIntegrations/RegenerateAPIKey";
 
 const GeneralSettingsRoute: Component = (props) => {
 	// ----------------------------------------
@@ -17,6 +18,7 @@ const GeneralSettingsRoute: Component = (props) => {
 	const rowTarget = useRowTarget({
 		triggers: {
 			delete: false,
+			regenerateAPIKey: false,
 			apiKey: false,
 		},
 	});
@@ -26,15 +28,6 @@ const GeneralSettingsRoute: Component = (props) => {
 	// Queries
 	const clientIntegrations = api.clientIntegrations.useGetAll({
 		queryParams: {},
-	});
-
-	// ----------------------------------------
-	// Mutations
-	const generateAPIKey = api.clientIntegrations.useRegenerateAPIKey({
-		onSuccess: (data) => {
-			setAPIKey(data.data.apiKey);
-			rowTarget.setTrigger("apiKey", true);
-		},
 	});
 
 	// ----------------------------------------
@@ -167,12 +160,14 @@ const GeneralSettingsRoute: Component = (props) => {
 											type: "button",
 											label: T()("regenerate_api_key"),
 											onClick: () => {
-												generateAPIKey.action.mutate({
-													id: clientIntegration.id,
-												});
+												rowTarget.setTargetId(
+													clientIntegration.id,
+												);
+												rowTarget.setTrigger(
+													"regenerateAPIKey",
+													true,
+												);
 											},
-											isLoading:
-												generateAPIKey.action.isPending,
 											permission:
 												hasRegeneratePermission(),
 										},
@@ -203,6 +198,21 @@ const GeneralSettingsRoute: Component = (props) => {
 					callbacks={{
 						onClose: () => {
 							setAPIKey(undefined);
+						},
+					}}
+				/>
+				<RegenerateAPIKey
+					id={rowTarget.getTargetId}
+					state={{
+						open: rowTarget.getTriggers().regenerateAPIKey,
+						setOpen: (state: boolean) => {
+							rowTarget.setTrigger("regenerateAPIKey", state);
+						},
+					}}
+					callbacks={{
+						onSuccess: (key) => {
+							setAPIKey(key);
+							rowTarget.setTrigger("apiKey", true);
 						},
 					}}
 				/>
