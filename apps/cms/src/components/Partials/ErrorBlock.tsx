@@ -13,6 +13,9 @@ interface ErrorBlockProps {
 		text: string;
 		href: string;
 	};
+	options?: {
+		contentMaxWidth?: "md";
+	};
 	children?: JSXElement;
 }
 
@@ -38,8 +41,9 @@ const ErrorBlock: Component<ErrorBlockProps> = (props) => {
 				<h2 class="mb-15">{props.content.title}</h2>
 				<p
 					class={classNames({
-						"max-w-96": props.type !== "block",
-						"max-w-md": props.type === "block",
+						"max-w-96":
+							props.options?.contentMaxWidth === undefined,
+						"max-w-md": props.options?.contentMaxWidth === "md",
 					})}
 				>
 					{props.content.description}

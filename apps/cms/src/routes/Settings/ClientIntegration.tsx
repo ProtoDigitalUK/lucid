@@ -5,22 +5,20 @@ import {
 	createSignal,
 	For,
 	Match,
-	Show,
 	Switch,
 } from "solid-js";
 import useRowTarget from "@/hooks/useRowTarget";
-import classNames from "classnames";
 import api from "@/services/api";
 import userStore from "@/store/userStore";
 import UpsertClientIntegrationPanel from "@/components/Panels/ClientIntegrations/UpsertClientIntegrationPanel";
 import InfoRow from "@/components/Blocks/InfoRow";
 import Layout from "@/components/Groups/Layout";
-import ActionDropdown from "@/components/Partials/ActionDropdown";
 import DeleteClientIntegration from "@/components/Modals/ClientIntegrations/DeleteClientIntegration";
 import CopyAPIKey from "@/components/Modals/ClientIntegrations/CopyAPIKey";
 import RegenerateAPIKey from "@/components/Modals/ClientIntegrations/RegenerateAPIKey";
 import Button from "@/components/Partials/Button";
 import ErrorBlock from "@/components/Partials/ErrorBlock";
+import ClientIntegrationRow from "@/components/Rows/ClientIntegrationRow";
 
 const GeneralSettingsRoute: Component = (props) => {
 	// ----------------------------------------
@@ -34,8 +32,6 @@ const GeneralSettingsRoute: Component = (props) => {
 		},
 	});
 	const [getAPIKey, setAPIKey] = createSignal<string | undefined>();
-	const [openCreateIntegrationPanel, setOpenCreateIntegrationPanel] =
-		createSignal(false);
 
 	// ----------------------------------
 	// Queries
@@ -52,16 +48,6 @@ const GeneralSettingsRoute: Component = (props) => {
 	const hasCreatePermission = createMemo(() => {
 		return userStore.get.hasPermission(["create_client_integration"]).all;
 	});
-	const hasUpdatePermission = createMemo(() => {
-		return userStore.get.hasPermission(["update_client_integration"]).all;
-	});
-	const hasDeletePermission = createMemo(() => {
-		return userStore.get.hasPermission(["delete_client_integration"]).all;
-	});
-	const hasRegeneratePermission = createMemo(() => {
-		return userStore.get.hasPermission(["regenerate_client_integration"])
-			.all;
-	});
 
 	// ----------------------------------------
 	// Render
@@ -76,8 +62,11 @@ const GeneralSettingsRoute: Component = (props) => {
 			}}
 			actions={{
 				create: {
-					open: openCreateIntegrationPanel(),
-					setOpen: setOpenCreateIntegrationPanel,
+					open: rowTarget.getTriggers().update,
+					setOpen: (state) => {
+						rowTarget.setTargetId(undefined);
+						rowTarget.setTrigger("update", state);
+					},
 					permission: hasCreatePermission(),
 				},
 			}}
@@ -110,98 +99,10 @@ const GeneralSettingsRoute: Component = (props) => {
 						>
 							<For each={clientIntegrations.data?.data}>
 								{(clientIntegration) => (
-									<div class="bg-container-2 p-15 rounded-md border border-border mb-2.5 last:mb-0 flex items-center justify-between">
-										<div class="flex items-start">
-											<span
-												class={classNames(
-													"w-4 h-4 rounded-full block mr-2.5",
-													{
-														"bg-primary-base":
-															clientIntegration.enabled ===
-															1,
-														"bg-error-base":
-															clientIntegration.enabled ===
-															0,
-													},
-												)}
-											/>
-											<div>
-												<h3
-													class={classNames(
-														"text-base leading-none",
-														{
-															"mb-2": clientIntegration.description,
-														},
-													)}
-												>
-													{clientIntegration.name} (
-													{clientIntegration.key})
-												</h3>
-												<Show
-													when={
-														clientIntegration.description
-													}
-												>
-													<p class="text-sm mb-0 leading-none">
-														{
-															clientIntegration.description
-														}
-													</p>
-												</Show>
-											</div>
-										</div>
-										<ActionDropdown
-											actions={[
-												{
-													type: "button",
-													label: T()("update"),
-													onClick: () => {
-														rowTarget.setTargetId(
-															clientIntegration.id,
-														);
-														rowTarget.setTrigger(
-															"update",
-															true,
-														);
-													},
-													permission:
-														hasUpdatePermission(),
-												},
-												{
-													type: "button",
-													label: T()("delete"),
-													onClick: () => {
-														rowTarget.setTargetId(
-															clientIntegration.id,
-														);
-														rowTarget.setTrigger(
-															"delete",
-															true,
-														);
-													},
-													permission:
-														hasDeletePermission(),
-												},
-												{
-													type: "button",
-													label: T()(
-														"regenerate_api_key",
-													),
-													onClick: () => {
-														rowTarget.setTargetId(
-															clientIntegration.id,
-														);
-														rowTarget.setTrigger(
-															"regenerateAPIKey",
-															true,
-														);
-													},
-													permission:
-														hasRegeneratePermission(),
-												},
-											]}
-										/>
-									</div>
+									<ClientIntegrationRow
+										clientIntegration={clientIntegration}
+										rowTarget={rowTarget}
+									/>
 								)}
 							</For>
 						</Match>
@@ -219,13 +120,20 @@ const GeneralSettingsRoute: Component = (props) => {
 											"no_client_integrations_found_descriptions",
 										),
 									}}
+									options={{
+										contentMaxWidth: "md",
+									}}
 								>
 									<Button
 										type="submit"
 										theme="primary"
 										size="medium"
 										onClick={() => {
-											setOpenCreateIntegrationPanel(true);
+											rowTarget.setTargetId(undefined);
+											rowTarget.setTrigger(
+												"update",
+												true,
+											);
 										}}
 									>
 										{T()("create_integration")}
@@ -247,23 +155,17 @@ const GeneralSettingsRoute: Component = (props) => {
 					}}
 				/>
 				<UpsertClientIntegrationPanel
-					state={{
-						open: openCreateIntegrationPanel(),
-						setOpen: setOpenCreateIntegrationPanel,
-					}}
-					callbacks={{
-						onCreateSuccess: (key) => {
-							setAPIKey(key);
-							rowTarget.setTrigger("apiKey", true);
-						},
-					}}
-				/>
-				<UpsertClientIntegrationPanel
 					id={rowTarget.getTargetId}
 					state={{
 						open: rowTarget.getTriggers().update,
 						setOpen: (state: boolean) => {
 							rowTarget.setTrigger("update", state);
+						},
+					}}
+					callbacks={{
+						onCreateSuccess: (key) => {
+							setAPIKey(key);
+							rowTarget.setTrigger("apiKey", true);
 						},
 					}}
 				/>

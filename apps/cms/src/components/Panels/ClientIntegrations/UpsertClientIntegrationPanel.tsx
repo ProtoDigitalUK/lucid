@@ -41,7 +41,7 @@ const UpsertClientIntegrationPanel: Component<
 			},
 		},
 		key: () => props.state.open,
-		enabled: () => props.state.open && props.id !== undefined,
+		enabled: () => props.state.open && mode() !== "create",
 	});
 
 	// ----------------------------------------
@@ -70,27 +70,31 @@ const UpsertClientIntegrationPanel: Component<
 
 	// ---------------------------------
 	// Memos
+	const mode = createMemo(() => {
+		if (props.id === undefined || props.id() === undefined) return "create";
+		return "update";
+	});
 	const isLoading = createMemo(() => {
-		if (props.id === undefined) return false;
+		if (mode() === "create") return false;
 		return clientIntegration.isLoading;
 	});
 	const isError = createMemo(() => {
-		if (props.id === undefined) return false;
+		if (mode() === "create") return false;
 		return clientIntegration.isError;
 	});
 
 	const panelTitle = createMemo(() => {
-		if (props.id === undefined)
+		if (mode() === "create")
 			return T()("create_client_integration_panel_title");
 		return T()("update_client_integration_panel_title");
 	});
 	const panelDescription = createMemo(() => {
-		if (props.id === undefined)
+		if (mode() === "create")
 			return T()("create_client_integration_panel_description");
 		return T()("update_client_integration_panel_description");
 	});
 	const panelSubmit = createMemo(() => {
-		if (props.id === undefined) return T()("create");
+		if (mode() === "create") return T()("create");
 		return T()("update");
 	});
 
@@ -109,7 +113,7 @@ const UpsertClientIntegrationPanel: Component<
 		);
 	});
 	const submitIsDisabled = createMemo(() => {
-		if (!props.id) return false;
+		if (mode() === "create") return false;
 		return !updateData().changed;
 	});
 	// Mutation memos
@@ -120,7 +124,7 @@ const UpsertClientIntegrationPanel: Component<
 		);
 	});
 	const errors = createMemo(() => {
-		if (!props.id) return createClientIntegration.errors();
+		if (mode() === "create") return createClientIntegration.errors();
 		return updateClientIntegration.errors();
 	});
 
@@ -131,7 +135,7 @@ const UpsertClientIntegrationPanel: Component<
 			open={props.state.open}
 			setOpen={props.state.setOpen}
 			onSubmit={() => {
-				if (!props.id) {
+				if (mode() === "create") {
 					createClientIntegration.action.mutate({
 						name: getName(),
 						description: getDescription(),
@@ -139,7 +143,7 @@ const UpsertClientIntegrationPanel: Component<
 					});
 				} else {
 					updateClientIntegration.action.mutate({
-						id: props.id() as number,
+						id: props.id?.() as number,
 						body: updateData().data,
 					});
 				}
