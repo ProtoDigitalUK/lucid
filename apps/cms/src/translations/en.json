@@ -17,6 +17,7 @@
 	"key": "Key",
 	"delivered": "Delivered",
 	"translations": "Translations",
+	"enabled": "Enabled",
 	"confirm_delete": "Confirm Delete",
 	"bricks": "Bricks",
 	"assign_bricks_description": "Select the bricks you wish this environment to have access to.",
@@ -295,8 +296,10 @@
 	"create_page_panel_description": "Create a new page for the {{collection}} collection.",
 	"update_page_panel_title": "Update {{name}}",
 	"update_page_panel_description": "Update the {{collection}} collection page.",
-	"account_route_title": "Account",
-	"account_route_description": "Manage your account details and settings.",
+	"create_client_integration_panel_title": "Create Client Integration",
+	"create_client_integration_panel_description": "Create a new client integration.",
+	"update_client_integration_panel_title": "Update Client Integration",
+	"update_client_integration_panel_description": "Update your client integration details",
 
 	"password_reset_toast_title": "Password reset email sent",
 	"password_reset_toast_message": "Please check your email for a password reset link",
@@ -347,6 +350,8 @@
 	"account_update_toast_message": "Your account has been updated",
 	"regenerate_api_key_toast_title": "API Key Regenerated",
 	"regenerate_api_key_toast_message": "The API key has been regenerated",
+	"client_integration_update_toast_title": "Client Integration Updated",
+	"client_integration_update_toast_message": "The client integration has been updated",
 
 	"create_toast_title": "{{name}} created",
 	"create_toast_message": "The {{name}} has been created",
@@ -355,6 +360,8 @@
 	"update_toast_title": "{{name}} updated",
 	"update_toast_message": "The {{name}} has been updated",
 
+	"account_route_title": "Account",
+	"account_route_description": "Manage your account details and settings.",
 	"roles_route_title": "Roles",
 	"roles_route_description": "Create and manage roles.",
 	"forgot_password_route_title": "Forgot your password?",

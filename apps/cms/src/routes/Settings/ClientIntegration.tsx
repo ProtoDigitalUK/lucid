@@ -4,7 +4,7 @@ import useRowTarget from "@/hooks/useRowTarget";
 import classNames from "classnames";
 import api from "@/services/api";
 import userStore from "@/store/userStore";
-import CreateClientIntegration from "@/components/Forms/ClientIntegrations/CreateClientIntegration";
+import UpsertClientIntegrationPanel from "@/components/Panels/ClientIntegrations/UpsertClientIntegrationPanel";
 import InfoRow from "@/components/Blocks/InfoRow";
 import Layout from "@/components/Groups/Layout";
 import ActionDropdown from "@/components/Partials/ActionDropdown";
@@ -20,9 +20,11 @@ const GeneralSettingsRoute: Component = (props) => {
 			delete: false,
 			regenerateAPIKey: false,
 			apiKey: false,
+			update: false,
 		},
 	});
 	const [getAPIKey, setAPIKey] = createSignal<string | undefined>();
+	const [openCreateRolePanel, setOpenCreateRolePanel] = createSignal(false);
 
 	// ----------------------------------
 	// Queries
@@ -61,6 +63,13 @@ const GeneralSettingsRoute: Component = (props) => {
 				isError: isError(),
 				isSuccess: isSuccess(),
 			}}
+			actions={{
+				create: {
+					open: openCreateRolePanel(),
+					setOpen: setOpenCreateRolePanel,
+					permission: hasCreatePermission(),
+				},
+			}}
 			headingChildren={
 				<Layout.NavigationTabs
 					tabs={[
@@ -81,21 +90,6 @@ const GeneralSettingsRoute: Component = (props) => {
 					title={T()("client_integrations")}
 					description={T()("client_integration_description")}
 				>
-					<Show when={hasCreatePermission()}>
-						<InfoRow.Content>
-							<CreateClientIntegration
-								state={{
-									setAPIKey: setAPIKey,
-								}}
-								callbacks={{
-									onSuccess: (key: string) => {
-										setAPIKey(key);
-										rowTarget.setTrigger("apiKey", true);
-									},
-								}}
-							/>
-						</InfoRow.Content>
-					</Show>
 					<For each={clientIntegrations.data?.data}>
 						{(clientIntegration) => (
 							<div class="bg-container-2 p-15 rounded-md border border-border mb-2.5 last:mb-0 flex items-center justify-between">
@@ -139,7 +133,15 @@ const GeneralSettingsRoute: Component = (props) => {
 										{
 											type: "button",
 											label: T()("update"),
-											onClick: () => {},
+											onClick: () => {
+												rowTarget.setTargetId(
+													clientIntegration.id,
+												);
+												rowTarget.setTrigger(
+													"update",
+													true,
+												);
+											},
 											permission: hasUpdatePermission(),
 										},
 										{
@@ -177,13 +179,34 @@ const GeneralSettingsRoute: Component = (props) => {
 						)}
 					</For>
 				</InfoRow.Root>
-				{/* Modals */}
+				{/* Panels & Modals */}
 				<DeleteClientIntegration
 					id={rowTarget.getTargetId}
 					state={{
 						open: rowTarget.getTriggers().delete,
 						setOpen: (state: boolean) => {
 							rowTarget.setTrigger("delete", state);
+						},
+					}}
+				/>
+				<UpsertClientIntegrationPanel
+					state={{
+						open: openCreateRolePanel(),
+						setOpen: setOpenCreateRolePanel,
+					}}
+					callbacks={{
+						onCreateSuccess: (key) => {
+							setAPIKey(key);
+							rowTarget.setTrigger("apiKey", true);
+						},
+					}}
+				/>
+				<UpsertClientIntegrationPanel
+					id={rowTarget.getTargetId}
+					state={{
+						open: rowTarget.getTriggers().update,
+						setOpen: (state: boolean) => {
+							rowTarget.setTrigger("update", state);
 						},
 					}}
 				/>

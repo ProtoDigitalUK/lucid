@@ -1,4 +1,5 @@
 import z from "zod";
+import type getSingle from "../controllers/roles/get-single.js";
 
 export default {
 	createSingle: {
@@ -13,6 +14,13 @@ export default {
 		body: undefined,
 		query: undefined,
 		params: undefined,
+	},
+	getSingle: {
+		body: undefined,
+		query: undefined,
+		params: z.object({
+			id: z.string(),
+		}),
 	},
 	deleteSingle: {
 		body: undefined,
