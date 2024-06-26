@@ -73,6 +73,14 @@ const handleResponse = async <ResponseBody, Data = unknown>(
 		}
 	}
 
+	if (fetchRes.status === 429) {
+		handleSiteErrors(data as ErrorResponse);
+		throw new LucidError(
+			(data as ErrorResponse).message,
+			data as ErrorResponse,
+		);
+	}
+
 	if (!fetchRes.ok) {
 		handleSiteErrors(data as ErrorResponse);
 		throw new LucidError(

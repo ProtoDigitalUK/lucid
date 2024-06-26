@@ -11,8 +11,13 @@ const App: Component = () => {
 			queries: {
 				retry: (_, error) => {
 					if (error instanceof LucidError) {
-						if (error.errorRes.status === 401) {
-							return false;
+						switch (error.errorRes.status) {
+							case 401:
+								return false;
+							case 429:
+								return false;
+							default:
+								return true;
 						}
 					}
 					return true;
