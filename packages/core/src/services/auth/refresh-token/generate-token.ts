@@ -33,7 +33,7 @@ const generateToken = async (
 		httpOnly: true,
 		secure: request.protocol === "https",
 		sameSite: "strict",
-		path: "/api/v1/auth/token",
+		path: "/",
 	});
 
 	await UserTokensRepo.createSingle({

@@ -10,6 +10,7 @@ import fastifyRateLimit from "@fastify/rate-limit";
 import fastifyMultipart from "@fastify/multipart";
 import fastifySwagger from "@fastify/swagger";
 import fastifySwaggerUi from "@fastify/swagger-ui";
+import fastifyHelmet from "@fastify/helmet";
 import type { FastifyInstance } from "fastify";
 import T from "./translations/index.js";
 import constants from "./constants/constants.js";
@@ -85,6 +86,11 @@ const lucidPlugin = async (fastify: FastifyInstance) => {
 
 		fastify.register(fastifyMultipart, {
 			limits: { fileSize: config.media.maxSize },
+		});
+
+		fastify.register(fastifyHelmet, {
+			contentSecurityPolicy: false,
+			crossOriginResourcePolicy: false,
 		});
 
 		await fastify.register(fastifyRateLimit, {
