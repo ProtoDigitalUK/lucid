@@ -2,6 +2,7 @@ import T from "../../translations/index.js";
 import Repository from "../../libs/repositories/index.js";
 import { add } from "date-fns";
 import constants from "../../constants/constants.js";
+import generateSecret from "../../utils/helpers/generate-secret.js";
 import type { BooleanInt } from "../../libs/db/types.js";
 import type { ServiceFn } from "../../utils/services/types.js";
 
@@ -67,6 +68,8 @@ const createSingle: ServiceFn<
 		};
 	}
 
+	const { encryptSecret } = generateSecret(context.config.keys.encryptionKey);
+
 	const newUser = await UsersRepo.createSingle({
 		email: data.email,
 		username: data.username,
@@ -74,6 +77,7 @@ const createSingle: ServiceFn<
 		lastName: data.lastName,
 		superAdmin: data.authSuperAdmin === 1 ? data.superAdmin : 0,
 		triggerPasswordReset: 0,
+		secret: encryptSecret,
 	});
 
 	if (newUser === undefined) {

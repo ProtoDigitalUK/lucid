@@ -7,7 +7,7 @@ const encryptionKeyToHex = (encryptionKey: string) =>
 		.digest("hex")
 		.substring(0, 64);
 
-export const encryptSecret = (secret: string, encryptionKey: string) => {
+export const encrypt = (secret: string, encryptionKey: string) => {
 	const iv = crypto.randomBytes(16);
 	const cipher = crypto.createCipheriv(
 		"aes-256-cbc",
@@ -19,10 +19,7 @@ export const encryptSecret = (secret: string, encryptionKey: string) => {
 	return `${iv.toString("hex")}:${encrypted}`;
 };
 
-export const decryptSecret = (
-	encryptedSecret: string,
-	encryptionKey: string,
-) => {
+export const decrypt = (encryptedSecret: string, encryptionKey: string) => {
 	const [iv, encrypted] = encryptedSecret.split(":");
 	const decipher = crypto.createDecipheriv(
 		"aes-256-cbc",

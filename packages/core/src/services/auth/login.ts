@@ -1,6 +1,7 @@
 import T from "../../translations/index.js";
 import argon2 from "argon2";
 import Repository from "../../libs/repositories/index.js";
+import { decrypt } from "../../utils/helpers/encrypt-decrypt.js";
 import type { ServiceFn } from "../../utils/services/types.js";
 
 const login: ServiceFn<
@@ -17,7 +18,7 @@ const login: ServiceFn<
 	const UsersRepo = Repository.get("users", context.db);
 
 	const user = await UsersRepo.selectSingleByEmailUsername({
-		select: ["id", "password", "is_deleted"],
+		select: ["id", "password", "is_deleted", "secret"],
 		data: {
 			username: data.usernameOrEmail,
 			email: data.usernameOrEmail,
@@ -46,7 +47,12 @@ const login: ServiceFn<
 		};
 	}
 
-	const valid = await argon2.verify(user.password, data.password);
+	const valid = await argon2.verify(user.password, data.password, {
+		secret: Buffer.from(
+			decrypt(user.secret, context.config.keys.encryptionKey),
+		),
+	});
+	console.log("valid", valid);
 	if (!valid)
 		return {
 			error: {

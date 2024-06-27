@@ -1,7 +1,7 @@
 import T from "../../translations/index.js";
 import argon2 from "argon2";
 import Repository from "../../libs/repositories/index.js";
-import { decryptSecret } from "../../utils/helpers/encrypt-decrypt.js";
+import { decrypt } from "../../utils/helpers/encrypt-decrypt.js";
 import type { ServiceFn } from "../../utils/services/types.js";
 
 const verifyApiKey: ServiceFn<
@@ -48,7 +48,7 @@ const verifyApiKey: ServiceFn<
 		};
 	}
 
-	const secret = decryptSecret(
+	const secret = decrypt(
 		clientIntegration.secret,
 		context.config.keys.encryptionKey,
 	);

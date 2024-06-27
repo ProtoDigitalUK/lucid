@@ -3,6 +3,7 @@ import Repository from "../../libs/repositories/index.js";
 import Formatter from "../../libs/formatters/index.js";
 import constants from "../../constants/constants.js";
 import argon2 from "argon2";
+import { generateSecret } from "../../utils/helpers/index.js";
 import type { ServiceContext, ServiceFn } from "../../utils/services/types.js";
 
 const defaultUser: ServiceFn<[], undefined> = async (
@@ -18,9 +19,15 @@ const defaultUser: ServiceFn<[], undefined> = async (
 				data: undefined,
 			};
 		}
+		const { secret, encryptSecret } = generateSecret(
+			context.config.keys.encryptionKey,
+		);
 
 		const hashedPassword = await argon2.hash(
 			constants.seedDefaults.user.password,
+			{
+				secret: Buffer.from(secret),
+			},
 		);
 
 		await UsersRepo.createSingle({
@@ -31,6 +38,7 @@ const defaultUser: ServiceFn<[], undefined> = async (
 			lastName: constants.seedDefaults.user.lastName,
 			triggerPasswordReset: 1,
 			password: hashedPassword,
+			secret: encryptSecret,
 		});
 
 		return {

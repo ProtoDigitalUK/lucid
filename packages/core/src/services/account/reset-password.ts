@@ -2,6 +2,7 @@ import T from "../../translations/index.js";
 import argon2 from "argon2";
 import constants from "../../constants/constants.js";
 import Repository from "../../libs/repositories/index.js";
+import { generateSecret } from "../../utils/helpers/index.js";
 import type { ServiceFn } from "../../utils/services/types.js";
 
 const resetPassword: ServiceFn<
@@ -16,24 +17,52 @@ const resetPassword: ServiceFn<
 	const UserTokensRepo = Repository.get("user-tokens", context.db);
 	const UsersRepo = Repository.get("users", context.db);
 
-	const token = await context.services.user.token.getSingle(context, {
+	const tokenRes = await context.services.user.token.getSingle(context, {
 		token: data.token,
 		tokenType: "password_reset",
 	});
-	if (token.error) return token;
+	if (tokenRes.error) return tokenRes;
 
-	const hashedPassword = await argon2.hash(data.password);
+	const userRes = await UsersRepo.selectSingle({
+		select: ["id"],
+		where: [
+			{
+				key: "id",
+				operator: "=",
+				value: tokenRes.data.user_id,
+			},
+		],
+	});
+	if (userRes === undefined) {
+		return {
+			error: {
+				type: "basic",
+				status: 404,
+				message: T("user_not_found_message"),
+			},
+			data: undefined,
+		};
+	}
+
+	const { secret, encryptSecret } = generateSecret(
+		context.config.keys.encryptionKey,
+	);
+
+	const hashedPassword = await argon2.hash(data.password, {
+		secret: Buffer.from(secret),
+	});
 
 	const user = await UsersRepo.updateSingle({
 		data: {
 			password: hashedPassword,
+			secret: encryptSecret,
 			updatedAt: new Date().toISOString(),
 		},
 		where: [
 			{
 				key: "id",
 				operator: "=",
-				value: token.data.user_id,
+				value: tokenRes.data.user_id,
 			},
 		],
 	});
@@ -54,7 +83,7 @@ const resetPassword: ServiceFn<
 				{
 					key: "id",
 					operator: "=",
-					value: token.data.id,
+					value: tokenRes.data.id,
 				},
 			],
 		}),

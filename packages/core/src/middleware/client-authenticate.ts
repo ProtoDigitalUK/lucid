@@ -1,9 +1,6 @@
 import T from "../translations/index.js";
 import constants from "../constants/constants.js";
 import { LucidAPIError } from "../utils/errors/index.js";
-import Repository from "../libs/repositories/index.js";
-import { decryptSecret } from "../utils/helpers/encrypt-decrypt.js";
-import argon2 from "argon2";
 import serviceWrapper from "../utils/services/service-wrapper.js";
 import type { FastifyRequest } from "fastify";
 

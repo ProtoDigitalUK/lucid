@@ -286,6 +286,7 @@ export default class UsersRepo {
 			lastName?: string;
 			username?: string;
 			superAdmin?: BooleanInt;
+			secret?: string;
 			email?: string;
 			isDeleted?: BooleanInt;
 			isDeletedAt?: string;
@@ -301,6 +302,7 @@ export default class UsersRepo {
 				username: props.data.username,
 				email: props.data.email,
 				password: props.data.password,
+				secret: props.data.secret,
 				super_admin: props.data.superAdmin,
 				updated_at: props.data.updatedAt,
 				is_deleted: props.data.isDeleted,

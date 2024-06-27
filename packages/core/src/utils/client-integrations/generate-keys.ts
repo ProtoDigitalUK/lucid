@@ -1,6 +1,6 @@
 import crypto from "node:crypto";
 import argon2 from "argon2";
-import { encryptSecret } from "../helpers/encrypt-decrypt.js";
+import { generateSecret } from "../helpers/index.js";
 
 const generateKeys = async (
 	encryptionKey: string,
@@ -11,7 +11,7 @@ const generateKeys = async (
 	secret: string;
 }> => {
 	const apiKey = crypto.randomBytes(32).toString("hex");
-	const secret = crypto.randomBytes(32).toString("hex");
+	const { secret, encryptSecret } = generateSecret(encryptionKey);
 	const apiKeyHash = await argon2.hash(apiKey, {
 		secret: Buffer.from(secret),
 	});
@@ -20,7 +20,7 @@ const generateKeys = async (
 		key: crypto.randomBytes(3).toString("hex"),
 		apiKey: apiKey,
 		apiKeyHash: apiKeyHash,
-		secret: encryptSecret(secret, encryptionKey),
+		secret: encryptSecret,
 	};
 };
 

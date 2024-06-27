@@ -1,5 +1,7 @@
 import T from "../../../translations/index.js";
 import argon2 from "argon2";
+import generateSecret from "../../../utils/helpers/generate-secret.js";
+import { decrypt } from "../../../utils/helpers/encrypt-decrypt.js";
 import type { ServiceFn } from "../../../utils/services/types.js";
 
 const checkPassed = (value: string | undefined) => {
@@ -9,15 +11,18 @@ const checkPassed = (value: string | undefined) => {
 const checkUpdatePassword: ServiceFn<
 	[
 		{
+			encryptedSecret: string;
 			password: string; // the users hashed password
 			currentPassword?: string;
 			newPassword?: string;
 			passwordConfirmation?: string;
+			encryptionKey: string;
 		},
 	],
 	{
 		newPassword: string | undefined;
 		triggerPasswordReset: 0 | 1 | undefined;
+		encryptSecret: string | undefined;
 	}
 > = async (_, data) => {
 	let newPassword = undefined;
@@ -75,6 +80,7 @@ const checkUpdatePassword: ServiceFn<
 			data: {
 				newPassword: newPassword,
 				triggerPasswordReset: triggerPasswordReset,
+				encryptSecret: undefined,
 			},
 		};
 	}
@@ -103,6 +109,11 @@ const checkUpdatePassword: ServiceFn<
 	const passwordValid = await argon2.verify(
 		data.password,
 		data.currentPassword as string,
+		{
+			secret: Buffer.from(
+				decrypt(data.encryptedSecret, data.encryptionKey),
+			),
+		},
 	);
 
 	if (!passwordValid) {
@@ -124,7 +135,11 @@ const checkUpdatePassword: ServiceFn<
 		};
 	}
 
-	newPassword = await argon2.hash(data.newPassword as string);
+	const { secret, encryptSecret } = generateSecret(data.encryptionKey);
+
+	newPassword = await argon2.hash(data.newPassword as string, {
+		secret: Buffer.from(secret),
+	});
 	triggerPasswordReset = 0 as const;
 
 	return {
@@ -132,6 +147,7 @@ const checkUpdatePassword: ServiceFn<
 		data: {
 			newPassword: newPassword,
 			triggerPasswordReset: triggerPasswordReset,
+			encryptSecret: encryptSecret,
 		},
 	};
 };

@@ -21,8 +21,8 @@ const updateMe: ServiceFn<
 > = async (context, data) => {
 	const UsersRepo = Repository.get("users", context.db);
 
-	const getUser = await UsersRepo.selectSingle({
-		select: ["super_admin", "password", "first_name"],
+	const getUserRes = await UsersRepo.selectSingle({
+		select: ["super_admin", "password", "first_name", "secret"],
 		where: [
 			{
 				key: "id",
@@ -32,7 +32,7 @@ const updateMe: ServiceFn<
 		],
 	});
 
-	if (getUser === undefined) {
+	if (getUserRes === undefined) {
 		return {
 			error: {
 				type: "basic",
@@ -80,10 +80,12 @@ const updateMe: ServiceFn<
 					})
 				: undefined,
 			context.services.account.checks.checkUpdatePassword(context, {
-				password: getUser.password,
+				encryptedSecret: getUserRes.secret,
+				password: getUserRes.password,
 				currentPassword: data.currentPassword,
 				newPassword: data.newPassword,
 				passwordConfirmation: data.passwordConfirmation,
+				encryptionKey: context.config.keys.encryptionKey,
 			}),
 		],
 	);
@@ -132,6 +134,7 @@ const updateMe: ServiceFn<
 			email: data.email,
 			updatedAt: new Date().toISOString(),
 			password: updatePassword.data.newPassword,
+			secret: updatePassword.data.encryptSecret,
 			triggerPasswordReset: updatePassword.data.triggerPasswordReset,
 		},
 		where: [
@@ -161,13 +164,13 @@ const updateMe: ServiceFn<
 			to: data.email,
 			subject: T("email_update_success_subject"),
 			data: {
-				firstName: data.firstName || getUser.first_name,
+				firstName: data.firstName || getUserRes.first_name,
 			},
 		});
 		if (sendEmail.error) return sendEmail;
 	}
 
-	if (getUser.super_admin === 0) {
+	if (getUserRes.super_admin === 0) {
 		return {
 			error: undefined,
 			data: undefined,

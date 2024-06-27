@@ -2,6 +2,7 @@ import T from "../../translations/index.js";
 import argon2 from "argon2";
 import Repository from "../../libs/repositories/index.js";
 import constants from "../../constants/constants.js";
+import generateSecret from "../../utils/helpers/generate-secret.js";
 import type { BooleanInt } from "../../libs/db/types.js";
 import type { ServiceFn } from "../../utils/services/types.js";
 
@@ -129,8 +130,13 @@ const updateSingle: ServiceFn<
 	}
 
 	let hashedPassword = undefined;
+	let encryptSecret = undefined;
 	if (data.password) {
-		hashedPassword = await argon2.hash(data.password);
+		const genSecret = generateSecret(context.config.keys.encryptionKey);
+		hashedPassword = await argon2.hash(data.password, {
+			secret: Buffer.from(genSecret.secret),
+		});
+		encryptSecret = genSecret.encryptSecret;
 	}
 
 	const [updateUser, updateRoelsRes] = await Promise.all([
@@ -141,6 +147,7 @@ const updateSingle: ServiceFn<
 				username: data.username,
 				email: data.email,
 				password: hashedPassword,
+				secret: encryptSecret,
 				superAdmin:
 					data.auth.superAdmin === 1 ? data.superAdmin : undefined,
 				updatedAt: new Date().toISOString(),
