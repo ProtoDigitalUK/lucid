@@ -28,7 +28,6 @@ export default {
 					...permissionGroups.users.permissions,
 					...permissionGroups.roles.permissions,
 					...permissionGroups.media.permissions,
-					...permissionGroups.settings.permissions,
 					...permissionGroups.emails.permissions,
 					...permissionGroups.content.permissions,
 					...permissionGroups["client-integrations"].permissions,

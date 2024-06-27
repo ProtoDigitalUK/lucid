@@ -288,7 +288,6 @@ export type Permission =
 	| "create_media"
 	| "update_media"
 	| "delete_media"
-	| "update_settings"
 	| "read_email"
 	| "delete_email"
 	| "send_email"
@@ -312,7 +311,6 @@ export type PermissionGroupKey =
 	| "users"
 	| "roles"
 	| "media"
-	| "settings"
 	| "emails"
 	| "content"
 	| "client-integrations";

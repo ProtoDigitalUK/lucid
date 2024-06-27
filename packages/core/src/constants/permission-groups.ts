@@ -13,10 +13,6 @@ const permissionGroups: Record<PermissionGroupKey, PermissionGroup> = {
 		key: "media_permissions",
 		permissions: ["create_media", "update_media", "delete_media"],
 	},
-	settings: {
-		key: "settings_permissions",
-		permissions: ["update_settings"],
-	},
 	emails: {
 		key: "emails_permissions",
 		permissions: ["read_email", "delete_email", "send_email"],
