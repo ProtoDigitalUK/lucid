@@ -321,6 +321,7 @@ export default class UsersRepo {
 		email: string;
 		username: string;
 		triggerPasswordReset: BooleanInt;
+		secret: string;
 		firstName?: string;
 		lastName?: string;
 		password?: string;
@@ -335,6 +336,7 @@ export default class UsersRepo {
 				first_name: props.firstName,
 				last_name: props.lastName,
 				password: props.password,
+				secret: props.secret,
 				triggered_password_reset: props.triggerPasswordReset,
 			})
 			.executeTakeFirst();

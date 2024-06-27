@@ -71,6 +71,7 @@ export interface HeadlessUsers {
 	first_name: string | null;
 	last_name: string | null;
 	password: ColumnType<string, string | undefined, string>;
+	secret: ColumnType<string, string, string>;
 	triggered_password_reset: ColumnType<
 		BooleanInt,
 		BooleanInt | undefined,

@@ -22,6 +22,7 @@ const Migration00000004: MigrationFn = (adapter) => {
 				.addColumn("first_name", "text")
 				.addColumn("last_name", "text")
 				.addColumn("password", "text")
+				.addColumn("secret", "text", (col) => col.notNull())
 				.addColumn("triggered_password_reset", "integer", (col) =>
 					col.defaultTo(0),
 				)
