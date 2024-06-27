@@ -73,7 +73,7 @@ const renderTemplate: ServiceFn<
 	if (mjmlFile.error) return mjmlFile;
 
 	const mjmlTemplate = Handlebars.compile(mjmlFile.data);
-	const mjml = mjmlTemplate(data);
+	const mjml = mjmlTemplate(data.data);
 	const htmlOutput = mjml2html(mjml);
 
 	return {
