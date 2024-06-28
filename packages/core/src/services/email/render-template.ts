@@ -1,3 +1,4 @@
+import T from "../../translations/index.js";
 import fs from "fs-extra";
 import Handlebars from "handlebars";
 import mjml2html from "mjml";
@@ -36,24 +37,28 @@ const getTemplateData = async (
 			};
 		}
 
-		// TODO: move copy to translations file
 		return {
 			error: {
-				type: "basic",
-				name: "error",
-				message: `Template ${template} not found`,
-				status: 500,
+				message: T("template_not_found_message"),
+				status: 404,
 			},
 			data: undefined,
 		};
 	} catch (error) {
-		// TODO: move copy to translations file
+		if (error instanceof Error) {
+			return {
+				error: {
+					message: error.message || T("template_not_found_message"),
+					status: 404,
+				},
+				data: undefined,
+			};
+		}
+
 		return {
 			error: {
-				type: "basic",
-				name: "error",
-				message: `Template ${template} not found`,
-				status: 500,
+				message: T("template_not_found_message"),
+				status: 404,
 			},
 			data: undefined,
 		};

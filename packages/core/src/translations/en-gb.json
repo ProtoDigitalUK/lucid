@@ -192,6 +192,7 @@
 	"token_not_found_message": "The token you are trying to access does not exist.",
 	"user_not_found_message": "The user you are trying to access does not exist.",
 	"client_integration_not_found_message": "The client integration you are trying to access does not exist.",
+	"template_not_found_message": "The template you are trying to use cannot be found.",
 	"error_saving_bricks": "Error Saving Bricks",
 	"error_saving_page_duplicate_order": "Duplicate builder orders found: {{order}}.",
 	"login_error_message": "The username/email or password you entered is incorrect.",
