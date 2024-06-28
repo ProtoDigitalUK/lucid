@@ -6,13 +6,7 @@ import type { ErrorResult, LucidErrorData } from "../../types/errors.js";
  * The LucidAPIError class should be used to throw errors within the API request lifecycle. This will be caught by Fastify's error handler and will return a formatted error response. If the error is a Zod error, it will be formatted into a more readable format.
  * @class
  * @extends Error
- * @param {LucidErrorData["type"]} data.type - The type of error
- * @param {string} [data.name] - The error name
- * @param {string} [data.message] - The error message
- * @param {number} [data.status] - The HTTP status code
- * @param {LucidErrorData["code"]} [data.code] - The error code
- * @param {z.ZodError} [data.zod] - The Zod error object - this is formatted and stored in the errors property
- * @param {ErrorResult} [data.errorResponse] - The error result object - this is returned in the response
+ * @param {LucidErrorData} error
  * @returns {void}
  * @example
  * throw new LucidAPIError({
@@ -38,43 +32,36 @@ import type { ErrorResult, LucidErrorData } from "../../types/errors.js";
  * });
  */
 class LucidAPIError extends Error {
-	type: LucidErrorData["type"] = "basic";
-	code: LucidErrorData["code"];
-	errorResponse: LucidErrorData["errorResponse"];
-	status: LucidErrorData["status"];
-	constructor(data: LucidErrorData) {
-		super(data.message);
-		this.type = data.type ?? "basic";
-		this.code = data.code;
-		this.errorResponse = data.errorResponse;
-		this.status = data.status;
-		this.name = data.name ?? "";
+	error: LucidErrorData;
+	constructor(error: LucidErrorData) {
+		super(error.message);
+		this.error = error;
 
-		if (data.zod !== undefined) {
-			this.errorResponse = LucidAPIError.formatZodErrors(
-				data.zod?.issues || [],
+		if (error.zod !== undefined) {
+			this.error.errorResponse = LucidAPIError.formatZodErrors(
+				error.zod?.issues || [],
 			);
 		}
 
-		switch (data.type) {
+		switch (error.type) {
 			case "validation": {
-				if (data.status === undefined) this.status = 400;
-				if (data.name === undefined) this.name = T("validation_error");
+				this.error.status = 400;
+				if (error.name === undefined) this.name = T("validation_error");
 				break;
 			}
 			case "authorisation": {
-				if (data.status === undefined) this.status = 401;
-				if (data.name === undefined)
+				this.error.status = 401;
+				if (error.name === undefined)
 					this.name = T("authorisation_error");
 				break;
 			}
 			case "forbidden": {
-				if (data.status === undefined) this.status = 403;
-				if (data.name === undefined) this.name = T("forbidden_error");
+				this.error.status = 403;
+				if (error.name === undefined) this.name = T("forbidden_error");
 				break;
 			}
 			default: {
-				if (data.status === undefined) this.status = 500;
+				if (error.status === undefined) this.error.status = 500;
 				break;
 			}
 		}

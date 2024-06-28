@@ -9,10 +9,12 @@ import SQLiteAdapter from "./libs/db/adapters/sqlite/index.js";
 import { LucidAPIError, LucidError } from "./utils/errors/index.js";
 import logger from "./utils/logging/index.js";
 import toolkit from "./libs/toolkit/toolkit.js";
+import z from "zod";
 
 export {
 	toolkit,
 	logger,
+	z,
 	// Builders
 	BrickBuilder,
 	CollectionBuilder,

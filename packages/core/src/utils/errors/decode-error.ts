@@ -3,14 +3,14 @@ import { LucidAPIError } from "./index.js";
 import constants from "../../constants/constants.js";
 import type { LucidErrorData } from "../../types.js";
 
-const decodeError = (error: Error): LucidErrorData => {
+const decodeError = (error: Error): Exclude<LucidErrorData, "zod"> => {
 	if (error instanceof LucidAPIError) {
 		return {
-			name: error.name,
-			message: error.message,
-			status: error.status,
-			errorResponse: error.errorResponse,
-			code: error.code,
+			name: error.error.name,
+			message: error.error.message,
+			status: error.error.status,
+			errorResponse: error.error.errorResponse,
+			code: error.error.code,
 		};
 	}
 

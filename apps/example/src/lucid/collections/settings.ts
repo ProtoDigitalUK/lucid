@@ -1,5 +1,4 @@
-import { CollectionBuilder } from "@lucidcms/core";
-import z from "zod";
+import { z, CollectionBuilder } from "@lucidcms/core";
 import SEOBrick from "../bricks/seo.js";
 
 const SettingsCollection = new CollectionBuilder("settings", {
