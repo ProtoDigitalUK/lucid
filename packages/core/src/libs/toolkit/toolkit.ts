@@ -1,15 +1,7 @@
-import toolkitWrapper from "./toolkit-wrapper.js";
-import lucidServices from "../../services/index.js";
-import type { ExtractServiceFnArgs } from "../../utils/services/types.js";
+import emailToolkit from "./email/index.js";
 
 const toolkit = {
-	email: {
-		sendEmail: (
-			...data: ExtractServiceFnArgs<
-				typeof lucidServices.email.sendExternal
-			>
-		) => toolkitWrapper(lucidServices.email.sendExternal, data),
-	},
+	email: emailToolkit,
 };
 
 export default toolkit;
