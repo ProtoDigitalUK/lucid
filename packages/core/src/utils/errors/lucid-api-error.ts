@@ -1,6 +1,8 @@
 import T from "../../translations/index.js";
+import errorTypeDefaults from "./error-type-defaults.js";
 import type z from "zod";
 import type { ErrorResult, LucidErrorData } from "../../types/errors.js";
+import constants from "../../constants/constants.js";
 
 /**
  * The LucidAPIError class should be used to throw errors within the API request lifecycle. This will be caught by Fastify's error handler and will return a formatted error response. If the error is a Zod error, it will be formatted into a more readable format.
@@ -43,28 +45,11 @@ class LucidAPIError extends Error {
 			);
 		}
 
-		switch (error.type) {
-			case "validation": {
-				this.error.status = 400;
-				if (error.name === undefined) this.name = T("validation_error");
-				break;
-			}
-			case "authorisation": {
-				this.error.status = 401;
-				if (error.name === undefined)
-					this.name = T("authorisation_error");
-				break;
-			}
-			case "forbidden": {
-				this.error.status = 403;
-				if (error.name === undefined) this.name = T("forbidden_error");
-				break;
-			}
-			default: {
-				if (error.status === undefined) this.error.status = 500;
-				break;
-			}
-		}
+		const errorTypeRes = errorTypeDefaults(error);
+
+		this.error.status = errorTypeRes.status;
+		this.name = errorTypeRes.name ?? constants.errors.name;
+		this.message = errorTypeRes.message ?? constants.errors.message;
 	}
 	// static
 	static formatZodErrors(error: z.ZodIssue[]) {

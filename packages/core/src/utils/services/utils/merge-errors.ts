@@ -1,10 +1,16 @@
 import T from "../../../translations/index.js";
+import errorTypeDefaults from "../../errors/error-type-defaults.js";
 import type { LucidErrorData } from "../../../types/errors.js";
 
 const mergeServiceError = (
 	error: LucidErrorData,
 	defaultError?: Omit<Partial<LucidErrorData>, "zod" | "errorResponse">,
 ): LucidErrorData => {
+	const errorTypeRes = errorTypeDefaults(error);
+	error.status = errorTypeRes.status;
+	error.name = errorTypeRes.name;
+	error.message = errorTypeRes.message;
+
 	return {
 		type: error.type ?? defaultError?.type ?? "basic",
 		name: error.name ?? defaultError?.name ?? T("unknown_service_error"),

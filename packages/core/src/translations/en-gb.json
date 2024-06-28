@@ -2,9 +2,9 @@
 	"headers_already_sent": "Headers were already sent.",
 	"default_error_name": "An error occurred!",
 	"default_error_message": "An error occurred! Please try again later.",
-	"validation_error": "Validation error!",
-	"authorisation_error": "Authorisation error.",
-	"forbidden_error": "Forbidden error!",
+	"validation_error": "Validation Error",
+	"authorisation_error": "Authorisation Error",
+	"forbidden_error": "Forbidden Error",
 	"an_unknown_error_occurred": "An unknown error occurred.",
 	"option_error_occured_saving_default": "An error occurred while saving the default option.",
 	"roles_error_occured_saving_default": "An error occurred while saving the default roles.",
@@ -214,5 +214,10 @@
 	"rate_limit_error_name": "Rate Limit Error",
 	"route_not_found": "Route Not Found",
 	"route_not_found_message": "The route you are trying to access does not exist.",
-	"page_not_found": "The page you are trying to access does not exist."
+	"page_not_found": "The page you are trying to access does not exist.",
+	"toolkit_error_name": "Toolkit Error",
+	"toolkit_error_message": "An error occurred while using the toolkit",
+	"validation_error_message": "Please ensure the data you have provided is correct.",
+	"authorisation_error_message": "Please ensure you are logged in and have the correct permissions.",
+	"forbidden_error_message": "You do not have permission to perform this action."
 }
