@@ -18,7 +18,6 @@ const clearSingleProcessedController: RouteController<
 				type: "basic",
 				name: T("route_media_clear_processed_error_name"),
 				message: T("route_media_clear_processed_error_message"),
-				status: 500,
 			},
 		},
 	)(

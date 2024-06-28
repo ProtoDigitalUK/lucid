@@ -18,7 +18,6 @@ const deleteSingleController: RouteController<
 				type: "basic",
 				name: T("route_client_integrations_delete_error_name"),
 				message: T("route_client_integrations_delete_error_message"),
-				status: 500,
 			},
 		},
 	)(

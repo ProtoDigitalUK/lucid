@@ -20,7 +20,6 @@ const getSettingsController: RouteController<
 				type: "basic",
 				name: T("route_settings_fetch_error_name"),
 				message: T("route_settings_fetch_error_message"),
-				status: 500,
 			},
 		},
 	)({

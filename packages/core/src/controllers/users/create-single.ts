@@ -20,7 +20,6 @@ const createSingleController: RouteController<
 				type: "basic",
 				name: T("route_user_create_error_name"),
 				message: T("route_user_create_error_message"),
-				status: 500,
 			},
 		},
 	)(
@@ -47,7 +46,6 @@ const createSingleController: RouteController<
 			type: "basic",
 			name: T("route_user_fetch_error_name"),
 			message: T("route_user_fetch_error_message"),
-			status: 500,
 		},
 	})(
 		{

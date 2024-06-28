@@ -18,7 +18,6 @@ const getMeController: RouteController<
 			type: "basic",
 			name: T("route_user_fetch_error_name"),
 			message: T("route_user_fetch_error_message"),
-			status: 500,
 		},
 	})(
 		{

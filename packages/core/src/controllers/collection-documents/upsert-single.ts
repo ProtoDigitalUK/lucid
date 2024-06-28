@@ -25,7 +25,6 @@ const upsertSingleController: RouteController<
 				message: request.body.documentId
 					? T("route_document_update_error_message")
 					: T("route_document_create_error_message"),
-				status: 500,
 			},
 		},
 	)(

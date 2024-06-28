@@ -20,7 +20,6 @@ const getSingleController: RouteController<
 				type: "basic",
 				name: T("route_client_integrations_fetch_error_name"),
 				message: T("route_client_integrations_fetch_error_message"),
-				status: 500,
 			},
 		},
 	)(

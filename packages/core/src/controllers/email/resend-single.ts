@@ -19,7 +19,6 @@ const resendSingleController: RouteController<
 				type: "basic",
 				name: T("route_email_resend_error_name"),
 				message: T("route_email_resend_error_message"),
-				status: 500,
 			},
 		},
 	)(

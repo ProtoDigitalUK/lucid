@@ -18,7 +18,6 @@ const deleteMultipleController: RouteController<
 				type: "basic",
 				name: T("route_document_delete_error_name"),
 				message: T("route_document_delete_error_message"),
-				status: 500,
 			},
 		},
 	)(

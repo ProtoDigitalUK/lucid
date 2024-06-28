@@ -23,7 +23,6 @@ const getMultipleController: RouteController<
 				type: "basic",
 				name: T("route_email_fetch_error_name"),
 				message: T("route_email_fetch_error_message"),
-				status: 500,
 			},
 		},
 	)(

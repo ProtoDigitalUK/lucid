@@ -23,7 +23,6 @@ const getAllController: RouteController<
 				type: "basic",
 				name: T("route_locale_fetch_error_name"),
 				message: T("route_locale_fetch_error_message"),
-				status: 500,
 			},
 		},
 	)({

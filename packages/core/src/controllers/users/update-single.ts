@@ -18,7 +18,6 @@ const updateSingleController: RouteController<
 				type: "basic",
 				name: T("route_user_update_error_name"),
 				message: T("route_user_update_error_message"),
-				status: 500,
 			},
 		},
 	)(

@@ -20,7 +20,6 @@ const uploadSingleController: RouteController<
 				type: "basic",
 				name: T("route_media_upload_error_name"),
 				message: T("route_media_upload_error_message"),
-				status: 500,
 			},
 		},
 	)(
@@ -46,7 +45,6 @@ const uploadSingleController: RouteController<
 				type: "basic",
 				name: T("route_media_fetch_error_name"),
 				message: T("route_media_fetch_error_message"),
-				status: 500,
 			},
 		},
 	)(

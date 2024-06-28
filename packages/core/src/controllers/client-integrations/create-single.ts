@@ -20,7 +20,6 @@ const createSingleController: RouteController<
 				type: "basic",
 				name: T("route_client_integrations_create_error_name"),
 				message: T("route_client_integrations_create_error_message"),
-				status: 500,
 			},
 		},
 	)(
