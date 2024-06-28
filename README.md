@@ -1,12 +1,14 @@
 ![Lucid CMS](https://github.com/ProtoDigitalUK/lucid/blob/master/banner.jpg?raw=true)
 
-[![NPM Version](https://img.shields.io/npm/v/@lucidcms/core/latest.svg)](https://www.npmjs.com/package/@lucidcms/core)
 [![Tests](https://github.com/ProtoDigitalUK/lucid/actions/workflows/tests.yml/badge.svg)](https://github.com/ProtoDigitalUK/lucid/actions/workflows/tests.yml)
+[![NPM Version](https://img.shields.io/npm/v/@lucidcms/core/latest.svg)](https://www.npmjs.com/package/@lucidcms/core)
+![NPM Downloads](https://img.shields.io/npm/dw/@lucidcms/core)
+![NPM License](https://img.shields.io/npm/l/@lucidcms/core)
 
 <hr/>
 
 > [!IMPORTANT]  
-> Lucid is still in Alpha and under heavy development so please avoid using this in any production setting.
+> Lucid is still in Alpha and under heavy development so please avoid using this in any production setting. Before hitting 1.0 we do not commit to backwards compatibility and will be releasing breaking changes.
 
 <hr/>
 
