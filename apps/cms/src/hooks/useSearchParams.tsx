@@ -207,7 +207,6 @@ const useSearchParams = (
 
 		// --------------------
 		// Set filters
-		console.log(searchParams.entries());
 		for (const [key, value] of searchParams.entries()) {
 			if (key.startsWith("filter[")) {
 				const filterKey = key.slice(7, -1); // remove filter[ and ]
