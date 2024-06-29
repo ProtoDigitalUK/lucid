@@ -1,6 +1,6 @@
 import getTableKeyValue from "./utils/get-table-key-value.js";
 import getFilterOperator from "./utils/get-filter-operator.js";
-import type { RequestQueryParsed } from "../../middleware/validate-query.js";
+import type { QueryParams } from "../../types/query-params.js";
 import type {
 	SelectQueryBuilder,
 	ReferenceExpression,
@@ -20,7 +20,7 @@ const queryBuilder = <DB, Table extends keyof DB, O>(
 		>;
 	},
 	config: {
-		queryParams: RequestQueryParsed;
+		queryParams: QueryParams;
 		documentFilters?: DocumentFiltersResponse[];
 		meta?: {
 			tableKeys?: {

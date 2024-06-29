@@ -1,15 +1,9 @@
-import type {
-	QueryFilterValue,
-	QueryFilterOperator,
-} from "../../../middleware/validate-query.js";
 import type { ComparisonOperatorExpression } from "kysely";
+import type { FilterObject } from "../../../types/query-params.js";
 
 const getFilterOperator = (
 	key: string,
-	f: {
-		value: QueryFilterValue;
-		operator?: QueryFilterOperator;
-	},
+	f: FilterObject,
 	operators?: Record<string, ComparisonOperatorExpression | "%">,
 ) => {
 	if (f.operator !== undefined) return f.operator;

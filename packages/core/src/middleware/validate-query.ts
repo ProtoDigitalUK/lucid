@@ -3,41 +3,7 @@ import z, { type ZodTypeAny } from "zod";
 import constants from "../constants/constants.js";
 import { LucidAPIError } from "../utils/errors/index.js";
 import type { FastifyRequest } from "fastify";
-import type { ComparisonOperatorExpression } from "kysely";
-
-export type QueryFilterValue = string | Array<string> | number | Array<number>;
-export type QueryFilterOperator = ComparisonOperatorExpression | "%";
-
-export interface RequestQueryParsed {
-	filter:
-		| Record<
-				string,
-				{
-					value: QueryFilterValue;
-					operator?: QueryFilterOperator;
-				}
-		  >
-		| undefined;
-	sort:
-		| Array<{
-				key: string;
-				value: "asc" | "desc";
-		  }>
-		| undefined;
-	include: Array<string> | undefined;
-	exclude: Array<string> | undefined;
-	page: number;
-	perPage: number;
-}
-
-// username: {
-//     value?: string | number
-//     operator?: string | undefined;
-// };
-// roleIds: {
-//     value?: string | number | string[] | number[]
-//     operator?: string | undefined;
-// };
+import type { QueryParams, QueryParamFilters } from "../types/query-params.js";
 
 const buildSort = (query: unknown) => {
 	const queryObject = query as Record<string, string>;
@@ -61,8 +27,10 @@ const buildSort = (query: unknown) => {
 
 const buildFilter = (query: unknown) => {
 	const queryObject = query as Record<string, string>;
-	const result: RequestQueryParsed["filter"] = {};
+	const result: QueryParamFilters = {};
 
+	// TODO: update this to support operators down the line
+	//* Maybe something like: filter[key:operator]=value,value
 	for (const [key, value] of Object.entries(queryObject)) {
 		if (key.includes("filter[")) {
 			const splitBracket = key.split("[")[1];
@@ -163,7 +131,7 @@ const validateQuery =
 			});
 		}
 
-		request.query = validateResult.data.query;
+		request.query = validateResult.data.query as QueryParams;
 	};
 
 export default validateQuery;

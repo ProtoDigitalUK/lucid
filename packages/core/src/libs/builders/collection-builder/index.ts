@@ -1,7 +1,7 @@
 import FieldBuilder from "../field-builder/index.js";
 import type BrickBuilder from "../brick-builder/index.js";
 import type { FieldTypes, CFProps } from "../../custom-fields/types.js";
-import type { RequestQueryParsed } from "../../../middleware/validate-query.js";
+import type { QueryParamFilters } from "../../../types/query-params.js";
 import type {
 	FieldCollectionConfig,
 	CollectionConfigSchemaType,
@@ -108,9 +108,7 @@ class CollectionBuilder extends FieldBuilder {
 	}
 	// ------------------------------------
 	// Public Methods
-	documentFilters(
-		filters: RequestQueryParsed["filter"],
-	): DocumentFiltersResponse[] {
+	documentFilters(filters?: QueryParamFilters): DocumentFiltersResponse[] {
 		if (!filters) return [];
 
 		return this.filterableFieldKeys.reduce<DocumentFiltersResponse[]>(
