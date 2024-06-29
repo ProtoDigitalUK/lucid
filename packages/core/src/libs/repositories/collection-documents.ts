@@ -1,5 +1,8 @@
-import type z from "zod";
 import { sql } from "kysely";
+import queryBuilder, {
+	type QueryBuilderWhere,
+} from "../query-builder/index.js";
+import type z from "zod";
 import type {
 	BooleanInt,
 	HeadlessCollectionDocuments,
@@ -7,12 +10,6 @@ import type {
 	KyselyDB,
 } from "../db/types.js";
 import type { Config } from "../../types/config.js";
-import queryBuilder, {
-	deleteQB,
-	selectQB,
-	updateQB,
-	type QueryBuilderWhereT,
-} from "../db/query-builder.js";
 import type CollectionBuilder from "../builders/collection-builder/index.js";
 import type collectionDocumentsSchema from "../../schemas/collection-documents.js";
 
@@ -25,13 +22,13 @@ export default class CollectionDocumentsRepo {
 		K extends keyof Select<HeadlessCollectionDocuments>,
 	>(props: {
 		select: K[];
-		where: QueryBuilderWhereT<"lucid_collection_documents">;
+		where: QueryBuilderWhere<"lucid_collection_documents">;
 	}) => {
 		let query = this.db
 			.selectFrom("lucid_collection_documents")
 			.select(props.select);
 
-		query = selectQB(query, props.where);
+		query = queryBuilder.select(query, props.where);
 
 		return query.executeTakeFirst() as Promise<
 			Pick<Select<HeadlessCollectionDocuments>, K> | undefined
@@ -81,13 +78,13 @@ export default class CollectionDocumentsRepo {
 		K extends keyof Select<HeadlessCollectionDocuments>,
 	>(props: {
 		select: K[];
-		where: QueryBuilderWhereT<"lucid_collection_documents">;
+		where: QueryBuilderWhere<"lucid_collection_documents">;
 	}) => {
 		let query = this.db
 			.selectFrom("lucid_collection_documents")
 			.select(props.select);
 
-		query = selectQB(query, props.where);
+		query = queryBuilder.select(query, props.where);
 
 		return query.execute() as Promise<
 			Array<Pick<Select<HeadlessCollectionDocuments>, K>>
@@ -268,7 +265,7 @@ export default class CollectionDocumentsRepo {
 			}
 		}
 
-		const { main, count } = queryBuilder(
+		const { main, count } = queryBuilder.main(
 			{
 				main: pagesQuery,
 				count: pagesCountQuery,
@@ -330,7 +327,7 @@ export default class CollectionDocumentsRepo {
 	// ----------------------------------------
 	// update
 	updateSingle = async (props: {
-		where: QueryBuilderWhereT<"lucid_collection_documents">;
+		where: QueryBuilderWhere<"lucid_collection_documents">;
 		data: {
 			isDeleted?: BooleanInt;
 			isDeletedAt?: string;
@@ -346,12 +343,12 @@ export default class CollectionDocumentsRepo {
 			})
 			.returning(["id"]);
 
-		query = updateQB(query, props.where);
+		query = queryBuilder.update(query, props.where);
 
 		return query.executeTakeFirst();
 	};
 	updateMultiple = async (props: {
-		where: QueryBuilderWhereT<"lucid_collection_documents">;
+		where: QueryBuilderWhere<"lucid_collection_documents">;
 		data: {
 			isDeleted?: BooleanInt;
 			isDeletedAt?: string;
@@ -367,31 +364,31 @@ export default class CollectionDocumentsRepo {
 			})
 			.returning(["id"]);
 
-		query = updateQB(query, props.where);
+		query = queryBuilder.update(query, props.where);
 
 		return query.execute();
 	};
 	// ----------------------------------------
 	// delete
 	deleteSingle = async (props: {
-		where: QueryBuilderWhereT<"lucid_collection_documents">;
+		where: QueryBuilderWhere<"lucid_collection_documents">;
 	}) => {
 		let query = this.db
 			.deleteFrom("lucid_collection_documents")
 			.returning(["id"]);
 
-		query = deleteQB(query, props.where);
+		query = queryBuilder.delete(query, props.where);
 
 		return query.executeTakeFirst();
 	};
 	deleteMultiple = async (props: {
-		where: QueryBuilderWhereT<"lucid_collection_documents">;
+		where: QueryBuilderWhere<"lucid_collection_documents">;
 	}) => {
 		let query = this.db
 			.deleteFrom("lucid_collection_documents")
 			.returning(["id"]);
 
-		query = deleteQB(query, props.where);
+		query = queryBuilder.delete(query, props.where);
 
 		return query.execute();
 	};

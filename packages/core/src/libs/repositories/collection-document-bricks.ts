@@ -1,14 +1,12 @@
+import queryBuilder, {
+	type QueryBuilderWhere,
+} from "../query-builder/index.js";
 import type {
 	HeadlessCollectionDocumentBricks,
 	Select,
 	KyselyDB,
 	BooleanInt,
 } from "../db/types.js";
-import {
-	deleteQB,
-	selectQB,
-	type QueryBuilderWhereT,
-} from "../db/query-builder.js";
 import type { Config } from "../../types/config.js";
 import type { BrickSchema } from "../../schemas/collection-bricks.js";
 
@@ -21,13 +19,13 @@ export default class CollectionDocumentBricksRepo {
 		K extends keyof Select<HeadlessCollectionDocumentBricks>,
 	>(props: {
 		select: K[];
-		where: QueryBuilderWhereT<"lucid_collection_document_bricks">;
+		where: QueryBuilderWhere<"lucid_collection_document_bricks">;
 	}) => {
 		let query = this.db
 			.selectFrom("lucid_collection_document_bricks")
 			.select(props.select);
 
-		query = selectQB(query, props.where);
+		query = queryBuilder.select(query, props.where);
 
 		return query.executeTakeFirst() as Promise<
 			Pick<Select<HeadlessCollectionDocumentBricks>, K> | undefined
@@ -202,11 +200,11 @@ export default class CollectionDocumentBricksRepo {
 	// ----------------------------------------
 	// delete
 	deleteMultiple = async (props: {
-		where: QueryBuilderWhereT<"lucid_collection_document_bricks">;
+		where: QueryBuilderWhere<"lucid_collection_document_bricks">;
 	}) => {
 		let query = this.db.deleteFrom("lucid_collection_document_bricks");
 
-		query = deleteQB(query, props.where);
+		query = queryBuilder.delete(query, props.where);
 
 		return query.execute();
 	};

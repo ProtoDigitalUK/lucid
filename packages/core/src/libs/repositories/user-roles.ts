@@ -1,4 +1,6 @@
-import { deleteQB, type QueryBuilderWhereT } from "../db/query-builder.js";
+import queryBuilder, {
+	type QueryBuilderWhere,
+} from "../query-builder/index.js";
 import type { KyselyDB } from "../db/types.js";
 
 export default class UserRolesRepo {
@@ -25,11 +27,11 @@ export default class UserRolesRepo {
 	// ----------------------------------------
 	// delete
 	deleteMultiple = async (props: {
-		where: QueryBuilderWhereT<"lucid_user_roles">;
+		where: QueryBuilderWhere<"lucid_user_roles">;
 	}) => {
 		let query = this.db.deleteFrom("lucid_user_roles").returning("id");
 
-		query = deleteQB(query, props.where);
+		query = queryBuilder.delete(query, props.where);
 
 		return query.execute();
 	};

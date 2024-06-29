@@ -1,4 +1,6 @@
-import { deleteQB, type QueryBuilderWhereT } from "../db/query-builder.js";
+import queryBuilder, {
+	type QueryBuilderWhere,
+} from "../query-builder/index.js";
 import type { KyselyDB } from "../db/types.js";
 
 export default class TranslationKeysRepo {
@@ -7,11 +9,11 @@ export default class TranslationKeysRepo {
 	// ----------------------------------------
 	// delete
 	deleteMultiple = async (props: {
-		where: QueryBuilderWhereT<"lucid_translation_keys">;
+		where: QueryBuilderWhere<"lucid_translation_keys">;
 	}) => {
 		let query = this.db.deleteFrom("lucid_translation_keys");
 
-		query = deleteQB(query, props.where);
+		query = queryBuilder.delete(query, props.where);
 
 		return query.execute();
 	};

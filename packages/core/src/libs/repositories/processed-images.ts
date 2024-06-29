@@ -1,22 +1,20 @@
-import type { HeadlessProcessedImages, Select, KyselyDB } from "../db/types.js";
 import { sql } from "kysely";
-import {
-	deleteQB,
-	selectQB,
-	type QueryBuilderWhereT,
-} from "../db/query-builder.js";
+import queryBuilder, {
+	type QueryBuilderWhere,
+} from "../query-builder/index.js";
+import type { HeadlessProcessedImages, Select, KyselyDB } from "../db/types.js";
 
 export default class ProcessedImagesRepo {
 	constructor(private db: KyselyDB) {}
 
 	count = async (props: {
-		where: QueryBuilderWhereT<"lucid_processed_images">;
+		where: QueryBuilderWhere<"lucid_processed_images">;
 	}) => {
 		let query = this.db
 			.selectFrom("lucid_processed_images")
 			.select(sql`count(*)`.as("count"));
 
-		query = selectQB(query, props.where);
+		query = queryBuilder.select(query, props.where);
 
 		return query.executeTakeFirst() as Promise<
 			{ count: string } | undefined
@@ -28,13 +26,13 @@ export default class ProcessedImagesRepo {
 		K extends keyof Select<HeadlessProcessedImages>,
 	>(props: {
 		select: K[];
-		where: QueryBuilderWhereT<"lucid_processed_images">;
+		where: QueryBuilderWhere<"lucid_processed_images">;
 	}) => {
 		let query = this.db
 			.selectFrom("lucid_processed_images")
 			.select(props.select);
 
-		query = selectQB(query, props.where);
+		query = queryBuilder.select(query, props.where);
 
 		return query.execute() as Promise<
 			Array<Pick<Select<HeadlessProcessedImages>, K>>
@@ -61,13 +59,13 @@ export default class ProcessedImagesRepo {
 	// ----------------------------------------
 	// delete
 	deleteMultiple = async (props: {
-		where: QueryBuilderWhereT<"lucid_processed_images">;
+		where: QueryBuilderWhere<"lucid_processed_images">;
 	}) => {
 		let query = this.db
 			.deleteFrom("lucid_processed_images")
 			.returning("key");
 
-		query = deleteQB(query, props.where);
+		query = queryBuilder.delete(query, props.where);
 
 		return query.execute();
 	};

@@ -1,3 +1,7 @@
+import { sql } from "kysely";
+import queryBuilder, {
+	type QueryBuilderWhere,
+} from "../query-builder/index.js";
 import type z from "zod";
 import type {
 	BooleanInt,
@@ -5,15 +9,8 @@ import type {
 	Select,
 	KyselyDB,
 } from "../db/types.js";
-import { sql } from "kysely";
 import type mediaSchema from "../../schemas/media.js";
 import type { Config } from "../../types/config.js";
-import queryBuilder, {
-	deleteQB,
-	selectQB,
-	updateQB,
-	type QueryBuilderWhereT,
-} from "../db/query-builder.js";
 
 export default class MediaRepo {
 	constructor(private db: KyselyDB) {}
@@ -22,11 +19,11 @@ export default class MediaRepo {
 	// select
 	selectSingle = async <K extends keyof Select<HeadlessMedia>>(props: {
 		select: K[];
-		where: QueryBuilderWhereT<"lucid_media">;
+		where: QueryBuilderWhere<"lucid_media">;
 	}) => {
 		let query = this.db.selectFrom("lucid_media").select(props.select);
 
-		query = selectQB(query, props.where);
+		query = queryBuilder.select(query, props.where);
 
 		return query.executeTakeFirst() as Promise<
 			Pick<Select<HeadlessMedia>, K> | undefined
@@ -91,11 +88,11 @@ export default class MediaRepo {
 	};
 	selectMultiple = async <K extends keyof Select<HeadlessMedia>>(props: {
 		select: K[];
-		where: QueryBuilderWhereT<"lucid_media">;
+		where: QueryBuilderWhere<"lucid_media">;
 	}) => {
 		let query = this.db.selectFrom("lucid_media").select(props.select);
 
-		query = selectQB(query, props.where);
+		query = queryBuilder.select(query, props.where);
 
 		return query.execute() as Promise<
 			Array<Pick<Select<HeadlessMedia>, K>>
@@ -220,7 +217,7 @@ export default class MediaRepo {
 			.where("visible", "=", 1)
 			.groupBy(["title_translations.value", "alt_translations.value"]);
 
-		const { main, count } = queryBuilder(
+		const { main, count } = queryBuilder.main(
 			{
 				main: mediasQuery,
 				count: mediasCountQuery,
@@ -303,7 +300,7 @@ export default class MediaRepo {
 	// ----------------------------------------
 	// update
 	updateSingle = async (props: {
-		where: QueryBuilderWhereT<"lucid_users">;
+		where: QueryBuilderWhere<"lucid_users">;
 		data: {
 			key?: string;
 			eTag?: string;
@@ -331,14 +328,14 @@ export default class MediaRepo {
 			})
 			.returning(["id"]);
 
-		query = updateQB(query, props.where);
+		query = queryBuilder.update(query, props.where);
 
 		return query.executeTakeFirst();
 	};
 	// ----------------------------------------
 	// delete
 	deleteSingle = async (props: {
-		where: QueryBuilderWhereT<"lucid_media">;
+		where: QueryBuilderWhere<"lucid_media">;
 	}) => {
 		let query = this.db
 			.deleteFrom("lucid_media")
@@ -350,7 +347,7 @@ export default class MediaRepo {
 				"alt_translation_key_id",
 			]);
 
-		query = deleteQB(query, props.where);
+		query = queryBuilder.delete(query, props.where);
 
 		return query.executeTakeFirst();
 	};

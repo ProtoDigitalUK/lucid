@@ -1,5 +1,8 @@
-import type z from "zod";
 import { sql } from "kysely";
+import queryBuilder, {
+	type QueryBuilderWhere,
+} from "../query-builder/index.js";
+import type z from "zod";
 import type { Config } from "../../types/config.js";
 import type usersSchema from "../../schemas/users.js";
 import type {
@@ -8,12 +11,6 @@ import type {
 	Select,
 	KyselyDB,
 } from "../db/types.js";
-import queryBuilder, {
-	selectQB,
-	updateQB,
-	deleteQB,
-	type QueryBuilderWhereT,
-} from "../db/query-builder.js";
 
 export default class UsersRepo {
 	constructor(private db: KyselyDB) {}
@@ -35,11 +32,11 @@ export default class UsersRepo {
 	// selects
 	selectSingle = async <K extends keyof Select<HeadlessUsers>>(props: {
 		select: K[];
-		where: QueryBuilderWhereT<"lucid_users">;
+		where: QueryBuilderWhere<"lucid_users">;
 	}) => {
 		let query = this.db.selectFrom("lucid_users").select(props.select);
 
-		query = selectQB(query, props.where);
+		query = queryBuilder.select(query, props.where);
 
 		return query.executeTakeFirst() as Promise<
 			Pick<Select<HeadlessUsers>, K> | undefined
@@ -121,11 +118,11 @@ export default class UsersRepo {
 	};
 	selectMultiple = async <K extends keyof Select<HeadlessUsers>>(props: {
 		select: K[];
-		where: QueryBuilderWhereT<"lucid_users">;
+		where: QueryBuilderWhere<"lucid_users">;
 	}) => {
 		let query = this.db.selectFrom("lucid_users").select(props.select);
 
-		query = selectQB(query, props.where);
+		query = queryBuilder.select(query, props.where);
 
 		return query.execute() as Promise<
 			Array<Pick<Select<HeadlessUsers>, K>>
@@ -178,7 +175,7 @@ export default class UsersRepo {
 			)
 			.where("lucid_users.is_deleted", "=", 0);
 
-		const { main, count } = queryBuilder(
+		const { main, count } = queryBuilder.main(
 			{
 				main: usersQuery,
 				count: usersCountQuery,
@@ -243,18 +240,18 @@ export default class UsersRepo {
 	// ----------------------------------------
 	// delete
 	deleteMultiple = async (props: {
-		where: QueryBuilderWhereT<"lucid_users">;
+		where: QueryBuilderWhere<"lucid_users">;
 	}) => {
 		let query = this.db.deleteFrom("lucid_users").returning("id");
 
-		query = deleteQB(query, props.where);
+		query = queryBuilder.delete(query, props.where);
 
 		return query.execute();
 	};
 	// ----------------------------------------
 	// update
 	updateSingle = async (props: {
-		where: QueryBuilderWhereT<"lucid_users">;
+		where: QueryBuilderWhere<"lucid_users">;
 		data: {
 			password?: string;
 			updatedAt?: string;
@@ -288,7 +285,7 @@ export default class UsersRepo {
 			})
 			.returning(["id", "first_name", "last_name", "email"]);
 
-		query = updateQB(query, props.where);
+		query = queryBuilder.update(query, props.where);
 
 		return query.executeTakeFirst();
 	};
