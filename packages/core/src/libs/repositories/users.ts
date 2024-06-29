@@ -197,7 +197,7 @@ export default class UsersRepo {
 							email: "lucid_users.email",
 							username: "lucid_users.username",
 							roleIds: "lucid_user_roles.role_id",
-							notId: "lucid_users.id",
+							id: "lucid_users.id",
 						},
 						sorts: {
 							createdAt: "lucid_users.created_at",
@@ -213,7 +213,6 @@ export default class UsersRepo {
 						lastName: props.config.db.fuzzOperator,
 						email: props.config.db.fuzzOperator,
 						username: props.config.db.fuzzOperator,
-						notId: "<>",
 					},
 				},
 			},

@@ -3,7 +3,12 @@ import z, { type ZodTypeAny } from "zod";
 import constants from "../constants/constants.js";
 import { LucidAPIError } from "../utils/errors/index.js";
 import type { FastifyRequest } from "fastify";
-import type { QueryParams, QueryParamFilters } from "../types/query-params.js";
+import type {
+	QueryParams,
+	QueryParamFilters,
+	FilterOperator,
+	FilterValue,
+} from "../types/query-params.js";
 
 const buildSort = (query: unknown) => {
 	const queryObject = query as Record<string, string>;
@@ -26,34 +31,26 @@ const buildSort = (query: unknown) => {
 };
 
 const buildFilter = (query: unknown) => {
-	const queryObject = query as Record<string, string>;
-	const result: QueryParamFilters = {};
-
-	// TODO: update this to support operators down the line
-	//* Maybe something like: filter[key:operator]=value,value
-	for (const [key, value] of Object.entries(queryObject)) {
+	return Object.entries(
+		query as Record<string, string>,
+	).reduce<QueryParamFilters>((acc, [key, value]) => {
 		if (key.includes("filter[")) {
-			const splitBracket = key.split("[")[1];
-			if (splitBracket === undefined) continue;
+			const match = key.match(/filter\[([^\]:]+):?([^\]]*)\]/);
+			if (!match) return acc;
 
-			const name = splitBracket.split("]")[0];
-			if (name === undefined) continue;
+			const [, name, operator] = match;
+			if (!name) return acc;
 
-			if (value.includes(",")) {
-				result[name] = {
-					value: value.split(","),
-					operator: undefined,
-				};
-			} else if (value !== "") {
-				result[name] = {
-					value: value,
-					operator: undefined,
-				};
-			}
+			acc[name] = {
+				value: value.includes(",") ? value.split(",") : value,
+				operator:
+					operator === "" || operator === undefined
+						? undefined
+						: (operator as FilterOperator),
+			};
 		}
-	}
-
-	return Object.keys(result).length === 0 ? undefined : result;
+		return acc;
+	}, {});
 };
 
 const buildPage = (query: unknown) => {

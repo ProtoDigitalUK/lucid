@@ -44,7 +44,7 @@ export default {
 					email: filterSchemas.single.optional(),
 					username: filterSchemas.single.optional(),
 					roleIds: filterSchemas.union.optional(),
-					notId: filterSchemas.single.optional(),
+					id: filterSchemas.union.optional(),
 				})
 				.optional(),
 			sort: z

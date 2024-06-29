@@ -26,7 +26,18 @@ z.object({
 */
 
 const filterOperators = z
-	.enum(["=", "%", "like", "ilike", "in", "not in", "<>", "is not", "is"])
+	.enum([
+		"=",
+		"%",
+		"like",
+		"ilike",
+		"in",
+		"not in",
+		"<>",
+		"is not",
+		"is",
+		"!=",
+	])
 	.optional();
 
 export const filterSchemas = {

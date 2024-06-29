@@ -11,7 +11,7 @@ interface QueryParams {
 		lastName?: Accessor<string>;
 		email?: Accessor<string>;
 		username?: Accessor<string>;
-		notId?: Accessor<number>;
+		id?: Accessor<number | number[]>;
 	};
 }
 

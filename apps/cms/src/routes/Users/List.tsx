@@ -29,7 +29,7 @@ const UsersListRoute: Component = () => {
 					value: "",
 					type: "text",
 				},
-				notId: {
+				"id:!=": {
 					value: userStore.get.user?.id,
 					type: "number",
 				},
