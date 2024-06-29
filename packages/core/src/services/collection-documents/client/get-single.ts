@@ -8,6 +8,7 @@ import type collectionDocumentsSchema from "../../../schemas/collection-document
 const getSingle: ServiceFn<
 	[
 		{
+			collectionKey: string;
 			query: z.infer<
 				typeof collectionDocumentsSchema.client.getSingle.query
 			>;
@@ -21,6 +22,9 @@ const getSingle: ServiceFn<
 	);
 	const CollectionDocumentsFormatter = Formatter.get("collection-documents");
 
+	console.log(data);
+
+	// split filters into two groups, one for the document based on a fixed set of keys, and allowed filters set against the collection
 	// should lookup a single document by a given filter and or field value
 	// then fetch all bricks and collection fields for that document
 	// return nested response

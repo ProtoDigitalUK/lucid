@@ -13,26 +13,28 @@ lucid.fastify.post("/send-email", async (_, reply) => {
 	reply.send(res.data);
 });
 
-lucid.fastify.post("/get-document", async (_, reply) => {
+lucid.fastify.get("/get-document", async (_, reply) => {
 	const res = await toolkit.document.getSingle({
-		where: {
-			id: {
-				value: 1,
-				operator: "=",
+		collectionKey: "page",
+		query: {
+			filter: {
+				id: {
+					value: 1,
+					operator: "=",
+				},
+				is_deleted: {
+					value: 1,
+					operator: "!=",
+				},
+				full_slug: {
+					value: "/test",
+					operator: "=",
+				},
 			},
-			// full_slug: {
-			// 	value: "/test",
-			// 	operator: "=",
-			// },
-			is_deleted: {
-				value: 0,
-				operator: "=",
-			},
+			include: ["bricks"],
 		},
 	});
-	// @ts-expect-error
 	if (res.error) throw new LucidAPIError(res.error);
-	// @ts-expect-error
 	reply.send(res.data);
 });
 

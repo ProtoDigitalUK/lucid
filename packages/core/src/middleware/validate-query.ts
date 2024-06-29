@@ -7,7 +7,6 @@ import type {
 	QueryParams,
 	QueryParamFilters,
 	FilterOperator,
-	FilterValue,
 } from "../types/query-params.js";
 
 const buildSort = (query: unknown) => {

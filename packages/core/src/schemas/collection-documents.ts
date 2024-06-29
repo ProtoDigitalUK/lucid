@@ -71,15 +71,29 @@ export default {
 	client: {
 		getSingle: {
 			query: z.object({
-				filter: z
-					.record(
-						z.string(),
-						z.object({
-							value: z.union([z.string(), z.array(z.string())]),
-							operator: z.enum(["=", "<", ">", "<=", ">="]),
+				filter: z.union([
+					z
+						.object({
+							// HeadlessCollectionDocuments
+							id: filterSchemas.single.optional(),
+							collection_key: filterSchemas.single.optional(),
+							is_deleted: filterSchemas.single.optional(),
+							is_deleted_at: filterSchemas.single.optional(),
+							deleted_by: filterSchemas.single.optional(),
+							created_by: filterSchemas.single.optional(),
+							updated_by: filterSchemas.single.optional(),
+							created_at: filterSchemas.single.optional(),
+							updated_at: filterSchemas.single.optional(),
+						})
+						.refine((data) => Object.keys(data).length > 0, {
+							message: "Please provide at least one filter",
 						}),
-					)
-					.optional(),
+					z
+						.record(z.string(), filterSchemas.union)
+						.refine((data) => Object.keys(data).length > 0, {
+							message: "Please provide at least one filter",
+						}),
+				]),
 				include: z.array(z.enum(["bricks"])).optional(),
 			}),
 			params: undefined,

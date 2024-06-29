@@ -42,11 +42,16 @@ const filterOperators = z
 
 export const filterSchemas = {
 	single: z.object({
-		value: z.string(),
+		value: z.union([z.string(), z.number()]),
 		operator: filterOperators,
 	}),
 	union: z.object({
-		value: z.union([z.string(), z.array(z.string())]),
+		value: z.union([
+			z.string(),
+			z.array(z.string()),
+			z.number(),
+			z.array(z.number()),
+		]),
 		operator: filterOperators,
 	}),
 };
