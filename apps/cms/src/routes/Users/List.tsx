@@ -29,6 +29,10 @@ const UsersListRoute: Component = () => {
 					value: "",
 					type: "text",
 				},
+				notId: {
+					value: userStore.get.user?.id,
+					type: "number",
+				},
 			},
 			sorts: {
 				createdAt: undefined,

@@ -72,7 +72,7 @@ export default class EmailsRepo {
 				count: emailsCountQuery,
 			},
 			{
-				requestQuery: {
+				queryParams: {
 					filter: props.query.filter,
 					sort: props.query.sort,
 					include: props.query.include,
@@ -81,55 +81,26 @@ export default class EmailsRepo {
 					perPage: props.query.perPage,
 				},
 				meta: {
-					filters: [
-						{
-							queryKey: "toAddress",
-							tableKey: "to_address",
-							operator: "=",
+					tableKeys: {
+						filters: {
+							toAddress: "to_address",
+							subject: "subject",
+							deliveryStatus: "delivery_status",
+							type: "type",
+							template: "template",
 						},
-						{
-							queryKey: "subject",
-							tableKey: "subject",
-							operator: props.config.db.fuzzOperator,
+						sorts: {
+							lastAttemptAt: "last_attempt_at",
+							lastSuccessAt: "last_success_at",
+							createdAt: "created_at",
+							sentCount: "sent_count",
+							errorCount: "error_count",
 						},
-						{
-							queryKey: "deliveryStatus",
-							tableKey: "delivery_status",
-							operator: "=",
-						},
-						{
-							queryKey: "type",
-							tableKey: "type",
-							operator: "=",
-						},
-						{
-							queryKey: "template",
-							tableKey: "template",
-							operator: props.config.db.fuzzOperator,
-						},
-					],
-					sorts: [
-						{
-							queryKey: "lastAttemptAt",
-							tableKey: "last_attempt_at",
-						},
-						{
-							queryKey: "lastSuccessAt",
-							tableKey: "last_success_at",
-						},
-						{
-							queryKey: "createdAt",
-							tableKey: "created_at",
-						},
-						{
-							queryKey: "sentCount",
-							tableKey: "sent_count",
-						},
-						{
-							queryKey: "errorCount",
-							tableKey: "error_count",
-						},
-					],
+					},
+					defaultOperators: {
+						subject: props.config.db.fuzzOperator,
+						template: props.config.db.fuzzOperator,
+					},
 				},
 			},
 		);

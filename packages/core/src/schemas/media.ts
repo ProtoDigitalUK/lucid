@@ -1,5 +1,5 @@
 import z from "zod";
-import defaultQuery from "./default-query.js";
+import defaultQuery, { filterSchemas } from "./default-query.js";
 
 export default {
 	getSingle: {
@@ -20,15 +20,11 @@ export default {
 		query: z.object({
 			filter: z
 				.object({
-					title: z.string().optional(),
-					key: z.string().optional(),
-					mimeType: z
-						.union([z.string(), z.array(z.string())])
-						.optional(),
-					type: z.union([z.string(), z.array(z.string())]).optional(),
-					fileExtension: z
-						.union([z.string(), z.array(z.string())])
-						.optional(),
+					title: filterSchemas.single.optional(),
+					key: filterSchemas.single.optional(),
+					mimeType: filterSchemas.union.optional(),
+					type: filterSchemas.union.optional(),
+					fileExtension: filterSchemas.union.optional(),
 				})
 				.optional(),
 			sort: z

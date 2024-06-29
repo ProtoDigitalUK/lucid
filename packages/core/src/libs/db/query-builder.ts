@@ -7,6 +7,10 @@ import type {
 	OperandValueExpressionOrList,
 	UpdateQueryBuilder,
 } from "kysely";
+import type {
+	QueryFilterValue,
+	QueryFilterOperator,
+} from "../../middleware/validate-query.js";
 import type { DocumentFiltersResponse } from "../builders/collection-builder/types.js";
 import type { LucidDB } from "./types.js";
 
@@ -33,7 +37,7 @@ export interface QueryBuilderConfigT<DB, Table extends keyof DB> {
 }
 
 const queryBuilder = <DB, Table extends keyof DB, O, T>(
-	db: {
+	query: {
 		main: SelectQueryBuilder<DB, Table, O>;
 		count?: SelectQueryBuilder<
 			DB,
@@ -43,49 +47,61 @@ const queryBuilder = <DB, Table extends keyof DB, O, T>(
 			}
 		>;
 	},
-	config: QueryBuilderConfigT<DB, Table>,
+	config: {
+		queryParams: RequestQueryParsed;
+		documentFilters?: DocumentFiltersResponse[];
+		meta?: {
+			tableKeys?: {
+				filters?: Record<string, ReferenceExpression<DB, Table>>;
+				sorts?: Record<string, ReferenceExpression<DB, Table>>;
+			};
+			defaultOperators?: Record<
+				string,
+				ComparisonOperatorExpression | "%"
+			>;
+		};
+	},
 ) => {
-	let mainQuery = db.main;
-	let countQuery = db.count;
-	const { requestQuery, meta } = config;
+	let mainQuery = query.main;
+	let countQuery = query.count;
 
 	// -----------------------------------------
 	// Filters
-	const filters = Object.entries(requestQuery.filter || {});
-	for (const [queryKey, value] of filters) {
-		const filterMeta = meta.filters.find(
-			(filter) => filter.queryKey === queryKey,
+	const filters = Object.entries(config.queryParams.filter || {});
+
+	for (const [key, f] of filters) {
+		const tableKey = getTableKeyMap<DB, Table>(
+			key,
+			config.meta?.tableKeys?.filters,
 		);
-		if (!filterMeta) continue;
+		const operator = getFilterOperator(
+			key,
+			f,
+			config.meta?.defaultOperators,
+		);
 
-		const { tableKey, operator } = filterMeta;
-
-		const isArray = Array.isArray(value);
-
-		if (isArray) {
-			mainQuery = mainQuery.where(tableKey, "in", value);
-			if (countQuery) {
-				countQuery = countQuery.where(tableKey, "in", value);
-			}
-		} else {
-			mainQuery = mainQuery.where(
+		mainQuery = mainQuery.where(
+			tableKey,
+			operator as ComparisonOperatorExpression,
+			f.value,
+		);
+		if (countQuery) {
+			countQuery = countQuery.where(
 				tableKey,
 				operator as ComparisonOperatorExpression,
-				value,
+				f.value,
 			);
-			if (countQuery) {
-				countQuery = countQuery.where(
-					tableKey,
-					operator as ComparisonOperatorExpression,
-					value,
-				);
-			}
 		}
 	}
 
-	// collection filters
+	// Document filters
 	if (config.documentFilters && config.documentFilters.length > 0) {
-		for (const { key, value, column } of config.documentFilters) {
+		for (const { key, value, column, operator } of config.documentFilters) {
+			const o = getFilterOperator(key, {
+				value: value,
+				operator: operator,
+			});
+
 			mainQuery = mainQuery.where(({ eb, and }) =>
 				and([
 					// @ts-expect-error
@@ -93,7 +109,7 @@ const queryBuilder = <DB, Table extends keyof DB, O, T>(
 					eb(
 						// @ts-expect-error
 						`lucid_collection_document_fields.${column}`,
-						Array.isArray(value) ? "in" : "=",
+						o,
 						value,
 					),
 				]),
@@ -106,7 +122,7 @@ const queryBuilder = <DB, Table extends keyof DB, O, T>(
 						eb(
 							// @ts-expect-error
 							`lucid_collection_document_fields.${column}`,
-							Array.isArray(value) ? "in" : "=",
+							o,
 							value,
 						),
 					]),
@@ -116,50 +132,51 @@ const queryBuilder = <DB, Table extends keyof DB, O, T>(
 	}
 
 	// -----------------------------------------
-	// Exclude
-	for (const exclude of requestQuery.exclude || []) {
-		const meta = config.meta.exclude?.find(
-			(meta) => meta.queryKey === exclude,
-		);
-		if (!meta) continue;
-
-		mainQuery = mainQuery.where(meta.tableKey, meta.operator, meta.value);
-		if (countQuery) {
-			countQuery = countQuery.where(
-				meta.tableKey,
-				meta.operator,
-				meta.value,
-			);
-		}
-	}
-
-	// -----------------------------------------
 	// Sort
-	if (requestQuery.sort) {
-		for (const sort of requestQuery.sort) {
-			const sortMeta = meta.sorts.find(
-				(sortMeta) => sortMeta.queryKey === sort.key,
+	if (config.queryParams.sort) {
+		for (const sort of config.queryParams.sort) {
+			const tableKey = getTableKeyMap<DB, Table>(
+				sort.key,
+				config.meta?.tableKeys?.sorts,
 			);
-			if (!sortMeta) continue;
-
-			const { tableKey } = sortMeta;
-
 			mainQuery = mainQuery.orderBy(tableKey, sort.value);
 		}
 	}
 
 	// -----------------------------------------
 	// Pagination
-	if (requestQuery.perPage !== -1) {
+	if (config.queryParams.perPage !== -1) {
 		mainQuery = mainQuery
-			.limit(requestQuery.perPage)
-			.offset((requestQuery.page - 1) * requestQuery.perPage);
+			.limit(config.queryParams.perPage)
+			.offset((config.queryParams.page - 1) * config.queryParams.perPage);
 	}
 
 	return {
 		main: mainQuery,
 		count: countQuery,
 	};
+};
+
+const getTableKeyMap = <DB, Table extends keyof DB>(
+	key: string,
+	keyMap?: Record<string, ReferenceExpression<DB, Table>>,
+): ReferenceExpression<DB, Table> => {
+	if (keyMap?.[key]) {
+		return keyMap[key] || (key as ReferenceExpression<DB, Table>);
+	}
+	return key as ReferenceExpression<DB, Table>;
+};
+const getFilterOperator = (
+	key: string,
+	f: {
+		value: QueryFilterValue;
+		operator?: QueryFilterOperator;
+	},
+	operators?: Record<string, ComparisonOperatorExpression | "%">,
+) => {
+	if (f.operator !== undefined) return f.operator;
+	if (Array.isArray(f.value)) return "in";
+	return operators?.[key] || "=";
 };
 
 export type QueryBuilderWhereT<Table extends keyof LucidDB> = Array<{

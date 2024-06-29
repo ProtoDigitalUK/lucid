@@ -1,5 +1,5 @@
 import z from "zod";
-import defaultQuery from "./default-query.js";
+import defaultQuery, { filterSchemas } from "./default-query.js";
 
 export default {
 	getMultiple: {
@@ -7,13 +7,11 @@ export default {
 		query: z.object({
 			filter: z
 				.object({
-					toAddress: z.string().optional(),
-					subject: z.string().optional(),
-					deliveryStatus: z
-						.union([z.string(), z.array(z.string())])
-						.optional(),
-					type: z.union([z.string(), z.array(z.string())]).optional(), // internal | external
-					template: z.string().optional(),
+					toAddress: filterSchemas.single.optional(),
+					subject: filterSchemas.single.optional(),
+					deliveryStatus: filterSchemas.union.optional(),
+					type: filterSchemas.union.optional(), // internal | external
+					template: filterSchemas.single.optional(),
 				})
 				.optional(),
 			sort: z

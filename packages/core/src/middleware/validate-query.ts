@@ -1,11 +1,23 @@
 import T from "../translations/index.js";
-import type { FastifyRequest } from "fastify";
 import z, { type ZodTypeAny } from "zod";
 import constants from "../constants/constants.js";
 import { LucidAPIError } from "../utils/errors/index.js";
+import type { FastifyRequest } from "fastify";
+import type { ComparisonOperatorExpression } from "kysely";
+
+export type QueryFilterValue = string | Array<string> | number | Array<number>;
+export type QueryFilterOperator = ComparisonOperatorExpression | "%";
 
 export interface RequestQueryParsed {
-	filter: Record<string, string | Array<string>> | undefined;
+	filter:
+		| Record<
+				string,
+				{
+					value: QueryFilterValue;
+					operator?: QueryFilterOperator;
+				}
+		  >
+		| undefined;
 	sort:
 		| Array<{
 				key: string;
@@ -17,6 +29,15 @@ export interface RequestQueryParsed {
 	page: number;
 	perPage: number;
 }
+
+// username: {
+//     value?: string | number
+//     operator?: string | undefined;
+// };
+// roleIds: {
+//     value?: string | number | string[] | number[]
+//     operator?: string | undefined;
+// };
 
 const buildSort = (query: unknown) => {
 	const queryObject = query as Record<string, string>;
@@ -51,9 +72,15 @@ const buildFilter = (query: unknown) => {
 			if (name === undefined) continue;
 
 			if (value.includes(",")) {
-				result[name] = value.split(",");
+				result[name] = {
+					value: value.split(","),
+					operator: undefined,
+				};
 			} else if (value !== "") {
-				result[name] = value;
+				result[name] = {
+					value: value,
+					operator: undefined,
+				};
 			}
 		}
 	}

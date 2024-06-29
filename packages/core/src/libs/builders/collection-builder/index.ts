@@ -123,7 +123,8 @@ class CollectionBuilder extends FieldBuilder {
 
 				acc.push({
 					key: field.key,
-					value: filterValue,
+					value: filterValue.value,
+					operator: filterValue.operator ?? "=",
 					column: fieldInstance.column,
 				});
 

@@ -33,9 +33,6 @@ const getMultipleController: RouteController<
 		},
 		{
 			query: request.query,
-			auth: {
-				id: request.auth.id,
-			},
 		},
 	);
 	if (users.error) throw new LucidAPIError(users.error);

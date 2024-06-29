@@ -274,7 +274,7 @@ export default class CollectionDocumentsRepo {
 				count: pagesCountQuery,
 			},
 			{
-				requestQuery: {
+				queryParams: {
 					filter: props.query.filter,
 					sort: props.query.sort,
 					include: props.query.include,
@@ -284,17 +284,12 @@ export default class CollectionDocumentsRepo {
 				},
 				documentFilters: collectionDocFiltersRes,
 				meta: {
-					filters: [],
-					sorts: [
-						{
-							queryKey: "createdAt",
-							tableKey: "created_at",
+					tableKeys: {
+						sorts: {
+							createdAt: "created_at",
+							updatedAt: "updated_at",
 						},
-						{
-							queryKey: "updatedAt",
-							tableKey: "updated_at",
-						},
-					],
+					},
 				},
 			},
 		);

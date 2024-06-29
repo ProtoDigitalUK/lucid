@@ -226,7 +226,7 @@ export default class MediaRepo {
 				count: mediasCountQuery,
 			},
 			{
-				requestQuery: {
+				queryParams: {
 					filter: props.query.filter,
 					sort: props.query.sort,
 					include: props.query.include,
@@ -235,67 +235,28 @@ export default class MediaRepo {
 					perPage: props.query.perPage,
 				},
 				meta: {
-					filters: [
-						{
-							queryKey: "title",
-							tableKey: "title_translations.value",
-							operator: props.config.db.fuzzOperator,
+					tableKeys: {
+						filters: {
+							title: "title_translations.value",
+							key: "key",
+							mimeType: "mime_type",
+							type: "type",
+							fileExtension: "file_extension",
 						},
-						{
-							queryKey: "key",
-							tableKey: "key",
-							operator: "=",
+						sorts: {
+							title: "title_translations.value",
+							createdAt: "created_at",
+							updatedAt: "updated_at",
+							fileSize: "file_size",
+							width: "width",
+							height: "height",
+							mimeType: "mime_type",
+							fileExtension: "file_extension",
 						},
-						{
-							queryKey: "mimeType",
-							tableKey: "mime_type",
-							operator: "=",
-						},
-						{
-							queryKey: "type",
-							tableKey: "type",
-							operator: "=",
-						},
-						{
-							queryKey: "fileExtension",
-							tableKey: "file_extension",
-							operator: "=",
-						},
-					],
-					sorts: [
-						{
-							queryKey: "title",
-							tableKey: "title_translations.value",
-						},
-						{
-							queryKey: "createdAt",
-							tableKey: "created_at",
-						},
-						{
-							queryKey: "updatedAt",
-							tableKey: "updated_at",
-						},
-						{
-							queryKey: "fileSize",
-							tableKey: "file_size",
-						},
-						{
-							queryKey: "width",
-							tableKey: "width",
-						},
-						{
-							queryKey: "height",
-							tableKey: "height",
-						},
-						{
-							queryKey: "mimeType",
-							tableKey: "mime_type",
-						},
-						{
-							queryKey: "fileExtension",
-							tableKey: "file_extension",
-						},
-					],
+					},
+					defaultOperators: {
+						title: props.config.db.fuzzOperator,
+					},
 				},
 			},
 		);

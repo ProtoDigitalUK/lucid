@@ -116,7 +116,7 @@ export default class RolesRepo {
 				count: rolesCountQuery,
 			},
 			{
-				requestQuery: {
+				queryParams: {
 					filter: props.query.filter,
 					sort: props.query.sort,
 					include: props.query.include,
@@ -125,28 +125,19 @@ export default class RolesRepo {
 					perPage: props.query.perPage,
 				},
 				meta: {
-					filters: [
-						{
-							queryKey: "name",
-							tableKey: "name",
-							operator: props.config.db.fuzzOperator,
+					tableKeys: {
+						filters: {
+							name: "name",
+							roleIds: "id",
 						},
-						{
-							queryKey: "roleIds",
-							tableKey: "id",
-							operator: "=",
+						sorts: {
+							name: "name",
+							createdAt: "created_at",
 						},
-					],
-					sorts: [
-						{
-							queryKey: "name",
-							tableKey: "name",
-						},
-						{
-							queryKey: "createdAt",
-							tableKey: "created_at",
-						},
-					],
+					},
+					defaultOperators: {
+						name: props.config.db.fuzzOperator,
+					},
 				},
 			},
 		);

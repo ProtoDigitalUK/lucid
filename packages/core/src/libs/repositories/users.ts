@@ -134,7 +134,6 @@ export default class UsersRepo {
 	selectMultipleFiltered = async (props: {
 		query: z.infer<typeof usersSchema.getMultiple.query>;
 		config: Config;
-		authId: number;
 	}) => {
 		const usersQuery = this.db
 			.selectFrom("lucid_users")
@@ -185,7 +184,7 @@ export default class UsersRepo {
 				count: usersCountQuery,
 			},
 			{
-				requestQuery: {
+				queryParams: {
 					filter: props.query.filter,
 					sort: props.query.sort,
 					include: props.query.include,
@@ -194,60 +193,39 @@ export default class UsersRepo {
 					perPage: props.query.perPage,
 				},
 				meta: {
-					filters: [
-						{
-							queryKey: "firstName",
-							tableKey: "lucid_users.first_name",
-							operator: props.config.db.fuzzOperator,
+					tableKeys: {
+						filters: {
+							firstName: "lucid_users.first_name",
+							lastName: "lucid_users.last_name",
+							email: "lucid_users.email",
+							username: "lucid_users.username",
+							roleIds: "lucid_user_roles.role_id",
+							notId: "lucid_users.id",
 						},
-						{
-							queryKey: "lastName",
-							tableKey: "lucid_users.last_name",
-							operator: props.config.db.fuzzOperator,
+						sorts: {
+							createdAt: "lucid_users.created_at",
+							updatedAt: "lucid_users.updated_at",
+							firstName: "lucid_users.first_name",
+							lastName: "lucid_users.last_name",
+							email: "lucid_users.email",
+							username: "lucid_users.username",
 						},
-						{
-							queryKey: "email",
-							tableKey: "lucid_users.email",
-							operator: props.config.db.fuzzOperator,
-						},
-						{
-							queryKey: "username",
-							tableKey: "lucid_users.username",
-							operator: props.config.db.fuzzOperator,
-						},
-						{
-							queryKey: "roleIds",
-							tableKey: "lucid_user_roles.role_id",
-							operator: "=",
-						},
-					],
-					sorts: [
-						{
-							queryKey: "createdAt",
-							tableKey: "lucid_users.created_at",
-						},
-						{
-							queryKey: "updatedAt",
-							tableKey: "lucid_users.updated_at",
-						},
-						{
-							queryKey: "firstName",
-							tableKey: "lucid_users.first_name",
-						},
-						{
-							queryKey: "lastName",
-							tableKey: "lucid_users.last_name",
-						},
-						{
-							queryKey: "email",
-							tableKey: "lucid_users.email",
-						},
-						{
-							queryKey: "username",
-							tableKey: "lucid_users.username",
-						},
-					],
-					exclude: [
+					},
+					defaultOperators: {
+						firstName: props.config.db.fuzzOperator,
+						lastName: props.config.db.fuzzOperator,
+						email: props.config.db.fuzzOperator,
+						username: props.config.db.fuzzOperator,
+						notId: "<>",
+					},
+				},
+			},
+		);
+
+		/*
+
+        TODO: turn this into a filter, not sure why it was set up this way in the first place
+        		exclude: [
 						{
 							queryKey: "current",
 							tableKey: "lucid_users.id",
@@ -255,9 +233,7 @@ export default class UsersRepo {
 							operator: "<>",
 						},
 					],
-				},
-			},
-		);
+        */
 
 		return Promise.all([
 			main.execute(),
