@@ -219,5 +219,6 @@
 	"toolkit_error_message": "An error occurred while using the toolkit",
 	"validation_error_message": "Please ensure the data you have provided is correct.",
 	"authorisation_error_message": "Please ensure you are logged in and have the correct permissions.",
-	"forbidden_error_message": "You do not have permission to perform this action."
+	"forbidden_error_message": "You do not have permission to perform this action.",
+	"send_email_error_name": "Send Email Error"
 }

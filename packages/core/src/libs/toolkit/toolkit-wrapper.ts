@@ -16,10 +16,12 @@ const toolkitWrapper = async <T extends unknown[], R>(props: {
 
 	return serviceWrapper(props.fn, {
 		transaction: props.config?.transaction ?? false,
-		defaultError: props.config?.defaultError ?? {
-			type: "basic",
-			name: T("toolkit_error_name"),
-			message: T("toolkit_error_message"),
+		defaultError: {
+			...props.config?.defaultError,
+			type: props.config?.defaultError?.type ?? "toolkit",
+			message:
+				props.config?.defaultError?.message ??
+				T("toolkit_error_message"),
 		},
 		schema: props.config?.schema,
 		schemaArgIndex: props.config?.schemaArgIndex,

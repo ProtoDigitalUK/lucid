@@ -22,12 +22,18 @@ const getSingle: ServiceFn<
 	);
 	const CollectionDocumentsFormatter = Formatter.get("collection-documents");
 
-	console.log(data);
-
 	// split filters into two groups, one for the document based on a fixed set of keys, and allowed filters set against the collection
 	// should lookup a single document by a given filter and or field value
 	// then fetch all bricks and collection fields for that document
 	// return nested response
+
+	const collectionRes = await context.services.collection.getSingleInstance(
+		context,
+		{
+			key: data.collectionKey,
+		},
+	);
+	if (collectionRes.error) return collectionRes;
 
 	return {
 		error: undefined,

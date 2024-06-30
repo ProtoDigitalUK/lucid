@@ -1,3 +1,4 @@
+import T from "../../../translations/index.js";
 import z from "zod";
 import toolkitWrapper from "../toolkit-wrapper.js";
 import lucidServices from "../../../services/index.js";
@@ -21,6 +22,9 @@ const emailToolkit = {
 					replyTo: z.string().optional(),
 					data: z.record(z.any()),
 				}),
+				defaultError: {
+					name: T("send_email_error_name"),
+				},
 			},
 		}),
 };

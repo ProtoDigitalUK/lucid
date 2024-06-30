@@ -1,3 +1,4 @@
+import T from "../../../translations/index.js";
 import z from "zod";
 import toolkitWrapper from "../toolkit-wrapper.js";
 import lucidServices from "../../../services/index.js";
@@ -19,6 +20,9 @@ const documentToolkit = {
 					collectionKey: z.string(),
 					query: collectionDocumentsSchema.client.getSingle.query,
 				}),
+				defaultError: {
+					name: T("route_document_fetch_error_name"),
+				},
 			},
 		}),
 	// getMultiple: async (query: {
