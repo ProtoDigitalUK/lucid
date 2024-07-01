@@ -6,7 +6,7 @@ import type {
 	FieldCollectionConfig,
 	CollectionConfigSchemaType,
 	CollectionData,
-	DocumentFiltersResponse,
+	DocumentFiltersResponse as DocumentFieldFiltersResponse,
 	CollectionBrickConfig,
 	FieldFilters,
 } from "./types.js";
@@ -108,10 +108,12 @@ class CollectionBuilder extends FieldBuilder {
 	}
 	// ------------------------------------
 	// Public Methods
-	documentFilters(filters?: QueryParamFilters): DocumentFiltersResponse[] {
+	documentFieldFilters(
+		filters?: QueryParamFilters,
+	): DocumentFieldFiltersResponse[] {
 		if (!filters) return [];
 
-		return this.filterableFieldKeys.reduce<DocumentFiltersResponse[]>(
+		return this.filterableFieldKeys.reduce<DocumentFieldFiltersResponse[]>(
 			(acc, field) => {
 				const filterValue = filters[field.key];
 				if (filterValue === undefined) return acc;
@@ -130,6 +132,15 @@ class CollectionBuilder extends FieldBuilder {
 			},
 			[],
 		);
+	}
+	splitFilters(filters?: QueryParamFilters): {
+		documentFilters: QueryParamFilters;
+		fieldFilters: DocumentFieldFiltersResponse[];
+	} {
+		// TODO: look through all fields from collection and bricks and work out fieldFilters array
+		// TODO: based on keys in document table, along with cammelCase version of keys, work out documentFilters
+
+		return { documentFilters: {}, fieldFilters: [] };
 	}
 	// ------------------------------------
 	// Private Methods

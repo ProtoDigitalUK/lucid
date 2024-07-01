@@ -133,7 +133,7 @@ export default class CollectionDocumentsRepo {
 			)
 			.where("lucid_collection_documents.is_deleted", "=", 0);
 
-		const collectionDocFiltersRes = props.collection.documentFilters(
+		const collectionDocFiltersRes = props.collection.documentFieldFilters(
 			props.query.filter,
 		);
 

@@ -26,7 +26,7 @@ lucid.fastify.get("/get-document", async (_, reply) => {
 					value: 1,
 					operator: "!=",
 				},
-				full_slug: {
+				title: {
 					value: "/test",
 					operator: "=",
 				},
