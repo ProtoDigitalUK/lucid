@@ -1,10 +1,10 @@
 import T from "../../../translations/index.js";
 import Repository from "../../../libs/repositories/index.js";
 import Formatter from "../../../libs/formatters/index.js";
+import { splitDocumentFilters } from "../../../utils/helpers/index.js";
 import type z from "zod";
 import type { ServiceFn } from "../../../utils/services/types.js";
 import type collectionDocumentsSchema from "../../../schemas/collection-documents.js";
-import type { HeadlessCollectionDocuments } from "../../../libs/db/types.js";
 
 const getSingle: ServiceFn<
 	[
@@ -36,7 +36,8 @@ const getSingle: ServiceFn<
 	);
 	if (collectionRes.error) return collectionRes;
 
-	const { documentFilters, fieldFilters } = collectionRes.data.splitFilters(
+	const { documentFilters, fieldFilters } = splitDocumentFilters(
+		collectionRes.data,
 		data.query.filter,
 	);
 

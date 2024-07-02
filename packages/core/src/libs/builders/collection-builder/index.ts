@@ -133,15 +133,6 @@ class CollectionBuilder extends FieldBuilder {
 			[],
 		);
 	}
-	splitFilters(filters?: QueryParamFilters): {
-		documentFilters: QueryParamFilters;
-		fieldFilters: DocumentFieldFiltersResponse[];
-	} {
-		// TODO: look through all fields from collection and bricks and work out fieldFilters array
-		// TODO: based on keys in document table, along with cammelCase version of keys, work out documentFilters
-
-		return { documentFilters: {}, fieldFilters: [] };
-	}
 	// ------------------------------------
 	// Private Methods
 	#removeDuplicateBricks = (bricks?: Array<BrickBuilder>) => {
