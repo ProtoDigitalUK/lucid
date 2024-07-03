@@ -74,6 +74,11 @@ export default class CollectionDocumentsRepo {
 			.where("lucid_collection_documents.is_deleted", "=", 0)
 			.executeTakeFirst();
 	};
+	selectSingleFitlered = async (props: {
+		query: z.infer<typeof collectionDocumentsSchema.client.getSingle.query>;
+		collection: CollectionBuilder;
+		config: Config;
+	}) => {};
 	selectMultiple = async <
 		K extends keyof Select<HeadlessCollectionDocuments>,
 	>(props: {
