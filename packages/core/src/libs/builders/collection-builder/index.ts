@@ -6,7 +6,7 @@ import type {
 	FieldCollectionConfig,
 	CollectionConfigSchemaType,
 	CollectionData,
-	DocumentFiltersResponse as DocumentFieldFiltersResponse,
+	DocumentFieldFilters as DocumentFieldFiltersResponse,
 	CollectionBrickConfig,
 	FieldFilters,
 } from "./types.js";

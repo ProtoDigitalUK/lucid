@@ -6,7 +6,7 @@ import type {
 	ReferenceExpression,
 	ComparisonOperatorExpression,
 } from "kysely";
-import type { DocumentFiltersResponse } from "../builders/collection-builder/types.js";
+import type { DocumentFieldFilters } from "../builders/collection-builder/types.js";
 
 const queryBuilder = <DB, Table extends keyof DB, O>(
 	query: {
@@ -20,8 +20,8 @@ const queryBuilder = <DB, Table extends keyof DB, O>(
 		>;
 	},
 	config: {
-		queryParams: QueryParams;
-		documentFilters?: DocumentFiltersResponse[];
+		queryParams: Partial<QueryParams>;
+		documentFilters?: DocumentFieldFilters[];
 		meta?: {
 			tableKeys?: {
 				filters?: Record<string, ReferenceExpression<DB, Table>>;
@@ -117,7 +117,11 @@ const queryBuilder = <DB, Table extends keyof DB, O>(
 
 	// -----------------------------------------
 	// Pagination
-	if (config.queryParams.perPage !== -1) {
+	if (
+		config.queryParams.perPage !== undefined &&
+		config.queryParams.page !== undefined &&
+		config.queryParams.perPage !== -1
+	) {
 		mainQuery = mainQuery
 			.limit(config.queryParams.perPage)
 			.offset((config.queryParams.page - 1) * config.queryParams.perPage);

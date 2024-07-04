@@ -12,6 +12,8 @@ import type {
 import type { Config } from "../../types/config.js";
 import type CollectionBuilder from "../builders/collection-builder/index.js";
 import type collectionDocumentsSchema from "../../schemas/collection-documents.js";
+import type { DocumentFieldFilters } from "../../types.js";
+import type { QueryParamFilters } from "../../types/query-params.js";
 
 export default class CollectionDocumentsRepo {
 	constructor(private db: KyselyDB) {}
@@ -75,10 +77,67 @@ export default class CollectionDocumentsRepo {
 			.executeTakeFirst();
 	};
 	selectSingleFitlered = async (props: {
-		query: z.infer<typeof collectionDocumentsSchema.client.getSingle.query>;
+		documentFilters: QueryParamFilters;
+		fieldFilters: DocumentFieldFilters[];
 		collection: CollectionBuilder;
 		config: Config;
-	}) => {};
+	}) => {
+		const pagesQuery = this.db
+			.selectFrom("lucid_collection_documents")
+			.select([
+				"lucid_collection_documents.id",
+				"lucid_collection_documents.collection_key",
+				"lucid_collection_documents.created_by",
+				"lucid_collection_documents.created_at",
+				"lucid_collection_documents.updated_at",
+				"lucid_collection_documents.updated_by",
+			])
+			.leftJoin(
+				"lucid_users",
+				"lucid_users.id",
+				"lucid_collection_documents.created_by",
+			)
+			.where("lucid_collection_documents.is_deleted", "=", 0)
+			.where(
+				"lucid_collection_documents.collection_key",
+				"=",
+				props.collection.key,
+			)
+			.groupBy(["lucid_collection_documents.id", "lucid_users.id"]);
+
+		const { main } = queryBuilder.main(
+			{
+				main: pagesQuery,
+			},
+			{
+				queryParams: {
+					filter: props.documentFilters,
+				},
+				// documentFilters: props.fieldFilters,
+				meta: {
+					tableKeys: {
+						filters: {
+							id: "lucid_collection_documents.id",
+							collectionKey:
+								"lucid_collection_documents.collection_key",
+							createdBy: "lucid_collection_documents.created_by",
+							updatedBy: "lucid_collection_documents.updated_by",
+							createdAt: "lucid_collection_documents.created_at",
+							updatedAt: "lucid_collection_documents.updated_at",
+							collection_key:
+								"lucid_collection_documents.collection_key",
+							created_by: "lucid_collection_documents.created_by",
+							updated_by: "lucid_collection_documents.updated_by",
+							created_at: "lucid_collection_documents.created_at",
+							updated_at: "lucid_collection_documents.updated_at",
+						},
+					},
+				},
+			},
+		);
+
+		return main.executeTakeFirst();
+	};
 	selectMultiple = async <
 		K extends keyof Select<HeadlessCollectionDocuments>,
 	>(props: {

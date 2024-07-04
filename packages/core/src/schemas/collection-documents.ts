@@ -77,13 +77,15 @@ export default {
 							// HeadlessCollectionDocuments
 							id: filterSchemas.single.optional(),
 							collection_key: filterSchemas.single.optional(),
-							is_deleted: filterSchemas.single.optional(),
-							is_deleted_at: filterSchemas.single.optional(),
-							deleted_by: filterSchemas.single.optional(),
 							created_by: filterSchemas.single.optional(),
 							updated_by: filterSchemas.single.optional(),
 							created_at: filterSchemas.single.optional(),
 							updated_at: filterSchemas.single.optional(),
+							collectionKey: filterSchemas.single.optional(),
+							createdBy: filterSchemas.single.optional(),
+							updatedBy: filterSchemas.single.optional(),
+							createdAt: filterSchemas.single.optional(),
+							updatedAt: filterSchemas.single.optional(),
 						})
 						.refine((data) => Object.keys(data).length > 0, {
 							message: "Please provide at least one filter",

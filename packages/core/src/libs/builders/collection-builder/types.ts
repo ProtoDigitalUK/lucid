@@ -52,7 +52,7 @@ export interface CollectionBrickConfig {
 	fields: CFConfig<FieldTypes>[];
 }
 
-export interface DocumentFiltersResponse {
+export interface DocumentFieldFilters {
 	key: string;
 	value: FilterValue;
 	operator: FilterOperator;

@@ -5,6 +5,7 @@ import { splitDocumentFilters } from "../../../utils/helpers/index.js";
 import type z from "zod";
 import type { ServiceFn } from "../../../utils/services/types.js";
 import type collectionDocumentsSchema from "../../../schemas/collection-documents.js";
+import type { CollectionDocumentResponse } from "../../../types/response.js";
 
 const getSingle: ServiceFn<
 	[
@@ -15,7 +16,7 @@ const getSingle: ServiceFn<
 			>;
 		},
 	],
-	undefined
+	CollectionDocumentResponse
 > = async (context, data) => {
 	const CollectionDocumentsRepo = Repository.get(
 		"collection-documents",
@@ -41,11 +42,34 @@ const getSingle: ServiceFn<
 		data.query.filter,
 	);
 
-	console.log(fieldFilters, documentFilters);
+	const pageRes = await CollectionDocumentsRepo.selectSingleFitlered({
+		documentFilters: documentFilters,
+		fieldFilters: fieldFilters,
+		collection: collectionRes.data,
+		config: context.config,
+	});
+	if (pageRes === undefined) {
+		return {
+			error: {
+				type: "basic",
+				message: T("route_document_fetch_error_message"),
+				status: 404,
+			},
+			data: undefined,
+		};
+	}
 
 	return {
 		error: undefined,
-		data: undefined,
+		data: CollectionDocumentsFormatter.formatSingle({
+			document: pageRes,
+			collection: collectionRes.data,
+			host: context.config.host,
+			localisation: {
+				locales: context.config.localisation.locales.map((l) => l.code),
+				default: context.config.localisation.defaultLocale,
+			},
+		}),
 	};
 };
 
