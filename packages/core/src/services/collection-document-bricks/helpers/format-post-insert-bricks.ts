@@ -39,13 +39,6 @@ const formatPostInsertBricks = (
 				fields: brick.fields,
 			};
 		})
-		.filter((b) => b !== null) as {
-		id: number;
-		key: string | undefined;
-		order: number | undefined;
-		type: "builder" | "fixed" | "collection-fields";
-		groups: GroupInsertItem[];
-		fields: FieldInsertItem[];
-	}[];
+		.filter((b) => b !== null);
 
 export default formatPostInsertBricks;

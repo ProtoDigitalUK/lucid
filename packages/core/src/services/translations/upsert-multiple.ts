@@ -35,16 +35,10 @@ const upsertMultiple: ServiceFn<[ServiceData<string>], undefined> = async <
 				return {
 					value: translation.value ?? "",
 					localeCode: translation.localeCode,
-					translationKeyId: data.keys[translation.key] ?? null,
+					translationKeyId: data.keys[translation.key] as number,
 				};
 			})
-			.filter(
-				(translation) => translation.translationKeyId !== null,
-			) as Array<{
-			value: string;
-			localeCode: string;
-			translationKeyId: number;
-		}>;
+			.filter((translation) => translation.translationKeyId !== null);
 
 		if (translations.length === 0) {
 			return {

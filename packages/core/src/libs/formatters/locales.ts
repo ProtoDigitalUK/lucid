@@ -7,7 +7,7 @@ export default class LocalesFormatter {
 	formatMultiple = (props: {
 		locales: Select<HeadlessLocales>[];
 		localisation: Config["localisation"];
-	}) => {
+	}): LocalesResponse[] => {
 		return props.locales
 			.map((l) => {
 				const configLocale = props.localisation.locales.find(
@@ -22,7 +22,7 @@ export default class LocalesFormatter {
 					defaultLocale: props.localisation.defaultLocale,
 				});
 			})
-			.filter((l) => l !== null) as LocalesResponse[];
+			.filter((l) => l !== null);
 	};
 	formatSingle = (props: {
 		locale: Select<HeadlessLocales>;

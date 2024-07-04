@@ -35,7 +35,7 @@ const formatInsertFields = (props: {
 				groupId: targetGroup?.group_id ?? null,
 			});
 		})
-		.filter((f) => f !== null) as CFInsertItem<FieldTypes>[];
+		.filter((f) => f !== null);
 };
 
 const getFieldInstance = (props: {
