@@ -21,7 +21,7 @@ const queryBuilder = <DB, Table extends keyof DB, O>(
 	},
 	config: {
 		queryParams: Partial<QueryParams>;
-		documentFilters?: DocumentFieldFilters[];
+		documentFieldFilters?: DocumentFieldFilters[];
 		meta?: {
 			tableKeys?: {
 				filters?: Record<string, ReferenceExpression<DB, Table>>;
@@ -46,6 +46,8 @@ const queryBuilder = <DB, Table extends keyof DB, O>(
 			key,
 			config.meta?.tableKeys?.filters,
 		);
+		if (!tableKey) continue;
+
 		const operator = getFilterOperator(
 			key,
 			f,
@@ -67,12 +69,18 @@ const queryBuilder = <DB, Table extends keyof DB, O>(
 	}
 
 	// Document filters
-	if (config.documentFilters && config.documentFilters.length > 0) {
-		for (const { key, value, column, operator } of config.documentFilters) {
+	if (config.documentFieldFilters && config.documentFieldFilters.length > 0) {
+		for (const {
+			key,
+			value,
+			column,
+			operator,
+		} of config.documentFieldFilters) {
 			const o = getFilterOperator(key, {
 				value: value,
 				operator: operator,
 			});
+			console.log("lucid_collection_document_fields.key", "=", key);
 
 			mainQuery = mainQuery.where(({ eb, and }) =>
 				and([
@@ -111,6 +119,7 @@ const queryBuilder = <DB, Table extends keyof DB, O>(
 				sort.key,
 				config.meta?.tableKeys?.sorts,
 			);
+			if (!tableKey) continue;
 			mainQuery = mainQuery.orderBy(tableKey, sort.value);
 		}
 	}

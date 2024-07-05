@@ -8,9 +8,9 @@ const splitDocumentFilters = (
 	filters?: QueryParamFilters,
 ): {
 	documentFilters: QueryParamFilters;
-	fieldFilters: DocumentFieldFilters[];
+	documentFieldFilters: DocumentFieldFilters[];
 } => {
-	if (!filters) return { documentFilters: {}, fieldFilters: [] };
+	if (!filters) return { documentFilters: {}, documentFieldFilters: [] };
 
 	const validDocFilters: Array<keyof HeadlessCollectionDocuments | string> = [
 		"id",
@@ -33,8 +33,7 @@ const splitDocumentFilters = (
 
 	return {
 		documentFilters: documentFilters,
-		// TODO: we may not want to limit this to just fields that have been marked as filterable, instead we could open it up to all fields.
-		fieldFilters: collection.documentFieldFilters(filters),
+		documentFieldFilters: collection.documentFieldFilters(filters, true),
 	};
 };
 

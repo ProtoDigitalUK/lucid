@@ -110,28 +110,27 @@ class CollectionBuilder extends FieldBuilder {
 	// Public Methods
 	documentFieldFilters(
 		filters?: QueryParamFilters,
+		allowAll?: boolean,
 	): DocumentFieldFiltersResponse[] {
 		if (!filters) return [];
+		const fields = allowAll ? this.flatFields : this.filterableFieldKeys;
 
-		return this.filterableFieldKeys.reduce<DocumentFieldFiltersResponse[]>(
-			(acc, field) => {
-				const filterValue = filters[field.key];
-				if (filterValue === undefined) return acc;
+		return fields.reduce<DocumentFieldFiltersResponse[]>((acc, field) => {
+			const filterValue = filters[field.key];
+			if (filterValue === undefined) return acc;
 
-				const fieldInstance = this.fields.get(field.key);
-				if (!fieldInstance) return acc;
+			const fieldInstance = this.fields.get(field.key);
+			if (!fieldInstance) return acc;
 
-				acc.push({
-					key: field.key,
-					value: filterValue.value,
-					operator: filterValue.operator ?? "=",
-					column: fieldInstance.column,
-				});
+			acc.push({
+				key: field.key,
+				value: filterValue.value,
+				operator: filterValue.operator ?? "=",
+				column: fieldInstance.column,
+			});
 
-				return acc;
-			},
-			[],
-		);
+			return acc;
+		}, []);
 	}
 	queryIncludeFields() {
 		const fieldKeys = Array.from(this.includeFieldKeys);

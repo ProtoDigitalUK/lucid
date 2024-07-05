@@ -34,27 +34,20 @@ const PageCollection = new CollectionBuilder("page", {
 		builder: [BannerBrick, IntroBrick],
 	},
 })
-	.addText(
-		"page_title",
-		{
-			labels: {
-				title: {
-					en: "Page title",
-				},
-				description: "The title of the page.",
+	.addText("page_title", {
+		labels: {
+			title: {
+				en: "Page title",
 			},
-			hidden: false,
-			disabled: false,
-			validation: {
-				required: true,
-				zod: z.string().min(2).max(128),
-			},
+			description: "The title of the page.",
 		},
-		{
-			list: true,
-			filterable: true,
+		hidden: false,
+		disabled: false,
+		validation: {
+			required: true,
+			zod: z.string().min(2).max(128),
 		},
-	)
+	})
 	.addUser("author", undefined, {
 		list: true,
 	});

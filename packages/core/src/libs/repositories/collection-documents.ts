@@ -82,7 +82,7 @@ export default class CollectionDocumentsRepo {
 		collection: CollectionBuilder;
 		config: Config;
 	}) => {
-		const pagesQuery = this.db
+		let pagesQuery = this.db
 			.selectFrom("lucid_collection_documents")
 			.select([
 				"lucid_collection_documents.id",
@@ -126,7 +126,125 @@ export default class CollectionDocumentsRepo {
 				"cb_user.id",
 			]);
 
-		console.log("here", props.documentFieldFilters);
+		const collectionFieldKeys = props.collection.flatFields.map(
+			(f) => f.key,
+		);
+
+		if (collectionFieldKeys.length > 0) {
+			pagesQuery = pagesQuery
+				.select((eb) => [
+					props.config.db
+						.jsonArrayFrom(
+							eb
+								.selectFrom("lucid_collection_document_fields")
+								.leftJoin("lucid_media", (join) =>
+									join.onRef(
+										"lucid_media.id",
+										"=",
+										"lucid_collection_document_fields.media_id",
+									),
+								)
+								.leftJoin("lucid_users", (join) =>
+									join.onRef(
+										"lucid_users.id",
+										"=",
+										"lucid_collection_document_fields.user_id",
+									),
+								)
+								.select((eb) => [
+									"lucid_collection_document_fields.fields_id",
+									"lucid_collection_document_fields.text_value",
+									"lucid_collection_document_fields.int_value",
+									"lucid_collection_document_fields.bool_value",
+									"lucid_collection_document_fields.locale_code",
+									"lucid_collection_document_fields.media_id",
+									"lucid_collection_document_fields.user_id",
+									"lucid_collection_document_fields.type",
+									"lucid_collection_document_fields.key",
+									"lucid_collection_document_fields.collection_brick_id",
+									"lucid_collection_document_fields.collection_document_id",
+									"lucid_collection_document_fields.group_id",
+									// User fields
+									"lucid_users.id as user_id",
+									"lucid_users.email as user_email",
+									"lucid_users.first_name as user_first_name",
+									"lucid_users.last_name as user_last_name",
+									"lucid_users.email as user_email",
+									"lucid_users.username as user_username",
+									// Media fields
+									"lucid_media.key as media_key",
+									"lucid_media.mime_type as media_mime_type",
+									"lucid_media.file_extension as media_file_extension",
+									"lucid_media.file_size as media_file_size",
+									"lucid_media.width as media_width",
+									"lucid_media.height as media_height",
+									"lucid_media.type as media_type",
+									props.config.db
+										.jsonArrayFrom(
+											eb
+												.selectFrom(
+													"lucid_translations",
+												)
+												.select([
+													"lucid_translations.value",
+													"lucid_translations.locale_code",
+												])
+												.where(
+													"lucid_translations.value",
+													"is not",
+													null,
+												)
+												.whereRef(
+													"lucid_translations.translation_key_id",
+													"=",
+													"lucid_media.title_translation_key_id",
+												),
+										)
+										.as("media_title_translations"),
+									props.config.db
+										.jsonArrayFrom(
+											eb
+												.selectFrom(
+													"lucid_translations",
+												)
+												.select([
+													"lucid_translations.value",
+													"lucid_translations.locale_code",
+												])
+												.where(
+													"lucid_translations.value",
+													"is not",
+													null,
+												)
+												.whereRef(
+													"lucid_translations.translation_key_id",
+													"=",
+													"lucid_media.alt_translation_key_id",
+												),
+										)
+										.as("media_alt_translations"),
+								])
+								.whereRef(
+									"lucid_collection_document_fields.collection_document_id",
+									"=",
+									"lucid_collection_documents.id",
+								)
+								.where(
+									"lucid_collection_document_fields.key",
+									"in",
+									collectionFieldKeys,
+								),
+						)
+						.as("fields"),
+				])
+				.leftJoin("lucid_collection_document_fields", (join) =>
+					join.onRef(
+						"lucid_collection_document_fields.collection_document_id",
+						"=",
+						"lucid_collection_documents.id",
+					),
+				);
+		}
 
 		const { main } = queryBuilder.main(
 			{

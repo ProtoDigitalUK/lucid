@@ -18,12 +18,8 @@ lucid.fastify.get("/get-document", async (_, reply) => {
 		collectionKey: "page",
 		query: {
 			filter: {
-				is_deleted: {
-					value: 1,
-					operator: "!=",
-				},
 				page_title: {
-					value: "/test",
+					value: "Homepage",
 					operator: "=",
 				},
 			},

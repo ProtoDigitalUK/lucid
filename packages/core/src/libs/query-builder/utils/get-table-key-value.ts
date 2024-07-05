@@ -3,11 +3,11 @@ import type { ReferenceExpression } from "kysely";
 const getTableKeyValue = <DB, Table extends keyof DB>(
 	key: string,
 	keyMap?: Record<string, ReferenceExpression<DB, Table>>,
-): ReferenceExpression<DB, Table> => {
+): ReferenceExpression<DB, Table> | undefined => {
 	if (keyMap?.[key]) {
-		return keyMap[key] || (key as ReferenceExpression<DB, Table>);
+		return keyMap[key];
 	}
-	return key as ReferenceExpression<DB, Table>;
+	return undefined;
 };
 
 export default getTableKeyValue;
