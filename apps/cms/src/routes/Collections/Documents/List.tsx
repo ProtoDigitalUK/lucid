@@ -92,7 +92,7 @@ const CollectionsDocumentsListRoute: Component = () => {
 	createEffect(() => {
 		if (collection.isSuccess) {
 			const filterConfig: FilterSchema = {};
-			for (const field of collectionFieldInclude()) {
+			for (const field of collectionFieldFilter()) {
 				switch (field.type) {
 					default: {
 						filterConfig[field.key] = {
