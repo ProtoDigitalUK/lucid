@@ -74,14 +74,7 @@ export default {
 				filter: z.union([
 					z
 						.object({
-							// HeadlessCollectionDocuments
 							id: filterSchemas.single.optional(),
-							collection_key: filterSchemas.single.optional(),
-							created_by: filterSchemas.single.optional(),
-							updated_by: filterSchemas.single.optional(),
-							created_at: filterSchemas.single.optional(),
-							updated_at: filterSchemas.single.optional(),
-							collectionKey: filterSchemas.single.optional(),
 							createdBy: filterSchemas.single.optional(),
 							updatedBy: filterSchemas.single.optional(),
 							createdAt: filterSchemas.single.optional(),

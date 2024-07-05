@@ -265,12 +265,6 @@ export default class CollectionDocumentsRepo {
 							updatedBy: "lucid_collection_documents.updated_by",
 							createdAt: "lucid_collection_documents.created_at",
 							updatedAt: "lucid_collection_documents.updated_at",
-							collection_key:
-								"lucid_collection_documents.collection_key",
-							created_by: "lucid_collection_documents.created_by",
-							updated_by: "lucid_collection_documents.updated_by",
-							created_at: "lucid_collection_documents.created_at",
-							updated_at: "lucid_collection_documents.updated_at",
 						},
 					},
 				},

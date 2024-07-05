@@ -1,5 +1,4 @@
 import type { QueryParamFilters } from "../../types/query-params.js";
-import type { HeadlessCollectionDocuments } from "../../libs/db/types.js";
 import type { DocumentFieldFilters } from "../../types.js";
 import type CollectionBuilder from "../../libs/builders/collection-builder/index.js";
 
@@ -12,12 +11,8 @@ const splitDocumentFilters = (
 } => {
 	if (!filters) return { documentFilters: {}, documentFieldFilters: [] };
 
-	const validDocFilters: Array<keyof HeadlessCollectionDocuments | string> = [
+	const validDocFilters = [
 		"id",
-		"created_by",
-		"updated_by",
-		"created_at",
-		"updated_at",
 		"createdBy",
 		"updatedBy",
 		"createdAt",
