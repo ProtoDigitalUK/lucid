@@ -78,7 +78,7 @@ export default class CollectionDocumentsRepo {
 	};
 	selectSingleFitlered = async (props: {
 		documentFilters: QueryParamFilters;
-		fieldFilters: DocumentFieldFilters[];
+		documentFieldFilters: DocumentFieldFilters[];
 		collection: CollectionBuilder;
 		config: Config;
 	}) => {
@@ -93,17 +93,40 @@ export default class CollectionDocumentsRepo {
 				"lucid_collection_documents.updated_by",
 			])
 			.leftJoin(
-				"lucid_users",
-				"lucid_users.id",
+				"lucid_users as cb_user",
+				"cb_user.id",
 				"lucid_collection_documents.created_by",
 			)
+			.leftJoin(
+				"lucid_users as ub_user",
+				"cb_user.id",
+				"lucid_collection_documents.updated_by",
+			)
+			.select([
+				"cb_user.id as cb_user_id",
+				"cb_user.email as cb_user_email",
+				"cb_user.first_name as cb_user_first_name",
+				"cb_user.last_name as cb_user_last_name",
+				"cb_user.username as cb_user_username",
+				"ub_user.id as ub_user_id",
+				"ub_user.email as ub_user_email",
+				"ub_user.first_name as ub_user_first_name",
+				"ub_user.last_name as ub_user_last_name",
+				"ub_user.username as ub_user_username",
+			])
 			.where("lucid_collection_documents.is_deleted", "=", 0)
 			.where(
 				"lucid_collection_documents.collection_key",
 				"=",
 				props.collection.key,
 			)
-			.groupBy(["lucid_collection_documents.id", "lucid_users.id"]);
+			.groupBy([
+				"lucid_collection_documents.id",
+				"ub_user.id",
+				"cb_user.id",
+			]);
+
+		console.log("here", props.documentFieldFilters);
 
 		const { main } = queryBuilder.main(
 			{
@@ -113,7 +136,7 @@ export default class CollectionDocumentsRepo {
 				queryParams: {
 					filter: props.documentFilters,
 				},
-				// documentFilters: props.fieldFilters,
+				documentFieldFilters: props.documentFieldFilters,
 				meta: {
 					tableKeys: {
 						filters: {
@@ -201,7 +224,7 @@ export default class CollectionDocumentsRepo {
 			props.query.filter,
 		);
 
-		if (props.collection.data.config.fields.include.length > 0) {
+		if (props.collection.queryIncludeFields().length > 0) {
 			pagesQuery = pagesQuery
 				.select((eb) => [
 					props.config.db
@@ -303,7 +326,7 @@ export default class CollectionDocumentsRepo {
 								.where(
 									"lucid_collection_document_fields.key",
 									"in",
-									props.collection.data.config.fields.include,
+									props.collection.queryIncludeFields(),
 								),
 						)
 						.as("fields"),
@@ -343,7 +366,7 @@ export default class CollectionDocumentsRepo {
 					page: props.query.page,
 					perPage: props.query.perPage,
 				},
-				documentFilters: collectionDocFiltersRes,
+				documentFieldFilters: collectionDocFiltersRes,
 				meta: {
 					tableKeys: {
 						sorts: {

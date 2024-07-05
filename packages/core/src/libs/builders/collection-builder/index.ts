@@ -133,6 +133,14 @@ class CollectionBuilder extends FieldBuilder {
 			[],
 		);
 	}
+	queryIncludeFields() {
+		const fieldKeys = Array.from(this.includeFieldKeys);
+		for (const field of this.filterableFieldKeys) {
+			if (fieldKeys.includes(field.key)) continue;
+			fieldKeys.push(field.key);
+		}
+		return fieldKeys;
+	}
 	// ------------------------------------
 	// Private Methods
 	#removeDuplicateBricks = (bricks?: Array<BrickBuilder>) => {
