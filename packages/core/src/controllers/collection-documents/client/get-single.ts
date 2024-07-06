@@ -3,8 +3,9 @@ import collectionDocumentsSchema from "../../../schemas/collection-documents.js"
 import {
 	swaggerResponse,
 	swaggerQueryString,
+	swaggerHeaders,
 } from "../../../utils/swagger/index.js";
-import buildResponse from "../../../utils/build-response.js";
+import formatAPIResponse from "../../../utils/build-response.js";
 import CollectionDocumentsFormatter from "../../../libs/formatters/collection-documents.js";
 import serviceWrapper from "../../../utils/services/service-wrapper.js";
 import { LucidAPIError } from "../../../utils/errors/index.js";
@@ -39,7 +40,7 @@ const getSingleController: RouteController<
 	if (document.error) throw new LucidAPIError(document.error);
 
 	reply.status(200).send(
-		await buildResponse(request, {
+		formatAPIResponse(request, {
 			data: document.data,
 		}),
 	);
@@ -59,6 +60,10 @@ export default {
 				data: CollectionDocumentsFormatter.swagger,
 			}),
 		},
+		headers: swaggerHeaders({
+			authorization: true,
+			clientKey: true,
+		}),
 		querystring: swaggerQueryString({
 			include: ["bricks"],
 			filters: [

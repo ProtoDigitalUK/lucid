@@ -1,7 +1,7 @@
 import T from "../../translations/index.js";
 import clientIntegrationsSchema from "../../schemas/client-integrations.js";
 import { swaggerResponse } from "../../utils/swagger/index.js";
-import buildResponse from "../../utils/build-response.js";
+import formatAPIResponse from "../../utils/build-response.js";
 import ClientIntegrationsFormatter from "../../libs/formatters/client-integrations.js";
 import serviceWrapper from "../../utils/services/service-wrapper.js";
 import { LucidAPIError } from "../../utils/errors/index.js";
@@ -35,7 +35,7 @@ const getSingleController: RouteController<
 	if (getSingleRes.error) throw new LucidAPIError(getSingleRes.error);
 
 	reply.status(200).send(
-		await buildResponse(request, {
+		formatAPIResponse(request, {
 			data: getSingleRes.data,
 		}),
 	);

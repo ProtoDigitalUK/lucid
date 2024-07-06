@@ -4,7 +4,7 @@ import { swaggerResponse, swaggerHeaders } from "../../utils/swagger/index.js";
 import serviceWrapper from "../../utils/services/service-wrapper.js";
 import ClientIntegrationsFormatter from "../../libs/formatters/client-integrations.js";
 import { LucidAPIError } from "../../utils/errors/index.js";
-import buildResponse from "../../utils/build-response.js";
+import formatAPIResponse from "../../utils/build-response.js";
 import type { RouteController } from "../../types/types.js";
 
 const regenerateKeysController: RouteController<
@@ -36,7 +36,7 @@ const regenerateKeysController: RouteController<
 		throw new LucidAPIError(regenerateKeysRes.error);
 
 	reply.status(200).send(
-		await buildResponse(request, {
+		formatAPIResponse(request, {
 			data: regenerateKeysRes.data,
 		}),
 	);

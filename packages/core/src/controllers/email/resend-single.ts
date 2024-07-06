@@ -1,7 +1,7 @@
 import T from "../../translations/index.js";
 import emailsSchema from "../../schemas/email.js";
 import { swaggerResponse, swaggerHeaders } from "../../utils/swagger/index.js";
-import buildResponse from "../../utils/build-response.js";
+import formatAPIResponse from "../../utils/build-response.js";
 import serviceWrapper from "../../utils/services/service-wrapper.js";
 import { LucidAPIError } from "../../utils/errors/index.js";
 import type { RouteController } from "../../types/types.js";
@@ -34,7 +34,7 @@ const resendSingleController: RouteController<
 	if (emailRes.error) throw new LucidAPIError(emailRes.error);
 
 	reply.status(200).send(
-		await buildResponse(request, {
+		formatAPIResponse(request, {
 			data: emailRes.data,
 		}),
 	);

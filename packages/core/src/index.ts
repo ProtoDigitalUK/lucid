@@ -10,11 +10,14 @@ import { LucidAPIError, LucidError } from "./utils/errors/index.js";
 import logger from "./utils/logging/index.js";
 import toolkit from "./libs/toolkit/toolkit.js";
 import z from "zod";
+import formatAPIResponse from "./utils/build-response.js";
 
 export {
 	toolkit,
 	logger,
 	z,
+	// Utils
+	formatAPIResponse,
 	// Builders
 	BrickBuilder,
 	CollectionBuilder,

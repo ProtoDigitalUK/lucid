@@ -1,7 +1,7 @@
 import T from "../../translations/index.js";
 import rolesSchema from "../../schemas/roles.js";
 import { swaggerResponse, swaggerHeaders } from "../../utils/swagger/index.js";
-import buildResponse from "../../utils/build-response.js";
+import formatAPIResponse from "../../utils/build-response.js";
 import RolesFormatter from "../../libs/formatters/roles.js";
 import serviceWrapper from "../../utils/services/service-wrapper.js";
 import { LucidAPIError } from "../../utils/errors/index.js";
@@ -56,7 +56,7 @@ const createSingleController: RouteController<
 	if (role.error) throw new LucidAPIError(role.error);
 
 	reply.status(200).send(
-		await buildResponse(request, {
+		formatAPIResponse(request, {
 			data: role.data,
 		}),
 	);

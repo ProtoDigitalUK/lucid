@@ -1,6 +1,6 @@
 import authSchema from "../../schemas/auth.js";
 import { swaggerResponse } from "../../utils/swagger/index.js";
-import buildResponse from "../../utils/build-response.js";
+import formatAPIResponse from "../../utils/build-response.js";
 import { LucidAPIError } from "../../utils/errors/index.js";
 import type { RouteController } from "../../types/types.js";
 
@@ -16,7 +16,7 @@ const getCSRFController: RouteController<
 	if (tokenRes.error) throw new LucidAPIError(tokenRes.error);
 
 	reply.status(200).send(
-		await buildResponse(request, {
+		formatAPIResponse(request, {
 			data: {
 				_csrf: tokenRes.data,
 			},

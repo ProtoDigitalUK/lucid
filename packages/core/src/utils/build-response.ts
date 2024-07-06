@@ -1,7 +1,5 @@
 import type { FastifyRequest } from "fastify";
 import type { ResponseBody } from "../types/response.js";
-// Services
-import getConfig from "../libs/config/get-config.js";
 
 // --------------------------------------------------
 // Types
@@ -14,19 +12,17 @@ interface BuildResponseParams {
 	};
 }
 
-type BuildResponse = (
+type FormatAPIResponse = (
 	request: FastifyRequest,
 	params: BuildResponseParams,
-) => Promise<ResponseBody>;
+) => ResponseBody;
 
 // --------------------------------------------------
 // Helpers
 
-const getPath = async (request: FastifyRequest) => {
-	const config = await getConfig();
-
+const getPath = (request: FastifyRequest) => {
 	const originalUrl = request.originalUrl;
-	return `${config.host}${originalUrl}`.split("?")[0] ?? "";
+	return `${request.server.config.host}${originalUrl}`.split("?")[0] ?? "";
 };
 
 const buildMetaLinks = (
@@ -105,7 +101,7 @@ const buildLinks = (
 
 // --------------------------------------------------
 // Main
-const buildResponse: BuildResponse = async (request, params) => {
+const formatAPIResponse: FormatAPIResponse = (request, params) => {
 	let lastPage = null;
 	if (params.pagination) {
 		if (params.pagination.perPage === -1) {
@@ -118,7 +114,7 @@ const buildResponse: BuildResponse = async (request, params) => {
 	}
 
 	const meta: ResponseBody["meta"] = {
-		path: await getPath(request),
+		path: getPath(request),
 		links: buildMetaLinks(request, params),
 		currentPage: params.pagination?.page ?? null,
 		perPage: params.pagination?.perPage ?? null,
@@ -134,4 +130,4 @@ const buildResponse: BuildResponse = async (request, params) => {
 	};
 };
 
-export default buildResponse;
+export default formatAPIResponse;

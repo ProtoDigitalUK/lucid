@@ -3,7 +3,7 @@ import collectionDocumentsSchema from "../../schemas/collection-documents.js";
 import { swaggerResponse, swaggerHeaders } from "../../utils/swagger/index.js";
 import { swaggerBodyBricksObj } from "../../schemas/collection-bricks.js";
 import { swaggerFieldObj } from "../../schemas/collection-fields.js";
-import buildResponse from "../../utils/build-response.js";
+import formatAPIResponse from "../../utils/build-response.js";
 import serviceWrapper from "../../utils/services/service-wrapper.js";
 import { LucidAPIError } from "../../utils/errors/index.js";
 import type { RouteController } from "../../types/types.js";
@@ -44,7 +44,7 @@ const upsertSingleController: RouteController<
 	if (documentId.error) throw new LucidAPIError(documentId.error);
 
 	reply.status(200).send(
-		await buildResponse(request, {
+		formatAPIResponse(request, {
 			data: {
 				id: documentId.data,
 			},

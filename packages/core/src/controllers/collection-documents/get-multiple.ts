@@ -3,9 +3,8 @@ import collectionDocumentsSchema from "../../schemas/collection-documents.js";
 import {
 	swaggerResponse,
 	swaggerQueryString,
-	swaggerHeaders,
 } from "../../utils/swagger/index.js";
-import buildResponse from "../../utils/build-response.js";
+import formatAPIResponse from "../../utils/build-response.js";
 import CollectionDocumentsFormatter from "../../libs/formatters/collection-documents.js";
 import serviceWrapper from "../../utils/services/service-wrapper.js";
 import { LucidAPIError } from "../../utils/errors/index.js";
@@ -40,7 +39,7 @@ const getMultipleController: RouteController<
 	if (documents.error) throw new LucidAPIError(documents.error);
 
 	reply.status(200).send(
-		await buildResponse(request, {
+		formatAPIResponse(request, {
 			data: documents.data.data,
 			pagination: {
 				count: documents.data.count,
@@ -68,9 +67,6 @@ export default {
 				paginated: true,
 			}),
 		},
-		headers: swaggerHeaders({
-			contentLocale: true,
-		}),
 		querystring: swaggerQueryString({
 			filters: [
 				{

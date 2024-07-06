@@ -5,7 +5,7 @@ import {
 	swaggerHeaders,
 	swaggerQueryString,
 } from "../../utils/swagger/index.js";
-import buildResponse from "../../utils/build-response.js";
+import formatAPIResponse from "../../utils/build-response.js";
 import MediaFormatter from "../../libs/formatters/media.js";
 import serviceWrapper from "../../utils/services/service-wrapper.js";
 import { LucidAPIError } from "../../utils/errors/index.js";
@@ -40,7 +40,7 @@ const getMultipleController: RouteController<
 	if (media.error) throw new LucidAPIError(media.error);
 
 	reply.status(200).send(
-		await buildResponse(request, {
+		formatAPIResponse(request, {
 			data: media.data.data,
 			pagination: {
 				count: media.data.count,

@@ -1,7 +1,7 @@
 import T from "../../translations/index.js";
 import collectionsSchema from "../../schemas/collections.js";
 import { swaggerResponse } from "../../utils/swagger/index.js";
-import buildResponse from "../../utils/build-response.js";
+import formatAPIResponse from "../../utils/build-response.js";
 import CollectionsFormatter from "../../libs/formatters/collections.js";
 import serviceWrapper from "../../utils/services/service-wrapper.js";
 import { LucidAPIError } from "../../utils/errors/index.js";
@@ -35,7 +35,7 @@ const getAllController: RouteController<
 	if (collections.error) throw new LucidAPIError(collections.error);
 
 	reply.status(200).send(
-		await buildResponse(request, {
+		formatAPIResponse(request, {
 			data: collections.data,
 		}),
 	);
