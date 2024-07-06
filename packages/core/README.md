@@ -29,6 +29,8 @@ Effortlessly configure Lucid to meet your content needs with our flexible config
 - **Full Localisation Support:** Full localisation support out of the box for collections and media with opt-in/out flags against individual fields.
 - **Plugin Support:** Use plugins to extend the configuration and give Lucid the power to seamlessly integrate with third-party solutions.
 - **Hook Support:** Extend Lucid further through a range of hooks, giving you full flexibility to add custom features.
+- **Client Integrations:** Register and manage client integrations allowing a head to request data from Lucid.
+- **Toolkit:** Call client route services programmatically enabling you to extend Lucid.
 
 ## 🛠️ First Party Plugins
 
