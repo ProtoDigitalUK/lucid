@@ -34,9 +34,15 @@ export default {
 						z.union([filterSchemas.single, filterSchemas.union]),
 					),
 					z.object({
-						documentId: filterSchemas.single.optional(),
-						documentCreatedBy: filterSchemas.single.optional(),
-						documentUpdatedBy: filterSchemas.single.optional(),
+						documentId: z
+							.union([filterSchemas.single, filterSchemas.union])
+							.optional(),
+						documentCreatedBy: z
+							.union([filterSchemas.single, filterSchemas.union])
+							.optional(),
+						documentUpdatedBy: z
+							.union([filterSchemas.single, filterSchemas.union])
+							.optional(),
 						documentCreatedAt: filterSchemas.single.optional(),
 						documentUpdatedAt: filterSchemas.single.optional(),
 					}),
@@ -50,8 +56,6 @@ export default {
 					}),
 				)
 				.optional(),
-			include: defaultQuery.include,
-			exclude: defaultQuery.exclude,
 			page: defaultQuery.page,
 			perPage: defaultQuery.perPage,
 		}),
@@ -99,6 +103,57 @@ export default {
 					])
 					.optional(),
 				include: z.array(z.enum(["bricks"])).optional(),
+			}),
+			params: z.object({
+				collectionKey: z.string(),
+			}),
+			body: undefined,
+		},
+		getMultiple: {
+			query: z.object({
+				filter: z
+					.union([
+						z.record(
+							z.string(),
+							z.union([
+								filterSchemas.single,
+								filterSchemas.union,
+							]),
+						),
+						z.object({
+							documentId: z
+								.union([
+									filterSchemas.single,
+									filterSchemas.union,
+								])
+								.optional(),
+							documentCreatedBy: z
+								.union([
+									filterSchemas.single,
+									filterSchemas.union,
+								])
+								.optional(),
+							documentUpdatedBy: z
+								.union([
+									filterSchemas.single,
+									filterSchemas.union,
+								])
+								.optional(),
+							documentCreatedAt: filterSchemas.single.optional(),
+							documentUpdatedAt: filterSchemas.single.optional(),
+						}),
+					])
+					.optional(),
+				sort: z
+					.array(
+						z.object({
+							key: z.enum(["createdAt", "updatedAt"]),
+							value: z.enum(["asc", "desc"]),
+						}),
+					)
+					.optional(),
+				page: defaultQuery.page,
+				perPage: defaultQuery.perPage,
 			}),
 			params: z.object({
 				collectionKey: z.string(),

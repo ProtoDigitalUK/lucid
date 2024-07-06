@@ -80,6 +80,7 @@ export default class CollectionDocumentsRepo {
 		documentFilters: QueryParamFilters;
 		documentFieldFilters: DocumentFieldFilters[];
 		collection: CollectionBuilder;
+		includeAllFields?: boolean;
 		config: Config;
 	}) => {
 		let pagesQuery = this.db
@@ -126,11 +127,11 @@ export default class CollectionDocumentsRepo {
 				"cb_user.id",
 			]);
 
-		const collectionFieldKeys = props.collection.flatFields.map(
-			(f) => f.key,
+		const includeFieldKeys = props.collection.queryIncludeFields(
+			props.includeAllFields,
 		);
 
-		if (collectionFieldKeys.length > 0) {
+		if (includeFieldKeys.length > 0) {
 			pagesQuery = pagesQuery
 				.select((eb) => [
 					props.config.db
@@ -232,7 +233,7 @@ export default class CollectionDocumentsRepo {
 								.where(
 									"lucid_collection_document_fields.key",
 									"in",
-									collectionFieldKeys,
+									includeFieldKeys,
 								),
 						)
 						.as("fields"),
@@ -297,6 +298,7 @@ export default class CollectionDocumentsRepo {
 		documentFilters: QueryParamFilters;
 		documentFieldFilters: DocumentFieldFilters[];
 		query: z.infer<typeof collectionDocumentsSchema.getMultiple.query>;
+		includeAllFields?: boolean;
 		collection: CollectionBuilder;
 		config: Config;
 	}) => {
@@ -338,7 +340,11 @@ export default class CollectionDocumentsRepo {
 			)
 			.where("lucid_collection_documents.is_deleted", "=", 0);
 
-		if (props.collection.queryIncludeFields().length > 0) {
+		const includeFieldKeys = props.collection.queryIncludeFields(
+			props.includeAllFields,
+		);
+
+		if (includeFieldKeys.length > 0) {
 			pagesQuery = pagesQuery
 				.select((eb) => [
 					props.config.db
@@ -440,7 +446,7 @@ export default class CollectionDocumentsRepo {
 								.where(
 									"lucid_collection_document_fields.key",
 									"in",
-									props.collection.queryIncludeFields(),
+									includeFieldKeys,
 								),
 						)
 						.as("fields"),

@@ -40,6 +40,7 @@ const getSingle: ServiceFn<
 	const pageRes = await CollectionDocumentsRepo.selectSingleFitlered({
 		documentFilters,
 		documentFieldFilters,
+		includeAllFields: true,
 		collection: collectionRes.data,
 		config: context.config,
 	});

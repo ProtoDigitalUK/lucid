@@ -25,17 +25,25 @@ const documentToolkit = {
 				},
 			},
 		}),
-	// getMultiple: async (query: {
-	// 	where: Partial<
-	// 		Record<keyof HeadlessCollectionDocuments | string, FilterObject>
-	// 	>;
-	// 	sort: Array<{
-	// 		key: string;
-	// 		value: "asc" | "desc";
-	// 	}>;
-	// 	page: number;
-	// 	perPage: number;
-	// }) => {},
+	getMultiple: async (
+		...data: ExtractServiceFnArgs<
+			typeof lucidServices.collection.document.client.getMultiple
+		>
+	) =>
+		toolkitWrapper({
+			fn: lucidServices.collection.document.client.getMultiple,
+			data: data,
+			config: {
+				transaction: false,
+				schema: z.object({
+					collectionKey: z.string(),
+					query: collectionDocumentsSchema.client.getMultiple.query,
+				}),
+				defaultError: {
+					name: T("route_document_fetch_error_name"),
+				},
+			},
+		}),
 };
 
 export default documentToolkit;

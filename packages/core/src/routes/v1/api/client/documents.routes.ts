@@ -13,6 +13,17 @@ const clientDocumentsRoutes = async (fastify: FastifyInstance) => {
 		zodSchema: collectionDocuments.client.getSingle.zodSchema,
 		controller: collectionDocuments.client.getSingle.controller,
 	});
+
+	r(fastify, {
+		method: "get",
+		url: "/documents/:collectionKey",
+		middleware: {
+			clientAuthentication: true,
+		},
+		swaggerSchema: collectionDocuments.client.getMultiple.swaggerSchema,
+		zodSchema: collectionDocuments.client.getMultiple.zodSchema,
+		controller: collectionDocuments.client.getMultiple.controller,
+	});
 };
 
 export default clientDocumentsRoutes;

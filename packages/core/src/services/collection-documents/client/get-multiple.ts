@@ -1,16 +1,18 @@
-import Repository from "../../libs/repositories/index.js";
-import Formatter from "../../libs/formatters/index.js";
-import { splitDocumentFilters } from "../../utils/helpers/index.js";
+import Repository from "../../../libs/repositories/index.js";
+import Formatter from "../../../libs/formatters/index.js";
+import { splitDocumentFilters } from "../../../utils/helpers/index.js";
 import type z from "zod";
-import type collectionDocumentsSchema from "../../schemas/collection-documents.js";
-import type { ServiceFn } from "../../utils/services/types.js";
-import type { CollectionDocumentResponse } from "../../types/response.js";
+import type collectionDocumentsSchema from "../../../schemas/collection-documents.js";
+import type { ServiceFn } from "../../../utils/services/types.js";
+import type { CollectionDocumentResponse } from "../../../types/response.js";
 
 const getMultiple: ServiceFn<
 	[
 		{
 			collectionKey: string;
-			query: z.infer<typeof collectionDocumentsSchema.getMultiple.query>;
+			query: z.infer<
+				typeof collectionDocumentsSchema.client.getMultiple.query
+			>;
 		},
 	],
 	{
@@ -42,7 +44,7 @@ const getMultiple: ServiceFn<
 			query: data.query,
 			documentFilters,
 			documentFieldFilters,
-			includeAllFields: false,
+			includeAllFields: true,
 			collection: collectionRes.data,
 			config: context.config,
 		});
