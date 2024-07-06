@@ -990,7 +990,7 @@
 			"name": "Locales",
 			"item": [
 				{
-					"name": "Get Multiple",
+					"name": "Get All",
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -1763,12 +1763,12 @@
 								"header": [
 									{
 										"key": "lucid-client-key",
-										"value": "07d533",
+										"value": "{{CLIENT_KEY}}",
 										"type": "text"
 									},
 									{
 										"key": "Authorization",
-										"value": "643e000b86a91d8287169ddbf23d4ca2a626f6364daf3d0e3e0e52efa1156ca2",
+										"value": "{{CLIENT_API_KEY}}",
 										"type": "text"
 									}
 								],
@@ -1831,12 +1831,12 @@
 								"header": [
 									{
 										"key": "lucid-client-key",
-										"value": "07d533",
+										"value": "{{CLIENT_KEY}}",
 										"type": "text"
 									},
 									{
 										"key": "Authorization",
-										"value": "643e000b86a91d8287169ddbf23d4ca2a626f6364daf3d0e3e0e52efa1156ca2",
+										"value": "{{CLIENT_API_KEY}}",
 										"type": "text"
 									}
 								],
@@ -1888,6 +1888,42 @@
 											"value": "Homepage FR",
 											"disabled": true
 										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Locales",
+					"item": [
+						{
+							"name": "Get All",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "lucid-client-key",
+										"value": "{{CLIENT_KEY}}",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{CLIENT_API_KEY}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{BASE_URL}}/api/v1/client/locales",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"client",
+										"locales"
 									]
 								}
 							},
@@ -2046,7 +2082,7 @@
 			"name": "Playground Routes (Testing)",
 			"item": [
 				{
-					"name": "Test",
+					"name": "Send Email (toolkit)",
 					"request": {
 						"method": "POST",
 						"header": [],
@@ -2067,7 +2103,7 @@
 					"response": []
 				},
 				{
-					"name": "Test 2",
+					"name": "Get Documents (toolkit)",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -2079,12 +2115,36 @@
 							"formdata": []
 						},
 						"url": {
-							"raw": "{{BASE_URL}}/get-document",
+							"raw": "{{BASE_URL}}/get-documents",
 							"host": [
 								"{{BASE_URL}}"
 							],
 							"path": [
-								"get-document"
+								"get-documents"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Locales (toolkit)",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/get-locales",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"get-locales"
 							]
 						}
 					},

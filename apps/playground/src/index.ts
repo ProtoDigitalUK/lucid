@@ -21,7 +21,7 @@ lucid.fastify.post("/send-email", async (request, reply) => {
 	);
 });
 
-lucid.fastify.get("/get-document", async (request, reply) => {
+lucid.fastify.get("/get-documents", async (request, reply) => {
 	const PAGE = 1;
 	const PER_PAGE = 10;
 
@@ -50,6 +50,16 @@ lucid.fastify.get("/get-document", async (request, reply) => {
 				page: PAGE,
 				perPage: PER_PAGE,
 			},
+		}),
+	);
+});
+
+lucid.fastify.get("/get-locales", async (request, reply) => {
+	const res = await toolkit.locale.getAll();
+	if (res.error) throw new LucidAPIError(res.error);
+	reply.send(
+		formatAPIResponse(request, {
+			data: res.data,
 		}),
 	);
 });

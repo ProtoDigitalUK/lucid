@@ -13,4 +13,11 @@ export default {
 		params: undefined,
 		body: undefined,
 	},
+	client: {
+		getAll: {
+			query: undefined,
+			params: undefined,
+			body: undefined,
+		},
+	},
 };
