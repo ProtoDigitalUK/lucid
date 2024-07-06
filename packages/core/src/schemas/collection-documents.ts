@@ -100,7 +100,9 @@ export default {
 					.optional(),
 				include: z.array(z.enum(["bricks"])).optional(),
 			}),
-			params: undefined,
+			params: z.object({
+				collectionKey: z.string(),
+			}),
 			body: undefined,
 		},
 	},

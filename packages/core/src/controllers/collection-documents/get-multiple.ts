@@ -72,7 +72,23 @@ export default {
 			contentLocale: true,
 		}),
 		querystring: swaggerQueryString({
-			filters: [],
+			filters: [
+				{
+					key: "documentId",
+				},
+				{
+					key: "documentCreatedBy",
+				},
+				{
+					key: "documentUpdatedBy",
+				},
+				{
+					key: "documentCreatedAt",
+				},
+				{
+					key: "documentUpdatedAt",
+				},
+			],
 			sorts: ["createdAt", "updatedAt"],
 			page: true,
 			perPage: true,
