@@ -481,8 +481,6 @@ export default class CollectionDocumentsRepo {
 				queryParams: {
 					filter: props.documentFilters,
 					sort: props.query.sort,
-					include: props.query.include,
-					exclude: props.query.exclude,
 					page: props.query.page,
 					perPage: props.query.perPage,
 				},
