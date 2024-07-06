@@ -1,5 +1,5 @@
 {
-	"name": "@lucidcms/example",
+	"name": "@lucidcms/playground",
 	"private": true,
 	"description": "",
 	"main": "src/index.ts",
