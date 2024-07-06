@@ -258,13 +258,17 @@ export default class CollectionDocumentsRepo {
 				meta: {
 					tableKeys: {
 						filters: {
-							id: "lucid_collection_documents.id",
-							collectionKey:
+							documentId: "lucid_collection_documents.id",
+							documentCollectionKey:
 								"lucid_collection_documents.collection_key",
-							createdBy: "lucid_collection_documents.created_by",
-							updatedBy: "lucid_collection_documents.updated_by",
-							createdAt: "lucid_collection_documents.created_at",
-							updatedAt: "lucid_collection_documents.updated_at",
+							documentCreatedBy:
+								"lucid_collection_documents.created_by",
+							documentUpdatedBy:
+								"lucid_collection_documents.updated_by",
+							documentCreatedAt:
+								"lucid_collection_documents.created_at",
+							documentUpdatedAt:
+								"lucid_collection_documents.updated_at",
 						},
 					},
 				},
@@ -290,6 +294,8 @@ export default class CollectionDocumentsRepo {
 		>;
 	};
 	selectMultipleFiltered = async (props: {
+		documentFilters: QueryParamFilters;
+		documentFieldFilters: DocumentFieldFilters[];
 		query: z.infer<typeof collectionDocumentsSchema.getMultiple.query>;
 		collection: CollectionBuilder;
 		config: Config;
@@ -331,10 +337,6 @@ export default class CollectionDocumentsRepo {
 				props.collection.key,
 			)
 			.where("lucid_collection_documents.is_deleted", "=", 0);
-
-		const collectionDocFiltersRes = props.collection.documentFieldFilters(
-			props.query.filter,
-		);
 
 		if (props.collection.queryIncludeFields().length > 0) {
 			pagesQuery = pagesQuery
@@ -451,7 +453,7 @@ export default class CollectionDocumentsRepo {
 					),
 				);
 
-			if (collectionDocFiltersRes.length > 0) {
+			if (props.documentFieldFilters.length > 0) {
 				pagesCountQuery = pagesCountQuery.leftJoin(
 					"lucid_collection_document_fields",
 					(join) =>
@@ -471,16 +473,29 @@ export default class CollectionDocumentsRepo {
 			},
 			{
 				queryParams: {
-					filter: props.query.filter,
+					filter: props.documentFilters,
 					sort: props.query.sort,
 					include: props.query.include,
 					exclude: props.query.exclude,
 					page: props.query.page,
 					perPage: props.query.perPage,
 				},
-				documentFieldFilters: collectionDocFiltersRes,
+				documentFieldFilters: props.documentFieldFilters,
 				meta: {
 					tableKeys: {
+						filters: {
+							documentId: "lucid_collection_documents.id",
+							documentCollectionKey:
+								"lucid_collection_documents.collection_key",
+							documentCreatedBy:
+								"lucid_collection_documents.created_by",
+							documentUpdatedBy:
+								"lucid_collection_documents.updated_by",
+							documentCreatedAt:
+								"lucid_collection_documents.created_at",
+							documentUpdatedAt:
+								"lucid_collection_documents.updated_at",
+						},
 						sorts: {
 							createdAt: "created_at",
 							updatedAt: "updated_at",

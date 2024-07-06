@@ -32,17 +32,14 @@ const getSingle: ServiceFn<
 	);
 	if (collectionRes.error) return collectionRes;
 
-	// TODO: review this - is liekly an issue if fields have a key that is also used as a document column
-	// TODO: Might need to add new query.fieldFilters for instance
-
 	const { documentFilters, documentFieldFilters } = splitDocumentFilters(
 		collectionRes.data,
 		data.query.filter,
 	);
 
 	const pageRes = await CollectionDocumentsRepo.selectSingleFitlered({
-		documentFilters: documentFilters,
-		documentFieldFilters: documentFieldFilters,
+		documentFilters,
+		documentFieldFilters,
 		collection: collectionRes.data,
 		config: context.config,
 	});

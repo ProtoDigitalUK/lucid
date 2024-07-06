@@ -28,10 +28,19 @@ export default {
 	getMultiple: {
 		query: z.object({
 			filter: z
-				.record(
-					z.string(),
-					z.union([filterSchemas.single, filterSchemas.union]),
-				)
+				.union([
+					z.object({
+						documentId: filterSchemas.single.optional(),
+						documentCreatedBy: filterSchemas.single.optional(),
+						documentUpdatedBy: filterSchemas.single.optional(),
+						documentCreatedAt: filterSchemas.single.optional(),
+						documentUpdatedAt: filterSchemas.single.optional(),
+					}),
+					z.record(
+						z.string(),
+						z.union([filterSchemas.single, filterSchemas.union]),
+					),
+				])
 				.optional(),
 			sort: z
 				.array(
@@ -71,24 +80,24 @@ export default {
 	client: {
 		getSingle: {
 			query: z.object({
-				filter: z.union([
-					z
-						.object({
-							id: filterSchemas.single.optional(),
-							createdBy: filterSchemas.single.optional(),
-							updatedBy: filterSchemas.single.optional(),
-							createdAt: filterSchemas.single.optional(),
-							updatedAt: filterSchemas.single.optional(),
-						})
-						.refine((data) => Object.keys(data).length > 0, {
-							message: "Please provide at least one filter",
+				filter: z
+					.union([
+						z.object({
+							documentId: filterSchemas.single.optional(),
+							documentCreatedBy: filterSchemas.single.optional(),
+							documentUpdatedBy: filterSchemas.single.optional(),
+							documentCreatedAt: filterSchemas.single.optional(),
+							documentUpdatedAt: filterSchemas.single.optional(),
 						}),
-					z
-						.record(z.string(), filterSchemas.union)
-						.refine((data) => Object.keys(data).length > 0, {
-							message: "Please provide at least one filter",
-						}),
-				]),
+						z.record(
+							z.string(),
+							z.union([
+								filterSchemas.single,
+								filterSchemas.union,
+							]),
+						),
+					])
+					.optional(),
 				include: z.array(z.enum(["bricks"])).optional(),
 			}),
 			params: undefined,

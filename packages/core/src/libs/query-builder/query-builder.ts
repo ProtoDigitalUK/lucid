@@ -80,7 +80,6 @@ const queryBuilder = <DB, Table extends keyof DB, O>(
 				value: value,
 				operator: operator,
 			});
-			console.log("lucid_collection_document_fields.key", "=", key);
 
 			mainQuery = mainQuery.where(({ eb, and }) =>
 				and([
