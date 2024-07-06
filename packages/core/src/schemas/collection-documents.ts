@@ -29,6 +29,10 @@ export default {
 		query: z.object({
 			filter: z
 				.union([
+					z.record(
+						z.string(),
+						z.union([filterSchemas.single, filterSchemas.union]),
+					),
 					z.object({
 						documentId: filterSchemas.single.optional(),
 						documentCreatedBy: filterSchemas.single.optional(),
@@ -36,10 +40,6 @@ export default {
 						documentCreatedAt: filterSchemas.single.optional(),
 						documentUpdatedAt: filterSchemas.single.optional(),
 					}),
-					z.record(
-						z.string(),
-						z.union([filterSchemas.single, filterSchemas.union]),
-					),
 				])
 				.optional(),
 			sort: z
@@ -82,13 +82,6 @@ export default {
 			query: z.object({
 				filter: z
 					.union([
-						z.object({
-							documentId: filterSchemas.single.optional(),
-							documentCreatedBy: filterSchemas.single.optional(),
-							documentUpdatedBy: filterSchemas.single.optional(),
-							documentCreatedAt: filterSchemas.single.optional(),
-							documentUpdatedAt: filterSchemas.single.optional(),
-						}),
 						z.record(
 							z.string(),
 							z.union([
@@ -96,6 +89,13 @@ export default {
 								filterSchemas.union,
 							]),
 						),
+						z.object({
+							documentId: filterSchemas.single.optional(),
+							documentCreatedBy: filterSchemas.single.optional(),
+							documentUpdatedBy: filterSchemas.single.optional(),
+							documentCreatedAt: filterSchemas.single.optional(),
+							documentUpdatedAt: filterSchemas.single.optional(),
+						}),
 					])
 					.optional(),
 				include: z.array(z.enum(["bricks"])).optional(),

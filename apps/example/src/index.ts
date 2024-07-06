@@ -18,12 +18,12 @@ lucid.fastify.get("/get-document", async (_, reply) => {
 		collectionKey: "page",
 		query: {
 			filter: {
-				documentId: {
-					value: 1,
-				},
+				// documentId: {
+				// 	value: 1,
+				// },
 				page_title: {
-					value: "Homepage FRR",
-					operator: "!=",
+					value: "About",
+					operator: "=",
 				},
 			},
 			// include: ["bricks"],
