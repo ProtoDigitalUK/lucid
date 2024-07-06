@@ -11,9 +11,7 @@ interface QueryParams {
 		lastName?: Accessor<string>;
 		email?: Accessor<string>;
 		username?: Accessor<string>;
-	};
-	exclude?: {
-		current?: Accessor<boolean> | boolean;
+		id?: Accessor<number | number[]>;
 	};
 }
 

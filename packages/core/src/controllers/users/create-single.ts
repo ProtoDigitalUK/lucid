@@ -1,7 +1,7 @@
 import T from "../../translations/index.js";
 import usersSchema from "../../schemas/users.js";
 import { swaggerResponse } from "../../utils/swagger/index.js";
-import buildResponse from "../../utils/build-response.js";
+import formatAPIResponse from "../../utils/build-response.js";
 import UsersFormatter from "../../libs/formatters/users.js";
 import serviceWrapper from "../../utils/services/service-wrapper.js";
 import { LucidAPIError } from "../../utils/errors/index.js";
@@ -20,7 +20,6 @@ const createSingleController: RouteController<
 				type: "basic",
 				name: T("route_user_create_error_name"),
 				message: T("route_user_create_error_message"),
-				status: 500,
 			},
 		},
 	)(
@@ -47,7 +46,6 @@ const createSingleController: RouteController<
 			type: "basic",
 			name: T("route_user_fetch_error_name"),
 			message: T("route_user_fetch_error_message"),
-			status: 500,
 		},
 	})(
 		{
@@ -62,7 +60,7 @@ const createSingleController: RouteController<
 	if (user.error) throw new LucidAPIError(user.error);
 
 	reply.status(200).send(
-		await buildResponse(request, {
+		formatAPIResponse(request, {
 			data: user.data,
 		}),
 	);

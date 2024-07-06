@@ -3,7 +3,9 @@
 	"scripts": {
 		"start": "turbo run start",
 		"build": "turbo run build",
-		"dev": "turbo run dev --no-daemon",
+		"dev:full": "turbo dev --filter=@lucidcms/example --filter=@lucidcms/cms --filter=@lucidcms/core",
+		"dev:core": "turbo dev --filter=@lucidcms/example --filter=@lucidcms/core",
+		"dev:cms": "turbo dev --filter=@lucidcms/example --filter=@lucidcms/cms",
 		"test": "vitest run",
 		"test:watch": "vitest watch",
 		"format": "turbo run format",
@@ -14,7 +16,7 @@
 	},
 	"devDependencies": {
 		"husky": "^9.0.11",
-		"turbo": "^1.12.5",
+		"turbo": "^2.0.6",
 		"vitest": "^1.5.0"
 	},
 	"optionalDependencies": {

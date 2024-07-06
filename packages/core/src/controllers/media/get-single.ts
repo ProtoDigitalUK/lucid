@@ -1,7 +1,7 @@
 import T from "../../translations/index.js";
 import mediaSchema from "../../schemas/media.js";
 import { swaggerResponse } from "../../utils/swagger/index.js";
-import buildResponse from "../../utils/build-response.js";
+import formatAPIResponse from "../../utils/build-response.js";
 import MediaFormatter from "../../libs/formatters/media.js";
 import serviceWrapper from "../../utils/services/service-wrapper.js";
 import { LucidAPIError } from "../../utils/errors/index.js";
@@ -20,7 +20,6 @@ const getSingleController: RouteController<
 				type: "basic",
 				name: T("route_media_fetch_error_name"),
 				message: T("route_media_fetch_error_message"),
-				status: 500,
 			},
 		},
 	)(
@@ -36,7 +35,7 @@ const getSingleController: RouteController<
 	if (media.error) throw new LucidAPIError(media.error);
 
 	reply.status(200).send(
-		await buildResponse(request, {
+		formatAPIResponse(request, {
 			data: media.data,
 		}),
 	);

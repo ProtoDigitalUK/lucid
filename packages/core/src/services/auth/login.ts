@@ -52,7 +52,6 @@ const login: ServiceFn<
 			decrypt(user.secret, context.config.keys.encryptionKey),
 		),
 	});
-	console.log("valid", valid);
 	if (!valid)
 		return {
 			error: {

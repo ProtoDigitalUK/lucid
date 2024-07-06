@@ -1,7 +1,7 @@
 import T from "../../translations/index.js";
 import emailsSchema from "../../schemas/email.js";
 import { swaggerResponse } from "../../utils/swagger/index.js";
-import buildResponse from "../../utils/build-response.js";
+import formatAPIResponse from "../../utils/build-response.js";
 import EmailsFormatter from "../../libs/formatters/emails.js";
 import serviceWrapper from "../../utils/services/service-wrapper.js";
 import { LucidAPIError } from "../../utils/errors/index.js";
@@ -20,7 +20,6 @@ const getSingleController: RouteController<
 				type: "basic",
 				name: T("route_email_fetch_error_name"),
 				message: T("route_email_fetch_error_message"),
-				status: 500,
 			},
 		},
 	)(
@@ -37,7 +36,7 @@ const getSingleController: RouteController<
 	if (email.error) throw new LucidAPIError(email.error);
 
 	reply.status(200).send(
-		await buildResponse(request, {
+		formatAPIResponse(request, {
 			data: email.data,
 		}),
 	);

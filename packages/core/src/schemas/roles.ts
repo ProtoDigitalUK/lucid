@@ -1,5 +1,5 @@
 import z from "zod";
-import defaultQuery from "./default-query.js";
+import defaultQuery, { filterSchemas } from "./default-query.js";
 
 export default {
 	createSingle: {
@@ -34,10 +34,8 @@ export default {
 		query: z.object({
 			filter: z
 				.object({
-					name: z.string().optional(),
-					roleIds: z
-						.union([z.string(), z.array(z.string())])
-						.optional(),
+					name: filterSchemas.single.optional(),
+					roleIds: filterSchemas.union.optional(),
 				})
 				.optional(),
 			sort: z

@@ -9,9 +9,6 @@ const getMultiple: ServiceFn<
 	[
 		{
 			query: z.infer<typeof usersSchema.getMultiple.query>;
-			auth: {
-				id: number;
-			};
 		},
 	],
 	{
@@ -25,7 +22,6 @@ const getMultiple: ServiceFn<
 	const [users, count] = await UsersRepo.selectMultipleFiltered({
 		query: data.query,
 		config: context.config,
-		authId: data.auth.id,
 	});
 
 	return {

@@ -1,7 +1,7 @@
 import T from "../../translations/index.js";
 import settingsSchema from "../../schemas/settings.js";
 import { swaggerResponse } from "../../utils/swagger/index.js";
-import buildResponse from "../../utils/build-response.js";
+import formatAPIResponse from "../../utils/build-response.js";
 import SettingsFormatter from "../../libs/formatters/settings.js";
 import serviceWrapper from "../../utils/services/service-wrapper.js";
 import { LucidAPIError } from "../../utils/errors/index.js";
@@ -20,7 +20,6 @@ const getSettingsController: RouteController<
 				type: "basic",
 				name: T("route_settings_fetch_error_name"),
 				message: T("route_settings_fetch_error_message"),
-				status: 500,
 			},
 		},
 	)({
@@ -31,7 +30,7 @@ const getSettingsController: RouteController<
 	if (settings.error) throw new LucidAPIError(settings.error);
 
 	reply.status(200).send(
-		await buildResponse(request, {
+		formatAPIResponse(request, {
 			data: settings.data,
 		}),
 	);

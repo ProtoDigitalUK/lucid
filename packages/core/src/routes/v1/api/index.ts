@@ -8,11 +8,11 @@ import localeRoutes from "./locales.routes.js";
 import emailRoutes from "./emails.routes.js";
 import mediaRoutes from "./media.routes.js";
 import settingsRoutes from "./settings.routes.js";
-import publicPagesRoutes from "./public-pages.routes.js";
 import collectionRoutes from "./collections.routes.js";
 import collectionDocumentsRoutes from "./collection-documents.routes.js";
 import userRoutes from "./users.routes.js";
 import clientIntegrationRoutes from "./client-integrations.routes.js";
+import clientRoutes from "./client/index.js";
 
 const routes = async (fastify: FastifyInstance) => {
 	fastify.register(authRoutes, {
@@ -51,9 +51,10 @@ const routes = async (fastify: FastifyInstance) => {
 	fastify.register(clientIntegrationRoutes, {
 		prefix: "/client-integrations",
 	});
-	// Public
-	fastify.register(publicPagesRoutes, {
-		prefix: "/public/pages",
+
+	// Client
+	fastify.register(clientRoutes, {
+		prefix: "/client",
 	});
 };
 

@@ -1,6 +1,6 @@
 import permissionsSchema from "../../schemas/permissions.js";
 import { swaggerResponse } from "../../utils/swagger/index.js";
-import buildResponse from "../../utils/build-response.js";
+import formatAPIResponse from "../../utils/build-response.js";
 import permissionGroups from "../../constants/permission-groups.js";
 import Formatter from "../../libs/formatters/index.js";
 import PermissionsFormatter from "../../libs/formatters/permissions.js";
@@ -14,7 +14,7 @@ const getAllController: RouteController<
 	const PermissionsFormatter = Formatter.get("permissions");
 
 	reply.status(200).send(
-		await buildResponse(request, {
+		formatAPIResponse(request, {
 			data: PermissionsFormatter.formatMultiple({
 				permissions: permissionGroups,
 			}),

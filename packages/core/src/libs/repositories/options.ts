@@ -1,9 +1,7 @@
+import queryBuilder, {
+	type QueryBuilderWhere,
+} from "../query-builder/index.js";
 import type { HeadlessOptions, Select, KyselyDB } from "../db/types.js";
-import {
-	selectQB,
-	updateQB,
-	type QueryBuilderWhereT,
-} from "../db/query-builder.js";
 
 export default class OptionsRepo {
 	constructor(private db: KyselyDB) {}
@@ -12,11 +10,11 @@ export default class OptionsRepo {
 	// select
 	selectSingle = async <K extends keyof Select<HeadlessOptions>>(props: {
 		select: K[];
-		where: QueryBuilderWhereT<"lucid_options">;
+		where: QueryBuilderWhere<"lucid_options">;
 	}) => {
 		let query = this.db.selectFrom("lucid_options").select(props.select);
 
-		query = selectQB(query, props.where);
+		query = queryBuilder.select(query, props.where);
 
 		return query.executeTakeFirst() as Promise<
 			Pick<Select<HeadlessOptions>, K> | undefined
@@ -43,7 +41,7 @@ export default class OptionsRepo {
 	// ----------------------------------------
 	// update
 	updateSingle = async (props: {
-		where: QueryBuilderWhereT<"lucid_options">;
+		where: QueryBuilderWhere<"lucid_options">;
 		data: {
 			valueInt?: HeadlessOptions["value_int"];
 			valueBool?: HeadlessOptions["value_bool"];
@@ -59,7 +57,7 @@ export default class OptionsRepo {
 			})
 			.returning("name");
 
-		query = updateQB(query, props.where);
+		query = queryBuilder.update(query, props.where);
 
 		return query.executeTakeFirst();
 	};

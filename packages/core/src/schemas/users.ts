@@ -1,4 +1,4 @@
-import defaultQuery from "./default-query.js";
+import defaultQuery, { filterSchemas } from "./default-query.js";
 import z from "zod";
 
 export default {
@@ -39,13 +39,12 @@ export default {
 		query: z.object({
 			filter: z
 				.object({
-					firstName: z.string().optional(),
-					lastName: z.string().optional(),
-					email: z.string().optional(),
-					username: z.string().optional(),
-					roleIds: z
-						.union([z.array(z.string()), z.string()])
-						.optional(),
+					firstName: filterSchemas.single.optional(),
+					lastName: filterSchemas.single.optional(),
+					email: filterSchemas.single.optional(),
+					username: filterSchemas.single.optional(),
+					roleIds: filterSchemas.union.optional(),
+					id: filterSchemas.union.optional(),
 				})
 				.optional(),
 			sort: z
@@ -64,7 +63,7 @@ export default {
 				)
 				.optional(),
 			include: z.array(z.enum(["permissions"])).optional(),
-			exclude: z.array(z.enum(["current"])).optional(),
+			exclude: defaultQuery.exclude,
 			page: defaultQuery.page,
 			perPage: defaultQuery.perPage,
 		}),

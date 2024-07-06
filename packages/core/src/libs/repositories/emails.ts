@@ -1,13 +1,10 @@
+import { sql } from "kysely";
+import queryBuilder, {
+	type QueryBuilderWhere,
+} from "../query-builder/index.js";
 import type z from "zod";
 import type { HeadlessEmails, Select, KyselyDB } from "../db/types.js";
 import type { Config } from "../../types/config.js";
-import { sql } from "kysely";
-import queryBuilder, {
-	deleteQB,
-	selectQB,
-	updateQB,
-	type QueryBuilderWhereT,
-} from "../db/query-builder.js";
 import type emailsSchema from "../../schemas/email.js";
 
 export default class EmailsRepo {
@@ -17,11 +14,11 @@ export default class EmailsRepo {
 	// selects
 	selectSingle = async <K extends keyof Select<HeadlessEmails>>(props: {
 		select: K[];
-		where: QueryBuilderWhereT<"lucid_emails">;
+		where: QueryBuilderWhere<"lucid_emails">;
 	}) => {
 		let query = this.db.selectFrom("lucid_emails").select(props.select);
 
-		query = selectQB(query, props.where);
+		query = queryBuilder.select(query, props.where);
 
 		return query.executeTakeFirst() as Promise<
 			Pick<Select<HeadlessEmails>, K> | undefined
@@ -66,13 +63,13 @@ export default class EmailsRepo {
 			.selectFrom("lucid_emails")
 			.select(sql`count(*)`.as("count"));
 
-		const { main, count } = queryBuilder(
+		const { main, count } = queryBuilder.main(
 			{
 				main: emailsQuery,
 				count: emailsCountQuery,
 			},
 			{
-				requestQuery: {
+				queryParams: {
 					filter: props.query.filter,
 					sort: props.query.sort,
 					include: props.query.include,
@@ -81,55 +78,26 @@ export default class EmailsRepo {
 					perPage: props.query.perPage,
 				},
 				meta: {
-					filters: [
-						{
-							queryKey: "toAddress",
-							tableKey: "to_address",
-							operator: "=",
+					tableKeys: {
+						filters: {
+							toAddress: "to_address",
+							subject: "subject",
+							deliveryStatus: "delivery_status",
+							type: "type",
+							template: "template",
 						},
-						{
-							queryKey: "subject",
-							tableKey: "subject",
-							operator: props.config.db.fuzzOperator,
+						sorts: {
+							lastAttemptAt: "last_attempt_at",
+							lastSuccessAt: "last_success_at",
+							createdAt: "created_at",
+							sentCount: "sent_count",
+							errorCount: "error_count",
 						},
-						{
-							queryKey: "deliveryStatus",
-							tableKey: "delivery_status",
-							operator: "=",
-						},
-						{
-							queryKey: "type",
-							tableKey: "type",
-							operator: "=",
-						},
-						{
-							queryKey: "template",
-							tableKey: "template",
-							operator: props.config.db.fuzzOperator,
-						},
-					],
-					sorts: [
-						{
-							queryKey: "lastAttemptAt",
-							tableKey: "last_attempt_at",
-						},
-						{
-							queryKey: "lastSuccessAt",
-							tableKey: "last_success_at",
-						},
-						{
-							queryKey: "createdAt",
-							tableKey: "created_at",
-						},
-						{
-							queryKey: "sentCount",
-							tableKey: "sent_count",
-						},
-						{
-							queryKey: "errorCount",
-							tableKey: "error_count",
-						},
-					],
+					},
+					defaultOperators: {
+						subject: props.config.db.fuzzOperator,
+						template: props.config.db.fuzzOperator,
+					},
 				},
 			},
 		);
@@ -183,7 +151,7 @@ export default class EmailsRepo {
 	// ----------------------------------------
 	// update
 	updateSingle = async (props: {
-		where: QueryBuilderWhereT<"lucid_emails">;
+		where: QueryBuilderWhere<"lucid_emails">;
 		data: {
 			deliveryStatus?: HeadlessEmails["delivery_status"];
 			lastErrorMessage?: string;
@@ -205,18 +173,18 @@ export default class EmailsRepo {
 			})
 			.returningAll();
 
-		query = updateQB(query, props.where);
+		query = queryBuilder.update(query, props.where);
 
 		return query.executeTakeFirst();
 	};
 	// ----------------------------------------
 	// delete
 	deleteSingle = async (props: {
-		where: QueryBuilderWhereT<"lucid_emails">;
+		where: QueryBuilderWhere<"lucid_emails">;
 	}) => {
 		let query = this.db.deleteFrom("lucid_emails").returning("id");
 
-		query = deleteQB(query, props.where);
+		query = queryBuilder.delete(query, props.where);
 
 		return query.executeTakeFirst();
 	};

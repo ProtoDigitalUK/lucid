@@ -1,14 +1,11 @@
-import type z from "zod";
 import { sql } from "kysely";
+import queryBuilder, {
+	type QueryBuilderWhere,
+} from "../query-builder/index.js";
+import type z from "zod";
 import type { HeadlessRoles, Select, KyselyDB } from "../db/types.js";
 import type { Config } from "../../types/config.js";
 import type rolesSchema from "../../schemas/roles.js";
-import queryBuilder, {
-	deleteQB,
-	selectQB,
-	updateQB,
-	type QueryBuilderWhereT,
-} from "../db/query-builder.js";
 
 export default class RolesRepo {
 	constructor(private db: KyselyDB) {}
@@ -23,11 +20,11 @@ export default class RolesRepo {
 	// selects
 	selectSingle = async <K extends keyof Select<HeadlessRoles>>(props: {
 		select: K[];
-		where: QueryBuilderWhereT<"lucid_roles">;
+		where: QueryBuilderWhere<"lucid_roles">;
 	}) => {
 		let query = this.db.selectFrom("lucid_roles").select(props.select);
 
-		query = selectQB(query, props.where);
+		query = queryBuilder.select(query, props.where);
 
 		return query.executeTakeFirst() as Promise<
 			Pick<Select<HeadlessRoles>, K> | undefined
@@ -67,11 +64,11 @@ export default class RolesRepo {
 	};
 	selectMultiple = async <K extends keyof Select<HeadlessRoles>>(props: {
 		select: K[];
-		where: QueryBuilderWhereT<"lucid_roles">;
+		where: QueryBuilderWhere<"lucid_roles">;
 	}) => {
 		let query = this.db.selectFrom("lucid_roles").select(props.select);
 
-		query = selectQB(query, props.where);
+		query = queryBuilder.select(query, props.where);
 
 		return query.execute() as Promise<
 			Array<Pick<Select<HeadlessRoles>, K>>
@@ -110,13 +107,13 @@ export default class RolesRepo {
 			.selectFrom("lucid_roles")
 			.select(sql`count(*)`.as("count"));
 
-		const { main, count } = queryBuilder(
+		const { main, count } = queryBuilder.main(
 			{
 				main: rolesQuery,
 				count: rolesCountQuery,
 			},
 			{
-				requestQuery: {
+				queryParams: {
 					filter: props.query.filter,
 					sort: props.query.sort,
 					include: props.query.include,
@@ -125,28 +122,19 @@ export default class RolesRepo {
 					perPage: props.query.perPage,
 				},
 				meta: {
-					filters: [
-						{
-							queryKey: "name",
-							tableKey: "name",
-							operator: props.config.db.fuzzOperator,
+					tableKeys: {
+						filters: {
+							name: "name",
+							roleIds: "id",
 						},
-						{
-							queryKey: "roleIds",
-							tableKey: "id",
-							operator: "=",
+						sorts: {
+							name: "name",
+							createdAt: "created_at",
 						},
-					],
-					sorts: [
-						{
-							queryKey: "name",
-							tableKey: "name",
-						},
-						{
-							queryKey: "createdAt",
-							tableKey: "created_at",
-						},
-					],
+					},
+					defaultOperators: {
+						name: props.config.db.fuzzOperator,
+					},
 				},
 			},
 		);
@@ -159,18 +147,18 @@ export default class RolesRepo {
 	// ----------------------------------------
 	// delete
 	deleteMultiple = async (props: {
-		where: QueryBuilderWhereT<"lucid_roles">;
+		where: QueryBuilderWhere<"lucid_roles">;
 	}) => {
 		let query = this.db.deleteFrom("lucid_roles").returning("id");
 
-		query = deleteQB(query, props.where);
+		query = queryBuilder.delete(query, props.where);
 
 		return query.execute();
 	};
 	// ----------------------------------------
 	// update
 	updateSingle = async (props: {
-		where: QueryBuilderWhereT<"lucid_roles">;
+		where: QueryBuilderWhere<"lucid_roles">;
 		data: {
 			name?: string;
 			description?: string;
@@ -186,7 +174,7 @@ export default class RolesRepo {
 			})
 			.returning(["id"]);
 
-		query = updateQB(query, props.where);
+		query = queryBuilder.update(query, props.where);
 
 		return query.executeTakeFirst();
 	};

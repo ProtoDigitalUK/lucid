@@ -4,6 +4,10 @@ import type { FieldTypes, CFConfig } from "../../custom-fields/types.js";
 import type CollectionConfigSchema from "./schema.js";
 import type { CollectionDocumentBuilderHooks } from "../../../types/hooks.js";
 import type { CFColumn } from "../../custom-fields/types.js";
+import type {
+	FilterValue,
+	FilterOperator,
+} from "../../../types/query-params.js";
 
 export interface FieldCollectionConfig {
 	list?: true;
@@ -48,8 +52,9 @@ export interface CollectionBrickConfig {
 	fields: CFConfig<FieldTypes>[];
 }
 
-export interface DocumentFiltersResponse {
+export interface DocumentFieldFilters {
 	key: string;
-	value: string | string[];
+	value: FilterValue;
+	operator: FilterOperator;
 	column: CFColumn<FieldTypes>;
 }

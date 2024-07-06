@@ -1,4 +1,4 @@
-import z from "zod";
+import z, { string } from "zod";
 
 /*
 z.object({
@@ -24,6 +24,37 @@ z.object({
 	per_page: defaultQuery.per_page,
 })
 */
+
+const filterOperators = z
+	.enum([
+		"=",
+		"%",
+		"like",
+		"ilike",
+		"in",
+		"not in",
+		"<>",
+		"is not",
+		"is",
+		"!=",
+	])
+	.optional();
+
+export const filterSchemas = {
+	single: z.object({
+		value: z.union([z.string(), z.number()]),
+		operator: filterOperators,
+	}),
+	union: z.object({
+		value: z.union([
+			z.string(),
+			z.array(z.string()),
+			z.number(),
+			z.array(z.number()),
+		]),
+		operator: filterOperators,
+	}),
+};
 
 export default {
 	filter: z.object({}).optional(),

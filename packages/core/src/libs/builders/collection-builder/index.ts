@@ -1,12 +1,12 @@
 import FieldBuilder from "../field-builder/index.js";
 import type BrickBuilder from "../brick-builder/index.js";
 import type { FieldTypes, CFProps } from "../../custom-fields/types.js";
-import type { RequestQueryParsed } from "../../../middleware/validate-query.js";
+import type { QueryParamFilters } from "../../../types/query-params.js";
 import type {
 	FieldCollectionConfig,
 	CollectionConfigSchemaType,
 	CollectionData,
-	DocumentFiltersResponse,
+	DocumentFieldFilters as DocumentFieldFiltersResponse,
 	CollectionBrickConfig,
 	FieldFilters,
 } from "./types.js";
@@ -108,29 +108,39 @@ class CollectionBuilder extends FieldBuilder {
 	}
 	// ------------------------------------
 	// Public Methods
-	documentFilters(
-		filters: RequestQueryParsed["filter"],
-	): DocumentFiltersResponse[] {
+	documentFieldFilters(
+		filters?: QueryParamFilters,
+		allowAll?: boolean,
+	): DocumentFieldFiltersResponse[] {
 		if (!filters) return [];
+		const fields = allowAll ? this.flatFields : this.filterableFieldKeys;
 
-		return this.filterableFieldKeys.reduce<DocumentFiltersResponse[]>(
-			(acc, field) => {
-				const filterValue = filters[field.key];
-				if (filterValue === undefined) return acc;
+		return fields.reduce<DocumentFieldFiltersResponse[]>((acc, field) => {
+			const filterValue = filters[field.key];
+			if (filterValue === undefined) return acc;
 
-				const fieldInstance = this.fields.get(field.key);
-				if (!fieldInstance) return acc;
+			const fieldInstance = this.fields.get(field.key);
+			if (!fieldInstance) return acc;
 
-				acc.push({
-					key: field.key,
-					value: filterValue,
-					column: fieldInstance.column,
-				});
+			acc.push({
+				key: field.key,
+				value: filterValue.value,
+				operator: filterValue.operator ?? "=",
+				column: fieldInstance.column,
+			});
 
-				return acc;
-			},
-			[],
-		);
+			return acc;
+		}, []);
+	}
+	queryIncludeFields(all?: boolean) {
+		if (all) return this.fieldTreeNoTab.map((f) => f.key);
+
+		const fieldKeys = Array.from(this.includeFieldKeys);
+		for (const field of this.filterableFieldKeys) {
+			if (fieldKeys.includes(field.key)) continue;
+			fieldKeys.push(field.key);
+		}
+		return fieldKeys;
 	}
 	// ------------------------------------
 	// Private Methods

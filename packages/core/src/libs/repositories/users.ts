@@ -1,5 +1,8 @@
-import type z from "zod";
 import { sql } from "kysely";
+import queryBuilder, {
+	type QueryBuilderWhere,
+} from "../query-builder/index.js";
+import type z from "zod";
 import type { Config } from "../../types/config.js";
 import type usersSchema from "../../schemas/users.js";
 import type {
@@ -8,12 +11,6 @@ import type {
 	Select,
 	KyselyDB,
 } from "../db/types.js";
-import queryBuilder, {
-	selectQB,
-	updateQB,
-	deleteQB,
-	type QueryBuilderWhereT,
-} from "../db/query-builder.js";
 
 export default class UsersRepo {
 	constructor(private db: KyselyDB) {}
@@ -35,11 +32,11 @@ export default class UsersRepo {
 	// selects
 	selectSingle = async <K extends keyof Select<HeadlessUsers>>(props: {
 		select: K[];
-		where: QueryBuilderWhereT<"lucid_users">;
+		where: QueryBuilderWhere<"lucid_users">;
 	}) => {
 		let query = this.db.selectFrom("lucid_users").select(props.select);
 
-		query = selectQB(query, props.where);
+		query = queryBuilder.select(query, props.where);
 
 		return query.executeTakeFirst() as Promise<
 			Pick<Select<HeadlessUsers>, K> | undefined
@@ -121,11 +118,11 @@ export default class UsersRepo {
 	};
 	selectMultiple = async <K extends keyof Select<HeadlessUsers>>(props: {
 		select: K[];
-		where: QueryBuilderWhereT<"lucid_users">;
+		where: QueryBuilderWhere<"lucid_users">;
 	}) => {
 		let query = this.db.selectFrom("lucid_users").select(props.select);
 
-		query = selectQB(query, props.where);
+		query = queryBuilder.select(query, props.where);
 
 		return query.execute() as Promise<
 			Array<Pick<Select<HeadlessUsers>, K>>
@@ -134,7 +131,6 @@ export default class UsersRepo {
 	selectMultipleFiltered = async (props: {
 		query: z.infer<typeof usersSchema.getMultiple.query>;
 		config: Config;
-		authId: number;
 	}) => {
 		const usersQuery = this.db
 			.selectFrom("lucid_users")
@@ -179,13 +175,13 @@ export default class UsersRepo {
 			)
 			.where("lucid_users.is_deleted", "=", 0);
 
-		const { main, count } = queryBuilder(
+		const { main, count } = queryBuilder.main(
 			{
 				main: usersQuery,
 				count: usersCountQuery,
 			},
 			{
-				requestQuery: {
+				queryParams: {
 					filter: props.query.filter,
 					sort: props.query.sort,
 					include: props.query.include,
@@ -194,60 +190,38 @@ export default class UsersRepo {
 					perPage: props.query.perPage,
 				},
 				meta: {
-					filters: [
-						{
-							queryKey: "firstName",
-							tableKey: "lucid_users.first_name",
-							operator: props.config.db.fuzzOperator,
+					tableKeys: {
+						filters: {
+							firstName: "lucid_users.first_name",
+							lastName: "lucid_users.last_name",
+							email: "lucid_users.email",
+							username: "lucid_users.username",
+							roleIds: "lucid_user_roles.role_id",
+							id: "lucid_users.id",
 						},
-						{
-							queryKey: "lastName",
-							tableKey: "lucid_users.last_name",
-							operator: props.config.db.fuzzOperator,
+						sorts: {
+							createdAt: "lucid_users.created_at",
+							updatedAt: "lucid_users.updated_at",
+							firstName: "lucid_users.first_name",
+							lastName: "lucid_users.last_name",
+							email: "lucid_users.email",
+							username: "lucid_users.username",
 						},
-						{
-							queryKey: "email",
-							tableKey: "lucid_users.email",
-							operator: props.config.db.fuzzOperator,
-						},
-						{
-							queryKey: "username",
-							tableKey: "lucid_users.username",
-							operator: props.config.db.fuzzOperator,
-						},
-						{
-							queryKey: "roleIds",
-							tableKey: "lucid_user_roles.role_id",
-							operator: "=",
-						},
-					],
-					sorts: [
-						{
-							queryKey: "createdAt",
-							tableKey: "lucid_users.created_at",
-						},
-						{
-							queryKey: "updatedAt",
-							tableKey: "lucid_users.updated_at",
-						},
-						{
-							queryKey: "firstName",
-							tableKey: "lucid_users.first_name",
-						},
-						{
-							queryKey: "lastName",
-							tableKey: "lucid_users.last_name",
-						},
-						{
-							queryKey: "email",
-							tableKey: "lucid_users.email",
-						},
-						{
-							queryKey: "username",
-							tableKey: "lucid_users.username",
-						},
-					],
-					exclude: [
+					},
+					defaultOperators: {
+						firstName: props.config.db.fuzzOperator,
+						lastName: props.config.db.fuzzOperator,
+						email: props.config.db.fuzzOperator,
+						username: props.config.db.fuzzOperator,
+					},
+				},
+			},
+		);
+
+		/*
+
+        TODO: turn this into a filter, not sure why it was set up this way in the first place
+        		exclude: [
 						{
 							queryKey: "current",
 							tableKey: "lucid_users.id",
@@ -255,9 +229,7 @@ export default class UsersRepo {
 							operator: "<>",
 						},
 					],
-				},
-			},
-		);
+        */
 
 		return Promise.all([
 			main.execute(),
@@ -267,18 +239,18 @@ export default class UsersRepo {
 	// ----------------------------------------
 	// delete
 	deleteMultiple = async (props: {
-		where: QueryBuilderWhereT<"lucid_users">;
+		where: QueryBuilderWhere<"lucid_users">;
 	}) => {
 		let query = this.db.deleteFrom("lucid_users").returning("id");
 
-		query = deleteQB(query, props.where);
+		query = queryBuilder.delete(query, props.where);
 
 		return query.execute();
 	};
 	// ----------------------------------------
 	// update
 	updateSingle = async (props: {
-		where: QueryBuilderWhereT<"lucid_users">;
+		where: QueryBuilderWhere<"lucid_users">;
 		data: {
 			password?: string;
 			updatedAt?: string;
@@ -312,7 +284,7 @@ export default class UsersRepo {
 			})
 			.returning(["id", "first_name", "last_name", "email"]);
 
-		query = updateQB(query, props.where);
+		query = queryBuilder.update(query, props.where);
 
 		return query.executeTakeFirst();
 	};

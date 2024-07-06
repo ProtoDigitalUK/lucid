@@ -17,7 +17,6 @@ const loginController: RouteController<
 			code: "login",
 			name: T("route_login_error_name"),
 			message: T("route_login_error_message"),
-			status: 500,
 		},
 	})(
 		{

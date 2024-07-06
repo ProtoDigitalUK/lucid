@@ -1,15 +1,12 @@
+import queryBuilder, {
+	type QueryBuilderWhere,
+} from "../query-builder/index.js";
 import type {
 	HeadlessClientIntegrations,
 	Select,
 	KyselyDB,
 	BooleanInt,
 } from "../db/types.js";
-import {
-	deleteQB,
-	selectQB,
-	updateQB,
-	type QueryBuilderWhereT,
-} from "../db/query-builder.js";
 
 export default class ClientIntegrationsRepo {
 	constructor(private db: KyselyDB) {}
@@ -20,13 +17,13 @@ export default class ClientIntegrationsRepo {
 		K extends keyof Select<HeadlessClientIntegrations>,
 	>(props: {
 		select: K[];
-		where: QueryBuilderWhereT<"lucid_client_integrations">;
+		where: QueryBuilderWhere<"lucid_client_integrations">;
 	}) => {
 		let query = this.db
 			.selectFrom("lucid_client_integrations")
 			.select(props.select);
 
-		query = selectQB(query, props.where);
+		query = queryBuilder.select(query, props.where);
 
 		return query.executeTakeFirst() as Promise<
 			Pick<Select<HeadlessClientIntegrations>, K> | undefined
@@ -36,13 +33,13 @@ export default class ClientIntegrationsRepo {
 		K extends keyof Select<HeadlessClientIntegrations>,
 	>(props: {
 		select: K[];
-		where: QueryBuilderWhereT<"lucid_client_integrations">;
+		where: QueryBuilderWhere<"lucid_client_integrations">;
 	}) => {
 		let query = this.db
 			.selectFrom("lucid_client_integrations")
 			.select(props.select);
 
-		query = selectQB(query, props.where);
+		query = queryBuilder.select(query, props.where);
 
 		return query.execute() as Promise<
 			Array<Pick<Select<HeadlessClientIntegrations>, K>>
@@ -78,7 +75,7 @@ export default class ClientIntegrationsRepo {
 	// ----------------------------------------
 	// update
 	updateSingle = async (props: {
-		where: QueryBuilderWhereT<"lucid_client_integrations">;
+		where: QueryBuilderWhere<"lucid_client_integrations">;
 		data: {
 			name?: string;
 			description?: string;
@@ -100,20 +97,20 @@ export default class ClientIntegrationsRepo {
 			})
 			.returning(["id"]);
 
-		query = updateQB(query, props.where);
+		query = queryBuilder.update(query, props.where);
 
 		return query.executeTakeFirst();
 	};
 	// ----------------------------------------
 	// delete
 	deleteSingle = async (props: {
-		where: QueryBuilderWhereT<"lucid_client_integrations">;
+		where: QueryBuilderWhere<"lucid_client_integrations">;
 	}) => {
 		let query = this.db
 			.deleteFrom("lucid_client_integrations")
 			.returning(["id"]);
 
-		query = deleteQB(query, props.where);
+		query = queryBuilder.delete(query, props.where);
 
 		return query.executeTakeFirst();
 	};

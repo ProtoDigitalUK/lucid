@@ -382,7 +382,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"email\": \"stand2ard@lucidcms.io\",\r\n    \"username\": \"standard2\",\r\n    \"password\": \"password\",\r\n    \"passwordConfirmation\": \"password\",\r\n    \"firstName\": \"First2\",\r\n    \"lastName\": \"Last\",\r\n    \"superAdmin\": true,\r\n    \"roleIds\": [1]\r\n}",
+							"raw": "{\r\n    \"email\": \"admin@lucidcms.io\",\r\n    \"username\": \"standard2\",\r\n    \"password\": \"password\",\r\n    \"passwordConfirmation\": \"password\",\r\n    \"firstName\": \"First2\",\r\n    \"lastName\": \"Last\",\r\n    \"superAdmin\": 1,\r\n    \"roleIds\": [1]\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -465,7 +465,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{BASE_URL}}/api/v1/users",
+							"raw": "{{BASE_URL}}/api/v1/users?filter[firstName:like]=lucid&filter[lastName]=",
 							"host": [
 								"{{BASE_URL}}"
 							],
@@ -476,14 +476,12 @@
 							],
 							"query": [
 								{
-									"key": "filter[firstName]",
-									"value": "Lucid",
-									"disabled": true
+									"key": "filter[firstName:like]",
+									"value": "lucid"
 								},
 								{
 									"key": "filter[lastName]",
-									"value": "",
-									"disabled": true
+									"value": ""
 								},
 								{
 									"key": "filter[roleIds]",
@@ -521,8 +519,8 @@
 									"disabled": true
 								},
 								{
-									"key": "exclude",
-									"value": "current",
+									"key": "filter[id:!%3D]",
+									"value": "1",
 									"disabled": true
 								}
 							]
@@ -671,7 +669,7 @@
 										},
 										{
 											"key": "filter[page_title]",
-											"value": "Homep",
+											"value": "About",
 											"disabled": true
 										},
 										{
@@ -1669,7 +1667,20 @@
 					"name": "Get All",
 					"request": {
 						"method": "GET",
-						"header": [],
+						"header": [
+							{
+								"key": "lucid-client-key",
+								"value": "eb7236",
+								"type": "text",
+								"disabled": true
+							},
+							{
+								"key": "Authorization",
+								"value": "15274346b4d8057f15fd3b7efa9ba366a497f1e7e69b792cbfb024d20ba23e08",
+								"type": "text",
+								"disabled": true
+							}
+						],
 						"url": {
 							"raw": "{{BASE_URL}}/api/v1/client-integrations",
 							"host": [
@@ -1686,8 +1697,32 @@
 					"response": []
 				},
 				{
+					"name": "Get Single",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/client-integrations/2",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"client-integrations",
+								"2"
+							]
+						},
+						"description": "## Description\n\nRecieves config for bricks. This is whats defined with the BrickBuilder class in the project setup."
+					},
+					"response": []
+				},
+				{
 					"name": "Regenerate API Key",
 					"request": {
+						"auth": {
+							"type": "noauth"
+						},
 						"method": "POST",
 						"header": [
 							{
@@ -1712,6 +1747,153 @@
 						"description": "## Description\n\nRecieves config for bricks. This is whats defined with the BrickBuilder class in the project setup."
 					},
 					"response": []
+				}
+			]
+		},
+		{
+			"name": "Client Routes",
+			"item": [
+				{
+					"name": "Documents",
+					"item": [
+						{
+							"name": "Get Single",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "lucid-client-key",
+										"value": "07d533",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "643e000b86a91d8287169ddbf23d4ca2a626f6364daf3d0e3e0e52efa1156ca2",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{BASE_URL}}/api/v1/client/document/page?filter[documentId]=1",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"client",
+										"document",
+										"page"
+									],
+									"query": [
+										{
+											"key": "include",
+											"value": "bricks",
+											"disabled": true
+										},
+										{
+											"key": "filter[documentId]",
+											"value": "1"
+										},
+										{
+											"key": "filter[documentCreatedBy]",
+											"value": null,
+											"disabled": true
+										},
+										{
+											"key": "filter[documentUpdatedBy]",
+											"value": null,
+											"disabled": true
+										},
+										{
+											"key": "filter[documentCreatedAt]",
+											"value": null,
+											"disabled": true
+										},
+										{
+											"key": "filter[documentUpdatedAt]",
+											"value": null,
+											"disabled": true
+										},
+										{
+											"key": "filter[page_title]",
+											"value": "Homepage FR",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Multiple",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "lucid-client-key",
+										"value": "07d533",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "643e000b86a91d8287169ddbf23d4ca2a626f6364daf3d0e3e0e52efa1156ca2",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{BASE_URL}}/api/v1/client/documents/page",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"client",
+										"documents",
+										"page"
+									],
+									"query": [
+										{
+											"key": "include",
+											"value": "bricks",
+											"disabled": true
+										},
+										{
+											"key": "filter[documentId]",
+											"value": "1",
+											"disabled": true
+										},
+										{
+											"key": "filter[documentCreatedBy]",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "filter[documentUpdatedBy]",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "filter[documentCreatedAt]",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "filter[documentUpdatedAt]",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "filter[page_title]",
+											"value": "Homepage FR",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
 				}
 			]
 		},
@@ -1853,6 +2035,56 @@
 									"value": "90",
 									"disabled": true
 								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Playground Routes (Testing)",
+			"item": [
+				{
+					"name": "Test",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/send-email",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"send-email"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Test 2",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/get-document",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"get-document"
 							]
 						}
 					},

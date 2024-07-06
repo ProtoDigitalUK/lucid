@@ -1,25 +1,7 @@
 import z from "zod";
 import { BrickSchema } from "./collection-bricks.js";
 import { FieldSchema } from "./collection-fields.js";
-import defaultQuery from "./default-query.js";
-
-const getMultipleQuerySchema = z.object({
-	filter: z
-		.record(z.string(), z.union([z.string(), z.array(z.string())]))
-		.optional(),
-	sort: z
-		.array(
-			z.object({
-				key: z.enum(["createdAt", "updatedAt"]),
-				value: z.enum(["asc", "desc"]),
-			}),
-		)
-		.optional(),
-	include: defaultQuery.include,
-	exclude: defaultQuery.exclude,
-	page: defaultQuery.page,
-	perPage: defaultQuery.perPage,
-});
+import defaultQuery, { filterSchemas } from "./default-query.js";
 
 export default {
 	upsertSingle: {
@@ -44,7 +26,39 @@ export default {
 		body: undefined,
 	},
 	getMultiple: {
-		query: getMultipleQuerySchema,
+		query: z.object({
+			filter: z
+				.union([
+					z.record(
+						z.string(),
+						z.union([filterSchemas.single, filterSchemas.union]),
+					),
+					z.object({
+						documentId: z
+							.union([filterSchemas.single, filterSchemas.union])
+							.optional(),
+						documentCreatedBy: z
+							.union([filterSchemas.single, filterSchemas.union])
+							.optional(),
+						documentUpdatedBy: z
+							.union([filterSchemas.single, filterSchemas.union])
+							.optional(),
+						documentCreatedAt: filterSchemas.single.optional(),
+						documentUpdatedAt: filterSchemas.single.optional(),
+					}),
+				])
+				.optional(),
+			sort: z
+				.array(
+					z.object({
+						key: z.enum(["createdAt", "updatedAt"]),
+						value: z.enum(["asc", "desc"]),
+					}),
+				)
+				.optional(),
+			page: defaultQuery.page,
+			perPage: defaultQuery.perPage,
+		}),
 		params: z.object({
 			collectionKey: z.string(),
 		}),
@@ -66,5 +80,85 @@ export default {
 		params: z.object({
 			collectionKey: z.string(),
 		}),
+	},
+	client: {
+		getSingle: {
+			query: z.object({
+				filter: z
+					.union([
+						z.record(
+							z.string(),
+							z.union([
+								filterSchemas.single,
+								filterSchemas.union,
+							]),
+						),
+						z.object({
+							documentId: filterSchemas.single.optional(),
+							documentCreatedBy: filterSchemas.single.optional(),
+							documentUpdatedBy: filterSchemas.single.optional(),
+							documentCreatedAt: filterSchemas.single.optional(),
+							documentUpdatedAt: filterSchemas.single.optional(),
+						}),
+					])
+					.optional(),
+				include: z.array(z.enum(["bricks"])).optional(),
+			}),
+			params: z.object({
+				collectionKey: z.string(),
+			}),
+			body: undefined,
+		},
+		getMultiple: {
+			query: z.object({
+				filter: z
+					.union([
+						z.record(
+							z.string(),
+							z.union([
+								filterSchemas.single,
+								filterSchemas.union,
+							]),
+						),
+						z.object({
+							documentId: z
+								.union([
+									filterSchemas.single,
+									filterSchemas.union,
+								])
+								.optional(),
+							documentCreatedBy: z
+								.union([
+									filterSchemas.single,
+									filterSchemas.union,
+								])
+								.optional(),
+							documentUpdatedBy: z
+								.union([
+									filterSchemas.single,
+									filterSchemas.union,
+								])
+								.optional(),
+							documentCreatedAt: filterSchemas.single.optional(),
+							documentUpdatedAt: filterSchemas.single.optional(),
+						}),
+					])
+					.optional(),
+				sort: z
+					.array(
+						z.object({
+							key: z.enum(["createdAt", "updatedAt"]),
+							value: z.enum(["asc", "desc"]),
+						}),
+					)
+					.optional(),
+				page: defaultQuery.page,
+				perPage: defaultQuery.perPage,
+			}),
+			params: z.object({
+				collectionKey: z.string(),
+			}),
+			body: undefined,
+		},
 	},
 };

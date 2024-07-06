@@ -18,7 +18,6 @@ const resetPasswordController: RouteController<
 				type: "basic",
 				name: T("route_reset_password_error_name"),
 				message: T("route_reset_password_error_message"),
-				status: 500,
 			},
 		},
 	)(

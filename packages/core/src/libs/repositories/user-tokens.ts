@@ -1,9 +1,7 @@
+import queryBuilder, {
+	type QueryBuilderWhere,
+} from "../query-builder/index.js";
 import type { HeadlessUserTokens, Select, KyselyDB } from "../db/types.js";
-import {
-	deleteQB,
-	selectQB,
-	type QueryBuilderWhereT,
-} from "../db/query-builder.js";
 
 export default class UserTokensRepo {
 	constructor(private db: KyselyDB) {}
@@ -12,13 +10,13 @@ export default class UserTokensRepo {
 	// selects
 	selectSingle = async <K extends keyof Select<HeadlessUserTokens>>(props: {
 		select: K[];
-		where: QueryBuilderWhereT<"lucid_user_tokens">;
+		where: QueryBuilderWhere<"lucid_user_tokens">;
 	}) => {
 		let query = this.db
 			.selectFrom("lucid_user_tokens")
 			.select<K>(props.select);
 
-		query = selectQB(query, props.where);
+		query = queryBuilder.select(query, props.where);
 
 		return query.executeTakeFirst() as Promise<
 			Pick<Select<HeadlessUserTokens>, K> | undefined
@@ -27,11 +25,11 @@ export default class UserTokensRepo {
 	// ----------------------------------------
 	// delete
 	deleteMultiple = async (props: {
-		where: QueryBuilderWhereT<"lucid_user_tokens">;
+		where: QueryBuilderWhere<"lucid_user_tokens">;
 	}) => {
 		let query = this.db.deleteFrom("lucid_user_tokens");
 
-		query = deleteQB(query, props.where);
+		query = queryBuilder.delete(query, props.where);
 
 		return query.execute();
 	};

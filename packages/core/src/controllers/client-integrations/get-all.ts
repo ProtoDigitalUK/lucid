@@ -1,7 +1,7 @@
 import T from "../../translations/index.js";
 import clientIntegrationsSchema from "../../schemas/client-integrations.js";
 import { swaggerResponse } from "../../utils/swagger/index.js";
-import buildResponse from "../../utils/build-response.js";
+import formatAPIResponse from "../../utils/build-response.js";
 import ClientIntegrationsFormatter from "../../libs/formatters/client-integrations.js";
 import serviceWrapper from "../../utils/services/service-wrapper.js";
 import { LucidAPIError } from "../../utils/errors/index.js";
@@ -20,7 +20,6 @@ const getAllController: RouteController<
 				type: "basic",
 				name: T("route_client_integrations_fetch_error_name"),
 				message: T("route_client_integrations_fetch_error_message"),
-				status: 500,
 			},
 		},
 	)({
@@ -31,7 +30,7 @@ const getAllController: RouteController<
 	if (getAllRes.error) throw new LucidAPIError(getAllRes.error);
 
 	reply.status(200).send(
-		await buildResponse(request, {
+		formatAPIResponse(request, {
 			data: getAllRes.data,
 		}),
 	);

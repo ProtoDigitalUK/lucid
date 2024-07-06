@@ -1,5 +1,7 @@
+import queryBuilder, {
+	type QueryBuilderWhere,
+} from "../query-builder/index.js";
 import type { BooleanInt, KyselyDB } from "../db/types.js";
-import { deleteQB, type QueryBuilderWhereT } from "../db/query-builder.js";
 import type { FieldTypes } from "../custom-fields/types.js";
 
 export default class CollectionDocumentFieldsRepo {
@@ -49,13 +51,13 @@ export default class CollectionDocumentFieldsRepo {
 	// ----------------------------------------
 	// delete
 	deleteMultiple = async (props: {
-		where: QueryBuilderWhereT<"lucid_collection_document_fields">;
+		where: QueryBuilderWhere<"lucid_collection_document_fields">;
 	}) => {
 		let query = this.db
 			.deleteFrom("lucid_collection_document_fields")
 			.returning(["fields_id"]);
 
-		query = deleteQB(query, props.where);
+		query = queryBuilder.delete(query, props.where);
 
 		return query.execute();
 	};

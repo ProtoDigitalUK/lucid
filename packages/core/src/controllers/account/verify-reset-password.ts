@@ -18,7 +18,6 @@ const verifyResetPasswordController: RouteController<
 				type: "basic",
 				name: T("route_verify_password_reset_error_name"),
 				message: T("route_verify_password_reset_error_message"),
-				status: 500,
 			},
 		},
 	)(

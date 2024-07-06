@@ -214,7 +214,7 @@ const useSearchParams = (
 				// If schema filter value is boolean, convert to boolean
 				if (
 					schema?.filters &&
-					schema.filters[filterKey].type === "boolean"
+					schema.filters[filterKey]?.type === "boolean"
 				) {
 					if (value === "1") filters.set(filterKey, true);
 					else if (value === "0") filters.set(filterKey, false);
@@ -223,7 +223,7 @@ const useSearchParams = (
 				// if schema filter value type is array, convert to array
 				else if (
 					schema?.filters &&
-					schema.filters[filterKey].type === "array"
+					schema.filters[filterKey]?.type === "array"
 				) {
 					const asArray = value.split(",");
 					// if values are numbers, convert to numbers
@@ -234,12 +234,12 @@ const useSearchParams = (
 					filters.set(filterKey, asNumber);
 				} else if (
 					schema?.filters &&
-					schema.filters[filterKey].type === "text"
+					schema.filters[filterKey]?.type === "text"
 				) {
 					filters.set(filterKey, value);
 				} else if (
 					schema?.filters &&
-					schema.filters[filterKey].type === "number"
+					schema.filters[filterKey]?.type === "number"
 				) {
 					const singleValue = Number.isNaN(Number(value))
 						? value

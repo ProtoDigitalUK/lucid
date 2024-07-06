@@ -4,7 +4,7 @@ import {
 	swaggerResponse,
 	swaggerQueryString,
 } from "../../utils/swagger/index.js";
-import buildResponse from "../../utils/build-response.js";
+import formatAPIResponse from "../../utils/build-response.js";
 import RolesFormatter from "../../libs/formatters/roles.js";
 import serviceWrapper from "../../utils/services/service-wrapper.js";
 import { LucidAPIError } from "../../utils/errors/index.js";
@@ -23,7 +23,6 @@ const getMultipleController: RouteController<
 				type: "basic",
 				name: T("route_roles_fetch_error_name"),
 				message: T("route_roles_fetch_error_message"),
-				status: 500,
 			},
 		},
 	)(
@@ -39,7 +38,7 @@ const getMultipleController: RouteController<
 	if (role.error) throw new LucidAPIError(role.error);
 
 	reply.status(200).send(
-		await buildResponse(request, {
+		formatAPIResponse(request, {
 			data: role.data.data,
 			pagination: {
 				count: role.data.count,
