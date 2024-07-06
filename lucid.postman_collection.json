@@ -1751,6 +1751,153 @@
 			]
 		},
 		{
+			"name": "Client Routes",
+			"item": [
+				{
+					"name": "Documents",
+					"item": [
+						{
+							"name": "Get Single",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "lucid-client-key",
+										"value": "07d533",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "643e000b86a91d8287169ddbf23d4ca2a626f6364daf3d0e3e0e52efa1156ca2",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{BASE_URL}}/api/v1/client/document/page?filter[documentId]=1",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"client",
+										"document",
+										"page"
+									],
+									"query": [
+										{
+											"key": "include",
+											"value": "bricks",
+											"disabled": true
+										},
+										{
+											"key": "filter[documentId]",
+											"value": "1"
+										},
+										{
+											"key": "filter[documentCreatedBy]",
+											"value": null,
+											"disabled": true
+										},
+										{
+											"key": "filter[documentUpdatedBy]",
+											"value": null,
+											"disabled": true
+										},
+										{
+											"key": "filter[documentCreatedAt]",
+											"value": null,
+											"disabled": true
+										},
+										{
+											"key": "filter[documentUpdatedAt]",
+											"value": null,
+											"disabled": true
+										},
+										{
+											"key": "filter[page_title]",
+											"value": "Homepage FR",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Multiple",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "lucid-client-key",
+										"value": "07d533",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "643e000b86a91d8287169ddbf23d4ca2a626f6364daf3d0e3e0e52efa1156ca2",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{BASE_URL}}/api/v1/client/documents/page",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"client",
+										"documents",
+										"page"
+									],
+									"query": [
+										{
+											"key": "include",
+											"value": "bricks",
+											"disabled": true
+										},
+										{
+											"key": "filter[documentId]",
+											"value": "1",
+											"disabled": true
+										},
+										{
+											"key": "filter[documentCreatedBy]",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "filter[documentUpdatedBy]",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "filter[documentCreatedAt]",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "filter[documentUpdatedAt]",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "filter[page_title]",
+											"value": "Homepage FR",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
 			"name": "CDN",
 			"item": [
 				{
@@ -1896,80 +2043,52 @@
 			]
 		},
 		{
-			"name": "Client Routes",
+			"name": "Playground Routes (Testing)",
 			"item": [
 				{
-					"name": "Documents",
-					"item": [
-						{
-							"name": "Get Single",
-							"request": {
-								"method": "GET",
-								"header": [
-									{
-										"key": "lucid-client-key",
-										"value": "07d533",
-										"type": "text"
-									},
-									{
-										"key": "Authorization",
-										"value": "643e000b86a91d8287169ddbf23d4ca2a626f6364daf3d0e3e0e52efa1156ca2",
-										"type": "text"
-									}
-								],
-								"url": {
-									"raw": "{{BASE_URL}}/api/v1/client/document/page?filter[documentId]=1",
-									"host": [
-										"{{BASE_URL}}"
-									],
-									"path": [
-										"api",
-										"v1",
-										"client",
-										"document",
-										"page"
-									],
-									"query": [
-										{
-											"key": "include",
-											"value": "bricks",
-											"disabled": true
-										},
-										{
-											"key": "filter[documentId]",
-											"value": "1"
-										},
-										{
-											"key": "filter[documentCreatedBy]",
-											"value": null,
-											"disabled": true
-										},
-										{
-											"key": "filter[documentUpdatedBy]",
-											"value": null,
-											"disabled": true
-										},
-										{
-											"key": "filter[documentCreatedAt]",
-											"value": null,
-											"disabled": true
-										},
-										{
-											"key": "filter[documentUpdatedAt]",
-											"value": null,
-											"disabled": true
-										},
-										{
-											"key": "filter[page_title]",
-											"value": "Homepage FR",
-											"disabled": true
-										}
-									]
-								}
-							},
-							"response": []
+					"name": "Test",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/send-email",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"send-email"
+							]
 						}
-					]
+					},
+					"response": []
+				},
+				{
+					"name": "Test 2",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/get-document",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"get-document"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
@@ -1992,51 +2111,6 @@
 					],
 					"path": [
 						"test.txt"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Test",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "formdata",
-					"formdata": []
-				},
-				"url": {
-					"raw": "{{BASE_URL}}/send-email",
-					"host": [
-						"{{BASE_URL}}"
-					],
-					"path": [
-						"send-email"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Test 2",
-			"protocolProfileBehavior": {
-				"disableBodyPruning": true
-			},
-			"request": {
-				"method": "GET",
-				"header": [],
-				"body": {
-					"mode": "formdata",
-					"formdata": []
-				},
-				"url": {
-					"raw": "{{BASE_URL}}/get-document",
-					"host": [
-						"{{BASE_URL}}"
-					],
-					"path": [
-						"get-document"
 					]
 				}
 			},
