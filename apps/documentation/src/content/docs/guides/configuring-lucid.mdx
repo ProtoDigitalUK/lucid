@@ -22,6 +22,7 @@ export default lucid.config({
     url: "libsql://localhost:8080?tls=0",
   }),
   keys: {
+    encryptionKey: process.env.LUCID_ENCRYPTION_KEY as string,
     cookieSecret: process.env.LUCID_COOKIE_SECRET as string,
     refreshTokenSecret: process.env.LUCID_REFRESH_TOKEN_SECRET as string,
     accessTokenSecret: process.env.LUCID_ACCESS_TOKEN_SECRET as string,
@@ -66,43 +67,44 @@ export default lucid.config({
 
 ```ts
 export interface LucidConfig {
-	db: DatabaseAdapter;
-	host: string;
-	keys: {
-		cookieSecret: string;
-		accessTokenSecret: string;
-		refreshTokenSecret: string;
-	};
-	disableSwagger?: boolean;
-	localisation?: {
-		locales: {
-			label: string;
-			code: string;
-		}[];
-		defaultLocale: string;
-	};
-	paths?: {
-		emailTemplates?: string;
-	};
-	email?: {
-		from: {
-			email: string;
-			name: string;
-		};
-		strategy: EmailStrategy;
-	};
-	media?: {
-		storage?: number;
-		maxSize?: number;
-		processed?: {
-			limit?: number;
-			store?: boolean;
-		};
-		fallbackImage?: string | boolean | undefined;
-		strategy?: MediaStrategy;
-	};
-	hooks?: Array<AllHooks>;
-	collections?: CollectionBuilder[];
-	plugins?: LucidPlugin[];
+  db: DatabaseAdapter;
+  host: string;
+  keys: {
+    encryptionKey: string;
+    cookieSecret: string;
+    accessTokenSecret: string;
+    refreshTokenSecret: string;
+  };
+  disableSwagger?: boolean;
+  localisation?: {
+    locales: {
+      label: string;
+      code: string;
+    }[];
+    defaultLocale: string;
+  };
+  paths?: {
+    emailTemplates?: string;
+  };
+  email?: {
+    from: {
+      email: string;
+      name: string;
+    };
+    strategy: EmailStrategy;
+  };
+  media?: {
+    storage?: number;
+    maxSize?: number;
+    processed?: {
+      limit?: number;
+      store?: boolean;
+    };
+    fallbackImage?: string | boolean | undefined;
+    strategy?: MediaStrategy;
+  };
+  hooks?: Array<AllHooks>;
+  collections?: CollectionBuilder[];
+  plugins?: LucidPlugin[];
 }
 ```

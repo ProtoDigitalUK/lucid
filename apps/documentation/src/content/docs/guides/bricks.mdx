@@ -13,57 +13,57 @@ To create a brick, simply import the `BrickBuilder` class and create a new insta
 import { BrickBuilder } from "@lucidcms/core";
 
 const Banner = new BrickBuilder("banner", {
-	title: {
-		en: "Banner",
-	},
-	description: "A banner with a title and intro text",
-	preview: {
-		image: "https://placehold.co/600x400",
-	},
+  title: {
+    en: "Banner",
+  },
+  description: "A banner with a title and intro text",
+  preview: {
+    image: "https://placehold.co/600x400",
+  },
 })
-	.addTab("content_tab", {
-		labels: {
-			title: "Content",
-		},
-	})
-	.addText("title", {
-		labels: {
-			description: "The title of the banner. This is displayed as an H1 tag.",
-		},
-		validation: {
-			required: true,
-		},
-	})
-	.addWysiwyg("intro")
-	.addRepeater("call_to_actions", {
-		labels: {
-			title: "Call to Actions",
-		},
-		validation: {
-			maxGroups: 3,
-		},
-	})
-	.addText("cta_title", {
-		labels: {
-			title: "Title",
-		},
-	})
-    .addText("cta_url", {
-		labels: {
-			title: "URL",
-		},
-	})
-	.endRepeater()
-	.addTab("config_tab", {
-		labels: {
-			title: "Config",
-		},
-	})
-	.addCheckbox("full_width", {
-		labels: {
-			description: "Make the banner full-width",
-		},
-	});
+  .addTab("contentTab", {
+    labels: {
+      title: "Content",
+    },
+  })
+  .addText("title", {
+    labels: {
+      description: "The title of the banner. This is displayed as an H1 tag.",
+    },
+    validation: {
+      required: true,
+    },
+  })
+  .addWysiwyg("intro")
+  .addRepeater("callToActions", {
+    labels: {
+      title: "Call to Actions",
+    },
+    validation: {
+      maxGroups: 3,
+    },
+  })
+  .addText("ctaTitle", {
+    labels: {
+      title: "Title",
+    },
+  })
+  .addText("ctaUrl", {
+    labels: {
+      title: "URL",
+    },
+  })
+  .endRepeater()
+  .addTab("configTab", {
+    labels: {
+      title: "Config",
+    },
+  })
+  .addCheckbox("fullWidth", {
+    labels: {
+      description: "Make the banner full-width",
+    },
+  });
 
 export default Banner;
 ```

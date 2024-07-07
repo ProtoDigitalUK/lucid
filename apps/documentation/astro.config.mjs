@@ -58,6 +58,36 @@ export default defineConfig({
           ],
         },
         {
+          label: "Extending Lucid",
+          items: [
+            {
+              label: "With Toolkit",
+              link: "/guides/extending-with-toolkit/",
+            },
+            {
+              label: "With Hooks",
+              link: "/guides/extending-with-hooks/",
+            },
+            {
+              label: "With Plugins",
+              link: "/guides/extending-with-plugins/",
+            },
+          ],
+        },
+        {
+          label: "Client Integrations",
+          items: [
+            {
+              label: "Data Fetching",
+              link: "/guides/data-fetching/",
+            },
+            {
+              label: "SDK",
+              link: "/guides/sdk/",
+            },
+          ],
+        },
+        {
           label: "Plugins",
           items: [
             // {
