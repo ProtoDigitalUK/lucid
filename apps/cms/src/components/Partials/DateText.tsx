@@ -17,8 +17,6 @@ const DateText: Component<DateTextProps> = (props) => {
 		return dateHelpers.formatFullDate(props.date);
 	});
 
-	// TODO: add support for timezones
-
 	// ----------------------------------
 	// Render
 	return (

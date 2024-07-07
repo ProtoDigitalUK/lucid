@@ -1,6 +1,4 @@
-// Limited 1 level deep and file/string only object to form data conversion
-// TODO: update down line if req
-
+//* Limited 1 level deep and file/string only object to form data conversion
 const objectToFormData = <T = Record<string, string | File>>(
 	obj: T,
 	stringify?: Record<string, boolean>,

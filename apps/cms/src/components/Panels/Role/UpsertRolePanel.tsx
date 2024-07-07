@@ -157,11 +157,7 @@ const UpsertRolePanel: Component<UpsertRolePanelProps> = (props) => {
 				} else {
 					updateRole.action.mutate({
 						id: props.id() as number,
-						// TODO: Fix this type error
-						body: updateData().data as {
-							name: string;
-							permissions: string[];
-						},
+						body: updateData().data,
 					});
 				}
 			}}

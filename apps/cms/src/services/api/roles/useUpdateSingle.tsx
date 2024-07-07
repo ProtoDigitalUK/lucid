@@ -8,7 +8,7 @@ interface Params {
 	id: number;
 	body: {
 		name?: string;
-		permissions: string[];
+		permissions?: string[];
 	};
 }
 
