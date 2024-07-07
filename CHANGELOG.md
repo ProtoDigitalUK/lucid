@@ -1,5 +1,27 @@
 # @lucidcms/core
 
+## v0.6.0-alpha.0
+
+### Features:
+
+- Client integration endpoints and authentication middleware added along with settings area for it within the SPA. ([4ef95c2](https://github.com/ProtoDigitalUK/lucid/commit/4ef95c28aed5508c1e17e83831e090be54943bb9))
+- Rate limiting added to the API and messaging within SPA. ([3d73bf2](https://github.com/ProtoDigitalUK/lucid/commit/3d73bf24510ca435d4d8b89f84e62801df732363))
+- Users now have their own secret generated and stored against them for hashing their password with argon2. It’s also setup to regenerate whenever a password is updated. ([6a10b44](https://github.com/ProtoDigitalUK/lucid/commit/6a10b442555f0bd14ddd3b53903f7c1092873b29))
+- Fetch documents client endpoint added along with toolkit support. ([fbcf50f](https://github.com/ProtoDigitalUK/lucid/commit/fbcf50fc90f5f9fa911fcba27881834eea91182d))
+- Fetch all locales client endpoint added along with toolkit support . ([5e54359](https://github.com/ProtoDigitalUK/lucid/commit/5e5435937c9421b4fa4b4a9c002ee9b1ee907bd9))
+
+### Breaking changes:
+
+- Lucid config keys have new validation schema - they are now required to be 64 characters long. ([e45701d](https://github.com/ProtoDigitalUK/lucid/commit/e45701d4dfbd2571414fd954db40b946299ed514))
+
+### Bug Fixes:
+
+- Fixed bug on processed image where we didn't wait for the upload to finish. ([cbc7a84](https://github.com/ProtoDigitalUK/lucid/commit/cbc7a848b01b8d9765b71d0e6bc3e00fe5ffc3b0))
+- Fixed issue where serviceWrapper didn't return result of fn if it wasn't within a transaction - caused 30ms delay on requests in some places. ([b2e92fe](https://github.com/ProtoDigitalUK/lucid/commit/b2e92fe99ecca787dd293260cf6ec98afd93ea51))
+- Fixed serviceWrapper bug that meant default error wasn't being merged into the fn error result. ([51412f8](https://github.com/ProtoDigitalUK/lucid/commit/51412f8907166cfd981aa8bc0051a745dc3d0ed4))
+- Fixed bug with render template service where template data wasn't being passed down correctly. ([ef30d80](https://github.com/ProtoDigitalUK/lucid/commit/ef30d80162fca0dfa5996df40493103bb1522993))
+- Fixed issue with get multiple filtered collection docs where it required collection fields to be included for them to be filterable. ([9c672dc](https://github.com/ProtoDigitalUK/lucid/commit/9c672dcabe63458b050317cf27e683512153be34))
+
 ## v0.5.0-alpha.4
 
 ### Features:
