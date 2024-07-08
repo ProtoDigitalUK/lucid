@@ -50,7 +50,7 @@
 		"mime-types": "^2.1.35"
 	},
 	"volta": {
-		"node": "20.12.2"
+		"node": "20.15.0"
 	},
 	"license": "MIT"
 }

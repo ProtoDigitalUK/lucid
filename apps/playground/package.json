@@ -13,20 +13,19 @@
 		"@lucidcms/plugin-local-storage": "*",
 		"@lucidcms/plugin-nodemailer": "*",
 		"@lucidcms/plugin-s3": "*",
-		"better-sqlite3": "^9.4.3",
-		"console-log-colors": "^0.4.0",
-		"fastify": "^4.24.3",
-		"nodemailer": "^6.9.9",
-		"ts-node": "^10.9.1",
-		"typescript": "^5.5.2"
+		"better-sqlite3": "^11.1.2",
+		"fastify": "^4.28.1",
+		"nodemailer": "^6.9.14",
+		"ts-node": "^10.9.2",
+		"typescript": "^5.5.3"
 	},
 	"author": "",
 	"license": "ISC",
 	"devDependencies": {
-		"@types/better-sqlite3": "^7.6.9",
-		"nodemon": "^3.0.1"
+		"@types/better-sqlite3": "^7.6.11",
+		"nodemon": "^3.1.4"
 	},
 	"volta": {
-		"node": "20.12.2"
+		"node": "20.15.0"
 	}
 }
