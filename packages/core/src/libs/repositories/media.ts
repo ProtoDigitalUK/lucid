@@ -300,7 +300,7 @@ export default class MediaRepo {
 	// ----------------------------------------
 	// update
 	updateSingle = async (props: {
-		where: QueryBuilderWhere<"lucid_users">;
+		where: QueryBuilderWhere<"lucid_media">;
 		data: {
 			key?: string;
 			eTag?: string;
@@ -326,7 +326,7 @@ export default class MediaRepo {
 				height: props.data.height,
 				updated_at: props.data.updatedAt,
 			})
-			.returning(["id"]);
+			.returning("id");
 
 		query = queryBuilder.update(query, props.where);
 
