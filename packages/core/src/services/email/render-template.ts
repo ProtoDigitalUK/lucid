@@ -79,7 +79,7 @@ const renderTemplate: ServiceFn<
 
 	const mjmlTemplate = Handlebars.compile(mjmlFile.data);
 	const mjml = mjmlTemplate(data.data);
-	const htmlOutput = mjml2html(mjml);
+	const htmlOutput = await mjml2html(mjml); //* lib types are wrong - this returns a promise. We are using a alpha version however
 
 	return {
 		error: undefined,

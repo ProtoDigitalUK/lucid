@@ -82,7 +82,7 @@
 		"kysely": "^0.27.3",
 		"lodash.merge": "^4.6.2",
 		"mime-types": "^2.1.35",
-		"mjml": "^4.15.3",
+		"mjml": "^5.0.0-alpha.4",
 		"node-cron": "^3.0.3",
 		"pg": "^8.12.0",
 		"sanitize-html": "^2.11.0",

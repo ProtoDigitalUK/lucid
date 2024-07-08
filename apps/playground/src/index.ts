@@ -8,9 +8,11 @@ lucid.fastify.post("/send-email", async (request, reply) => {
 	const res = await toolkit.email.sendEmail({
 		to: "hello@williamyallop.com",
 		subject: "Hello",
-		template: "password-reset",
+		template: "contact-form",
 		data: {
-			firstName: "William",
+			name: "William",
+			email: "william@lucidcms.io",
+			message: "hello@williamyallop.com",
 		},
 	});
 	if (res.error) throw new LucidAPIError(res.error);
