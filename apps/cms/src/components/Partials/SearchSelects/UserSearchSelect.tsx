@@ -27,7 +27,7 @@ const UserSearchSelect: Component<UserSearchSelectProps> = (props) => {
 	const users = api.users.useGetMultiple({
 		queryParams: {
 			filters: {
-				username: getSearchQuery,
+				username: getSearchQuery() !== "" ? getSearchQuery : undefined,
 			},
 		},
 	});
