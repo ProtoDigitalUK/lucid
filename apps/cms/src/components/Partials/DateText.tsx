@@ -20,7 +20,7 @@ const DateText: Component<DateTextProps> = (props) => {
 	// ----------------------------------
 	// Render
 	return (
-		<span class="whitespace-nowrap" title={fullDate() || ""}>
+		<span class="whitespace-nowrap text-sm" title={fullDate() || ""}>
 			{date() || "-"}
 		</span>
 	);

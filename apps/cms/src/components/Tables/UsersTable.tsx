@@ -1,6 +1,12 @@
 import T from "@/translations";
 import { type Component, Index } from "solid-js";
-import { FaSolidT, FaSolidCalendar, FaSolidEnvelope } from "solid-icons/fa";
+import {
+	FaSolidT,
+	FaSolidCalendar,
+	FaSolidEnvelope,
+	FaSolidUserTie,
+	FaSolidIdCard,
+} from "solid-icons/fa";
 import api from "@/services/api";
 import useRowTarget from "@/hooks/useRowTarget";
 import type useSearchParams from "@/hooks/useSearchParams";
@@ -50,7 +56,7 @@ const UsersTable: Component<UsersTableProps> = (props) => {
 					{
 						label: T()("username"),
 						key: "username",
-						icon: <FaSolidT />,
+						icon: <FaSolidIdCard />,
 					},
 					{
 						label: T()("first_name"),
@@ -65,7 +71,7 @@ const UsersTable: Component<UsersTableProps> = (props) => {
 					{
 						label: T()("super_admin"),
 						key: "superAdmin",
-						icon: <FaSolidT />,
+						icon: <FaSolidUserTie />,
 					},
 					{
 						label: T()("email"),

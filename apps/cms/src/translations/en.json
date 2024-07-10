@@ -19,6 +19,7 @@
 	"translations": "Translations",
 	"enabled": "Enabled",
 	"confirm_delete": "Confirm Delete",
+	"standard": "Standard",
 	"bricks": "Bricks",
 	"assign_bricks_description": "Select the bricks you wish this environment to have access to.",
 	"collections": "Collections",

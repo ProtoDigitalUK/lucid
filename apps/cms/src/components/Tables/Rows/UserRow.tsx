@@ -1,5 +1,5 @@
 import T from "@/translations";
-import type { Component } from "solid-js";
+import { createMemo, type Component } from "solid-js";
 import type { TableRowProps } from "@/types/components";
 import type { UserResponse } from "@lucidcms/core/types";
 import userStore from "@/store/userStore";
@@ -7,6 +7,7 @@ import type useRowTarget from "@/hooks/useRowTarget";
 import Table from "@/components/Groups/Table";
 import TextCol from "@/components/Tables/Columns/TextCol";
 import DateCol from "../Columns/DateCol";
+import PillCol from "../Columns/PillCol";
 
 interface UserRowProps extends TableRowProps {
 	user: UserResponse;
@@ -17,6 +18,17 @@ interface UserRowProps extends TableRowProps {
 }
 
 const UserRow: Component<UserRowProps> = (props) => {
+	// ----------------------------------
+	// Memos
+	const currentUser = createMemo(() => {
+		return props.user.id === userStore.get.user?.id;
+	});
+	const username = createMemo(() => {
+		return currentUser()
+			? `${props.user.username} (you)`
+			: props.user.username;
+	});
+
 	// ----------------------------------
 	// Render
 	return (
@@ -31,8 +43,9 @@ const UserRow: Component<UserRowProps> = (props) => {
 						props.rowTarget.setTargetId(props.user.id);
 						props.rowTarget.setTrigger("update", true);
 					},
-					permission: userStore.get.hasPermission(["update_user"])
-						.all,
+					permission:
+						userStore.get.hasPermission(["update_user"]).all &&
+						!currentUser(),
 				},
 				{
 					label: T()("delete"),
@@ -41,8 +54,9 @@ const UserRow: Component<UserRowProps> = (props) => {
 						props.rowTarget.setTargetId(props.user.id);
 						props.rowTarget.setTrigger("delete", true);
 					},
-					permission: userStore.get.hasPermission(["delete_user"])
-						.all,
+					permission:
+						userStore.get.hasPermission(["delete_user"]).all &&
+						!currentUser(),
 				},
 				{
 					label: T()("reset_password"),
@@ -51,15 +65,16 @@ const UserRow: Component<UserRowProps> = (props) => {
 						props.rowTarget.setTargetId(props.user.id);
 						props.rowTarget.setTrigger("passwordReset", true);
 					},
-					permission: userStore.get.hasPermission(["update_user"])
-						.all,
+					permission:
+						userStore.get.hasPermission(["update_user"]).all &&
+						!currentUser(),
 				},
 			]}
 			options={props.options}
 			callbacks={props.callbacks}
 		>
 			<TextCol
-				text={props.user.username}
+				text={username()}
 				options={{ include: props?.include[0] }}
 			/>
 			<TextCol
@@ -70,8 +85,10 @@ const UserRow: Component<UserRowProps> = (props) => {
 				text={props.user.lastName}
 				options={{ include: props?.include[2] }}
 			/>
-			<TextCol
-				text={props.user.superAdmin ? T()("yes") : T()("no")}
+			<PillCol
+				text={
+					props.user.superAdmin ? T()("super_admin") : T()("standard")
+				}
 				options={{ include: props?.include[3] }}
 			/>
 			<TextCol
