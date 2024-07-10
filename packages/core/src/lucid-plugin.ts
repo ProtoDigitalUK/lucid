@@ -70,17 +70,18 @@ const lucidPlugin = async (fastify: FastifyInstance) => {
 		});
 
 		// Register server-wide middleware
-		fastify.register(cors, {
-			origin: [config.host, "http://localhost:3000"],
-			methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
-			allowedHeaders: [
-				"Content-Type",
-				"Authorization",
-				"Content-Length",
-				...Object.values(constants.headers),
-			],
-			credentials: true,
-		});
+		// TODO: causes error with fastify astro plugin, might need own implementation or write own fastify astro plugin
+		// fastify.register(cors, {
+		// 	origin: [config.host, "http://localhost:3000"],
+		// 	methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
+		// 	allowedHeaders: [
+		// 		"Content-Type",
+		// 		"Authorization",
+		// 		"Content-Length",
+		// 		...Object.values(constants.headers),
+		// 	],
+		// 	credentials: true,
+		// });
 
 		fastify.register(fastifyCookie, { secret: config.keys.cookieSecret });
 
@@ -123,9 +124,10 @@ const lucidPlugin = async (fastify: FastifyInstance) => {
 		});
 
 		// Serve landing page
-		fastify.get("/", async (_, reply) => {
-			reply.type("text/html").send(landingPageFile);
-		});
+		// TODO: add option to disable this - needed for astro adapter
+		// fastify.get("/", async (_, reply) => {
+		// 	reply.type("text/html").send(landingPageFile);
+		// });
 
 		// Handle 404 errors
 		fastify.setNotFoundHandler(
