@@ -24,7 +24,7 @@
 	},
 	"name": "lucid",
 	"packageManager": "npm@10.2.4",
-	"workspaces": ["apps/*", "packages/*"],
+	"workspaces": ["apps/*", "packages/*", "examples/*"],
 	"volta": {
 		"node": "20.15.0"
 	}
