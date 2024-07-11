@@ -1,6 +1,6 @@
 import lucid, { SQLiteAdapter } from "@lucidcms/core";
 import Database from "better-sqlite3";
-import PageCollection from "./src/lucid/collections/pages.js";
+import PageCollection from "./src/lucid/collections/pages.ts";
 
 export default lucid.config({
 	host: "http://localhost:8393",

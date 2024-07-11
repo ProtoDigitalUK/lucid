@@ -5,9 +5,9 @@ import { getDirName } from "../../utils/helpers/index.js";
 const currentDir = getDirName(import.meta.url);
 
 const getBasicConfig = async () => {
-	const config = await getConfig(
-		path.resolve(currentDir, "./config/lucid.config.ts"),
-	);
+	const config = await getConfig({
+		givenPath: path.resolve(currentDir, "./config/lucid.config.ts"),
+	});
 
 	return config;
 };

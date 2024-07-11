@@ -11,7 +11,7 @@
 	},
 	"dependencies": {
 		"@astrojs/check": "^0.8.1",
-		"@lucidcms/core": "*",
+		"@lucidcms/astro-adapter": "*",
 		"astro": "^4.11.5",
 		"better-sqlite3": "^11.1.2",
 		"typescript": "^5.5.3"

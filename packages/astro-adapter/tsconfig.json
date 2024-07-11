@@ -1,0 +1,16 @@
+{
+    "extends": "@lucidcms/config/tsconfig.base.json",
+    "exclude": [
+        "./coverage",
+        "./dist",
+        "jest.config.ts",
+        "./node_modules",
+    ],
+    "compilerOptions": {
+        "rootDir": "./src",
+        "outDir": "./dist",
+        "typeRoots": [
+            "node_modules/@types",
+        ]
+    },
+}

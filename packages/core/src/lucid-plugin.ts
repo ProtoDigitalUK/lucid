@@ -15,6 +15,7 @@ import type { FastifyInstance } from "fastify";
 import T from "./translations/index.js";
 import constants from "./constants/constants.js";
 import getConfig from "./libs/config/get-config.js";
+import type { Config } from "./types/config.js";
 import routes from "./routes/index.js";
 import { getDirName } from "./utils/helpers/index.js";
 import { decodeError, LucidError } from "./utils/errors/index.js";
@@ -24,10 +25,19 @@ import executeStartTasks from "./actions/execute-start-tasks.js";
 
 const currentDir = getDirName(import.meta.url);
 
-const lucidPlugin = async (fastify: FastifyInstance) => {
+type LucidPluginOptions = {
+	config?: Config;
+};
+
+const lucidPlugin = async (
+	fastify: FastifyInstance,
+	options?: LucidPluginOptions,
+) => {
 	try {
 		const [config, cmsEntryFile, landingPageFile] = await Promise.all([
-			getConfig(),
+			getConfig({
+				config: options?.config,
+			}),
 			fs.readFile(path.resolve(currentDir, "../cms/index.html")),
 			fs.readFile(path.resolve(currentDir, "../assets/landing.html")),
 		]);
@@ -184,7 +194,8 @@ const lucidPlugin = async (fastify: FastifyInstance) => {
 	}
 };
 
-export default fp(lucidPlugin, {
-	name: "lucid",
-	fastify: "4.x",
-});
+export default (options?: LucidPluginOptions) =>
+	fp((fasitfy) => lucidPlugin(fasitfy, options), {
+		name: "lucid",
+		fastify: "4.x",
+	});

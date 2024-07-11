@@ -1,0 +1,39 @@
+{
+	"name": "@lucidcms/astro-adapter",
+	"version": "0.0.1",
+	"description": "",
+	"type": "module",
+	"types": "./dist/index.d.ts",
+	"module": "dist/index.js",
+	"exports": {
+		".": {
+			"import": "./dist/index.js",
+			"types": "./dist/index.d.ts"
+		}
+	},
+	"scripts": {
+		"build": "tsc",
+		"format": "biome format ./src",
+		"format:fix": "biome format --write ./src",
+		"lint": "biome lint ./src",
+		"lint:fix": "biome lint --apply ./src"
+	},
+	"files": ["dist"],
+	"author": "Proto Digital",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/ProtoDigitalUK/lucid.git",
+		"directory": "packages/astro-adapter"
+	},
+	"devDependencies": {
+		"typescript": "^5.5.3"
+	},
+	"dependencies": {
+		"@lucidcms/core": "*",
+		"@matthewp/astro-fastify": "^3.2.0"
+	},
+	"volta": {
+		"node": "20.15.1"
+	},
+	"license": "MIT"
+}
