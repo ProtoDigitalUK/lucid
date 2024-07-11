@@ -1,17 +1,17 @@
-import { pathToFileURL } from "node:url";
 import getConfigPath from "./get-config-path.js";
+import path from "node:path";
 import type { Config } from "../../types/config.js";
 
 let config: Config | undefined = undefined;
 
-export const getConfig = async (path?: string) => {
+export const getConfig = async (givenPath?: string) => {
 	if (config) {
 		return config;
 	}
 
-	const configPath = path ? path : getConfigPath(process.cwd());
-	const configUrl = pathToFileURL(configPath).href;
-	const configModule = await import(configUrl);
+	const configPath = givenPath ? givenPath : getConfigPath(process.cwd());
+	const importPath = path.resolve(configPath);
+	const configModule = await import(/* @vite-ignore */ importPath);
 
 	config = configModule.default as Config;
 

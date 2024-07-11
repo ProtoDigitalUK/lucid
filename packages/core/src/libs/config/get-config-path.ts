@@ -6,7 +6,7 @@ const getConfigPath = (cwd: string, filename?: string): string => {
 	let configPath: string | undefined = undefined;
 	const root = path.parse(cwd).root;
 	const configFileName = filename ?? "lucid.config";
-	const configExtensions = [".ts", ".js"];
+	const configExtensions = [".ts", ".js", ".mjs", ".mts"];
 
 	const search = (cwd: string): void => {
 		const files = fs.readdirSync(cwd);

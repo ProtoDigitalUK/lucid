@@ -14,7 +14,7 @@ const toolkitWrapper = async <T extends unknown[], R>(props: {
 }) => {
 	const config = await getConfig();
 
-	return serviceWrapper(props.fn, {
+	return await serviceWrapper(props.fn, {
 		transaction: props.config?.transaction ?? false,
 		defaultError: {
 			...props.config?.defaultError,

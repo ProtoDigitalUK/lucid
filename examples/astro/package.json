@@ -10,13 +10,13 @@
 		"astro": "astro"
 	},
 	"dependencies": {
-		"astro": "^4.11.5",
 		"@astrojs/check": "^0.8.1",
-		"typescript": "^5.5.3",
 		"@lucidcms/core": "*",
-		"@lucidcms/astro-lucid": "*"
+		"astro": "^4.11.5",
+		"better-sqlite3": "^11.1.2",
+		"typescript": "^5.5.3"
 	},
 	"volta": {
-		"node": "20.15.0"
+		"node": "20.15.1"
 	}
 }
