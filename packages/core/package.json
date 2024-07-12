@@ -23,12 +23,7 @@
 		"lint:fix": "biome lint --apply ./src",
 		"clear-db:postgres": "node ./scripts/clear-db-pg.js"
 	},
-	"files": [
-		"dist",
-		"cms",
-		"templates",
-		"assets"
-	],
+	"files": ["dist", "cms", "templates", "assets"],
 	"author": "Proto Digital",
 	"repository": {
 		"type": "git",

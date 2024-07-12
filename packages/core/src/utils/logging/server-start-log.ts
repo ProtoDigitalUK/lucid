@@ -1,4 +1,4 @@
-import projectPackage from "../../../package.json";
+import projectPackage from "../../../package.json" assert { type: "json" };
 import constants from "../../constants/constants.js";
 
 const bgYellow = "\x1b[43m";

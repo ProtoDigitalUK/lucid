@@ -196,6 +196,6 @@ const lucidPlugin = async (
 
 export default (options?: LucidPluginOptions) =>
 	fp((fasitfy) => lucidPlugin(fasitfy, options), {
-		name: "lucid",
+		name: "@lucidcms/core",
 		fastify: "4.x",
 	});
