@@ -11,15 +11,11 @@ import logger from "./utils/logging/index.js";
 import toolkit from "./libs/toolkit/toolkit.js";
 import z from "zod";
 import formatAPIResponse from "./utils/build-response.js";
-import lucidPlugin from "./lucid-plugin.js";
-import getConfigPath from "./libs/config/get-config-path.js";
 
 export {
 	toolkit,
 	logger,
 	z,
-	lucidPlugin,
-	getConfigPath,
 	// Utils
 	formatAPIResponse,
 	// Builders

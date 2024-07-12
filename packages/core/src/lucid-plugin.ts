@@ -15,7 +15,6 @@ import type { FastifyInstance } from "fastify";
 import T from "./translations/index.js";
 import constants from "./constants/constants.js";
 import getConfig from "./libs/config/get-config.js";
-import type { Config } from "./types/config.js";
 import routes from "./routes/index.js";
 import { getDirName } from "./utils/helpers/index.js";
 import { decodeError, LucidError } from "./utils/errors/index.js";
@@ -25,19 +24,10 @@ import executeStartTasks from "./actions/execute-start-tasks.js";
 
 const currentDir = getDirName(import.meta.url);
 
-type LucidPluginOptions = {
-	config?: Config;
-};
-
-const lucidPlugin = async (
-	fastify: FastifyInstance,
-	options?: LucidPluginOptions,
-) => {
+const lucidPlugin = async (fastify: FastifyInstance) => {
 	try {
 		const [config, cmsEntryFile, landingPageFile] = await Promise.all([
-			getConfig({
-				config: options?.config,
-			}),
+			getConfig(),
 			fs.readFile(path.resolve(currentDir, "../cms/index.html")),
 			fs.readFile(path.resolve(currentDir, "../assets/landing.html")),
 		]);
@@ -80,18 +70,17 @@ const lucidPlugin = async (
 		});
 
 		// Register server-wide middleware
-		// TODO: causes error with fastify astro plugin, might need own implementation or write own fastify astro plugin
-		// fastify.register(cors, {
-		// 	origin: [config.host, "http://localhost:3000"],
-		// 	methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
-		// 	allowedHeaders: [
-		// 		"Content-Type",
-		// 		"Authorization",
-		// 		"Content-Length",
-		// 		...Object.values(constants.headers),
-		// 	],
-		// 	credentials: true,
-		// });
+		fastify.register(cors, {
+			origin: [config.host, "http://localhost:3000"],
+			methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
+			allowedHeaders: [
+				"Content-Type",
+				"Authorization",
+				"Content-Length",
+				...Object.values(constants.headers),
+			],
+			credentials: true,
+		});
 
 		fastify.register(fastifyCookie, { secret: config.keys.cookieSecret });
 
@@ -134,10 +123,9 @@ const lucidPlugin = async (
 		});
 
 		// Serve landing page
-		// TODO: add option to disable this - needed for astro adapter
-		// fastify.get("/", async (_, reply) => {
-		// 	reply.type("text/html").send(landingPageFile);
-		// });
+		fastify.get("/", async (_, reply) => {
+			reply.type("text/html").send(landingPageFile);
+		});
 
 		// Handle 404 errors
 		fastify.setNotFoundHandler(
@@ -194,8 +182,7 @@ const lucidPlugin = async (
 	}
 };
 
-export default (options?: LucidPluginOptions) =>
-	fp((fasitfy) => lucidPlugin(fasitfy, options), {
-		name: "@lucidcms/core",
-		fastify: "4.x",
-	});
+export default fp(lucidPlugin, {
+	name: "@lucidcms/core",
+	fastify: "4.x",
+});

@@ -6,7 +6,7 @@ import serverStartLog from "./utils/logging/server-start-log.js";
 const startTime = process.hrtime();
 const fastify = Fastify();
 
-fastify.register(lucidPlugin());
+fastify.register(lucidPlugin);
 
 const start = async () => {
 	fastify.listen(
