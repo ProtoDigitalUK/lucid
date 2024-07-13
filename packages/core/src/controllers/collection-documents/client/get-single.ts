@@ -57,7 +57,7 @@ export default {
 		response: {
 			200: swaggerResponse({
 				type: 200,
-				data: CollectionDocumentsFormatter.swagger,
+				data: CollectionDocumentsFormatter.swaggerClient,
 			}),
 		},
 		headers: swaggerHeaders({

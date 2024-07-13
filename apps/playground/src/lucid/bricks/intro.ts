@@ -1,6 +1,8 @@
 import { BrickBuilder } from "@lucidcms/core";
 
-const IntroBrick = new BrickBuilder("intro")
+const IntroBrick = new BrickBuilder("intro", {
+	title: "Intro",
+})
 	.addTab("content_tab", {
 		labels: {
 			title: "Content",

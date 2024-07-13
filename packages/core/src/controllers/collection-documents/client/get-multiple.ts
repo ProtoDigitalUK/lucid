@@ -64,7 +64,7 @@ export default {
 				type: 200,
 				data: {
 					type: "array",
-					items: CollectionDocumentsFormatter.swagger,
+					items: CollectionDocumentsFormatter.swaggerClient,
 				},
 				paginated: true,
 			}),

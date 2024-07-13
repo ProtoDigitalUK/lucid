@@ -2,6 +2,8 @@ import type {
 	BrickResponse,
 	FieldResponse,
 	CollectionDocumentResponse,
+	ClientDocumentResponse,
+	BrickAltResponse,
 } from "../../types/response.js";
 import CollectionDocumentFieldsFormatterClass, {
 	type FieldProp,
@@ -65,18 +67,14 @@ export default class CollectionDocumentsFormatter {
 			locales: string[];
 			default: string;
 		};
-	}): CollectionDocumentResponse => {
-		let fields: FieldResponse[] | null = null;
+	}) => {
+		let fields: FieldResponse[] | null = props.fields ?? null;
+		const FieldsFormatter = Formatter.get("collection-document-fields");
 
-		if (props.fields) {
-			fields = props.fields;
-		} else if (props.document.fields) {
-			const CollectionDocumentFieldsFormatter = Formatter.get(
-				"collection-document-fields",
-			);
-
+		if (fields === null && props.document.fields) {
 			if (props.document.groups) {
-				fields = CollectionDocumentFieldsFormatter.formatMultiple(
+				// ** Standard format for fields - nested as we have access to the groups
+				fields = FieldsFormatter.formatMultiple(
 					{
 						fields: props.document.fields,
 						groups: props.document.groups,
@@ -92,7 +90,7 @@ export default class CollectionDocumentsFormatter {
 			} else {
 				// ** This is only used on get multiple documents, in this case we dont request groups and so should
 				// ** return fields in a flat format instead of nesting them if repeaters are present
-				fields = CollectionDocumentFieldsFormatter.formatMultipleFlat(
+				fields = FieldsFormatter.formatMultipleFlat(
 					{
 						fields: props.document.fields,
 					},
@@ -107,7 +105,7 @@ export default class CollectionDocumentsFormatter {
 			}
 		}
 
-		const res: CollectionDocumentResponse = {
+		return {
 			id: props.document.id,
 			collectionKey: props.document.collection_key,
 			bricks: props.bricks ?? null,
@@ -132,9 +130,68 @@ export default class CollectionDocumentsFormatter {
 				: null,
 			createdAt: Formatter.formatDate(props.document.created_at),
 			updatedAt: Formatter.formatDate(props.document.updated_at),
-		};
+		} satisfies CollectionDocumentResponse;
+	};
 
-		return res;
+	// Client
+	formatClientMultiple = (props: {
+		documents: DocumentPropT[];
+		collection: CollectionBuilder;
+		host: string;
+		localisation: {
+			locales: string[];
+			default: string;
+		};
+	}) => {
+		return props.documents.map((d) =>
+			this.formatClientSingle({
+				document: d,
+				collection: props.collection,
+				host: props.host,
+				localisation: props.localisation,
+			}),
+		);
+	};
+	formatClientSingle = (props: {
+		document: DocumentPropT;
+		collection: CollectionBuilder;
+		bricks?: BrickResponse[];
+		fields?: FieldResponse[] | null;
+		host: string;
+		localisation: {
+			locales: string[];
+			default: string;
+		};
+	}): ClientDocumentResponse => {
+		const FieldsFormatter = Formatter.get("collection-document-fields");
+
+		const res = this.formatSingle({
+			document: props.document,
+			collection: props.collection,
+			bricks: props.bricks,
+			fields: props.fields,
+			host: props.host,
+			localisation: props.localisation,
+		});
+
+		return {
+			...res,
+			bricks:
+				res.bricks !== null
+					? res.bricks.map((b) => {
+							return {
+								...b,
+								fields: FieldsFormatter.objectifyFields(
+									b.fields,
+								),
+							} satisfies BrickAltResponse;
+						})
+					: null,
+			fields:
+				res.fields !== null
+					? FieldsFormatter.objectifyFields(res.fields)
+					: null,
+		} satisfies ClientDocumentResponse;
 	};
 	static swagger = {
 		type: "object",
@@ -213,6 +270,32 @@ export default class CollectionDocumentsFormatter {
 						nullable: true,
 					},
 				},
+			},
+		},
+	};
+	static swaggerClient = {
+		type: "object",
+		properties: {
+			...CollectionDocumentsFormatter.swagger.properties,
+			bricks: {
+				type: "array",
+				nullable: true,
+				items: {
+					type: "object",
+					additionalProperties: true,
+					properties: {
+						...CollectionDocumentBricksFormatter.swagger.properties,
+						fields: {
+							type: "object",
+							additionalProperties: true,
+						},
+					},
+				},
+			},
+			fields: {
+				type: "object",
+				nullable: true,
+				additionalProperties: true,
 			},
 		},
 	};

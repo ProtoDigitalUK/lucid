@@ -1,6 +1,7 @@
 import type {
 	FieldResponse,
 	FieldGroupResponse,
+	FieldAltResponse,
 } from "../../types/response.js";
 import type { JSONString } from "../db/types.js";
 import type CollectionBuilder from "../builders/collection-builder/index.js";
@@ -135,6 +136,28 @@ export default class CollectionDocumentFieldsFormatter {
 		return fieldsRes;
 	};
 
+	// Helpers
+	objectifyFields = (
+		fields: FieldResponse[],
+	): Record<string, FieldAltResponse> => {
+		return fields.reduce(
+			(acc, field) => {
+				if (!field) return acc;
+
+				acc[field.key] = {
+					...field,
+					groups: field.groups?.map((g) => {
+						return {
+							...g,
+							fields: this.objectifyFields(g.fields || []),
+						};
+					}),
+				} satisfies FieldAltResponse;
+				return acc;
+			},
+			{} as Record<string, FieldAltResponse>,
+		);
+	};
 	// Private methods
 	private buildFieldTree = (
 		data: {

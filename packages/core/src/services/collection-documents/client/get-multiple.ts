@@ -4,7 +4,7 @@ import { splitDocumentFilters } from "../../../utils/helpers/index.js";
 import type z from "zod";
 import type collectionDocumentsSchema from "../../../schemas/collection-documents.js";
 import type { ServiceFn } from "../../../utils/services/types.js";
-import type { CollectionDocumentResponse } from "../../../types/response.js";
+import type { ClientDocumentResponse } from "../../../types/response.js";
 
 const getMultiple: ServiceFn<
 	[
@@ -16,7 +16,7 @@ const getMultiple: ServiceFn<
 		},
 	],
 	{
-		data: CollectionDocumentResponse[];
+		data: ClientDocumentResponse[];
 		count: number;
 	}
 > = async (context, data) => {
@@ -53,7 +53,7 @@ const getMultiple: ServiceFn<
 	return {
 		error: undefined,
 		data: {
-			data: CollectionDocumentsFormatter.formatMultiple({
+			data: CollectionDocumentsFormatter.formatClientMultiple({
 				documents: documents,
 				collection: collectionRes.data,
 				host: context.config.host,

@@ -5,7 +5,7 @@ import { splitDocumentFilters } from "../../../utils/helpers/index.js";
 import type z from "zod";
 import type { ServiceFn } from "../../../utils/services/types.js";
 import type collectionDocumentsSchema from "../../../schemas/collection-documents.js";
-import type { CollectionDocumentResponse } from "../../../types/response.js";
+import type { ClientDocumentResponse } from "../../../types/response.js";
 
 const getSingle: ServiceFn<
 	[
@@ -16,7 +16,7 @@ const getSingle: ServiceFn<
 			>;
 		},
 	],
-	CollectionDocumentResponse
+	ClientDocumentResponse
 > = async (context, data) => {
 	const CollectionDocumentsRepo = Repository.get(
 		"collection-documents",
@@ -69,7 +69,7 @@ const getSingle: ServiceFn<
 
 		return {
 			error: undefined,
-			data: CollectionDocumentsFormatter.formatSingle({
+			data: CollectionDocumentsFormatter.formatClientSingle({
 				document: documentRes,
 				collection: collectionRes.data,
 				bricks: bricksRes.data.bricks,
@@ -87,7 +87,7 @@ const getSingle: ServiceFn<
 
 	return {
 		error: undefined,
-		data: CollectionDocumentsFormatter.formatSingle({
+		data: CollectionDocumentsFormatter.formatClientSingle({
 			document: documentRes,
 			collection: collectionRes.data,
 			host: context.config.host,

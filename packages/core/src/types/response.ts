@@ -169,6 +169,14 @@ export interface BrickResponse {
 	type: "builder" | "fixed";
 	fields: Array<FieldResponse>;
 }
+export interface BrickAltResponse {
+	id: number;
+	key: string;
+	order: number;
+	open: BooleanInt | null;
+	type: "builder" | "fixed";
+	fields: Record<string, FieldAltResponse>;
+}
 
 export interface FieldResponse {
 	key: string;
@@ -179,11 +187,26 @@ export interface FieldResponse {
 	meta?: Record<string, FieldResponseMeta> | FieldResponseMeta;
 	groups?: Array<FieldGroupResponse>;
 }
+export interface FieldAltResponse {
+	key: string;
+	type: FieldTypes;
+	groupId?: number;
+	translations?: Record<string, FieldResponseValue>;
+	value?: FieldResponseValue;
+	meta?: Record<string, FieldResponseMeta> | FieldResponseMeta;
+	groups?: Array<FieldGroupAltResponse>;
+}
 export interface FieldGroupResponse {
 	id: number | string;
 	order: number;
 	open: BooleanInt | null;
 	fields: Array<FieldResponse>;
+}
+export interface FieldGroupAltResponse {
+	id: number | string;
+	order: number;
+	open: BooleanInt | null;
+	fields: Record<string, FieldAltResponse>;
 }
 
 export interface LinkValue {
@@ -244,6 +267,30 @@ export interface CollectionDocumentResponse {
 
 	bricks?: Array<BrickResponse> | null;
 	fields?: Array<FieldResponse> | null;
+}
+export interface ClientDocumentResponse {
+	id: number;
+	collectionKey: string | null;
+
+	createdBy: {
+		id: number;
+		email: string | null;
+		firstName: string | null;
+		lastName: string | null;
+		username: string | null;
+	} | null;
+	createdAt: string | null;
+	updatedAt: string | null;
+	updatedBy: {
+		id: number;
+		email: string | null;
+		firstName: string | null;
+		lastName: string | null;
+		username: string | null;
+	} | null;
+
+	bricks?: Array<BrickAltResponse> | null;
+	fields?: Record<string, FieldAltResponse> | null;
 }
 
 export interface ResponseBody<D = unknown> {
