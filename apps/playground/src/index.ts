@@ -56,6 +56,25 @@ lucid.fastify.get("/get-documents", async (request, reply) => {
 	);
 });
 
+lucid.fastify.get("/get-document", async (request, reply) => {
+	const res = await toolkit.document.getSingle({
+		collectionKey: "page",
+		query: {
+			filter: {
+				documentId: {
+					value: 1,
+				},
+			},
+		},
+	});
+	if (res.error) throw new LucidAPIError(res.error);
+	reply.send(
+		formatAPIResponse(request, {
+			data: res.data,
+		}),
+	);
+});
+
 lucid.fastify.get("/get-locales", async (request, reply) => {
 	const res = await toolkit.locale.getAll();
 	if (res.error) throw new LucidAPIError(res.error);

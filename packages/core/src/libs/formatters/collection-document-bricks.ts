@@ -7,6 +7,17 @@ import CollectionDocumentFieldsFormatter, {
 	type FieldProp,
 } from "./collection-document-fields.js";
 
+export interface GroupProp {
+	group_id: number;
+	parent_group_id: number | null;
+	collection_brick_id: number | null;
+	repeater_key: string;
+	group_order: number;
+	group_open: BooleanInt | null;
+	ref: string | null;
+	collection_document_id: number;
+}
+
 export interface BrickProp {
 	id: number;
 	brick_key: string | null;
@@ -14,16 +25,7 @@ export interface BrickProp {
 	brick_type: string;
 	brick_open: BooleanInt | null;
 	collection_document_id: number;
-	groups: Array<{
-		group_id: number;
-		parent_group_id: number | null;
-		collection_brick_id: number | null;
-		repeater_key: string;
-		group_order: number;
-		group_open: BooleanInt | null;
-		ref: string | null;
-		collection_document_id: number;
-	}>;
+	groups: Array<GroupProp>;
 	fields: Array<FieldProp>;
 }
 

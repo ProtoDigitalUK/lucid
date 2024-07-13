@@ -45,6 +45,7 @@ const getMultiple: ServiceFn<
 			documentFilters,
 			documentFieldFilters,
 			includeAllFields: true,
+			includeGroups: true,
 			collection: collectionRes.data,
 			config: context.config,
 		});

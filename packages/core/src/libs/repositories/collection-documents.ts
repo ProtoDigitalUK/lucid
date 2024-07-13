@@ -80,6 +80,7 @@ export default class CollectionDocumentsRepo {
 		documentFilters: QueryParamFilters;
 		documentFieldFilters: DocumentFieldFilters[];
 		collection: CollectionBuilder;
+		includeGroups: boolean;
 		includeAllFields?: boolean;
 		config: Config;
 	}) => {
@@ -132,6 +133,32 @@ export default class CollectionDocumentsRepo {
 		);
 
 		if (includeFieldKeys.length > 0) {
+			if (props.includeGroups) {
+				pagesQuery = pagesQuery.select((eb) => [
+					props.config.db
+						.jsonArrayFrom(
+							eb
+								.selectFrom("lucid_collection_document_groups")
+								.select([
+									"lucid_collection_document_groups.group_id",
+									"lucid_collection_document_groups.collection_document_id",
+									"lucid_collection_document_groups.collection_brick_id",
+									"lucid_collection_document_groups.parent_group_id",
+									"lucid_collection_document_groups.repeater_key",
+									"lucid_collection_document_groups.group_order",
+									"lucid_collection_document_groups.group_open",
+									"lucid_collection_document_groups.ref",
+								])
+								.whereRef(
+									"lucid_collection_document_groups.collection_document_id",
+									"=",
+									"lucid_collection_documents.id",
+								),
+						)
+						.as("groups"),
+				]);
+			}
+
 			pagesQuery = pagesQuery
 				.select((eb) => [
 					props.config.db
@@ -299,6 +326,7 @@ export default class CollectionDocumentsRepo {
 		documentFieldFilters: DocumentFieldFilters[];
 		query: z.infer<typeof collectionDocumentsSchema.getMultiple.query>;
 		includeAllFields?: boolean;
+		includeGroups?: boolean;
 		collection: CollectionBuilder;
 		config: Config;
 	}) => {
@@ -345,6 +373,32 @@ export default class CollectionDocumentsRepo {
 		);
 
 		if (includeFieldKeys.length > 0) {
+			if (props.includeGroups) {
+				pagesQuery = pagesQuery.select((eb) => [
+					props.config.db
+						.jsonArrayFrom(
+							eb
+								.selectFrom("lucid_collection_document_groups")
+								.select([
+									"lucid_collection_document_groups.group_id",
+									"lucid_collection_document_groups.collection_document_id",
+									"lucid_collection_document_groups.collection_brick_id",
+									"lucid_collection_document_groups.parent_group_id",
+									"lucid_collection_document_groups.repeater_key",
+									"lucid_collection_document_groups.group_order",
+									"lucid_collection_document_groups.group_open",
+									"lucid_collection_document_groups.ref",
+								])
+								.whereRef(
+									"lucid_collection_document_groups.collection_document_id",
+									"=",
+									"lucid_collection_documents.id",
+								),
+						)
+						.as("groups"),
+				]);
+			}
+
 			pagesQuery = pagesQuery
 				.select((eb) => [
 					props.config.db

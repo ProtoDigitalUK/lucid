@@ -37,14 +37,15 @@ const getSingle: ServiceFn<
 		data.query.filter,
 	);
 
-	const pageRes = await CollectionDocumentsRepo.selectSingleFitlered({
+	const documentRes = await CollectionDocumentsRepo.selectSingleFitlered({
 		documentFilters,
 		documentFieldFilters,
 		includeAllFields: true,
+		includeGroups: data.query.include?.includes("bricks") !== true, //* if bricks are included we then that query will include groups - this is just to prevent querying the data twice
 		collection: collectionRes.data,
 		config: context.config,
 	});
-	if (pageRes === undefined) {
+	if (documentRes === undefined) {
 		return {
 			error: {
 				type: "basic",
@@ -60,7 +61,7 @@ const getSingle: ServiceFn<
 			await context.services.collection.document.brick.getMultiple(
 				context,
 				{
-					documentId: pageRes.id,
+					documentId: documentRes.id,
 					collectionKey: collectionRes.data.key,
 				},
 			);
@@ -69,7 +70,7 @@ const getSingle: ServiceFn<
 		return {
 			error: undefined,
 			data: CollectionDocumentsFormatter.formatSingle({
-				document: pageRes,
+				document: documentRes,
 				collection: collectionRes.data,
 				bricks: bricksRes.data.bricks,
 				fields: bricksRes.data.fields,
@@ -87,7 +88,7 @@ const getSingle: ServiceFn<
 	return {
 		error: undefined,
 		data: CollectionDocumentsFormatter.formatSingle({
-			document: pageRes,
+			document: documentRes,
 			collection: collectionRes.data,
 			host: context.config.host,
 			localisation: {

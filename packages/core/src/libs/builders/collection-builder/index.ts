@@ -133,7 +133,10 @@ class CollectionBuilder extends FieldBuilder {
 		}, []);
 	}
 	queryIncludeFields(all?: boolean) {
-		if (all) return this.fieldTreeNoTab.map((f) => f.key);
+		if (all)
+			return this.flatFields
+				.filter((f) => f.type !== "tab")
+				.map((f) => f.key);
 
 		const fieldKeys = Array.from(this.includeFieldKeys);
 		for (const field of this.filterableFieldKeys) {

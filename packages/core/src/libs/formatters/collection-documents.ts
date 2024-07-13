@@ -8,7 +8,9 @@ import CollectionDocumentFieldsFormatterClass, {
 } from "./collection-document-fields.js";
 import type CollectionBuilder from "../builders/collection-builder/index.js";
 import Formatter from "./index.js";
-import CollectionDocumentBricksFormatter from "./collection-document-bricks.js";
+import CollectionDocumentBricksFormatter, {
+	type GroupProp,
+} from "./collection-document-bricks.js";
 
 interface DocumentPropT {
 	id: number;
@@ -31,6 +33,7 @@ interface DocumentPropT {
 	ub_user_username?: string | null;
 
 	fields?: FieldProp[];
+	groups?: GroupProp[];
 }
 
 export default class CollectionDocumentsFormatter {
@@ -68,24 +71,40 @@ export default class CollectionDocumentsFormatter {
 		if (props.fields) {
 			fields = props.fields;
 		} else if (props.document.fields) {
-			// ** This is only used on get multiple documents, in this case we dont request groups and so should
-			// ** return fields in a flat format instead of nesting them if repeaters are present
 			const CollectionDocumentFieldsFormatter = Formatter.get(
 				"collection-document-fields",
 			);
 
-			fields = CollectionDocumentFieldsFormatter.formatMultipleFlat(
-				{
-					fields: props.document.fields,
-				},
-				{
-					host: props.host,
-					builder: props.collection,
-					collectionTranslations:
-						props.collection.data.config.translations,
-					localisation: props.localisation,
-				},
-			);
+			if (props.document.groups) {
+				fields = CollectionDocumentFieldsFormatter.formatMultiple(
+					{
+						fields: props.document.fields,
+						groups: props.document.groups,
+					},
+					{
+						host: props.host,
+						builder: props.collection,
+						collectionTranslations:
+							props.collection.data.config.translations,
+						localisation: props.localisation,
+					},
+				);
+			} else {
+				// ** This is only used on get multiple documents, in this case we dont request groups and so should
+				// ** return fields in a flat format instead of nesting them if repeaters are present
+				fields = CollectionDocumentFieldsFormatter.formatMultipleFlat(
+					{
+						fields: props.document.fields,
+					},
+					{
+						host: props.host,
+						builder: props.collection,
+						collectionTranslations:
+							props.collection.data.config.translations,
+						localisation: props.localisation,
+					},
+				);
+			}
 		}
 
 		const res: CollectionDocumentResponse = {
