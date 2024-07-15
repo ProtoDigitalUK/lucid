@@ -109,6 +109,7 @@ const upsertSingle: ServiceFn<
 		createdBy: data.userId,
 		updatedBy: data.userId,
 		isDeleted: 0,
+		updatedAt: new Date().toISOString(),
 	});
 
 	if (document === undefined) {

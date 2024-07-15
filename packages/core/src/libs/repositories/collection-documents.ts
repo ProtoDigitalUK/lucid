@@ -576,6 +576,7 @@ export default class CollectionDocumentsRepo {
 		createdBy: number;
 		updatedBy: number;
 		isDeleted: BooleanInt;
+		updatedAt: string;
 	}) => {
 		return this.db
 			.insertInto("lucid_collection_documents")
@@ -591,6 +592,7 @@ export default class CollectionDocumentsRepo {
 					created_by: props.createdBy,
 					updated_by: props.updatedBy,
 					is_deleted: props.isDeleted,
+					updated_at: props.updatedAt,
 				}),
 			)
 			.returning("id")
