@@ -5,7 +5,6 @@ import { getMediaType, generateKey } from "./index.js";
 import { encode } from "blurhash";
 import type { RouteMediaMetaData } from "../../types/types.js";
 import type { ServiceResponse } from "../../utils/services/types.js";
-import { b } from "vitest/dist/suite-BRl_IYuM.js";
 
 const getFileMetaData = async (data: {
 	filePath: string;
@@ -23,7 +22,7 @@ const getFileMetaData = async (data: {
 		]);
 		const width = meta.width ?? null;
 		const height = meta.height ?? null;
-		const size = meta.size || buffer.byteLength || 0;
+		const size = meta.size || 0; //TODO: fix this - meta.size doesnt exists anymore
 
 		const blurHash =
 			mediaType === "image" && buffer
