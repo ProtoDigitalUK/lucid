@@ -106,6 +106,7 @@ export interface MediaResponse {
 		fileSize: number;
 		width: number | null;
 		height: number | null;
+		blurHash: string | null;
 	};
 	createdAt: string | null;
 	updatedAt: string | null;

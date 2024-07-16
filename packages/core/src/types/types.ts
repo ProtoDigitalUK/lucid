@@ -61,4 +61,5 @@ export interface RouteMediaMetaData {
 	type: MediaResponse["type"];
 	key: string;
 	etag?: string;
+	blurHash: string | null;
 }

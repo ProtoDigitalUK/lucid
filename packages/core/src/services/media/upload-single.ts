@@ -75,6 +75,7 @@ const uploadSingle: ServiceFn<
 			height: uploadObjectRes.data.height,
 			titleTranslationKeyId: translationKeyIdsRes.data.title,
 			altTranslationKeyId: translationKeyIdsRes.data.alt,
+			blurHash: uploadObjectRes.data.blurHash,
 		});
 
 		if (mediaRes === undefined) {

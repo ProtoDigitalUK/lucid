@@ -149,6 +149,7 @@ export interface HeadlessMedia {
 	file_size: number;
 	width: number | null;
 	height: number | null;
+	blur_hash: string | null;
 	title_translation_key_id: number | null;
 	alt_translation_key_id: number | null;
 	created_at: TimestampImmutable;

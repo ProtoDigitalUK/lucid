@@ -18,6 +18,7 @@ const optimiseImage: ServiceFn<
 		width: number | null;
 		height: number | null;
 		extension: string;
+		blurHash: null;
 	}
 > = async (_, data) => {
 	try {
@@ -57,6 +58,7 @@ const optimiseImage: ServiceFn<
 				width: meta.width || null,
 				height: meta.height || null,
 				extension: mime.extension(mimeType) || "",
+				blurHash: null,
 			},
 		};
 	} catch (error) {

@@ -25,6 +25,7 @@ const Migration00000006: MigrationFn = (adapter) => {
 				.addColumn("file_size", "integer", (col) => col.notNull())
 				.addColumn("width", "integer")
 				.addColumn("height", "integer")
+				.addColumn("blur_hash", "text")
 				.addColumn("title_translation_key_id", "integer", (col) =>
 					col
 						.references("lucid_translation_keys.id")

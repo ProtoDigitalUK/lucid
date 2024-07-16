@@ -49,6 +49,7 @@ export default class MediaRepo {
 				"alt_translation_key_id",
 				"created_at",
 				"updated_at",
+				"blur_hash",
 				props.config.db
 					.jsonArrayFrom(
 						eb
@@ -115,6 +116,7 @@ export default class MediaRepo {
 				"lucid_media.file_size",
 				"lucid_media.width",
 				"lucid_media.height",
+				"lucid_media.blur_hash",
 				"lucid_media.title_translation_key_id",
 				"lucid_media.alt_translation_key_id",
 				"lucid_media.created_at",
@@ -278,6 +280,7 @@ export default class MediaRepo {
 		updatedAt?: string;
 		titleTranslationKeyId?: number;
 		altTranslationKeyId?: number;
+		blurHash?: string | null;
 	}) => {
 		return this.db
 			.insertInto("lucid_media")
@@ -293,6 +296,7 @@ export default class MediaRepo {
 				height: props.height,
 				title_translation_key_id: props.titleTranslationKeyId,
 				alt_translation_key_id: props.altTranslationKeyId,
+				blur_hash: props.blurHash,
 			})
 			.returning("id")
 			.executeTakeFirst();
@@ -311,6 +315,7 @@ export default class MediaRepo {
 			width?: number | null;
 			height?: number | null;
 			updatedAt?: string;
+			blurHash?: string | null;
 		};
 	}) => {
 		let query = this.db
@@ -325,6 +330,7 @@ export default class MediaRepo {
 				width: props.data.width,
 				height: props.data.height,
 				updated_at: props.data.updatedAt,
+				blur_hash: props.data.blurHash,
 			})
 			.returning("id");
 

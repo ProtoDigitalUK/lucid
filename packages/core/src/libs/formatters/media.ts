@@ -16,6 +16,7 @@ interface MediaPropsT {
 	alt_translation_key_id: number | null;
 	created_at: Date | string | null;
 	updated_at: Date | string | null;
+	blur_hash: string | null;
 	title_translations?: Array<{
 		value: string | null;
 		locale_code: string | null;
@@ -65,6 +66,7 @@ export default class MediaFormatter {
 				fileSize: props.media.file_size,
 				width: props.media.width,
 				height: props.media.height,
+				blurHash: props.media.blur_hash,
 			},
 			createdAt: Formatter.formatDate(props.media.created_at),
 			updatedAt: Formatter.formatDate(props.media.updated_at),
@@ -107,6 +109,10 @@ export default class MediaFormatter {
 					fileSize: { type: "number", example: 100 },
 					width: { type: "number", example: 100 },
 					height: { type: "number", example: 100 },
+					blurHash: {
+						type: "string",
+						example: "AQABAAAABAAAAgAA...",
+					},
 				},
 			},
 			createdAt: { type: "string", example: "2022-01-01T00:00:00Z" },

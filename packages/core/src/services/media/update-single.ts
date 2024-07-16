@@ -107,6 +107,7 @@ const updateSingle: ServiceFn<
 			width: updateObjectRes.data.width,
 			height: updateObjectRes.data.height,
 			updatedAt: new Date().toISOString(),
+			blurHash: updateObjectRes.data.blurHash,
 		},
 	});
 

@@ -1,9 +1,11 @@
 import T from "../../translations/index.js";
 import mime from "mime-types";
 import sharp from "sharp";
-import { streamTempFile, getMediaType, generateKey } from "./index.js";
+import { getMediaType, generateKey } from "./index.js";
+import { encode } from "blurhash";
 import type { RouteMediaMetaData } from "../../types/types.js";
 import type { ServiceResponse } from "../../utils/services/types.js";
+import { b } from "vitest/dist/suite-BRl_IYuM.js";
 
 const getFileMetaData = async (data: {
 	filePath: string;
@@ -11,20 +13,28 @@ const getFileMetaData = async (data: {
 	fileName: string;
 }): ServiceResponse<RouteMediaMetaData> => {
 	try {
-		const file = streamTempFile(data.filePath);
-
-		const fileExtension = mime.extension(data.mimeType);
 		const mimeType = data.mimeType;
-		let size = 0;
-		let width = null;
-		let height = null;
+		const mediaType = getMediaType(mimeType);
+		const transform = sharp(data.filePath);
+		const fileExtension = mime.extension(data.mimeType);
+		const [meta, buffer] = await Promise.all([
+			transform.metadata(),
+			transform.raw().toBuffer(),
+		]);
+		const width = meta.width ?? null;
+		const height = meta.height ?? null;
+		const size = meta.size || buffer.byteLength || 0;
 
-		const transform = sharp();
-		file.pipe(transform);
-		const metaData = await transform.metadata();
-		width = metaData.width;
-		height = metaData.height;
-		size = metaData.size || 0;
+		const blurHash =
+			mediaType === "image" && buffer
+				? encode(
+						new Uint8ClampedArray(buffer),
+						width || 0,
+						height || 0,
+						4,
+						4,
+					)
+				: null;
 
 		const mediaKey = generateKey(data.fileName, fileExtension);
 		if (mediaKey.error) return mediaKey;
@@ -35,10 +45,11 @@ const getFileMetaData = async (data: {
 				mimeType: mimeType,
 				fileExtension: fileExtension || "",
 				size: size,
-				width: width || null,
-				height: height || null,
-				type: getMediaType(mimeType),
+				width: width,
+				height: height,
+				type: mediaType,
 				key: mediaKey.data,
+				blurHash: blurHash,
 			},
 		};
 	} catch (error) {

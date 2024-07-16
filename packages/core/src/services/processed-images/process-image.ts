@@ -129,6 +129,7 @@ const processImage: ServiceFn<
 					height: imageRes.data.height,
 					type: "image",
 					key: data.processKey,
+					blurHash: imageRes.data.blurHash,
 				},
 			}),
 			context.services.option.updateSingle(context, {
