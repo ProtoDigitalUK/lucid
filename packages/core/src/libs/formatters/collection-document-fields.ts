@@ -41,6 +41,7 @@ export interface FieldProp {
 	media_width?: number | null;
 	media_height?: number | null;
 	media_type?: string | null;
+	media_blur_hash?: string | null;
 	media_title_translations?: Array<{
 		value: string | null;
 		locale_code: string | null;
@@ -489,6 +490,10 @@ export default class CollectionDocumentFieldsFormatter {
 					},
 					height: {
 						type: "number",
+						nullable: true,
+					},
+					blurHash: {
+						type: "string",
 						nullable: true,
 					},
 					titleTranslations: {

@@ -509,6 +509,7 @@ export type MediaResMeta = {
 	fileSize: number | null;
 	width: number | null;
 	height: number | null;
+	blurHash: string | null;
 	titleTranslations?: Array<{
 		value: string | null;
 		localeCode: string | null;

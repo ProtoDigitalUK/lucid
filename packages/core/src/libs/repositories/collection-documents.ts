@@ -207,6 +207,7 @@ export default class CollectionDocumentsRepo {
 									"lucid_media.width as media_width",
 									"lucid_media.height as media_height",
 									"lucid_media.type as media_type",
+									"lucid_media.blur_hash as media_blur_hash",
 									props.config.db
 										.jsonArrayFrom(
 											eb
@@ -447,6 +448,7 @@ export default class CollectionDocumentsRepo {
 									"lucid_media.width as media_width",
 									"lucid_media.height as media_height",
 									"lucid_media.type as media_type",
+									"lucid_media.blur_hash as media_blur_hash",
 									props.config.db
 										.jsonArrayFrom(
 											eb

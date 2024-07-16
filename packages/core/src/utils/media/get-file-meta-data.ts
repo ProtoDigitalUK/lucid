@@ -1,7 +1,7 @@
 import T from "../../translations/index.js";
 import mime from "mime-types";
 import sharp from "sharp";
-import { getMediaType, generateKey } from "./index.js";
+import { getMediaType, generateKey, streamTempFile } from "./index.js";
 import { encode } from "blurhash";
 import type { RouteMediaMetaData } from "../../types/types.js";
 import type { ServiceResponse } from "../../utils/services/types.js";
@@ -12,28 +12,39 @@ const getFileMetaData = async (data: {
 	fileName: string;
 }): ServiceResponse<RouteMediaMetaData> => {
 	try {
-		const mimeType = data.mimeType;
-		const mediaType = getMediaType(mimeType);
-		const transform = sharp(data.filePath);
-		const fileExtension = mime.extension(data.mimeType);
-		const [meta, buffer] = await Promise.all([
-			transform.metadata(),
-			transform.raw().toBuffer(),
-		]);
-		const width = meta.width ?? null;
-		const height = meta.height ?? null;
-		const size = meta.size || 0; //TODO: fix this - meta.size doesnt exists anymore
+		const file = streamTempFile(data.filePath);
 
-		const blurHash =
-			mediaType === "image" && buffer
-				? encode(
-						new Uint8ClampedArray(buffer),
-						width || 0,
-						height || 0,
-						4,
-						4,
-					)
-				: null;
+		let width = null;
+		let height = null;
+		let blurHash = null;
+
+		const transform = sharp();
+		file.pipe(transform);
+		const meta = await transform.metadata();
+
+		const mediaType = getMediaType(data.mimeType);
+		const fileExtension = mime.extension(data.mimeType);
+		const size = meta.size || 0;
+
+		if (mediaType === "image") {
+			const buffer = await transform
+				.raw()
+				.resize({
+					width: 100,
+				})
+				.ensureAlpha()
+				.toBuffer({ resolveWithObject: true });
+			width = meta.width || null;
+			height = meta.height || null;
+
+			blurHash = encode(
+				new Uint8ClampedArray(buffer.data),
+				buffer.info.width,
+				buffer.info.height,
+				4,
+				4,
+			);
+		}
 
 		const mediaKey = generateKey(data.fileName, fileExtension);
 		if (mediaKey.error) return mediaKey;
@@ -41,7 +52,7 @@ const getFileMetaData = async (data: {
 		return {
 			error: undefined,
 			data: {
-				mimeType: mimeType,
+				mimeType: data.mimeType,
 				fileExtension: fileExtension || "",
 				size: size,
 				width: width,

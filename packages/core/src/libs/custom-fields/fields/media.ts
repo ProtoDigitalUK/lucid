@@ -54,6 +54,7 @@ class MediaCustomField extends CustomField<"media"> {
 				fileSize: props.data?.media_file_size ?? null,
 				width: props.data?.media_width ?? null,
 				height: props.data?.media_height ?? null,
+				blurHash: props.data?.media_blur_hash ?? null,
 				titleTranslations: props.data?.media_title_translations?.map(
 					(t) => ({
 						value: t.value,
