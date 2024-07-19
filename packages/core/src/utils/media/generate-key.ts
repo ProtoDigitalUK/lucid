@@ -5,7 +5,7 @@ import type { ServiceResponse } from "../../utils/services/types.js";
 
 const generateKey = (
 	name: string,
-	fileExtension: string | false,
+	fileExtension: string | null,
 ): Awaited<ServiceResponse<string>> => {
 	const [fname, extension] = name.split(".");
 	const ext = fileExtension || extension;

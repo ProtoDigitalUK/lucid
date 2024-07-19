@@ -23,7 +23,7 @@ const getFileMetaData = async (data: {
 		const meta = await transform.metadata();
 
 		const mediaType = getMediaType(data.mimeType);
-		const fileExtension = mime.extension(data.mimeType);
+		const fileExtension = mime.extension(data.mimeType) || null;
 		const size = meta.size || 0;
 
 		if (mediaType === "image") {

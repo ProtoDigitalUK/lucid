@@ -1,11 +1,15 @@
 import T from "../../../translations/index.js";
 import type { Config } from "../../../types/config.js";
-import type { ServiceFn } from "../../../utils/services/types.js";
+import type {
+	ServiceContext,
+	ServiceResponse,
+} from "../../../utils/services/types.js";
 
-const checkHasMediaStrategy: ServiceFn<
-	[],
-	Exclude<Config["media"]["strategy"], undefined>
-> = async (context) => {
+const checkHasMediaStrategy = (
+	context: ServiceContext,
+): Awaited<
+	ServiceResponse<Exclude<Config["media"]["strategy"], undefined>>
+> => {
 	if (context.config.media?.strategy === undefined) {
 		return {
 			error: {

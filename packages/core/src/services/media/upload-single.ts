@@ -24,79 +24,54 @@ const uploadSingle: ServiceFn<
 	],
 	number
 > = async (context, data) => {
-	let objectStored = false;
-	let objectKey = undefined;
-
-	try {
-		const MediaRepo = Repository.get("media", context.db);
-
-		const localeExistsRes =
-			await context.services.locale.checks.checkLocalesExist(context, {
-				localeCodes: getUniqueLocaleCodes([
-					data.titleTranslations || [],
-					data.altTranslations || [],
-				]),
-			});
-		if (localeExistsRes.error) return localeExistsRes;
-
-		const [translationKeyIdsRes, uploadObjectRes] = await Promise.all([
-			context.services.translation.createMultiple(context, {
-				keys: ["title", "alt"],
-				translations: mergeTranslationGroups([
-					{
-						translations: data.titleTranslations || [],
-						key: "title",
-					},
-					{
-						translations: data.altTranslations || [],
-						key: "alt",
-					},
-				]),
-			}),
-			context.services.media.storage.uploadObject(context, {
-				fileData: data.fileData,
-			}),
-		]);
-		if (translationKeyIdsRes.error) return translationKeyIdsRes;
-		if (uploadObjectRes.error) return uploadObjectRes;
-
-		objectStored = true;
-		objectKey = uploadObjectRes.data.key;
-
-		const mediaRes = await MediaRepo.createSingle({
-			key: uploadObjectRes.data.key,
-			eTag: uploadObjectRes.data.etag,
-			visible: data.visible ?? 1,
-			type: uploadObjectRes.data.type,
-			mimeType: uploadObjectRes.data.mimeType,
-			fileExtension: uploadObjectRes.data.fileExtension,
-			fileSize: uploadObjectRes.data.size,
-			width: uploadObjectRes.data.width,
-			height: uploadObjectRes.data.height,
-			titleTranslationKeyId: translationKeyIdsRes.data.title,
-			altTranslationKeyId: translationKeyIdsRes.data.alt,
-			blurHash: uploadObjectRes.data.blurHash,
+	const localeExistsRes =
+		await context.services.locale.checks.checkLocalesExist(context, {
+			localeCodes: getUniqueLocaleCodes([
+				data.titleTranslations || [],
+				data.altTranslations || [],
+			]),
 		});
+	if (localeExistsRes.error) return localeExistsRes;
 
-		if (mediaRes === undefined) {
-			return {
-				error: {
-					type: "basic",
-					status: 500,
+	const translationKeyIdsRes =
+		await context.services.translation.createMultiple(context, {
+			keys: ["title", "alt"],
+			translations: mergeTranslationGroups([
+				{
+					translations: data.titleTranslations || [],
+					key: "title",
 				},
-				data: undefined,
-			};
-		}
+				{
+					translations: data.altTranslations || [],
+					key: "alt",
+				},
+			]),
+		});
+	if (translationKeyIdsRes.error) return translationKeyIdsRes;
 
-		return {
-			error: undefined,
-			data: mediaRes.id,
-		};
-	} catch (e) {
-		if (objectStored && objectKey !== undefined) {
-			context.config.media?.strategy?.deleteSingle(objectKey);
-		}
+	const uploadRes = await context.services.media.strategies.upload(context, {
+		fileData: data.fileData,
+	});
+	if (uploadRes.error) return uploadRes;
 
+	const MediaRepo = Repository.get("media", context.db);
+	const mediaRes = await MediaRepo.createSingle({
+		key: uploadRes.data.key,
+		eTag: uploadRes.data.etag,
+		visible: data.visible ?? 1,
+		type: uploadRes.data.type,
+		mimeType: uploadRes.data.mimeType,
+		fileExtension: uploadRes.data.fileExtension,
+		fileSize: uploadRes.data.size,
+		width: uploadRes.data.width,
+		height: uploadRes.data.height,
+		titleTranslationKeyId: translationKeyIdsRes.data.title,
+		altTranslationKeyId: translationKeyIdsRes.data.alt,
+		blurHash: uploadRes.data.blurHash,
+	});
+
+	if (mediaRes === undefined) {
+		await context.config.media?.strategy?.deleteSingle(uploadRes.data.key);
 		return {
 			error: {
 				type: "basic",
@@ -105,6 +80,11 @@ const uploadSingle: ServiceFn<
 			data: undefined,
 		};
 	}
+
+	return {
+		error: undefined,
+		data: mediaRes.id,
+	};
 };
 
 export default uploadSingle;

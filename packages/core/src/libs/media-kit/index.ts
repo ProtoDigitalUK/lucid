@@ -15,12 +15,13 @@ import type { MultipartFile } from "@fastify/multipart";
 
 interface MediaMeta {
 	tempPath: string | null;
-	mimeType: string | null;
-	name: string | null;
+	mimeType: string;
+	name: string;
 	type: MediaType;
 	extension: string | null;
-	size: number | null;
-	key: string | null;
+	size: number;
+	key: string;
+	etag: string | null;
 	// image meta
 	width: number | null;
 	height: number | null;
@@ -75,7 +76,22 @@ class MediaKit {
 
 		return {
 			error: undefined,
-			data: this.meta,
+			data: {
+				tempPath: this.tempPath,
+				mimeType: this.mimeType,
+				name: this.name,
+				type: this.type,
+				extension: this.extension,
+				size: this.size,
+				key: this.key,
+				etag: null,
+				width: this.width,
+				height: this.height,
+				blurHash: this.blurHash,
+				averageColour: this.averageColour,
+				isDark: this.isDark,
+				isLight: this.isLight,
+			},
 		};
 	}
 	public async done(): ServiceResponse<undefined> {
@@ -141,26 +157,9 @@ class MediaKit {
 			data: `${getYear(date)}/${monthF}/${uuid}-${filename}.${ext}`,
 		};
 	}
-
-	// ----------------------------------------
-	// Getters
-	get meta(): MediaMeta {
-		return {
-			tempPath: this.tempPath,
-			mimeType: this.mimeType,
-			name: this.name,
-			type: this.type,
-			extension: this.extension,
-			size: this.size,
-			key: this.key,
-			// image meta
-			width: this.width,
-			height: this.height,
-			blurHash: this.blurHash,
-			averageColour: this.averageColour,
-			isDark: this.isDark,
-			isLight: this.isLight,
-		};
+	public streamTempFile() {
+		if (!this.tempPath) return undefined;
+		return fs.createReadStream(this.tempPath);
 	}
 
 	// ----------------------------------------
@@ -194,19 +193,16 @@ class MediaKit {
 			};
 		}
 	}
-	private streamTempFile(filePath: string) {
-		return fs.createReadStream(filePath);
-	}
 	private async typeSpecificMeta(
 		tempPath: string,
 	): ServiceResponse<undefined> {
 		try {
-			const file = this.streamTempFile(tempPath);
+			const file = this.streamTempFile();
 
 			switch (this.type) {
 				case "image": {
 					const transform = sharp();
-					file.pipe(transform);
+					file?.pipe(transform);
 					const meta = await transform.metadata();
 
 					this.width = meta.width || null;
