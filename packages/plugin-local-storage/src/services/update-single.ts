@@ -8,6 +8,7 @@ export default (pluginOptions: PluginOptions) => {
 	const updateSingle: MediaStrategyUpdateSingle = async (oldKey, props) => {
 		try {
 			const uploadRes = await uploadSingle(pluginOptions)(props);
+			if (uploadRes.error) return uploadRes;
 
 			if (oldKey !== props.key) {
 				const { targetPath } = keyPaths(
@@ -24,9 +25,11 @@ export default (pluginOptions: PluginOptions) => {
 		} catch (e) {
 			const error = e as Error;
 			return {
-				success: false,
-				message: error.message,
-				response: null,
+				error: {
+					message: error.message,
+					status: 500,
+				},
+				data: undefined,
 			};
 		}
 	};

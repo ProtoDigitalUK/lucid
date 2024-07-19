@@ -1,4 +1,3 @@
-import T from "../translations/index.js";
 import { type S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 import type { NodeJsClient } from "@smithy/types";
 import type { PluginOptions } from "../types/types.js";
@@ -18,25 +17,25 @@ export default (
 				Metadata: {
 					width: props.meta.width?.toString() || "",
 					height: props.meta.height?.toString() || "",
-					extension: props.meta.fileExtension,
+					extension: props.meta.extension || "",
 				},
 			});
 
 			const response = await client.send(command);
 
 			return {
-				success: true,
-				message: T("object_saved_successfully"),
-				response: {
+				error: undefined,
+				data: {
 					etag: response.ETag?.replace(/"/g, ""),
 				},
 			};
 		} catch (e) {
 			const error = e as Error;
 			return {
-				success: false,
-				message: error.message,
-				response: null,
+				error: {
+					message: error.message,
+				},
+				data: undefined,
 			};
 		}
 	};

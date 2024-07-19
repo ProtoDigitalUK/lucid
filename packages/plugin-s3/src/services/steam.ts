@@ -18,13 +18,17 @@ export default (
 			const response = await client.send(command);
 
 			if (response.Body === undefined) {
-				throw new Error(T("object_body_undefined"));
+				return {
+					error: {
+						message: T("object_body_undefined"),
+					},
+					data: undefined,
+				};
 			}
 
 			return {
-				success: true,
-				message: T("object_get_request_successful"),
-				response: {
+				error: undefined,
+				data: {
 					contentLength: response.ContentLength,
 					contentType: response.ContentType,
 					body: response.Body,
@@ -33,9 +37,10 @@ export default (
 		} catch (e) {
 			const error = e as Error;
 			return {
-				success: false,
-				message: error.message,
-				response: null,
+				error: {
+					message: error.message,
+				},
+				data: undefined,
 			};
 		}
 	};

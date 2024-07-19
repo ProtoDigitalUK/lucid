@@ -1,4 +1,3 @@
-import T from "../translations/index.js";
 import fs from "fs-extra";
 import { keyPaths } from "../utils/helpers.js";
 import type { PluginOptions } from "../types/types.js";
@@ -15,14 +14,16 @@ export default (pluginOptions: PluginOptions) => {
 			}
 
 			return {
-				success: true,
-				message: T("file_deleted_successfully_multiple"),
+				error: undefined,
+				data: undefined,
 			};
 		} catch (e) {
 			const error = e as Error;
 			return {
-				success: false,
-				message: error.message,
+				error: {
+					message: error.message,
+				},
+				data: undefined,
 			};
 		}
 	};

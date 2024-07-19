@@ -1,5 +1,11 @@
 # @lucidcms/plugin-local-storage
 
+## 1.0.4
+
+### Patch Changes
+
+- Response fomat of services updated to be consistent with core services and bumped core peer dependency version
+
 ## 1.0.3
 
 ### Patch Changes

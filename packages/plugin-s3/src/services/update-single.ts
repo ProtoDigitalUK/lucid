@@ -11,6 +11,7 @@ export default (
 	const updateSingle: MediaStrategyUpdateSingle = async (oldKey, props) => {
 		try {
 			const uploadRes = await uploadSingle(client, pluginOptions)(props);
+			if (uploadRes.error) return uploadRes;
 
 			if (oldKey !== props.key) {
 				const command = new DeleteObjectCommand({
@@ -25,9 +26,10 @@ export default (
 		} catch (e) {
 			const error = e as Error;
 			return {
-				success: false,
-				message: error.message,
-				response: null,
+				error: {
+					message: error.message,
+				},
+				data: undefined,
 			};
 		}
 	};

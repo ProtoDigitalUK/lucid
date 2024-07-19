@@ -12,22 +12,26 @@ export default (pluginOptions: PluginOptions) => {
 			const exists = await fs.pathExists(targetPath);
 			if (!exists) {
 				return {
-					success: false,
-					message: T("file_not_found"),
+					error: {
+						message: T("file_not_found"),
+					},
+					data: undefined,
 				};
 			}
 
 			await fs.unlink(targetPath);
 
 			return {
-				success: true,
-				message: T("file_deleted_successfully_single"),
+				error: undefined,
+				data: undefined,
 			};
 		} catch (e) {
 			const error = e as Error;
 			return {
-				success: false,
-				message: error.message,
+				error: {
+					message: error.message,
+				},
+				data: undefined,
 			};
 		}
 	};

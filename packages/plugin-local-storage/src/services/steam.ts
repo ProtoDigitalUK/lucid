@@ -14,9 +14,11 @@ export default (pluginOptions: PluginOptions) => {
 			const exists = await fs.pathExists(targetPath);
 			if (!exists) {
 				return {
-					success: false,
-					message: T("file_not_found"),
-					response: null,
+					error: {
+						message: T("file_not_found"),
+						status: 404,
+					},
+					data: undefined,
 				};
 			}
 
@@ -27,9 +29,8 @@ export default (pluginOptions: PluginOptions) => {
 			const mimeType = mime.lookup(fileExtension);
 
 			return {
-				success: true,
-				message: T("file_get_request_successful"),
-				response: {
+				error: undefined,
+				data: {
 					contentLength: stats.size,
 					contentType: mimeType || undefined,
 					body: body,
@@ -38,9 +39,11 @@ export default (pluginOptions: PluginOptions) => {
 		} catch (e) {
 			const error = e as Error;
 			return {
-				success: false,
-				message: error.message,
-				response: null,
+				error: {
+					message: error.message,
+					status: 500,
+				},
+				data: undefined,
 			};
 		}
 	};

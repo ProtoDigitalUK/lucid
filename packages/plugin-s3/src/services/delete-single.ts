@@ -18,14 +18,16 @@ export default (
 			await client.send(command);
 
 			return {
-				success: true,
-				message: T("object_deleted_successfully_single"),
+				error: undefined,
+				data: undefined,
 			};
 		} catch (e) {
 			const error = e as Error;
 			return {
-				success: false,
-				message: error.message,
+				error: {
+					message: error.message,
+				},
+				data: undefined,
 			};
 		}
 	};
