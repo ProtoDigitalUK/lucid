@@ -3,8 +3,22 @@ import mime from "mime-types";
 import sharp from "sharp";
 import { getMediaType, generateKey, streamTempFile } from "./index.js";
 import { encode } from "blurhash";
-import type { RouteMediaMetaData } from "../../types/types.js";
 import type { ServiceResponse } from "../../utils/services/types.js";
+import type { MediaResponse } from "../../types/response.js";
+
+// TODO: delete file
+
+interface RouteMediaMetaData {
+	mimeType: string;
+	fileExtension: string;
+	size: number;
+	width: number | null;
+	height: number | null;
+	type: MediaResponse["type"];
+	key: string;
+	etag?: string;
+	blurHash: string | null;
+}
 
 const getFileMetaData = async (data: {
 	filePath: string;

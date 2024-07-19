@@ -3,8 +3,9 @@ import type CollectionBuilder from "../libs/builders/collection-builder/index.js
 import type DatabaseAdapter from "../libs/db/adapter.js";
 import type ConfigSchema from "../libs/config/config-schema.js";
 import type { Readable } from "node:stream";
-import type { RouteMediaMetaData } from "../types/types.js";
+import type { MediaKitMeta } from "../libs/media-kit/index.js";
 import type { AllHooks } from "./hooks.js";
+import type { ServiceResponse } from "../utils/services/types.js";
 
 export type LucidPlugin = (config: Config) => Promise<{
 	key: string;
@@ -47,48 +48,35 @@ export type EmailStrategy = (
 	message: string;
 }>;
 
-export type MediaStrategyStream = (key: string) => Promise<{
-	success: boolean;
-	message: string;
-	response: {
-		contentLength: number | undefined;
-		contentType: string | undefined;
-		body: Readable;
-	} | null;
+export type MediaStrategyStream = (key: string) => ServiceResponse<{
+	contentLength: number | undefined;
+	contentType: string | undefined;
+	body: Readable;
 }>;
+
 export type MediaStrategyUploadSingle = (props: {
 	key: string;
 	data: Readable | Buffer;
-	meta: RouteMediaMetaData;
-}) => Promise<{
-	success: boolean;
-	message: string;
-	response: {
-		etag?: string;
-	} | null;
+	meta: MediaKitMeta;
+}) => ServiceResponse<{
+	etag?: string;
 }>;
 export type MediaStrategyUpdateSingle = (
 	oldKey: string,
 	props: {
 		key: string;
 		data: Readable | Buffer;
-		meta: RouteMediaMetaData;
+		meta: MediaKitMeta;
 	},
-) => Promise<{
-	success: boolean;
-	message: string;
-	response: {
-		etag?: string;
-	} | null;
+) => ServiceResponse<{
+	etag?: string;
 }>;
-export type MediaStrategyDeleteSingle = (key: string) => Promise<{
-	success: boolean;
-	message: string;
-}>;
-export type MediaStrategyDeleteMultiple = (keys: string[]) => Promise<{
-	success: boolean;
-	message: string;
-}>;
+export type MediaStrategyDeleteSingle = (
+	key: string,
+) => ServiceResponse<undefined>;
+export type MediaStrategyDeleteMultiple = (
+	keys: string[],
+) => ServiceResponse<undefined>;
 
 export type MediaStrategy = {
 	stream: MediaStrategyStream;

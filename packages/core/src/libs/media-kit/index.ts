@@ -13,7 +13,7 @@ import type { Config, MediaType } from "../../types.js";
 import type { ServiceResponse } from "../../utils/services/types.js";
 import type { MultipartFile } from "@fastify/multipart";
 
-interface MediaMeta {
+export interface MediaKitMeta {
 	tempPath: string | null;
 	mimeType: string;
 	name: string;
@@ -53,7 +53,9 @@ class MediaKit {
 		this.config = config;
 	}
 
-	public async injectFile(file: MultipartFile): ServiceResponse<MediaMeta> {
+	public async injectFile(
+		file: MultipartFile,
+	): ServiceResponse<MediaKitMeta> {
 		this.mimeType = file.mimetype;
 		this.name = file.filename;
 		this.type = this.getMediaType(this.mimeType);

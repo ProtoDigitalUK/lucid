@@ -7,7 +7,7 @@ import {
 } from "../../../utils/media/index.js";
 import type { MultipartFile } from "@fastify/multipart";
 import type { ServiceFn } from "../../../utils/services/types.js";
-import type { RouteMediaMetaData } from "../../../types/types.js";
+import type { MediaKitMeta } from "../../../libs/media-kit/index.js";
 
 const updateObject: ServiceFn<
 	[
@@ -17,7 +17,7 @@ const updateObject: ServiceFn<
 			key: string;
 		},
 	],
-	RouteMediaMetaData
+	MediaKitMeta
 > = async (context, data) => {
 	let tempFilePath = undefined;
 
@@ -74,18 +74,17 @@ const updateObject: ServiceFn<
 				meta: metaDataRes.data,
 			},
 		);
-
-		if (updateObjectRes.success === false) {
+		if (updateObjectRes.error) {
 			return {
 				error: {
 					type: "basic",
-					message: updateObjectRes.message,
+					message: updateObjectRes.error.message,
 					status: 500,
 					errorResponse: {
 						body: {
 							file: {
 								code: "s3_error",
-								message: updateObjectRes.message,
+								message: updateObjectRes.error.message,
 							},
 						},
 					},
@@ -106,7 +105,8 @@ const updateObject: ServiceFn<
 		if (storageRes.error) return storageRes;
 		if (clearProcessRes.error) return clearProcessRes;
 
-		metaDataRes.data.etag = updateObjectRes.response?.etag;
+		if (updateObjectRes.data?.etag)
+			metaDataRes.data.etag = updateObjectRes.data.etag;
 
 		return {
 			error: undefined,

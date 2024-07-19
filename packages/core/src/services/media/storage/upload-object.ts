@@ -7,7 +7,7 @@ import {
 } from "../../../utils/media/index.js";
 import type { MultipartFile } from "@fastify/multipart";
 import type { ServiceFn } from "../../../utils/services/types.js";
-import type { RouteMediaMetaData } from "../../../types/types.js";
+import type { MediaKitMeta } from "../../../libs/media-kit/index.js";
 
 const uploadObject: ServiceFn<
 	[
@@ -15,7 +15,7 @@ const uploadObject: ServiceFn<
 			fileData: MultipartFile | undefined;
 		},
 	],
-	RouteMediaMetaData
+	MediaKitMeta
 > = async (context, data) => {
 	let tempFilePath = undefined;
 
@@ -68,18 +68,17 @@ const uploadObject: ServiceFn<
 			data: streamTempFile(tempFilePath),
 			meta: metaDataRes.data,
 		});
-
-		if (saveObjectRes.success === false) {
+		if (saveObjectRes.error) {
 			return {
 				error: {
 					type: "basic",
-					message: saveObjectRes.message,
+					message: saveObjectRes.error.message,
 					status: 500,
 					errorResponse: {
 						body: {
 							file: {
 								code: "s3_error",
-								message: saveObjectRes.message,
+								message: saveObjectRes.error.message,
 							},
 						},
 					},
@@ -88,7 +87,8 @@ const uploadObject: ServiceFn<
 			};
 		}
 
-		metaDataRes.data.etag = saveObjectRes.response?.etag;
+		if (saveObjectRes.data?.etag)
+			metaDataRes.data.etag = saveObjectRes.data.etag;
 
 		// Update storage usage stats
 		const updateStorageRes = await context.services.option.updateSingle(

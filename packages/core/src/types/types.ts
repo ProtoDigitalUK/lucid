@@ -51,15 +51,3 @@ export type RouteController<
 	}>,
 	reply: FastifyReply,
 ) => void;
-
-export interface RouteMediaMetaData {
-	mimeType: string;
-	fileExtension: string;
-	size: number;
-	width: number | null;
-	height: number | null;
-	type: MediaResponse["type"];
-	key: string;
-	etag?: string;
-	blurHash: string | null;
-}
