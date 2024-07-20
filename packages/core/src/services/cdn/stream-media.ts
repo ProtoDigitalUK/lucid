@@ -1,4 +1,3 @@
-import T from "../../translations/index.js";
 import {
 	chooseAcceptHeaderFormat,
 	generateProcessKey,
@@ -26,7 +25,7 @@ const streamMedia: ServiceFn<
 	const format = chooseAcceptHeaderFormat(data.accept, data.query.format);
 
 	const mediaStrategyRes =
-		await context.services.media.checks.checkHasMediaStrategy(context);
+		context.services.media.checks.checkHasMediaStrategy(context);
 	if (mediaStrategyRes.error) return mediaStrategyRes;
 
 	// ------------------------------
@@ -38,24 +37,15 @@ const streamMedia: ServiceFn<
 		data.query?.quality === undefined
 	) {
 		const res = await mediaStrategyRes.data.stream(data.key);
+		if (res.error) return res;
 
-		if (!res.success || !res.response) {
-			return {
-				error: {
-					type: "basic",
-					message: T("media_not_found_message"),
-					status: 404,
-				},
-				data: undefined,
-			};
-		}
 		return {
 			error: undefined,
 			data: {
 				key: data.key,
-				contentLength: res.response.contentLength,
-				contentType: res.response.contentType,
-				body: res.response.body,
+				contentLength: res.data.contentLength,
+				contentType: res.data.contentType,
+				body: res.data.body,
 			},
 		};
 	}
@@ -74,15 +64,14 @@ const streamMedia: ServiceFn<
 
 	// Try and stream the processed media (may already exist)
 	const res = await mediaStrategyRes.data.stream(processKey);
-
-	if (res.success && res.response) {
+	if (res.data) {
 		return {
 			error: undefined,
 			data: {
 				key: processKey,
-				contentLength: res.response.contentLength,
-				contentType: res.response.contentType,
-				body: res.response.body,
+				contentLength: res.data.contentLength,
+				contentType: res.data.contentType,
+				body: res.data.body,
 			},
 		};
 	}

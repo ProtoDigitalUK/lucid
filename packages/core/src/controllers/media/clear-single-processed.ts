@@ -27,7 +27,7 @@ const clearSingleProcessedController: RouteController<
 			services: request.server.services,
 		},
 		{
-			key: request.params.key,
+			id: Number.parseInt(request.params.id),
 		},
 	);
 	if (clearProcessed.error) throw new LucidAPIError(clearProcessed.error);

@@ -82,6 +82,7 @@ const updateSingle: ServiceFn<
 	const updateObjectRes = await context.services.media.strategies.update(
 		context,
 		{
+			id: media.id,
 			fileData: data.fileData,
 			previousSize: media.file_size,
 			key: media.key,

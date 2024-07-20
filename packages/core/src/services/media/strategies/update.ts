@@ -7,6 +7,7 @@ import type { MediaKitMeta } from "../../../libs/media-kit/index.js";
 const update: ServiceFn<
 	[
 		{
+			id: number;
 			fileData: MultipartFile | undefined;
 			previousSize: number;
 			key: string;
@@ -96,7 +97,7 @@ const update: ServiceFn<
 			valueInt: proposedSizeRes.data.proposedSize,
 		}),
 		context.services.processedImage.clearSingle(context, {
-			key: data.key,
+			id: data.id,
 		}),
 		media.done(),
 	]);

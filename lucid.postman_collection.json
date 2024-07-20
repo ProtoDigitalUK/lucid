@@ -2,6 +2,7 @@
 	"info": {
 		"_postman_id": "cb052863-04a6-42a6-a3d0-d92f2af1977d",
 		"name": "Lucid CMS",
+		"description": "The complete Lucid CMS API - this contains endpoints for both internal use via the SPA along with client routes for applications and client integrations to fetch data from Lucid.",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "20656721"
 	},
@@ -1429,7 +1430,7 @@
 									"disabled": true
 								},
 								{
-									"key": "filter[fileExtension]",
+									"key": "filter[extension]",
 									"value": "",
 									"disabled": true
 								},
@@ -1479,7 +1480,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{BASE_URL}}/api/v1/media/placeholder-1708801580511/processed",
+							"raw": "{{BASE_URL}}/api/v1/media/1/processed",
 							"host": [
 								"{{BASE_URL}}"
 							],
@@ -1487,7 +1488,7 @@
 								"api",
 								"v1",
 								"media",
-								"placeholder-1708801580511",
+								"1",
 								"processed"
 							]
 						}
@@ -2121,6 +2122,30 @@
 							],
 							"path": [
 								"get-documents"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Document (toolkit)",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/get-document",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"get-document"
 							]
 						}
 					},

@@ -102,7 +102,7 @@ export default {
 		body: undefined,
 		query: undefined,
 		params: z.object({
-			key: z.string(),
+			id: z.string(),
 		}),
 	},
 	clearAllProcessed: {

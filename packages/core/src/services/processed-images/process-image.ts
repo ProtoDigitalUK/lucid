@@ -22,33 +22,22 @@ const processImage: ServiceFn<
 	}
 > = async (context, data) => {
 	const mediaStrategyRes =
-		await context.services.media.checks.checkHasMediaStrategy(context);
+		context.services.media.checks.checkHasMediaStrategy(context);
 	if (mediaStrategyRes.error) return mediaStrategyRes;
 
 	// get og image
-	const res = await mediaStrategyRes.data.stream(data.key);
-
-	// If there is no response
-	if (!res.success || !res.response) {
-		return {
-			error: {
-				type: "basic",
-				message: T("media_not_found_message"),
-				status: 404,
-			},
-			data: undefined,
-		};
-	}
+	const mediaRes = await mediaStrategyRes.data.stream(data.key);
+	if (mediaRes.error) return mediaRes;
 
 	// If the response is not an image
-	if (!res.response?.contentType?.startsWith("image/")) {
+	if (!mediaRes.data?.contentType?.startsWith("image/")) {
 		return {
 			error: undefined,
 			data: {
 				key: data.key,
-				contentLength: res.response.contentLength,
-				contentType: res.response.contentType,
-				body: res.response.body,
+				contentLength: mediaRes.data.contentLength,
+				contentType: mediaRes.data.contentType,
+				body: mediaRes.data.body,
 			},
 		};
 	}
@@ -56,7 +45,8 @@ const processImage: ServiceFn<
 	// Optimise image
 	const [imageRes, processedCountRes] = await Promise.all([
 		context.services.processedImage.optimiseImage(context, {
-			buffer: await streamToBuffer(res.response.body),
+			// buffer: await streamToBuffer(mediaRes.data.body),
+			stream: mediaRes.data.body,
 			options: data.options,
 		}),
 		context.services.processedImage.getSingleCount(context, {
@@ -69,9 +59,9 @@ const processImage: ServiceFn<
 			error: undefined,
 			data: {
 				key: data.key,
-				contentLength: res.response.contentLength,
-				contentType: res.response.contentType,
-				body: res.response.body,
+				contentLength: mediaRes.data.contentLength,
+				contentType: mediaRes.data.contentType,
+				body: mediaRes.data.body,
 			},
 		};
 	}
@@ -128,8 +118,6 @@ const processImage: ServiceFn<
 					width: imageRes.data.width,
 					height: imageRes.data.height,
 					type: "image",
-					key: data.processKey,
-					blurHash: imageRes.data.blurHash,
 				},
 			}),
 			context.services.option.updateSingle(context, {

@@ -4,16 +4,37 @@ import type { ServiceFn } from "../../utils/services/types.js";
 const clearSingle: ServiceFn<
 	[
 		{
-			key: string;
+			id: number;
 		},
 	],
 	undefined
 > = async (context, data) => {
 	const mediaStrategyRes =
-		await context.services.media.checks.checkHasMediaStrategy(context);
+		context.services.media.checks.checkHasMediaStrategy(context);
 	if (mediaStrategyRes.error) return mediaStrategyRes;
 
 	const ProcessedImagesRepo = Repository.get("processed-images", context.db);
+	const MediaRepo = Repository.get("media", context.db);
+
+	const mediaRes = await MediaRepo.selectSingle({
+		select: ["key"],
+		where: [
+			{
+				key: "id",
+				operator: "=",
+				value: data.id,
+			},
+		],
+	});
+	if (mediaRes === undefined) {
+		return {
+			error: {
+				type: "basic",
+				status: 404,
+			},
+			data: undefined,
+		};
+	}
 
 	const [storageUsedRes, processedImages] = await Promise.all([
 		context.services.option.getSingle(context, {
@@ -25,12 +46,14 @@ const clearSingle: ServiceFn<
 				{
 					key: "media_key",
 					operator: "=",
-					value: data.key,
+					value: mediaRes.key,
 				},
 			],
 		}),
 	]);
 	if (storageUsedRes.error) return storageUsedRes;
+
+	console.log("processedImages", processedImages);
 
 	if (processedImages.length === 0) {
 		return {
@@ -50,7 +73,7 @@ const clearSingle: ServiceFn<
 				{
 					key: "media_key",
 					operator: "=",
-					value: data.key,
+					value: mediaRes.key,
 				},
 			],
 		}),

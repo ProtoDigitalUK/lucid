@@ -69,7 +69,7 @@ const mediaRoutes = async (fastify: FastifyInstance) => {
 
 	r(fastify, {
 		method: "delete",
-		url: "/:key/processed",
+		url: "/:id/processed",
 		permissions: ["update_media"],
 		middleware: {
 			authenticate: true,

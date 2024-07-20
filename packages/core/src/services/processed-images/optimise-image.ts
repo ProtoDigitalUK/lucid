@@ -1,13 +1,15 @@
 import sharp from "sharp";
 import mime from "mime-types";
 import type z from "zod";
+import type { Readable } from "node:stream";
 import type cdnSchema from "../../schemas/cdn.js";
 import type { ServiceFn } from "../../utils/services/types.js";
 
 const optimiseImage: ServiceFn<
 	[
 		{
-			buffer: Buffer;
+			// buffer: Buffer;
+			stream: Readable;
 			options: z.infer<typeof cdnSchema.streamSingle.query>;
 		},
 	],
@@ -22,7 +24,8 @@ const optimiseImage: ServiceFn<
 	}
 > = async (_, data) => {
 	try {
-		const transform = sharp(data.buffer);
+		const transform = sharp();
+		data.stream.pipe(transform);
 
 		if (data.options.format) {
 			transform.toFormat(data.options.format, {
