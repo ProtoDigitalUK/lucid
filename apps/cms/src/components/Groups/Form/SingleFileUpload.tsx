@@ -110,6 +110,9 @@ export const SingleFileUpload: Component<SingleFileUploadProps> = (props) => {
 
 		return "no-file";
 	});
+	const fileType = createMemo(() => {
+		return helpers.getMediaType(props.state.value?.type as string);
+	});
 
 	// ------------------------------------
 	// Render
@@ -176,9 +179,7 @@ export const SingleFileUpload: Component<SingleFileUploadProps> = (props) => {
 								url: URL.createObjectURL(
 									props.state.value as File,
 								),
-								type: helpers.getMediaType(
-									props.state.value?.type as string,
-								),
+								type: fileType(),
 								name: props.state.value?.name as string,
 							}}
 							actions={{

@@ -8,7 +8,6 @@ import {
 	createEffect,
 	type Accessor,
 } from "solid-js";
-import { useQueryClient } from "@tanstack/solid-query";
 import api from "@/services/api";
 import useSingleFileUpload from "@/hooks/useSingleFileUpload";
 import type { MediaResponse } from "@lucidcms/core/types";
@@ -32,7 +31,6 @@ interface CreateUpdateMediaPanelProps {
 const CreateUpdateMediaPanel: Component<CreateUpdateMediaPanelProps> = (
 	props,
 ) => {
-	const queryClient = useQueryClient();
 	const panelMode = createMemo(() => {
 		return props.id === undefined ? "create" : "update";
 	});
@@ -50,8 +48,6 @@ const CreateUpdateMediaPanel: Component<CreateUpdateMediaPanelProps> = (
 
 	// ------------------------------
 	// State
-	const [getUpdateDataLock, setUpdateDataLock] = createSignal(false);
-	const [getUpdateFileLock, setUpdateFileLock] = createSignal(false);
 	const [getTitleTranslations, setTitleTranslations] = createSignal<
 		MediaResponse["titleTranslations"]
 	>([]);
@@ -190,22 +186,16 @@ const CreateUpdateMediaPanel: Component<CreateUpdateMediaPanelProps> = (
 	// Effects
 	createEffect(() => {
 		if (media.isSuccess && panelMode() === "update") {
-			if (!getUpdateDataLock()) {
-				setTitleTranslations(media.data?.data.titleTranslations || []);
-				setAltTranslations(media.data?.data.altTranslations || []);
-				setUpdateDataLock(true);
-			}
-			if (!getUpdateFileLock()) {
-				MediaFile.reset();
-				MediaFile.setCurrentFile({
-					name: media.data.data.key,
-					url: media.data?.data.url
-						? `${media.data.data.url}?width=400`
-						: undefined,
-					type: media.data?.data.type || undefined,
-				});
-				setUpdateFileLock(true);
-			}
+			setTitleTranslations(media.data?.data.titleTranslations || []);
+			setAltTranslations(media.data?.data.altTranslations || []);
+			MediaFile.reset();
+			MediaFile.setCurrentFile({
+				name: media.data.data.key,
+				url: media.data?.data.url
+					? `${media.data.data.url}?width=400`
+					: undefined,
+				type: media.data?.data.type || undefined,
+			});
 		}
 	});
 
@@ -235,18 +225,11 @@ const CreateUpdateMediaPanel: Component<CreateUpdateMediaPanelProps> = (
 			}}
 			fetchState={panelFetchState()}
 			reset={() => {
-				createSingle.reset();
-				updateSingle.reset();
-				MediaFile.reset();
-				if (panelMode() === "update") {
-					queryClient.invalidateQueries({
-						queryKey: ["media.getSingle"],
-					});
-				}
-				setTitleTranslations([]);
-				setAltTranslations([]);
-				setUpdateDataLock(false);
-				setUpdateFileLock(false);
+				// createSingle.reset();
+				// updateSingle.reset();
+				// MediaFile.reset();
+				// setTitleTranslations([]);
+				// setAltTranslations([]);
 			}}
 			mutateState={{
 				isLoading: mutateIsLoading(),
