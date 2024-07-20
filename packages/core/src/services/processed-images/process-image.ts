@@ -1,6 +1,4 @@
-import T from "../../translations/index.js";
 import Repository from "../../libs/repositories/index.js";
-import { streamToBuffer } from "../../utils/media/index.js";
 import { PassThrough, type Readable } from "node:stream";
 import type z from "zod";
 import type cdnSchema from "../../schemas/cdn.js";
@@ -45,7 +43,6 @@ const processImage: ServiceFn<
 	// Optimise image
 	const [imageRes, processedCountRes] = await Promise.all([
 		context.services.processedImage.optimiseImage(context, {
-			// buffer: await streamToBuffer(mediaRes.data.body),
 			stream: mediaRes.data.body,
 			options: data.options,
 		}),

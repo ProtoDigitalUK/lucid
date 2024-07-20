@@ -8,7 +8,6 @@ import type { ServiceFn } from "../../utils/services/types.js";
 const optimiseImage: ServiceFn<
 	[
 		{
-			// buffer: Buffer;
 			stream: Readable;
 			options: z.infer<typeof cdnSchema.streamSingle.query>;
 		},
