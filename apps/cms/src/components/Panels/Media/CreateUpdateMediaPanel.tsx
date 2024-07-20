@@ -45,7 +45,7 @@ const CreateUpdateMediaPanel: Component<CreateUpdateMediaPanelProps> = (
 				id: props.id as Accessor<number | undefined>,
 			},
 		},
-		enabled: () => props.id !== undefined && !!props.id(),
+		enabled: () => panelMode() === "update" && props.state.open,
 	});
 
 	// ------------------------------
@@ -238,9 +238,11 @@ const CreateUpdateMediaPanel: Component<CreateUpdateMediaPanelProps> = (
 				createSingle.reset();
 				updateSingle.reset();
 				MediaFile.reset();
-				queryClient.invalidateQueries({
-					queryKey: ["media.getSingle"],
-				});
+				if (panelMode() === "update") {
+					queryClient.invalidateQueries({
+						queryKey: ["media.getSingle"],
+					});
+				}
 				setTitleTranslations([]);
 				setAltTranslations([]);
 				setUpdateDataLock(false);
