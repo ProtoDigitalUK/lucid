@@ -222,8 +222,7 @@ export default class MediaRepo {
 				"title_translations.value as title_translation_value",
 				"alt_translations.value as alt_translation_value",
 			])
-			.where("visible", "=", 1)
-			.groupBy(["title_translations.value", "alt_translations.value"]);
+			.where("visible", "=", 1);
 
 		const { main, count } = queryBuilder.main(
 			{

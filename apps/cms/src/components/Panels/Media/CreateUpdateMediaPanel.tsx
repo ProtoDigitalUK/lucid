@@ -225,11 +225,11 @@ const CreateUpdateMediaPanel: Component<CreateUpdateMediaPanelProps> = (
 			}}
 			fetchState={panelFetchState()}
 			reset={() => {
-				// createSingle.reset();
-				// updateSingle.reset();
-				// MediaFile.reset();
-				// setTitleTranslations([]);
-				// setAltTranslations([]);
+				createSingle.reset();
+				updateSingle.reset();
+				MediaFile.reset();
+				setTitleTranslations([]);
+				setAltTranslations([]);
 			}}
 			mutateState={{
 				isLoading: mutateIsLoading(),
