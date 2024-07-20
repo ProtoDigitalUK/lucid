@@ -4,10 +4,12 @@ import type { MultipartFile } from "@fastify/multipart";
 import type { ServiceFn } from "../../../utils/services/types.js";
 import type { MediaKitMeta } from "../../../libs/media-kit/index.js";
 
-const upload: ServiceFn<
+const update: ServiceFn<
 	[
 		{
 			fileData: MultipartFile | undefined;
+			previousSize: number;
+			key: string;
 		},
 	],
 	MediaKitMeta
@@ -40,10 +42,11 @@ const upload: ServiceFn<
 	const injectRes = await media.injectFile(data.fileData);
 	if (injectRes.error) return injectRes;
 
-	// check storage space
+	// Ensure we available storage space
 	const proposedSizeRes =
-		await context.services.media.checks.checkCanStoreMedia(context, {
+		await context.services.media.checks.checkCanUpdateMedia(context, {
 			size: injectRes.data.size,
+			previousSize: data.previousSize,
 		});
 	if (proposedSizeRes.error) return proposedSizeRes;
 
@@ -60,23 +63,22 @@ const upload: ServiceFn<
 		};
 	}
 
-	const saveObjectRes = await mediaStrategyRes.data.uploadSingle({
+	const updateObjectRes = await mediaStrategyRes.data.updateSingle(data.key, {
 		key: injectRes.data.key,
 		data: mediaStream,
 		meta: injectRes.data,
 	});
-
-	if (saveObjectRes.error) {
+	if (updateObjectRes.error) {
 		return {
 			error: {
 				type: "basic",
-				message: saveObjectRes.error.message,
+				message: updateObjectRes.error.message,
 				status: 500,
 				errorResponse: {
 					body: {
 						file: {
 							code: "s3_error",
-							message: saveObjectRes.error.message,
+							message: updateObjectRes.error.message,
 						},
 					},
 				},
@@ -84,17 +86,22 @@ const upload: ServiceFn<
 			data: undefined,
 		};
 	}
-	if (saveObjectRes.data?.etag) injectRes.data.etag = saveObjectRes.data.etag;
+	if (updateObjectRes.data?.etag)
+		injectRes.data.etag = updateObjectRes.data.etag;
 
-	// Update storage usage stats and clean up
-	const [updateStorageRes] = await Promise.all([
+	// update storage, processed images and delete temp
+	const [storageRes, clearProcessRes] = await Promise.all([
 		context.services.option.updateSingle(context, {
 			name: "media_storage_used",
 			valueInt: proposedSizeRes.data.proposedSize,
 		}),
+		context.services.processedImage.clearSingle(context, {
+			key: data.key,
+		}),
 		media.done(),
 	]);
-	if (updateStorageRes.error) return updateStorageRes;
+	if (storageRes.error) return storageRes;
+	if (clearProcessRes.error) return clearProcessRes;
 
 	return {
 		error: undefined,
@@ -102,4 +109,4 @@ const upload: ServiceFn<
 	};
 };
 
-export default upload;
+export default update;

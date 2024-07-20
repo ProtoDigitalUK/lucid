@@ -68,6 +68,9 @@ const uploadSingle: ServiceFn<
 		titleTranslationKeyId: translationKeyIdsRes.data.title,
 		altTranslationKeyId: translationKeyIdsRes.data.alt,
 		blurHash: uploadRes.data.blurHash,
+		averageColour: uploadRes.data.averageColour,
+		isDark: uploadRes.data.isDark,
+		isLight: uploadRes.data.isLight,
 	});
 
 	if (mediaRes === undefined) {

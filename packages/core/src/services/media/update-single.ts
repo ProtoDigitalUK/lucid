@@ -41,7 +41,6 @@ const updateSingle: ServiceFn<
 			},
 		],
 	});
-
 	if (media === undefined) {
 		return {
 			error: {
@@ -72,6 +71,7 @@ const updateSingle: ServiceFn<
 		});
 	if (upsertTranslationsRes.error) return upsertTranslationsRes;
 
+	// early return if no file data
 	if (data.fileData === undefined) {
 		return {
 			error: undefined,
@@ -79,7 +79,7 @@ const updateSingle: ServiceFn<
 		};
 	}
 
-	const updateObjectRes = await context.services.media.storage.updateObject(
+	const updateObjectRes = await context.services.media.strategies.update(
 		context,
 		{
 			fileData: data.fileData,
@@ -108,9 +108,11 @@ const updateSingle: ServiceFn<
 			height: updateObjectRes.data.height,
 			updatedAt: new Date().toISOString(),
 			blurHash: updateObjectRes.data.blurHash,
+			averageColour: updateObjectRes.data.averageColour,
+			isDark: updateObjectRes.data.isDark,
+			isLight: updateObjectRes.data.isLight,
 		},
 	});
-
 	if (mediaUpdateRes === undefined) {
 		return {
 			error: {

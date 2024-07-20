@@ -11,7 +11,7 @@ const deleteObject: ServiceFn<
 	undefined
 > = async (context, data) => {
 	const mediaStrategyRes =
-		await context.services.media.checks.checkHasMediaStrategy(context);
+		context.services.media.checks.checkHasMediaStrategy(context);
 	if (mediaStrategyRes.error) return mediaStrategyRes;
 
 	const storageUsedRes = await context.services.option.getSingle(context, {
