@@ -150,6 +150,9 @@ export interface HeadlessMedia {
 	width: number | null;
 	height: number | null;
 	blur_hash: string | null;
+	average_colour: string | null;
+	is_dark: BooleanInt | null;
+	is_light: BooleanInt | null;
 	title_translation_key_id: number | null;
 	alt_translation_key_id: number | null;
 	created_at: TimestampImmutable;

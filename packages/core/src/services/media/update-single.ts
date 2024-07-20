@@ -102,7 +102,7 @@ const updateSingle: ServiceFn<
 			eTag: updateObjectRes.data.etag,
 			type: updateObjectRes.data.type,
 			mimeType: updateObjectRes.data.mimeType,
-			fileExtension: updateObjectRes.data.fileExtension,
+			extension: updateObjectRes.data.extension,
 			fileSize: updateObjectRes.data.size,
 			width: updateObjectRes.data.width,
 			height: updateObjectRes.data.height,

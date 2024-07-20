@@ -3,7 +3,7 @@ import type {
 	FieldGroupResponse,
 	FieldAltResponse,
 } from "../../types/response.js";
-import type { JSONString } from "../db/types.js";
+import type { JSONString, BooleanInt } from "../db/types.js";
 import type CollectionBuilder from "../builders/collection-builder/index.js";
 import type BrickBuilder from "../builders/brick-builder/index.js";
 import type { BrickProp } from "./collection-document-bricks.js";
@@ -42,6 +42,9 @@ export interface FieldProp {
 	media_height?: number | null;
 	media_type?: string | null;
 	media_blur_hash?: string | null;
+	media_average_colour?: string | null;
+	media_is_dark?: BooleanInt | null;
+	media_is_light?: BooleanInt | null;
 	media_title_translations?: Array<{
 		value: string | null;
 		locale_code: string | null;
@@ -476,7 +479,7 @@ export default class CollectionDocumentFieldsFormatter {
 						type: "string",
 						nullable: true,
 					},
-					fileExtension: {
+					extension: {
 						type: "string",
 						nullable: true,
 					},
@@ -494,6 +497,18 @@ export default class CollectionDocumentFieldsFormatter {
 					},
 					blurHash: {
 						type: "string",
+						nullable: true,
+					},
+					averageColour: {
+						type: "string",
+						nullable: true,
+					},
+					isDark: {
+						type: "number",
+						nullable: true,
+					},
+					isLight: {
+						type: "number",
 						nullable: true,
 					},
 					titleTranslations: {

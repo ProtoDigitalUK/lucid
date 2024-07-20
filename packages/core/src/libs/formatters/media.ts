@@ -1,5 +1,6 @@
 import Formatter from "./index.js";
 import { createCdnUrl } from "../../utils/media/index.js";
+import type { BooleanInt } from "../../libs/db/types.js";
 import type { MediaResponse, MediaType } from "../../types/response.js";
 
 interface MediaPropsT {
@@ -17,6 +18,9 @@ interface MediaPropsT {
 	created_at: Date | string | null;
 	updated_at: Date | string | null;
 	blur_hash: string | null;
+	average_colour: string | null;
+	is_dark: BooleanInt | null;
+	is_light: BooleanInt | null;
 	title_translations?: Array<{
 		value: string | null;
 		locale_code: string | null;
@@ -62,11 +66,14 @@ export default class MediaFormatter {
 			type: props.media.type as MediaType,
 			meta: {
 				mimeType: props.media.mime_type,
-				fileExtension: props.media.file_extension,
+				extension: props.media.file_extension,
 				fileSize: props.media.file_size,
 				width: props.media.width,
 				height: props.media.height,
 				blurHash: props.media.blur_hash,
+				averageColour: props.media.average_colour,
+				isDark: props.media.is_dark,
+				isLight: props.media.is_light,
 			},
 			createdAt: Formatter.formatDate(props.media.created_at),
 			updatedAt: Formatter.formatDate(props.media.updated_at),
@@ -105,13 +112,25 @@ export default class MediaFormatter {
 				type: "object",
 				properties: {
 					mimeType: { type: "string", example: "image/jpeg" },
-					fileExtension: { type: "string", example: "jpeg" },
+					extension: { type: "string", example: "jpeg" },
 					fileSize: { type: "number", example: 100 },
 					width: { type: "number", example: 100 },
 					height: { type: "number", example: 100 },
 					blurHash: {
 						type: "string",
 						example: "AQABAAAABAAAAgAA...",
+					},
+					averageColour: {
+						type: "string",
+						example: "#FFFFFF",
+					},
+					isDark: {
+						type: "number",
+						example: 1,
+					},
+					isLight: {
+						type: "number",
+						example: 1,
 					},
 				},
 			},

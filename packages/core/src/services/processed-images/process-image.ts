@@ -123,7 +123,7 @@ const processImage: ServiceFn<
 				data: imageRes.data.buffer,
 				meta: {
 					mimeType: imageRes.data.mimeType,
-					fileExtension: imageRes.data.extension,
+					extension: imageRes.data.extension,
 					size: imageRes.data.size,
 					width: imageRes.data.width,
 					height: imageRes.data.height,

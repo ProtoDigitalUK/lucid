@@ -12,13 +12,14 @@ import { getMonth, getYear } from "date-fns";
 import type { Config, MediaType } from "../../types.js";
 import type { ServiceResponse } from "../../utils/services/types.js";
 import type { MultipartFile } from "@fastify/multipart";
+import type { BooleanInt } from "../db/types.js";
 
 export interface MediaKitMeta {
 	tempPath: string | null;
 	mimeType: string;
 	name: string;
 	type: MediaType;
-	extension: string | null;
+	extension: string;
 	size: number;
 	key: string;
 	etag: string | null;
@@ -27,8 +28,8 @@ export interface MediaKitMeta {
 	height: number | null;
 	blurHash: string | null;
 	averageColour: string | null;
-	isDark: boolean | null;
-	isLight: boolean | null;
+	isDark: BooleanInt | null;
+	isLight: BooleanInt | null;
 }
 
 class MediaKit {
@@ -59,7 +60,10 @@ class MediaKit {
 		this.mimeType = file.mimetype;
 		this.name = file.filename;
 		this.type = this.getMediaType(this.mimeType);
-		this.extension = mime.extension(this.mimeType) || null;
+		this.extension =
+			mime.extension(this.mimeType) ||
+			file.filename.split(".").pop() ||
+			"";
 
 		const mediaKey = this.generateKey({
 			name: this.name,
@@ -91,8 +95,8 @@ class MediaKit {
 				height: this.height,
 				blurHash: this.blurHash,
 				averageColour: this.averageColour,
-				isDark: this.isDark,
-				isLight: this.isLight,
+				isDark: this.isDark === null ? null : this.isDark ? 1 : 0,
+				isLight: this.isLight === null ? null : this.isLight ? 1 : 0,
 			},
 		};
 	}

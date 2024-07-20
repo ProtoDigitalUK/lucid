@@ -19,7 +19,7 @@ const MediaListRoute: Component = () => {
 					value: "",
 					type: "text",
 				},
-				fileExtension: {
+				extension: {
 					value: "",
 					type: "text",
 				},
@@ -42,7 +42,7 @@ const MediaListRoute: Component = () => {
 				width: undefined,
 				height: undefined,
 				mimeType: undefined,
-				fileExtension: undefined,
+				extension: undefined,
 				createdAt: undefined,
 				updatedAt: "desc",
 			},
@@ -121,7 +121,7 @@ const MediaListRoute: Component = () => {
 						},
 						{
 							label: T()("file_extension"),
-							key: "fileExtension",
+							key: "extension",
 							type: "text",
 						},
 					]}
@@ -140,7 +140,7 @@ const MediaListRoute: Component = () => {
 						},
 						{
 							label: T()("file_extension"),
-							key: "fileExtension",
+							key: "extension",
 						},
 						{
 							label: T()("width"),

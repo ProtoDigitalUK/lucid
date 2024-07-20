@@ -86,18 +86,15 @@ const uploadObject: ServiceFn<
 	}
 	if (saveObjectRes.data?.etag) injectRes.data.etag = saveObjectRes.data.etag;
 
-	// Update storage usage stats
-	const updateStorageRes = await context.services.option.updateSingle(
-		context,
-		{
+	// Update storage usage stats and clean up
+	const [updateStorageRes] = await Promise.all([
+		context.services.option.updateSingle(context, {
 			name: "media_storage_used",
 			valueInt: proposedSizeRes.data.proposedSize,
-		},
-	);
+		}),
+		media.done(),
+	]);
 	if (updateStorageRes.error) return updateStorageRes;
-
-	// clean up
-	await media.done();
 
 	return {
 		error: undefined,

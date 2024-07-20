@@ -122,9 +122,7 @@ const MediaCard: Component<MediaCardProps> = (props) => {
 					<Pill theme="primary">
 						{helpers.bytesToSize(props.media.meta.fileSize)}
 					</Pill>
-					<Pill theme="primary">
-						{props.media.meta.fileExtension}
-					</Pill>
+					<Pill theme="primary">{props.media.meta.extension}</Pill>
 				</span>
 			</AspectRatio>
 			{/* Content */}

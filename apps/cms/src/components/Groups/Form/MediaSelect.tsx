@@ -52,7 +52,7 @@ export const MediaSelect: Component<MediaSelectProps> = (props) => {
 					url: media.url,
 					key: media.key,
 					mimeType: media.meta.mimeType,
-					fileExtension: media.meta.fileExtension,
+					extension: media.meta.extension,
 					fileSize: media.meta.fileSize,
 					type: media.type,
 					width: media.meta.width ?? null,

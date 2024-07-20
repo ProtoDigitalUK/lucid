@@ -24,7 +24,7 @@ export default {
 					key: filterSchemas.single.optional(),
 					mimeType: filterSchemas.union.optional(),
 					type: filterSchemas.union.optional(),
-					fileExtension: filterSchemas.union.optional(),
+					extension: filterSchemas.union.optional(),
 				})
 				.optional(),
 			sort: z
@@ -38,7 +38,7 @@ export default {
 							"width",
 							"height",
 							"mimeType",
-							"fileExtension",
+							"extension",
 						]),
 						value: z.enum(["asc", "desc"]),
 					}),

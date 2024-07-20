@@ -344,7 +344,7 @@ const CreateUpdateMediaPanel: Component<CreateUpdateMediaPanelProps> = (
 								},
 								{
 									label: T()("extension"),
-									value: media.data?.data.meta.fileExtension,
+									value: media.data?.data.meta.extension,
 								},
 								{
 									label: T()("mime_type"),

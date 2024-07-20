@@ -55,7 +55,7 @@ const SelectMediaContent: Component = () => {
 					value: "",
 					type: "text",
 				},
-				fileExtension: {
+				extension: {
 					value: mediaSelectStore.get.extensions || "",
 					type: "text",
 				},
@@ -151,7 +151,7 @@ const SelectMediaContent: Component = () => {
 							},
 							{
 								label: T()("file_extension"),
-								key: "fileExtension",
+								key: "extension",
 								type: "text",
 							},
 						]}

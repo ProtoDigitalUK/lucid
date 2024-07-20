@@ -50,6 +50,9 @@ export default class MediaRepo {
 				"created_at",
 				"updated_at",
 				"blur_hash",
+				"average_colour",
+				"is_dark",
+				"is_light",
 				props.config.db
 					.jsonArrayFrom(
 						eb
@@ -117,6 +120,9 @@ export default class MediaRepo {
 				"lucid_media.width",
 				"lucid_media.height",
 				"lucid_media.blur_hash",
+				"lucid_media.average_colour",
+				"lucid_media.is_dark",
+				"lucid_media.is_light",
 				"lucid_media.title_translation_key_id",
 				"lucid_media.alt_translation_key_id",
 				"lucid_media.created_at",
@@ -240,7 +246,7 @@ export default class MediaRepo {
 							key: "key",
 							mimeType: "mime_type",
 							type: "type",
-							fileExtension: "file_extension",
+							extension: "file_extension",
 						},
 						sorts: {
 							title: "title_translations.value",
@@ -250,7 +256,7 @@ export default class MediaRepo {
 							width: "width",
 							height: "height",
 							mimeType: "mime_type",
-							fileExtension: "file_extension",
+							extension: "file_extension",
 						},
 					},
 					defaultOperators: {
@@ -273,7 +279,7 @@ export default class MediaRepo {
 		eTag?: string;
 		type: HeadlessMedia["type"];
 		mimeType: string;
-		fileExtension: string;
+		extension: string;
 		fileSize: number;
 		width?: number | null;
 		height?: number | null;
@@ -281,6 +287,9 @@ export default class MediaRepo {
 		titleTranslationKeyId?: number;
 		altTranslationKeyId?: number;
 		blurHash?: string | null;
+		averageColour?: string | null;
+		isDark?: BooleanInt | null;
+		isLight?: BooleanInt | null;
 	}) => {
 		return this.db
 			.insertInto("lucid_media")
@@ -290,13 +299,16 @@ export default class MediaRepo {
 				visible: props.visible,
 				type: props.type,
 				mime_type: props.mimeType,
-				file_extension: props.fileExtension,
+				file_extension: props.extension,
 				file_size: props.fileSize,
 				width: props.width,
 				height: props.height,
 				title_translation_key_id: props.titleTranslationKeyId,
 				alt_translation_key_id: props.altTranslationKeyId,
 				blur_hash: props.blurHash,
+				average_colour: props.averageColour,
+				is_dark: props.isDark,
+				is_light: props.isLight,
 			})
 			.returning("id")
 			.executeTakeFirst();
@@ -307,15 +319,18 @@ export default class MediaRepo {
 		where: QueryBuilderWhere<"lucid_media">;
 		data: {
 			key?: string;
-			eTag?: string;
+			eTag?: string | null;
 			type?: HeadlessMedia["type"];
 			mimeType?: string;
-			fileExtension?: string;
+			extension?: string;
 			fileSize?: number;
 			width?: number | null;
 			height?: number | null;
 			updatedAt?: string;
 			blurHash?: string | null;
+			averageColour?: string | null;
+			isDark?: BooleanInt | null;
+			isLight?: BooleanInt | null;
 		};
 	}) => {
 		let query = this.db
@@ -325,12 +340,15 @@ export default class MediaRepo {
 				e_tag: props.data.eTag,
 				type: props.data.type,
 				mime_type: props.data.mimeType,
-				file_extension: props.data.fileExtension,
+				file_extension: props.data.extension,
 				file_size: props.data.fileSize,
 				width: props.data.width,
 				height: props.data.height,
 				updated_at: props.data.updatedAt,
 				blur_hash: props.data.blurHash,
+				average_colour: props.data.averageColour,
+				is_dark: props.data.isDark,
+				is_light: props.data.isLight,
 			})
 			.returning("id");
 

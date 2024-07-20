@@ -10,7 +10,7 @@ interface QueryParams {
 		name?: Accessor<string>;
 		key?: Accessor<string>;
 		mimeType?: Accessor<string>;
-		fileExtension?: Accessor<string>;
+		extension?: Accessor<string>;
 		type?: Accessor<string | string[]>;
 	};
 	perPage?: number;

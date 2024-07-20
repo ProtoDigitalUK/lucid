@@ -102,11 +102,14 @@ export interface MediaResponse {
 	type: MediaType;
 	meta: {
 		mimeType: string;
-		fileExtension: string;
+		extension: string;
 		fileSize: number;
 		width: number | null;
 		height: number | null;
 		blurHash: string | null;
+		averageColour: string | null;
+		isDark: BooleanInt | null;
+		isLight: BooleanInt | null;
 	};
 	createdAt: string | null;
 	updatedAt: string | null;
@@ -223,7 +226,7 @@ export interface MediaMeta {
 	url: string | null;
 	key: string | null;
 	mimeType: string | null;
-	fileExtension: string | null;
+	extension: string | null;
 	fileSize: number | null;
 	width: number | null;
 	height: number | null;

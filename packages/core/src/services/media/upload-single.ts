@@ -57,11 +57,11 @@ const uploadSingle: ServiceFn<
 	const MediaRepo = Repository.get("media", context.db);
 	const mediaRes = await MediaRepo.createSingle({
 		key: uploadRes.data.key,
-		eTag: uploadRes.data.etag,
+		eTag: uploadRes.data.etag ?? undefined,
 		visible: data.visible ?? 1,
 		type: uploadRes.data.type,
 		mimeType: uploadRes.data.mimeType,
-		fileExtension: uploadRes.data.fileExtension,
+		extension: uploadRes.data.extension,
 		fileSize: uploadRes.data.size,
 		width: uploadRes.data.width,
 		height: uploadRes.data.height,

@@ -80,7 +80,7 @@ export default {
 					key: "mimeType",
 				},
 				{
-					key: "fileExtension",
+					key: "extension",
 				},
 				{
 					key: "type",
@@ -97,7 +97,7 @@ export default {
 				"width",
 				"height",
 				"mimeType",
-				"fileExtension",
+				"extension",
 			],
 			page: true,
 			perPage: true,

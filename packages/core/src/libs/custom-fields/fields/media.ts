@@ -50,11 +50,14 @@ class MediaCustomField extends CustomField<"media"> {
 				url: createCdnUrl(props.host, props.data?.media_key ?? ""),
 				key: props.data?.media_key ?? null,
 				mimeType: props.data?.media_mime_type ?? null,
-				fileExtension: props.data?.media_file_extension ?? null,
+				extension: props.data?.media_file_extension ?? null,
 				fileSize: props.data?.media_file_size ?? null,
 				width: props.data?.media_width ?? null,
 				height: props.data?.media_height ?? null,
 				blurHash: props.data?.media_blur_hash ?? null,
+				averageColour: props.data?.media_average_colour ?? null,
+				isDark: props.data?.media_is_dark ?? null,
+				isLight: props.data?.media_is_light ?? null,
 				titleTranslations: props.data?.media_title_translations?.map(
 					(t) => ({
 						value: t.value,

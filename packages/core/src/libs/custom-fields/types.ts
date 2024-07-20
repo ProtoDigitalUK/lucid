@@ -505,11 +505,14 @@ export type MediaResMeta = {
 	url: string | null;
 	key: string | null;
 	mimeType: string | null;
-	fileExtension: string | null;
+	extension: string | null;
 	fileSize: number | null;
 	width: number | null;
 	height: number | null;
 	blurHash: string | null;
+	averageColour: string | null;
+	isDark: BooleanInt | null;
+	isLight: BooleanInt | null;
 	titleTranslations?: Array<{
 		value: string | null;
 		localeCode: string | null;
