@@ -10,7 +10,6 @@ import type { CFConfig, FieldTypes } from "@lucidcms/core/types";
 import type { BrickData } from "@/store/brickStore";
 import classNames from "classnames";
 import CustomFields from "@/components/Groups/Builder/CustomFields";
-import helpers from "@/utils/helpers";
 
 interface BrickProps {
 	state: {
@@ -73,21 +72,11 @@ export const BrickBody: Component<BrickProps> = (props) => {
 					<div class="border-b border-border mb-6 flex flex-wrap">
 						<For each={allTabs()}>
 							{(tab) => (
-								<button
-									class={classNames(
-										"border-b border-border -mb-px text-sm font-medium py-1 px-2 first:pl-0 focus:outline-none ring-inset focus:ring-1 ring-primary-base",
-										{
-											"border-primary-base":
-												getActiveTab() === tab.key,
-										},
-									)}
-									onClick={() => setActiveTab(tab.key)}
-									type="button"
-								>
-									{helpers.getLocaleValue({
-										value: tab.labels?.title,
-									})}
-								</button>
+								<CustomFields.TabField
+									tab={tab}
+									setActiveTab={setActiveTab}
+									getActiveTab={getActiveTab}
+								/>
 							)}
 						</For>
 					</div>
