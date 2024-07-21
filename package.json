@@ -16,7 +16,7 @@
 	},
 	"devDependencies": {
 		"husky": "^9.0.11",
-		"turbo": "^2.0.6",
+		"turbo": "^2.0.9",
 		"vitest": "^2.0.1"
 	},
 	"optionalDependencies": {
@@ -24,7 +24,11 @@
 	},
 	"name": "lucid",
 	"packageManager": "npm@10.2.4",
-	"workspaces": ["apps/*", "packages/*", "examples/*"],
+	"workspaces": [
+		"apps/*",
+		"packages/*",
+		"examples/*"
+	],
 	"volta": {
 		"node": "20.15.0"
 	}

@@ -99,16 +99,14 @@ const flattenFields = (
 				field.translations &&
 				collection.data.config.translations === true
 			) {
-				for (const [key, value] of Object.entries(field.translations)) {
-					const locale = localisation.locales.find(
-						(l) => l.code === key,
-					);
-					if (locale === undefined) continue;
+				for (let i = 0; i < localisation.locales.length; i++) {
+					const locale = localisation.locales[i];
+					if (!locale) continue;
 
 					fieldsRes.push({
 						key: field.key,
 						type: field.type,
-						value: value,
+						value: field.translations[locale.code],
 						localeCode: locale.code,
 						groupId: groupMeta?.id,
 						groupRef: groupMeta?.ref,

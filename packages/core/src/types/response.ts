@@ -230,6 +230,10 @@ export interface MediaMeta {
 	fileSize: number | null;
 	width: number | null;
 	height: number | null;
+	blurHash: string | null;
+	averageColour: string | null;
+	isDark: BooleanInt | null;
+	isLight: BooleanInt | null;
 	titleTranslations?: Array<{
 		value: string | null;
 		localeCode: string | null;
