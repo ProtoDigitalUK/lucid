@@ -25,7 +25,7 @@ interface LinkFieldProps {
 		repeaterKey?: string;
 		contentLocale: string;
 		fieldError: FieldErrors | undefined;
-		altLocaleHasError: boolean;
+		altLocaleError: boolean;
 	};
 }
 
@@ -86,7 +86,7 @@ export const LinkField: Component<LinkFieldProps> = (props) => {
 						value: props.state.fieldConfig.labels.description,
 					}),
 				}}
-				altLocaleHasError={props.state.altLocaleHasError}
+				altLocaleError={props.state.altLocaleError}
 				disabled={props.state.fieldConfig.disabled}
 				errors={props.state.fieldError}
 				required={props.state.fieldConfig.validation?.required || false}

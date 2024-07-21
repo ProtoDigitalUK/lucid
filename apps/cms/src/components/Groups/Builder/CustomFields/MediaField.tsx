@@ -25,7 +25,7 @@ interface MediaFieldProps {
 		repeaterKey?: string;
 		contentLocale: string;
 		fieldError: FieldErrors | undefined;
-		altLocaleHasError: boolean;
+		altLocaleError: boolean;
 	};
 }
 
@@ -98,7 +98,7 @@ export const MediaField: Component<MediaFieldProps> = (props) => {
 						value: props.state.fieldConfig.labels.description,
 					}),
 				}}
-				altLocaleHasError={props.state.altLocaleHasError}
+				altLocaleError={props.state.altLocaleError}
 				disabled={props.state.fieldConfig.disabled}
 				extensions={props.state.fieldConfig.validation?.extensions}
 				type={props.state.fieldConfig.validation?.type}

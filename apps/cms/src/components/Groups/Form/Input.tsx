@@ -23,7 +23,7 @@ interface InputProps {
 	required?: boolean;
 	disabled?: boolean;
 	errors?: ErrorResult | FieldErrors;
-	altLocaleHasError?: boolean;
+	altLocaleError?: boolean;
 	noMargin?: boolean;
 
 	theme?: "basic";
@@ -69,7 +69,7 @@ export const Input: Component<InputProps> = (props) => {
 					focused={inputFocus()}
 					required={props.required}
 					theme={props.theme}
-					altLocaleHasError={props.altLocaleHasError}
+					altLocaleError={props.altLocaleError}
 				/>
 				<input
 					class={classnames(

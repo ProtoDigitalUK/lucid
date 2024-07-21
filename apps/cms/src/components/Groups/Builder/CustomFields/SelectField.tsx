@@ -25,7 +25,7 @@ interface SelectFieldProps {
 		repeaterKey?: string;
 		contentLocale: string;
 		fieldError: FieldErrors | undefined;
-		altLocaleHasError: boolean;
+		altLocaleError: boolean;
 	};
 }
 
@@ -99,7 +99,7 @@ export const SelectField: Component<SelectFieldProps> = (props) => {
 					value: props.state.fieldConfig.labels.description,
 				}),
 			}}
-			altLocaleHasError={props.state.altLocaleHasError}
+			altLocaleError={props.state.altLocaleError}
 			noClear={props.state.fieldConfig.validation?.required || false}
 			disabled={props.state.fieldConfig.disabled}
 			errors={props.state.fieldError}

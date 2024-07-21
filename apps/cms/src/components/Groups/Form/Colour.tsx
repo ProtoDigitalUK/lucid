@@ -16,7 +16,7 @@ interface ColourProps {
 	required?: boolean;
 	disabled?: boolean;
 	errors?: ErrorResult | FieldErrors;
-	altLocaleHasError?: boolean;
+	altLocaleError?: boolean;
 }
 
 export const Colour: Component<ColourProps> = (props) => {
@@ -36,7 +36,7 @@ export const Colour: Component<ColourProps> = (props) => {
 				focused={inputFocus()}
 				required={props.required}
 				theme={"basic"}
-				altLocaleHasError={props.altLocaleHasError}
+				altLocaleError={props.altLocaleError}
 			/>
 			<input
 				class={classnames(

@@ -9,6 +9,19 @@ const IntroBrick = new BrickBuilder("intro", {
 		},
 	})
 	.addText("title")
-	.addWysiwyg("intro");
+	.addWysiwyg("intro")
+	.addTab("advanced_tab", {
+		labels: {
+			title: "Advanced",
+		},
+	})
+	.addText("json", {
+		labels: {
+			title: "JSON",
+		},
+		validation: {
+			required: true,
+		},
+	});
 
 export default IntroBrick;

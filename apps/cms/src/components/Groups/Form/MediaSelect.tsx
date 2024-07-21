@@ -30,7 +30,7 @@ interface MediaSelectProps {
 	noMargin?: boolean;
 	required?: boolean;
 	errors?: ErrorResult | FieldErrors;
-	altLocaleHasError?: boolean;
+	altLocaleError?: boolean;
 }
 
 export const MediaSelect: Component<MediaSelectProps> = (props) => {
@@ -57,6 +57,10 @@ export const MediaSelect: Component<MediaSelectProps> = (props) => {
 					type: media.type,
 					width: media.meta.width ?? null,
 					height: media.meta.height ?? null,
+					blurHash: media.meta.blurHash ?? null,
+					averageColour: media.meta.averageColour ?? null,
+					isDark: media.meta.isDark ?? null,
+					isLight: media.meta.isLight ?? null,
 					titleTranslations: media.titleTranslations,
 					altTranslations: media.altTranslations,
 				});
@@ -88,7 +92,7 @@ export const MediaSelect: Component<MediaSelectProps> = (props) => {
 				label={props.copy?.label}
 				required={props.required}
 				theme={"basic"}
-				altLocaleHasError={props.altLocaleHasError}
+				altLocaleError={props.altLocaleError}
 			/>
 			<div class="mt-2.5 w-full">
 				<Switch>

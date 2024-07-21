@@ -25,7 +25,7 @@ interface InputFieldProps {
 		repeaterKey?: string;
 		contentLocale: string;
 		fieldError: FieldErrors | undefined;
-		altLocaleHasError: boolean;
+		altLocaleError: boolean;
 	};
 }
 
@@ -101,7 +101,7 @@ export const InputField: Component<InputFieldProps> = (props) => {
 				}),
 			}}
 			errors={props.state.fieldError}
-			altLocaleHasError={props.state.altLocaleHasError}
+			altLocaleError={props.state.altLocaleError}
 			disabled={props.state.fieldConfig.disabled}
 			required={props.state.fieldConfig.validation?.required || false}
 			theme={"basic"}

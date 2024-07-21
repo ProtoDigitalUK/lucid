@@ -10,7 +10,7 @@ interface LabelProps {
 	required?: boolean;
 	noPadding?: boolean;
 	theme?: "basic";
-	altLocaleHasError?: boolean;
+	altLocaleError?: boolean;
 }
 
 export const Label: Component<LabelProps> = (props) => {
@@ -35,7 +35,7 @@ export const Label: Component<LabelProps> = (props) => {
 					</Show>
 				</span>
 
-				<Show when={props.altLocaleHasError}>
+				<Show when={props.altLocaleError}>
 					<span
 						class="text-error-base ml-1 inline"
 						title={T()("this_filed_has_errors_in_other_locales")}

@@ -24,7 +24,7 @@ interface ColourFieldProps {
 		repeaterKey?: string;
 		contentLocale: string;
 		fieldError: FieldErrors | undefined;
-		altLocaleHasError: boolean;
+		altLocaleError: boolean;
 	};
 }
 
@@ -86,7 +86,7 @@ export const ColourField: Component<ColourFieldProps> = (props) => {
 						value: props.state.fieldConfig.labels.description,
 					}),
 				}}
-				altLocaleHasError={props.state.altLocaleHasError}
+				altLocaleError={props.state.altLocaleError}
 				presets={props.state.fieldConfig.presets}
 				disabled={props.state.fieldConfig.disabled}
 				errors={props.state.fieldError}

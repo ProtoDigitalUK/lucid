@@ -17,7 +17,7 @@ interface WYSIWYGProps {
 	required?: boolean;
 	disabled?: boolean;
 	errors?: ErrorResult | FieldErrors;
-	altLocaleHasError?: boolean;
+	altLocaleError?: boolean;
 	noMargin?: boolean;
 }
 
@@ -78,7 +78,7 @@ export const WYSIWYG: Component<WYSIWYGProps> = (props) => {
 				focused={inputFocus()}
 				required={props.required}
 				theme={"basic"}
-				altLocaleHasError={props.altLocaleHasError}
+				altLocaleError={props.altLocaleError}
 			/>
 			<div
 				class={classnames("mt-1", {
@@ -90,6 +90,7 @@ export const WYSIWYG: Component<WYSIWYGProps> = (props) => {
 					ref={quillElement}
 					onFocus={() => setInputFocus(true)}
 					onBlur={() => setInputFocus(false)}
+					class="[&>.ql-editor]:min-h-72"
 				/>
 			</div>
 			<Form.DescribedBy

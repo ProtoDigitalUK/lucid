@@ -24,7 +24,7 @@ interface WYSIWYGFieldProps {
 		repeaterKey?: string;
 		contentLocale: string;
 		fieldError: FieldErrors | undefined;
-		altLocaleHasError: boolean;
+		altLocaleError: boolean;
 	};
 }
 
@@ -87,7 +87,7 @@ export const WYSIWYGField: Component<WYSIWYGFieldProps> = (props) => {
 					value: props.state.fieldConfig.labels.placeholder,
 				}),
 			}}
-			altLocaleHasError={props.state.altLocaleHasError}
+			altLocaleError={props.state.altLocaleError}
 			disabled={props.state.fieldConfig.disabled}
 			errors={props.state.fieldError}
 			required={props.state.fieldConfig.validation?.required || false}
