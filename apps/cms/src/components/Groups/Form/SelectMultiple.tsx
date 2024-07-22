@@ -206,7 +206,7 @@ export const SelectMultiple: Component<SelectMultipleProps> = (props) => {
 											>
 												<FaSolidCheck
 													size={14}
-													class="text-primary-contrast mr-2"
+													class="fill-current mr-2"
 												/>
 											</Show>
 										</DropdownMenu.Item>
