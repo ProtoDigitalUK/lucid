@@ -199,6 +199,7 @@ const UpsertRolePanel: Component<UpsertRolePanelProps> = (props) => {
 							required={true}
 							errors={getBodyError("name", errors)}
 							noMargin={true}
+							theme="full"
 						/>
 					</InputGrid>
 					{/* Global perms */}
@@ -224,6 +225,7 @@ const UpsertRolePanel: Component<UpsertRolePanelProps> = (props) => {
 									}}
 									copy={{}}
 									noMargin={true}
+									theme="full"
 								/>
 							</div>
 						</SectionHeading>
@@ -270,6 +272,7 @@ const UpsertRolePanel: Component<UpsertRolePanelProps> = (props) => {
 															),
 														}}
 														noMargin={true}
+														theme="full"
 													/>
 												)}
 											</For>

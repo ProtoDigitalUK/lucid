@@ -53,6 +53,7 @@ const ResetPasswordForm: Component<ResetPasswordFormProps> = (props) => {
 				required={true}
 				autoFoucs={true}
 				errors={getBodyError("password", resetPassword.errors)}
+				theme="full"
 			/>
 			<Form.Input
 				id="passwordConfirmation"
@@ -68,6 +69,7 @@ const ResetPasswordForm: Component<ResetPasswordFormProps> = (props) => {
 					"passwordConfirmation",
 					resetPassword.errors,
 				)}
+				theme="full"
 			/>
 		</Form.Root>
 	);

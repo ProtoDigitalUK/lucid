@@ -279,6 +279,7 @@ const CreateUpdateMediaPanel: Component<CreateUpdateMediaPanelProps> = (
 									errors={getErrorObject(
 										inputError(index())?.name,
 									)}
+									theme="full"
 								/>
 								<Show when={showAltInput()}>
 									<Form.Input
@@ -306,6 +307,7 @@ const CreateUpdateMediaPanel: Component<CreateUpdateMediaPanelProps> = (
 										errors={getErrorObject(
 											inputError(index())?.alt,
 										)}
+										theme="full"
 									/>
 								</Show>
 							</Show>

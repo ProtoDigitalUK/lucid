@@ -26,7 +26,7 @@ interface InputProps {
 	altLocaleError?: boolean;
 	noMargin?: boolean;
 
-	theme?: "basic";
+	theme: "basic" | "full";
 }
 
 export const Input: Component<InputProps> = (props) => {
@@ -46,7 +46,7 @@ export const Input: Component<InputProps> = (props) => {
 		<div
 			class={classnames("w-full", {
 				"mb-0": props.noMargin,
-				"mb-15 last:mb-0": !props.noMargin && props.theme !== "basic",
+				"mb-15 last:mb-0": !props.noMargin && props.theme === "full",
 				"mb-2.5 last:mb-0": !props.noMargin && props.theme === "basic",
 			})}
 		>
@@ -55,11 +55,11 @@ export const Input: Component<InputProps> = (props) => {
 					"flex flex-col transition-colors duration-200 ease-in-out relative",
 					{
 						"border-primary-base bg-container-3":
-							inputFocus() && props.theme !== "basic",
+							inputFocus() && props.theme === "full",
 						"border-error-base":
 							props.errors?.message !== undefined,
 						"bg-container-4 rounded-md border border-border":
-							props.theme !== "basic",
+							props.theme === "full",
 					},
 				)}
 			>
@@ -80,7 +80,7 @@ export const Input: Component<InputProps> = (props) => {
 							"bg-container-4 border border-border h-10 rounded-md mt-1 focus:border-primary-base duration-200 transition-colors":
 								props.theme === "basic",
 							"bg-transparent pb-2 pt-1 rounded-b-md":
-								props.theme !== "basic",
+								props.theme === "full",
 						},
 					)}
 					onKeyDown={(e) => {

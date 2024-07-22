@@ -21,7 +21,7 @@ interface JSONTextareaProps {
 	errors?: ErrorResult | FieldErrors;
 	altLocaleError?: boolean;
 	noMargin?: boolean;
-	theme?: "basic";
+	theme: "full" | "basic";
 }
 
 export const JSONTextarea: Component<JSONTextareaProps> = (props) => {
@@ -86,11 +86,11 @@ export const JSONTextarea: Component<JSONTextareaProps> = (props) => {
 					"flex flex-col transition-colors duration-200 ease-in-out relative",
 					{
 						"border-primary-base bg-container-3":
-							inputFocus() && props.theme !== "basic",
+							inputFocus() && props.theme === "full",
 						"border-error-base":
 							props.errors?.message !== undefined,
 						"bg-container-4 rounded-md border":
-							props.theme !== "basic",
+							props.theme === "full",
 					},
 				)}
 			>
@@ -111,7 +111,7 @@ export const JSONTextarea: Component<JSONTextareaProps> = (props) => {
 								"bg-container-4 border border-border rounded-md mt-1 p-2.5 focus:border-primary-base duration-200 transition-colors":
 									props.theme === "basic",
 								"bg-transparent pb-2 px-2.5 pt-1 rounded-b-md":
-									props.theme !== "basic",
+									props.theme === "full",
 							},
 						)}
 						onKeyDown={(e) => {

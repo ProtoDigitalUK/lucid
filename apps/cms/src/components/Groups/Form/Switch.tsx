@@ -21,7 +21,6 @@ interface SwitchProps {
 	errors?: ErrorResult | FieldErrors;
 	altLocaleError?: boolean;
 	noMargin?: boolean;
-	theme?: "basic";
 }
 
 export const Switch: Component<SwitchProps> = (props) => {
@@ -42,7 +41,7 @@ export const Switch: Component<SwitchProps> = (props) => {
 				label={props.copy?.label}
 				focused={inputFocus()}
 				required={props.required}
-				theme={props.theme}
+				theme={"basic"}
 				altLocaleError={props.altLocaleError}
 			/>
 			<input

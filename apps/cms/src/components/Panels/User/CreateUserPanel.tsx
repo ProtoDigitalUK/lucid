@@ -117,6 +117,7 @@ const CreateUserPanel: Component<CreateUserPanelProps> = (props) => {
 						}}
 						required={true}
 						errors={getBodyError("username", createUser.errors)}
+						theme="full"
 					/>
 					<InputGrid columns={2}>
 						<Form.Input
@@ -133,6 +134,7 @@ const CreateUserPanel: Component<CreateUserPanelProps> = (props) => {
 								"firstName",
 								createUser.errors,
 							)}
+							theme="full"
 						/>
 						<Form.Input
 							id="lastName"
@@ -145,6 +147,7 @@ const CreateUserPanel: Component<CreateUserPanelProps> = (props) => {
 							}}
 							noMargin={true}
 							errors={getBodyError("lastName", createUser.errors)}
+							theme="full"
 						/>
 					</InputGrid>
 					<InputGrid columns={1}>
@@ -160,6 +163,7 @@ const CreateUserPanel: Component<CreateUserPanelProps> = (props) => {
 							noMargin={true}
 							required={true}
 							errors={getBodyError("email", createUser.errors)}
+							theme="full"
 						/>
 					</InputGrid>
 					<Form.SelectMultiple
@@ -179,6 +183,7 @@ const CreateUserPanel: Component<CreateUserPanelProps> = (props) => {
 							}) || []
 						}
 						errors={getBodyError("roleIds", createUser.errors)}
+						theme="full"
 					/>
 					<Show when={userStore.get.user?.superAdmin}>
 						<Form.Checkbox
@@ -193,6 +198,7 @@ const CreateUserPanel: Component<CreateUserPanelProps> = (props) => {
 								"superAdmin",
 								createUser.errors,
 							)}
+							theme="full"
 						/>
 					</Show>
 				</>

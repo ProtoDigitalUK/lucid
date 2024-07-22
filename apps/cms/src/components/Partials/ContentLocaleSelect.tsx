@@ -15,6 +15,16 @@ const ContentLocaleSelect: Component<ContentLocaleSelectProps> = (props) => {
 		() => contentLocaleStore.get.contentLocale,
 	);
 	const locales = createMemo(() => contentLocaleStore.get.locales);
+	const options = createMemo(() => {
+		return (
+			locales().map((l) => ({
+				value: l.code,
+				label: `${
+					l.name ? `${l.name} (${l.code})` : l.code
+				} ${l.isDefault ? "(Default)" : ""}`,
+			})) || []
+		);
+	});
 
 	// ----------------------------------------
 	// Render
@@ -33,17 +43,11 @@ const ContentLocaleSelect: Component<ContentLocaleSelectProps> = (props) => {
 							);
 					}}
 					name={"content-locale"}
-					options={
-						locales().map((l) => ({
-							value: l.code,
-							label: `${
-								l.name ? `${l.name} (${l.code})` : l.code
-							} ${l.isDefault ? "(Default)" : ""}`,
-						})) || []
-					}
+					options={options()}
 					noMargin={true}
 					noClear={true}
 					hasError={props.hasError}
+					theme="basic-small"
 				/>
 			</Match>
 			<Match when={props.value !== undefined}>
@@ -55,17 +59,11 @@ const ContentLocaleSelect: Component<ContentLocaleSelectProps> = (props) => {
 						else props.setValue?.(value.toString());
 					}}
 					name={"content-locale"}
-					options={
-						locales().map((l) => ({
-							value: l.code,
-							label: `${
-								l.name ? `${l.name} (${l.code})` : l.code
-							} ${l.isDefault ? "(Default)" : ""}`,
-						})) || []
-					}
+					options={options()}
 					noMargin={true}
 					noClear={true}
 					hasError={props.hasError}
+					theme="basic-small"
 				/>
 			</Match>
 		</Switch>

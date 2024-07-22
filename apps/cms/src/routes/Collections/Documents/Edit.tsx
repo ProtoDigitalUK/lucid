@@ -230,7 +230,7 @@ const CollectionsDocumentsEditRoute: Component<
 											collection.data?.data.translations
 										}
 									>
-										<div class="w-full md:w-auto md:min-w-[250px]">
+										<div class="w-full md:w-auto md:min-w-[220px]">
 											<ContentLocaleSelect
 												hasError={brickTranslationErrors()}
 											/>
@@ -239,7 +239,7 @@ const CollectionsDocumentsEditRoute: Component<
 									<Button
 										type="button"
 										theme="primary"
-										size="small"
+										size="x-small"
 										onClick={upsertDocumentAction}
 										disabled={canSaveDocument()}
 									>
@@ -252,7 +252,7 @@ const CollectionsDocumentsEditRoute: Component<
 									<Show when={props.mode === "edit"}>
 										<Button
 											theme="danger"
-											size="icon"
+											size="xs-icon"
 											type="button"
 											onClick={() => setDeleteOpen(true)}
 										>

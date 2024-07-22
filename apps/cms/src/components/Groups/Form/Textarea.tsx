@@ -21,7 +21,7 @@ interface TextareaProps {
 	errors?: ErrorResult | FieldErrors;
 	altLocaleError?: boolean;
 	noMargin?: boolean;
-	theme?: "basic";
+	theme: "full" | "basic";
 	rows?: number;
 }
 
@@ -42,11 +42,11 @@ export const Textarea: Component<TextareaProps> = (props) => {
 					"flex flex-col transition-colors duration-200 ease-in-out relative",
 					{
 						"border-primary-base bg-container-3":
-							inputFocus() && props.theme !== "basic",
+							inputFocus() && props.theme === "full",
 						"border-error-base":
 							props.errors?.message !== undefined,
 						"bg-container-4 rounded-md border border-border":
-							props.theme !== "basic",
+							props.theme === "full",
 					},
 				)}
 			>
@@ -66,7 +66,7 @@ export const Textarea: Component<TextareaProps> = (props) => {
 							"bg-container-4 border border-border rounded-md mt-1 p-2.5 focus:border-primary-base duration-200 transition-colors":
 								props.theme === "basic",
 							"bg-transparent pb-2 px-2.5 pt-1 rounded-b-md":
-								props.theme !== "basic",
+								props.theme === "full",
 						},
 					)}
 					onKeyDown={(e) => {

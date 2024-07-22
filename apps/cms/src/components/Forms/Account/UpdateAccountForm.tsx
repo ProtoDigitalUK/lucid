@@ -90,6 +90,7 @@ const UpdateAccountForm: Component<UpdateAccountFormProps> = (props) => {
 						label: T()("first_name"),
 					}}
 					errors={getBodyError("firstName", updateMe.errors)}
+					theme="full"
 				/>
 				<Form.Input
 					id="lastName"
@@ -101,6 +102,7 @@ const UpdateAccountForm: Component<UpdateAccountFormProps> = (props) => {
 						label: T()("last_name"),
 					}}
 					errors={getBodyError("lastName", updateMe.errors)}
+					theme="full"
 				/>
 			</div>
 			<Form.Input
@@ -114,6 +116,7 @@ const UpdateAccountForm: Component<UpdateAccountFormProps> = (props) => {
 				}}
 				required={true}
 				errors={getBodyError("username", updateMe.errors)}
+				theme="full"
 			/>
 			<Form.Input
 				id="email"
@@ -126,6 +129,7 @@ const UpdateAccountForm: Component<UpdateAccountFormProps> = (props) => {
 				}}
 				required={true}
 				errors={getBodyError("email", updateMe.errors)}
+				theme="full"
 			/>
 			<div class="mt-30">
 				<h3 class="mb-15">{T()("update_password")}</h3>
@@ -139,6 +143,7 @@ const UpdateAccountForm: Component<UpdateAccountFormProps> = (props) => {
 						label: T()("current_password"),
 					}}
 					errors={getBodyError("currentPassword", updateMe.errors)}
+					theme="full"
 				/>
 				<Form.Input
 					id="newPassword"
@@ -150,6 +155,7 @@ const UpdateAccountForm: Component<UpdateAccountFormProps> = (props) => {
 						label: T()("new_password"),
 					}}
 					errors={getBodyError("newPassword", updateMe.errors)}
+					theme="full"
 				/>
 				<Show when={newPassword() !== ""}>
 					<Form.Input
@@ -165,6 +171,7 @@ const UpdateAccountForm: Component<UpdateAccountFormProps> = (props) => {
 							"passwordConfirmation",
 							updateMe.errors,
 						)}
+						theme="full"
 					/>
 				</Show>
 			</div>

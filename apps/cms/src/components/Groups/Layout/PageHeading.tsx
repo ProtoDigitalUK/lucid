@@ -129,7 +129,7 @@ export const PageHeading: Component<PageHeadingProps> = (props) => {
 								props.actions.contentLocale !== false
 							}
 						>
-							<div class="w-full md:max-w-[240px]">
+							<div class="w-full md:max-w-[220px]">
 								<ContentLocaleSelect />
 							</div>
 						</Show>
@@ -142,7 +142,7 @@ export const PageHeading: Component<PageHeadingProps> = (props) => {
 							<Button
 								type="submit"
 								theme="primary"
-								size="icon"
+								size="xs-icon"
 								onClick={() => {
 									props.actions?.create?.setOpen(true);
 								}}
@@ -162,7 +162,7 @@ export const PageHeading: Component<PageHeadingProps> = (props) => {
 						>
 							<Link
 								theme="primary"
-								size="icon"
+								size="xs-icon"
 								href={props.actions?.createLink?.link}
 							>
 								<FaSolidPlus />
@@ -180,7 +180,7 @@ export const PageHeading: Component<PageHeadingProps> = (props) => {
 						>
 							<Link
 								theme="primary"
-								size="icon"
+								size="xs-icon"
 								href={props.actions?.link?.href}
 								target={
 									props.actions?.link?.newTab
@@ -202,7 +202,7 @@ export const PageHeading: Component<PageHeadingProps> = (props) => {
 						>
 							<Button
 								theme="danger"
-								size="icon"
+								size="xs-icon"
 								type="button"
 								onClick={() =>
 									props.actions?.delete?.setOpen(true)

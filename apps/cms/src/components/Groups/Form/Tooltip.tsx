@@ -5,7 +5,7 @@ import { HoverCard } from "@kobalte/core";
 
 interface TooltipProps {
 	copy?: string;
-	theme?: "basic";
+	theme?: "basic" | "full";
 }
 
 export const Tooltip: Component<TooltipProps> = (props) => {
@@ -19,7 +19,7 @@ export const Tooltip: Component<TooltipProps> = (props) => {
 						"h-4 w-4 cursor-help hover:bg-primary-base absolute bg-primary-base rounded-full fill-primary-contrast flex items-center justify-center duration-200 transition-colors",
 						{
 							"top-1/2 -translate-y-1/2 right-2.5":
-								props.theme !== "basic",
+								props.theme === "full",
 							"top-0 right-0": props.theme === "basic",
 						},
 					)}

@@ -95,7 +95,6 @@ export const CheckboxField: Component<CheckboxFieldProps> = (props) => {
 			disabled={props.state.fieldConfig.disabled}
 			errors={props.state.fieldError}
 			required={props.state.fieldConfig.validation?.required || false}
-			theme={"basic"}
 		/>
 	);
 };

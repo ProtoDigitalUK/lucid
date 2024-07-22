@@ -6,7 +6,6 @@ import {
 	For,
 	Switch,
 	Match,
-	createMemo,
 	createEffect,
 } from "solid-js";
 import classNames from "classnames";
@@ -45,7 +44,7 @@ export interface SelectProps {
 	noMargin?: boolean;
 	noClear?: boolean;
 	hasError?: boolean;
-	theme?: "basic";
+	theme: "full" | "basic" | "basic-small";
 }
 
 export const Select: Component<SelectProps> = (props) => {
@@ -80,26 +79,15 @@ export const Select: Component<SelectProps> = (props) => {
 	});
 
 	// ----------------------------------------
-	// Memos
-	// const selectOptions = createMemo(() => {
-	// 	if (props.noClear) return props.options;
-
-	// 	const options = JSON.parse(JSON.stringify(props.options));
-	// 	options.unshift({
-	// 		value: undefined,
-	// 		label: T()("deselect"),
-	// 	});
-	// 	return options;
-	// });
-
-	// ----------------------------------------
 	// Render
 	return (
 		<div
 			class={classNames("w-full", {
 				"mb-0": props.noMargin,
 				"mb-15 last:mb-0": !props.noMargin,
-				"mb-2.5 last:mb-0": !props.noMargin && props.theme === "basic",
+				"mb-2.5 last:mb-0":
+					!props.noMargin &&
+					(props.theme === "basic" || props.theme === "basic-small"),
 			})}
 		>
 			{/* Select */}
@@ -115,12 +103,12 @@ export const Select: Component<SelectProps> = (props) => {
 						"flex flex-col transition-colors duration-200 ease-in-out relative",
 						{
 							"border-primary-base bg-container-3":
-								inputFocus() && props.theme !== "basic",
+								inputFocus() && props.theme === "full",
 							"border-error-base":
 								props.errors?.message !== undefined ||
 								props.hasError,
 							"bg-container-4 rounded-md border border-border":
-								props.theme !== "basic",
+								props.theme === "full",
 						},
 					)}
 				>
@@ -138,13 +126,18 @@ export const Select: Component<SelectProps> = (props) => {
 						class={classNames(
 							"focus:outline-none px-2.5 text-sm text-title font-medium w-full flex justify-between disabled:cursor-not-allowed disabled:opacity-80",
 							{
+								"bg-container-4 border border-border flex items-center rounded-md focus:border-primary-base duration-200 transition-colors":
+									props.theme === "basic" ||
+									props.theme === "basic-small",
+								"h-10": props.theme === "basic",
+								"h-9": props.theme === "basic-small",
+								"mt-1":
+									props.theme !== "full" && props.copy?.label,
 								"pt-2 h-10 flex items-center":
 									props.copy?.label === undefined &&
-									props.theme !== "basic",
-								"bg-container-4 border border-border flex items-center mt-1 h-10 rounded-md focus:border-primary-base duration-200 transition-colors":
-									props.theme === "basic",
+									props.theme === "full",
 								"bg-transparent pb-2 pt-1 rounded-b-md":
-									props.theme !== "basic",
+									props.theme === "full",
 							},
 						)}
 						onFocus={() => setInputFocus(true)}

@@ -18,7 +18,7 @@ interface CheckboxInputProps {
 	required?: boolean;
 	errors?: ErrorResult | FieldErrors;
 	noMargin?: boolean;
-	theme?: "basic";
+	theme: "full" | "basic";
 }
 
 export const CheckboxInput: Component<CheckboxInputProps> = (props) => {

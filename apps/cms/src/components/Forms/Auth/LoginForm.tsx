@@ -54,6 +54,7 @@ const LoginForm: Component<LoginFormProps> = (props) => {
 				autoFoucs={true}
 				autoComplete="username"
 				errors={getBodyError("usernameOrEmail", login.errors)}
+				theme="full"
 			/>
 			<Form.Input
 				id="password"
@@ -67,6 +68,7 @@ const LoginForm: Component<LoginFormProps> = (props) => {
 				required={true}
 				autoComplete="current-password"
 				errors={getBodyError("password", login.errors)}
+				theme="full"
 			/>
 			<Show when={props.showForgotPassword}>
 				<A

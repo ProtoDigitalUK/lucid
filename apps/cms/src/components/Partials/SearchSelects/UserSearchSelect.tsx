@@ -14,7 +14,7 @@ interface UserSearchSelectProps {
 	copy?: SelectProps["copy"];
 	errors?: ErrorResult | FieldErrors;
 	altLocaleError?: boolean;
-	theme?: "basic";
+	theme: "basic" | "basic-small" | "full";
 	disabled?: boolean;
 	required?: boolean;
 }

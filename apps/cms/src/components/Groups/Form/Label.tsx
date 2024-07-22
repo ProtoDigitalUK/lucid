@@ -9,7 +9,7 @@ interface LabelProps {
 	focused?: boolean;
 	required?: boolean;
 	noPadding?: boolean;
-	theme?: "basic";
+	theme: "full" | "basic" | "basic-small";
 	altLocaleError?: boolean;
 }
 
@@ -23,7 +23,7 @@ export const Label: Component<LabelProps> = (props) => {
 					{
 						"text-primary-hover": props.focused,
 						"pt-2 px-2.5":
-							props.noPadding !== true && props.theme !== "basic",
+							props.noPadding !== true && props.theme === "full",
 						"mb-2": props.noPadding === true,
 					},
 				)}

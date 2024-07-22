@@ -53,6 +53,7 @@ const ForgotPasswordForm: Component<ForgotPasswordFormProps> = (props) => {
 				required={true}
 				autoFoucs={true}
 				errors={getBodyError("email", forgotPassword.errors)}
+				theme="full"
 			/>
 			<Show when={props.showBackToLogin}>
 				<A

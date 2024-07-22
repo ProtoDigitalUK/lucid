@@ -129,6 +129,7 @@ export const SingleFileUpload: Component<SingleFileUploadProps> = (props) => {
 				required={props.required}
 				noPadding={true}
 				altLocaleError={props.altLocaleError}
+				theme="basic"
 			/>
 			<input
 				ref={inputRef}

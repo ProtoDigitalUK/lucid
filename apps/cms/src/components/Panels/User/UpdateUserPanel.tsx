@@ -147,6 +147,7 @@ const UpdateUserPanel: Component<UpdateUserPanelProps> = (props) => {
 							}) || []
 						}
 						errors={getBodyError("roleIds", updateUser.errors)}
+						theme="full"
 					/>
 					<Show when={userStore.get.user?.superAdmin}>
 						<Form.Checkbox
@@ -161,6 +162,7 @@ const UpdateUserPanel: Component<UpdateUserPanelProps> = (props) => {
 								"superAdmin",
 								updateUser.errors,
 							)}
+							theme="full"
 						/>
 					</Show>
 				</>

@@ -24,6 +24,7 @@ const SelectCol: Component<SelectColProps> = (props) => {
 						onChange={props.onChange}
 						copy={{}}
 						noMargin={true}
+						theme="full"
 					/>
 				</Table.Th>
 			</Match>
@@ -38,6 +39,7 @@ const SelectCol: Component<SelectColProps> = (props) => {
 						onChange={props.onChange}
 						copy={{}}
 						noMargin={true}
+						theme="full"
 					/>
 				</Table.Td>
 			</Match>
