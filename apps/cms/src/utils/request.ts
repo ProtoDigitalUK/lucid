@@ -22,7 +22,8 @@ export const getFetchURL = (url: string, query?: QueryBuilderProps): string => {
 		? url
 		: `${import.meta.env.VITE_API_DEV_URL}${url}`;
 	if (query) {
-		targetUrl += `?${queryBuilder(query)}`;
+		const queryString = queryBuilder(query);
+		if (queryString) targetUrl += `?${queryString}`;
 	}
 	return targetUrl;
 };
