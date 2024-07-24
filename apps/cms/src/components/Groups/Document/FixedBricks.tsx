@@ -1,7 +1,7 @@
 import { type Component, createMemo, For, createSignal } from "solid-js";
 import type { CollectionBrickConfig } from "@lucidcms/core/types";
 import classNames from "classnames";
-import { FaSolidCircleChevronUp } from "solid-icons/fa";
+import { FaSolidCircleChevronUp, FaSolidShield } from "solid-icons/fa";
 import brickStore, { type BrickData } from "@/store/brickStore";
 import Builder from "@/components/Groups/Builder";
 import helpers from "@/utils/helpers";
@@ -86,12 +86,15 @@ const FixedBrickRow: Component<FixedBrickRowProps> = (props) => {
 				role="button"
 				tabIndex="0"
 			>
-				<h2>
-					{helpers.getLocaleValue({
-						value: config()?.title,
-						fallback: config()?.key,
-					})}
-				</h2>
+				<div class="flex items-center">
+					<FaSolidShield class="text-white text-lg mr-2.5" />
+					<h2>
+						{helpers.getLocaleValue({
+							value: config()?.title,
+							fallback: config()?.key,
+						})}
+					</h2>
+				</div>
 				<div class="flex gap-2">
 					<Builder.BrickImagePreviewButton brickConfig={config()} />
 					<button

@@ -18,7 +18,7 @@ export const NavigationLink: Component<NavigationLinkProps> = (props) => {
 				title={props.title}
 				href={props.href}
 				class={classNames(
-					"h-10 w-full flex bg-container-2 text-body fill-body hover:text-body hover:bg-container-4 transition-colors duration-200 ease-in-out items-center px-2.5 rounded-md",
+					"h-10 w-full flex bg-container-3 text-body fill-body hover:text-body hover:bg-container-4 transition-colors duration-200 ease-in-out items-center px-2.5 rounded-md",
 				)}
 				activeClass={classNames(
 					"!bg-primary-base !text-primary-contrast !fill-primary-base-contrast",

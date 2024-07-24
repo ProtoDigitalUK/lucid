@@ -1,7 +1,11 @@
 import T from "@/translations";
 import { type Component, createMemo, For, Show, createSignal } from "solid-js";
 import type { CollectionBrickConfig } from "@lucidcms/core/types";
-import { FaSolidCircleChevronUp, FaSolidGripLines } from "solid-icons/fa";
+import {
+	FaSolidCircleChevronUp,
+	FaSolidGripLines,
+	FaSolidLayerGroup,
+} from "solid-icons/fa";
 import classNames from "classnames";
 import brickStore, { type BrickData } from "@/store/brickStore";
 import Builder from "@/components/Groups/Builder";
@@ -34,7 +38,10 @@ export const BuilderBricks: Component<BuilderBricksProps> = (props) => {
 		<Show when={props.brickConfig.length > 0}>
 			<div class="p-15 md:p-30">
 				<div class="flex justify-between mb-15">
-					<h2>{T()("builder_area")}:</h2>
+					<div class="flex items-center">
+						<FaSolidLayerGroup class="text-white text-xl mr-2.5" />
+						<h2>{T()("builder_area")}:</h2>
+					</div>
 					<Button
 						type="button"
 						theme="primary"
