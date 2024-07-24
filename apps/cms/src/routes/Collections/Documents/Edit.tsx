@@ -172,12 +172,10 @@ const CollectionsDocumentsEditRoute: Component<
 	return (
 		<Switch>
 			<Match when={isLoading()}>
-				<div class="fixed top-15 left-[85px] bottom-15 right-15 flex">
-					<span class="flex flex-col w-full h-full">
-						<span class="h-64 w-full skeleton block mb-15" />
-						<span class="h-full w-full skeleton block" />
-					</span>
-					<span class="w-full lg:max-w-[300px] skeleton block h-full ml-15" />
+				<div class="fixed top-15 left-[325px] bottom-15 right-15 flex flex-col">
+					<span class="h-32 w-full skeleton block mb-15" />
+					<span class="h-64 w-full skeleton block mb-15" />
+					<span class="h-full w-full skeleton block" />
 				</div>
 			</Match>
 			<Match when={isSuccess()}>
