@@ -11,30 +11,25 @@ interface NavigationLinkProps {
 
 export const NavigationLink: Component<NavigationLinkProps> = (props) => {
 	// ----------------------------------
-	// Hooks & States
-
-	// ----------------------------------
-	// Classes
-	const iconClasses = classNames("w-5 h-5 text-primary-base");
-
-	// ----------------------------------
 	// Render
 	return (
-		<li class="mb-1 last:mb-0">
+		<li class="mb-1.5 last:mb-0">
 			<A
 				title={props.title}
 				href={props.href}
 				class={classNames(
-					"h-10 w-full flex bg-container-1 text-body fill-body hover:text-body hover:bg-container-4 transition-colors duration-200 ease-in-out items-center px-2.5 rounded-md",
+					"h-10 w-full flex bg-container-2 text-body fill-body hover:text-body hover:bg-container-4 transition-colors duration-200 ease-in-out items-center px-2.5 rounded-md",
 				)}
 				activeClass={classNames(
-					"!bg-container-4 !text-title !fill-title",
+					"!bg-primary-base !text-primary-contrast !fill-primary-base-contrast",
 				)}
 				end
 			>
 				<Switch>
 					<Match when={props.icon === "page"}>
-						<FaSolidFile class={iconClasses} />
+						<FaSolidFile
+							class={classNames("w-4 h-4 text-current")}
+						/>
 					</Match>
 				</Switch>
 				<span class="ml-2.5 block text-sm font-medium">

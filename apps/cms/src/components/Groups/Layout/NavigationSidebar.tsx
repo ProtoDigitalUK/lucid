@@ -1,13 +1,7 @@
 import T from "@/translations";
-import {
-	type Component,
-	createMemo,
-	Show,
-	createSignal,
-	Switch,
-	Match,
-} from "solid-js";
+import { type Component, createMemo, Show } from "solid-js";
 import api from "@/services/api";
+import { useLocation } from "@solidjs/router";
 import packageJson from "../../../../../../packages/core/package.json";
 import { A } from "@solidjs/router";
 import LogoIcon from "@/assets/svgs/logo-icon.svg";
@@ -21,6 +15,48 @@ export const NavigationSidebar: Component = () => {
 	// Mutations
 	const logout = api.auth.useLogout();
 	const user = createMemo(() => userStore.get.user);
+	const location = useLocation();
+
+	// ----------------------------------
+	// Queries
+	const collections = api.collections.useGetAll({
+		queryParams: {},
+	});
+
+	// ----------------------------------
+	// Memos
+	const collectionsIsLoading = createMemo(() => {
+		return collections.isLoading;
+	});
+	const collectionsIsError = createMemo(() => {
+		return collections.isError;
+	});
+	const multiCollections = createMemo(() => {
+		return (
+			collections.data?.data.filter(
+				(collection) => collection.mode === "multiple",
+			) || []
+		);
+	});
+	const singleCollections = createMemo(() => {
+		return (
+			collections.data?.data.filter(
+				(collection) => collection.mode === "single",
+			) || []
+		);
+	});
+	const collectionLinkHref = createMemo(() => {
+		if (multiCollections().length > 0) {
+			return `/admin/collections/${multiCollections()[0].key}`;
+		}
+		if (singleCollections().length > 0) {
+			return `/admin/collections/${singleCollections()[0].key}`;
+		}
+		return "/admin/collections";
+	});
+	const isCollectionsRoute = createMemo(() => {
+		return location.pathname.includes("/admin/collections");
+	});
 
 	// ----------------------------------
 	// Render
@@ -43,7 +79,9 @@ export const NavigationSidebar: Component = () => {
 							type="link"
 							icon="collection"
 							title={T()("collections")}
-							href="/admin/collections"
+							href={collectionLinkHref()}
+							loading={collectionsIsLoading()}
+							active={isCollectionsRoute()}
 						/>
 						<Navigation.IconLink
 							type="link"
@@ -135,7 +173,14 @@ export const NavigationSidebar: Component = () => {
 				</div>
 			</div>
 			{/* SUbMenus */}
-			<SubMenus.Collections />
+			<SubMenus.Collections
+				state={{
+					isLoading: collectionsIsLoading(),
+					isError: collectionsIsError(),
+					multiCollections: multiCollections(),
+					singleCollections: singleCollections(),
+				}}
+			/>
 		</nav>
 	);
 };

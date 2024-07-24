@@ -431,5 +431,7 @@
 	"create_a_new_integration": "Create New Integration",
 	"client_integration": "Client Integration",
 	"no_client_integrations_found_title": "No Client Integrations Found",
-	"no_client_integrations_found_descriptions": "You currently have no client integrations. Creating an integration will allow you to request and use data from Lucid in your own applications."
+	"no_client_integrations_found_descriptions": "You currently have no client integrations. Creating an integration will allow you to request and use data from Lucid in your own applications.",
+	"multiple_documents": "Multiple Documents",
+	"single_documents": "Single Documents"
 }

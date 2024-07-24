@@ -39,12 +39,6 @@ interface IconLinkProps {
 export const IconLink: Component<IconLinkProps> = (props) => {
 	// ----------------------------------
 	// Classes
-	const linkClasses = classNames(
-		"w-10 h-10 focus:outline-none focus:!border-primary-base focus:ring-0 flex items-center justify-center bg-container-1 rounded-lg border border-transparent transition-colors duration-200 ease-in-out hover:border-container-4",
-		{
-			"!border-container-4": props.active,
-		},
-	);
 	const iconClasses = classNames(
 		"w-5 h-5 text-icon-base hover:text-icon-hover",
 	);
@@ -91,7 +85,14 @@ export const IconLink: Component<IconLinkProps> = (props) => {
 							<Tooltip.Trigger tabIndex={-1}>
 								<A
 									href={props.href || "/"}
-									class={linkClasses}
+									class={classNames(
+										"w-10 h-10 focus:outline-none focus:!border-primary-base focus:ring-0 flex items-center justify-center bg-container-1 rounded-lg border border-transparent transition-colors duration-200 ease-in-out hover:border-container-4",
+										{
+											"!border-container-4": props.active,
+											"animate-pulse pointer-events-none":
+												props.loading,
+										},
+									)}
 									activeClass={
 										!props.active
 											? "!border-container-4"
@@ -107,7 +108,14 @@ export const IconLink: Component<IconLinkProps> = (props) => {
 							<Tooltip.Trigger
 								tabIndex={0}
 								as="button"
-								class={linkClasses}
+								class={classNames(
+									"w-10 h-10 focus:outline-none focus:!border-primary-base focus:ring-0 flex items-center justify-center bg-container-1 rounded-lg border border-transparent transition-colors duration-200 ease-in-out hover:border-container-4",
+									{
+										"!border-container-4": props.active,
+										"animate-pulse pointer-events-none":
+											props.loading,
+									},
+								)}
 								onClick={props.onClick}
 								disabled={props.loading}
 								onMouseEnter={props.onTargetEnter}
