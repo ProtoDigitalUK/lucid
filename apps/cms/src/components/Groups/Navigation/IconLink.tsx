@@ -1,4 +1,4 @@
-import { type Component, Switch, Match, Show } from "solid-js";
+import { type Component, Switch, Match, Show, type JSXElement } from "solid-js";
 import classNames from "classnames";
 import {
 	FaSolidPhotoFilm,
@@ -31,6 +31,9 @@ interface IconLinkProps {
 	permission?: boolean;
 	onClick?: () => void;
 	loading?: boolean;
+	onTargetEnter?: () => void;
+	onTargetLeave?: () => void;
+	tooltip?: false;
 }
 
 export const IconLink: Component<IconLinkProps> = (props) => {
@@ -82,7 +85,7 @@ export const IconLink: Component<IconLinkProps> = (props) => {
 	return (
 		<Show when={props.permission !== false}>
 			<li class="mb-2.5 last:mb-0">
-				<Tooltip.Root placement={"left"}>
+				<Tooltip.Root placement={"right"}>
 					<Switch>
 						<Match when={props.type === "link"}>
 							<Tooltip.Trigger tabIndex={-1}>
@@ -102,19 +105,25 @@ export const IconLink: Component<IconLinkProps> = (props) => {
 						</Match>
 						<Match when={props.type === "button"}>
 							<Tooltip.Trigger
-								tabIndex={-1}
+								tabIndex={0}
 								as="button"
 								class={linkClasses}
 								onClick={props.onClick}
 								disabled={props.loading}
+								onMouseEnter={props.onTargetEnter}
+								onMouseLeave={props.onTargetLeave}
+								onFocus={props.onTargetEnter}
+								onBlur={props.onTargetLeave}
 							>
 								<Icons />
 							</Tooltip.Trigger>
 						</Match>
 					</Switch>
-					<Tooltip.Portal>
-						<TooltipContent text={props.title} />
-					</Tooltip.Portal>
+					<Show when={props.tooltip !== false}>
+						<Tooltip.Portal>
+							<TooltipContent text={props.title} />
+						</Tooltip.Portal>
+					</Show>
 				</Tooltip.Root>
 			</li>
 		</Show>
