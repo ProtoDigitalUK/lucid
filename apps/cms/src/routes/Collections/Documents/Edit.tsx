@@ -31,6 +31,7 @@ import SelectMediaPanel from "@/components/Panels/Media/SelectMedia";
 import LinkSelect from "@/components/Modals/CustomField/LinkSelect";
 import UserDisplay from "@/components/Partials/UserDisplay";
 import BrickImagePreview from "@/components/Modals/Bricks/ImagePreview";
+import classNames from "classnames";
 
 interface CollectionsDocumentsEditRouteProps {
 	mode: "create" | "edit";
@@ -180,48 +181,52 @@ const CollectionsDocumentsEditRoute: Component<
 			</Match>
 			<Match when={isSuccess()}>
 				<header class="bg-container-1 border-b border-border px-15 md:px-30 py-15 md:py-30">
-					<Layout.PageBreadcrumbs
-						breadcrumbs={[
+					<Show when={collection.data?.data.mode === "multiple"}>
+						<Layout.PageBreadcrumbs
+							breadcrumbs={[
+								{
+									link: `/admin/collections/${collectionKey()}`,
+									label: collection.data?.data.title || "",
+								},
+								{
+									link: `/admin/collections/${collectionKey()}/${
+										props.mode === "create"
+											? "create"
+											: documentId()
+									}`,
+									label:
+										props.mode === "create"
+											? T()("create")
+											: T()("edit"),
+								},
+							]}
+							options={{
+								noBorder: true,
+								noPadding: true,
+							}}
+						/>
+					</Show>
+					<div
+						class={classNames(
+							"flex items-end gap-15 lg:gap-30 flex-wrap-reverse lg:flex-nowrap",
 							{
-								link: "/admin/collections",
-								label: T()("collections"),
-							},
-							{
-								link: `/admin/collections/${collectionKey()}`,
-								label: collection.data?.data.title || "",
-								include:
+								"mt-15":
 									collection.data?.data.mode === "multiple",
 							},
-							{
-								link: `/admin/collections/${collectionKey()}/${
-									props.mode === "create"
-										? "create"
-										: documentId()
-								}`,
-								label:
-									props.mode === "create"
-										? T()("create")
-										: T()("edit"),
-							},
-						]}
-						options={{
-							noBorder: true,
-							noPadding: true,
-						}}
-					/>
-					<div class="flex items-end gap-15 lg:gap-30 mt-15 flex-wrap-reverse lg:flex-nowrap">
+						)}
+					>
 						<div class="w-full border-b border-border flex items-center gap-15">
-							<span class="text-lg px-1 py-2 font-semibold after:absolute after:-bottom-px after:left-0 after:right-0 after:h-px after:bg-primary-base relative cursor-pointer">
+							<span class="text-lg font-display pr-1 py-2 font-semibold after:absolute after:-bottom-px after:left-0 after:right-0 after:h-px after:bg-primary-base relative cursor-pointer">
 								Content
 							</span>
 							<span
-								class="text-lg px-1 py-2 font-semibold opacity-50 cursor-not-allowed"
+								class="text-lg font-display px-1 py-2 font-semibold opacity-50 cursor-not-allowed"
 								title="Coming soon"
 							>
 								Preview
 							</span>
 							<span
-								class="text-lg px-1 py-2 font-semibold opacity-50 cursor-not-allowed"
+								class="text-lg font-display px-1 py-2 font-semibold opacity-50 cursor-not-allowed"
 								title="Coming soon"
 							>
 								Revisions

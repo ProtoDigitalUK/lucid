@@ -132,16 +132,6 @@ const CollectionsDocumentsListRoute: Component = () => {
 					}),
 				},
 			}}
-			breadcrumbs={[
-				{
-					link: "/admin/collections",
-					label: T()("collections"),
-				},
-				{
-					link: `/admin/collections/${collectionKey()}`,
-					label: collection.data?.data.title || T()("documents"),
-				},
-			]}
 			headingChildren={
 				<Query.Row
 					searchParams={searchParams}

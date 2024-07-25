@@ -28,7 +28,7 @@ const Link: Component<LinkProps> = (props) => {
 	// Memos
 	const classes = createMemo(() => {
 		return classnames(
-			"flex items-center justify-center text-center focus:outline-none focus:ring-1 duration-200 transition-colors rounded-md font-display relative font-medium",
+			"flex items-center justify-center text-center focus:outline-none focus:ring-1 duration-200 transition-colors rounded-md relative font-base",
 			{
 				"bg-primary-base hover:bg-primary-hover text-primary-contrast hover:text-primary-contrast fill-primary-contrast ring-primary-base":
 					props.theme === "primary",
@@ -38,9 +38,9 @@ const Link: Component<LinkProps> = (props) => {
 					props.theme === "danger",
 				// Sizes
 				"px-2.5 py-2 text-sm": props.size === "x-small",
-				"px-5 py-2.5 h-10 text-base": props.size === "small",
-				"px-5 py-3.5 text-base": props.size === "medium",
-				"px-10 py-4 text-base": props.size === "large",
+				"px-5 py-2.5 h-10 text-sm": props.size === "small",
+				"px-5 py-3.5 text-sm": props.size === "medium",
+				"px-10 py-4 text-sm": props.size === "large",
 				"w-9 h-9 p-0 !min-w-[36px]": props.size === "xs-icon",
 				"w-10 h-10 p-0 !min-w-[40px]": props.size === "icon",
 				"p-1": props.size === "auto",
