@@ -252,7 +252,12 @@ const CollectionsDocumentsEditRoute: Component<
 										collection.data?.data.singular || "",
 								})}
 							</Button>
-							<Show when={props.mode === "edit"}>
+							<Show
+								when={
+									props.mode === "edit" &&
+									collection.data?.data.mode === "multiple"
+								}
+							>
 								<Button
 									theme="danger"
 									size="xs-icon"

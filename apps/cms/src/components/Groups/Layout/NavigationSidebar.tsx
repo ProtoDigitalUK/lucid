@@ -50,7 +50,11 @@ export const NavigationSidebar: Component = () => {
 			return `/admin/collections/${multiCollections()[0].key}`;
 		}
 		if (singleCollections().length > 0) {
-			return `/admin/collections/${singleCollections()[0].key}`;
+			const collection = singleCollections()[0];
+			if (collection.documentId) {
+				return `/admin/collections/${collection.key}/${collection.documentId}`;
+			}
+			return `/admin/collections/${collection.key}/create`;
 		}
 		return "/admin/collections";
 	});

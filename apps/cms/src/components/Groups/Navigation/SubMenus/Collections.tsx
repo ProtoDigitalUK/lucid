@@ -68,7 +68,12 @@ export const CollectionSubMenu: Component<{
 									{(collection) => (
 										<Navigation.Link
 											title={collection.title}
-											href={`/admin/collections/${collection.key}/${collection.documentId}`}
+											href={
+												collection.documentId
+													? `/admin/collections/${collection.key}/${collection.documentId}`
+													: `/admin/collections/${collection.key}/create`
+											}
+											activeIfIncludes={`/admin/collections/${collection.key}`}
 											icon="page"
 										/>
 									)}
