@@ -179,107 +179,100 @@ const CollectionsDocumentsEditRoute: Component<
 				</div>
 			</Match>
 			<Match when={isSuccess()}>
-				<Layout.PageBreadcrumbs
-					breadcrumbs={[
-						{
-							link: "/admin/collections",
-							label: T()("collections"),
-						},
-						{
-							link: `/admin/collections/${collectionKey()}`,
-							label: collection.data?.data.title || "",
-							include: collection.data?.data.mode === "multiple",
-						},
-						{
-							link: `/admin/collections/${collectionKey()}/${
-								props.mode === "create"
-									? "create"
-									: documentId()
-							}`,
-							label:
-								props.mode === "create"
-									? T()("create")
-									: T()("edit"),
-						},
-					]}
-				/>
-				<div class="flex flex-col lg:flex-row min-h-[calc(100vh-51px)]">
-					{/* Main */}
-					<div class="w-full">
-						{/* Header */}
-						<div class="bg-container-2 border-b border-border">
-							<header class="p-15 md:p-30 flex items-center justify-between flex-wrap-reverse md:flex-nowrap gap-15">
-								<h1 class="w-full">
-									{T()("document_route_title", {
-										mode: T()("edit"),
-										name:
-											collection.data?.data.singular ??
-											T()("document"),
-									})}
-									<Show when={props.mode === "edit"}>
-										<span class="text-unfocused ml-2.5">
-											#{document.data?.data.id}
-										</span>
-									</Show>
-								</h1>
-								<div class="w-full md:w-auto flex items-center gap-2.5">
-									<Show
-										when={
-											collection.data?.data.translations
-										}
-									>
-										<div class="w-full md:w-auto md:min-w-[220px]">
-											<ContentLocaleSelect
-												hasError={brickTranslationErrors()}
-											/>
-										</div>
-									</Show>
-									<Button
-										type="button"
-										theme="primary"
-										size="x-small"
-										onClick={upsertDocumentAction}
-										disabled={canSaveDocument()}
-									>
-										{T()("save", {
-											singular:
-												collection.data?.data
-													.singular || "",
-										})}
-									</Button>
-									<Show when={props.mode === "edit"}>
-										<Button
-											theme="danger"
-											size="xs-icon"
-											type="button"
-											onClick={() => setDeleteOpen(true)}
-										>
-											<span class="sr-only">
-												{T()("delete")}
-											</span>
-											<FaSolidTrash />
-										</Button>
-									</Show>
-								</div>
-							</header>
-							<Document.CollectionPseudoBrick
-								fields={collection.data?.data.fields || []}
-							/>
+				<header class="bg-container-1 border-b border-border px-15 md:px-30 py-15 md:py-30">
+					<Layout.PageBreadcrumbs
+						breadcrumbs={[
+							{
+								link: "/admin/collections",
+								label: T()("collections"),
+							},
+							{
+								link: `/admin/collections/${collectionKey()}`,
+								label: collection.data?.data.title || "",
+								include:
+									collection.data?.data.mode === "multiple",
+							},
+							{
+								link: `/admin/collections/${collectionKey()}/${
+									props.mode === "create"
+										? "create"
+										: documentId()
+								}`,
+								label:
+									props.mode === "create"
+										? T()("create")
+										: T()("edit"),
+							},
+						]}
+						options={{
+							noBorder: true,
+							noPadding: true,
+						}}
+					/>
+					<div class="flex items-end gap-15 lg:gap-30 mt-15 flex-wrap-reverse lg:flex-nowrap">
+						<div class="w-full border-b border-border flex items-center gap-15">
+							<span class="text-lg px-1 py-2 font-semibold after:absolute after:-bottom-px after:left-0 after:right-0 after:h-px after:bg-primary-base relative cursor-pointer">
+								Content
+							</span>
+							<span
+								class="text-lg px-1 py-2 font-semibold opacity-50 cursor-not-allowed"
+								title="Coming soon"
+							>
+								Preview
+							</span>
+							<span
+								class="text-lg px-1 py-2 font-semibold opacity-50 cursor-not-allowed"
+								title="Coming soon"
+							>
+								Revisions
+							</span>
 						</div>
-						{/* content */}
-						<Document.FixedBricks
-							brickConfig={
-								collection.data?.data.fixedBricks || []
-							}
-						/>
-						<Document.BuilderBricks
-							brickConfig={
-								collection.data?.data.builderBricks || []
-							}
-						/>
+						<div class="w-full md:w-auto flex items-center gap-2.5">
+							<Show when={collection.data?.data.translations}>
+								<div class="w-full md:w-auto md:min-w-[220px]">
+									<ContentLocaleSelect
+										hasError={brickTranslationErrors()}
+									/>
+								</div>
+							</Show>
+							<Button
+								type="button"
+								theme="primary"
+								size="x-small"
+								onClick={upsertDocumentAction}
+								disabled={canSaveDocument()}
+							>
+								{T()("save", {
+									singular:
+										collection.data?.data.singular || "",
+								})}
+							</Button>
+							<Show when={props.mode === "edit"}>
+								<Button
+									theme="danger"
+									size="xs-icon"
+									type="button"
+									onClick={() => setDeleteOpen(true)}
+								>
+									<span class="sr-only">{T()("delete")}</span>
+									<FaSolidTrash />
+								</Button>
+							</Show>
+						</div>
 					</div>
-					{/* Sidebar */}
-					<aside class="w-full lg:max-w-[300px] lg:overflow-y-auto bg-container-1 border-b lg:border-b-0 lg:border-l border-border ">
+				</header>
+				{/* content */}
+				<Document.CollectionPseudoBrick
+					fields={collection.data?.data.fields || []}
+				/>
+				<Document.FixedBricks
+					brickConfig={collection.data?.data.fixedBricks || []}
+				/>
+				<Document.BuilderBricks
+					brickConfig={collection.data?.data.builderBricks || []}
+				/>
+				{/* Sidebar */}
+				{/* <aside class="w-full lg:max-w-[300px] lg:overflow-y-auto bg-container-1 border-b lg:border-b-0 lg:border-l border-border ">
 						<div class="p-15 md:p-30">
 							<h2 class="mb-15">{T()("document")}</h2>
 							<DetailsList
@@ -366,8 +359,8 @@ const CollectionsDocumentsEditRoute: Component<
 								]}
 							/>
 						</div>
-					</aside>
-				</div>
+					</aside> */}
+				{/* </div> */}
 				{/* Modals */}
 				<NavigationGuard
 					state={{

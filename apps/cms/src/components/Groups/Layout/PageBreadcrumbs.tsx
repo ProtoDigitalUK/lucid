@@ -11,6 +11,7 @@ export interface PageBreadcrumbsProps {
 	}[];
 	options?: {
 		noBorder?: boolean;
+		noPadding?: boolean;
 	};
 }
 
@@ -20,8 +21,9 @@ export const PageBreadcrumbs: Component<PageBreadcrumbsProps> = (props) => {
 	return (
 		<Show when={props.breadcrumbs}>
 			<nav
-				class={classNames("px-15 md:px-30 py-15 bg-container-1", {
+				class={classNames("bg-container-1", {
 					"border-b border-border": props.options?.noBorder !== true,
+					"px-15 md:px-30 py-15": props.options?.noPadding !== true,
 				})}
 			>
 				<ul class="flex items-center">
