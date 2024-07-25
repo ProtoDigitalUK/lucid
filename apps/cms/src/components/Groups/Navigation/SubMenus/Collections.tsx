@@ -53,6 +53,7 @@ export const CollectionSubMenu: Component<{
 												collection.key
 											}`}
 											icon="page"
+											activeIfIncludes={`/admin/collections/${collection.key}`}
 										/>
 									)}
 								</For>
