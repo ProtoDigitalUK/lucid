@@ -132,7 +132,7 @@ export const Panel: Component<PanelProps> = (props) => {
 			onOpenChange={() => props.setOpen(!props.open)}
 		>
 			<Dialog.Portal>
-				<Dialog.Overlay class="fixed inset-0 bg-white bg-opacity-40 animate-animate-fade-out data-[expanded]:animate-animate-fade-in" />
+				<Dialog.Overlay class="fixed inset-0 z-50 bg-white bg-opacity-40 animate-animate-fade-out data-[expanded]:animate-animate-fade-in" />
 				<div class="fixed inset-0 z-40 flex justify-end">
 					<Dialog.Content
 						class="w-full max-w-[800px] bg-container-3 animate-animate-slide-from-right-out data-[expanded]:animate-animate-slide-from-right-in outline-none overflow-y-auto"

@@ -1,5 +1,5 @@
 import T from "@/translations";
-import { useParams, useNavigate } from "@solidjs/router";
+import { useParams, useNavigate, useLocation } from "@solidjs/router";
 import {
 	type Component,
 	createMemo,
@@ -9,6 +9,7 @@ import {
 	Match,
 	createEffect,
 	onCleanup,
+	onMount,
 } from "solid-js";
 import type { CollectionResponse, FieldErrors } from "@lucidcms/core/types";
 import api from "@/services/api";
@@ -44,10 +45,14 @@ const CollectionsDocumentsEditRoute: Component<
 	// Hooks & State
 	const params = useParams();
 	const navigate = useNavigate();
+	const location = useLocation();
 	const navGuard = navGuardHook({
 		brickMutateLock: true,
 	});
+	const [getHeaderEle, setHeaderEle] = createSignal<HTMLElement>();
+	const [getContentEle, setContentEle] = createSignal<HTMLDivElement>();
 	const [getDeleteOpen, setDeleteOpen] = createSignal(false);
+	const [getHasScrolled, setHasScrolled] = createSignal(false);
 
 	// ----------------------------------
 	// Memos
@@ -73,7 +78,7 @@ const CollectionsDocumentsEditRoute: Component<
 		enabled: () => !!collectionKey(),
 		refetchOnWindowFocus: false,
 	});
-	const document = api.collections.document.useGetSingle({
+	const doc = api.collections.document.useGetSingle({
 		queryParams: {
 			location: {
 				collectionKey: collectionKey,
@@ -111,13 +116,13 @@ const CollectionsDocumentsEditRoute: Component<
 	// ----------------------------------
 	// Memos
 	const isLoading = createMemo(() => {
-		return collection.isLoading || document.isLoading;
+		return collection.isLoading || doc.isLoading;
 	});
 	const isSuccess = createMemo(() => {
 		if (props.mode === "create") {
 			return collection.isSuccess;
 		}
-		return collection.isSuccess && document.isSuccess;
+		return collection.isSuccess && doc.isSuccess;
 	});
 	const isSaving = createMemo(() => {
 		return upsertDocument.action.isPending;
@@ -147,6 +152,18 @@ const CollectionsDocumentsEditRoute: Component<
 		});
 		brickStore.set("documentMutated", false);
 	};
+	const windowScroll = (e: Event) => {
+		if (window.scrollY >= (getHeaderEle()?.offsetHeight || 0)) {
+			setHasScrolled(true);
+		} else {
+			setHasScrolled(false);
+		}
+	};
+	const updateContentHeight = () => {
+		const headerHeight = getHeaderEle()?.offsetHeight || 0;
+		const contentEle = getContentEle();
+		if (contentEle) contentEle.style.marginTop = `${headerHeight}px`;
+	};
 
 	// ---------------------------------
 	// Effects
@@ -157,15 +174,20 @@ const CollectionsDocumentsEditRoute: Component<
 				"collectionTranslations",
 				collection.data?.data.translations || false,
 			);
-			brickStore.get.setBricks(
-				document.data?.data,
-				collection.data?.data,
-			);
+			brickStore.get.setBricks(doc.data?.data, collection.data?.data);
 		}
 	});
-
+	createEffect(() => {
+		updateContentHeight();
+	});
+	onMount(() => {
+		setHasScrolled(false);
+		document.addEventListener("scroll", windowScroll, false);
+	});
 	onCleanup(() => {
 		brickStore.get.reset();
+		setHeaderEle(undefined);
+		document.removeEventListener("scroll", windowScroll, false);
 	});
 
 	// ----------------------------------
@@ -180,13 +202,34 @@ const CollectionsDocumentsEditRoute: Component<
 				</div>
 			</Match>
 			<Match when={isSuccess()}>
-				<header class="bg-container-1 border-b border-border px-15 md:px-30 py-15 md:py-30">
-					<Show when={collection.data?.data.mode === "multiple"}>
+				<header
+					ref={setHeaderEle}
+					class={classNames(
+						"bg-container-1 border-b border-border px-15 md:px-30 fixed top-0 left-[310px] right-0 z-10 duration-200 transition-all",
+						{
+							"py-15 md:py-15": getHasScrolled(),
+							"py-15 md:py-30": !getHasScrolled(),
+						},
+					)}
+				>
+					<div
+						class={classNames(
+							"overflow-hidden transform-gpu duration-200 transition-all",
+							{
+								"opacity-100": !getHasScrolled(),
+								"opacity-0 -translate-y-full max-h-0":
+									getHasScrolled(),
+							},
+						)}
+					>
 						<Layout.PageBreadcrumbs
 							breadcrumbs={[
 								{
 									link: `/admin/collections/${collectionKey()}`,
 									label: collection.data?.data.title || "",
+									include:
+										collection.data?.data.mode ===
+										"multiple",
 								},
 								{
 									link: `/admin/collections/${collectionKey()}/${
@@ -196,8 +239,8 @@ const CollectionsDocumentsEditRoute: Component<
 									}`,
 									label:
 										props.mode === "create"
-											? T()("create")
-											: T()("edit"),
+											? `${T()("create")} ${collection.data?.data.singular || T()("document")}`
+											: `${T()("edit")} ${collection.data?.data.singular || T()("document")} (#${doc.data?.data.id})`,
 								},
 							]}
 							options={{
@@ -205,13 +248,12 @@ const CollectionsDocumentsEditRoute: Component<
 								noPadding: true,
 							}}
 						/>
-					</Show>
+					</div>
 					<div
 						class={classNames(
-							"flex items-end gap-15 lg:gap-30 flex-wrap-reverse lg:flex-nowrap",
+							"flex items-end gap-15 lg:gap-30 flex-wrap-reverse lg:flex-nowrap transition-all duration-200",
 							{
-								"mt-15":
-									collection.data?.data.mode === "multiple",
+								"mt-15": !getHasScrolled(),
 							},
 						)}
 					>
@@ -272,15 +314,17 @@ const CollectionsDocumentsEditRoute: Component<
 					</div>
 				</header>
 				{/* content */}
-				<Document.CollectionPseudoBrick
-					fields={collection.data?.data.fields || []}
-				/>
-				<Document.FixedBricks
-					brickConfig={collection.data?.data.fixedBricks || []}
-				/>
-				<Document.BuilderBricks
-					brickConfig={collection.data?.data.builderBricks || []}
-				/>
+				<div ref={setContentEle} class="w-full">
+					<Document.CollectionPseudoBrick
+						fields={collection.data?.data.fields || []}
+					/>
+					<Document.FixedBricks
+						brickConfig={collection.data?.data.fixedBricks || []}
+					/>
+					<Document.BuilderBricks
+						brickConfig={collection.data?.data.builderBricks || []}
+					/>
+				</div>
 				{/* Sidebar */}
 				{/* <aside class="w-full lg:max-w-[300px] lg:overflow-y-auto bg-container-1 border-b lg:border-b-0 lg:border-l border-border ">
 						<div class="p-15 md:p-30">
@@ -384,7 +428,7 @@ const CollectionsDocumentsEditRoute: Component<
 				<LinkSelect />
 				<BrickImagePreview />
 				<DeleteDocument
-					id={document.data?.data.id}
+					id={doc.data?.data.id}
 					state={{
 						open: getDeleteOpen(),
 						setOpen: setDeleteOpen,

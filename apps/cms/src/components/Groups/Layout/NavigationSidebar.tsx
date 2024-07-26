@@ -4,7 +4,7 @@ import api from "@/services/api";
 import { useLocation } from "@solidjs/router";
 import packageJson from "../../../../../../packages/core/package.json";
 import { A } from "@solidjs/router";
-import LogoIcon from "@/assets/svgs/logo-icon.svg";
+// import LogoIcon from "@/assets/svgs/logo-icon.svg";
 import userStore from "@/store/userStore";
 import Navigation from "@/components/Groups/Navigation";
 import UserDisplay from "@/components/Partials/UserDisplay";
@@ -65,14 +65,14 @@ export const NavigationSidebar: Component = () => {
 	// ----------------------------------
 	// Render
 	return (
-		<nav class="bg-container-1 max-h-screen flex relative">
+		<nav class="bg-container-1 max-h-screen flex sticky top-0 z-10">
 			{/* Primary */}
 			<div class="w-[70px] h-full flex items-center justify-between flex-col border-r border-border overflow-y-auto ">
 				<div>
-					<div class="h-[60px] min-h-[70px] flex items-center justify-center">
+					{/* <div class="h-[60px] min-h-[70px] flex items-center justify-center">
 						<img src={LogoIcon} alt="logo" class="size-6" />
-					</div>
-					<ul class="pb-15">
+					</div> */}
+					<ul class="py-15">
 						<Navigation.IconLink
 							type="link"
 							href="/admin"

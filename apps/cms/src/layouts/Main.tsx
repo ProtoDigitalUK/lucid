@@ -61,9 +61,9 @@ const MainLayout: Component<MainLayoutProps> = (props) => {
 	// ------------------------------------------------------
 	// Render
 	return (
-		<div class="grid grid-cols-main-layout fixed inset-0">
+		<div class="grid grid-cols-main-layout min-h-full relative">
 			<Layout.NavigationSidebar />
-			<main class="overflow-y-auto">
+			<main>
 				<Switch>
 					<Match when={isSuccess()}>{props.children}</Match>
 					<Match when={isLoading()}>
