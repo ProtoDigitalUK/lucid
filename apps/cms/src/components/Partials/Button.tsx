@@ -7,6 +7,7 @@ interface ButtonProps extends JSX.HTMLAttributes<HTMLButtonElement> {
 	theme:
 		| "primary"
 		| "container-outline"
+		| "border-outline"
 		| "danger"
 		| "basic"
 		| "secondary-toggle";
@@ -40,6 +41,8 @@ const Button: Component<ButtonProps> = (props) => {
 					props.theme === "primary",
 				"bg-transparent border border-primary-base hover:bg-primary-hover fill-primary-contrast text-title hover:text-primary-contrast ring-primary-base":
 					props.theme === "container-outline",
+				"bg-transparent border border-border hover:border-transparent hover:bg-primary-hover fill-primary-contrast text-title hover:text-primary-contrast ring-primary-base":
+					props.theme === "border-outline",
 				"bg-error-base hover:bg-error-hover text-error-contrast ring-primary-base fill-error-contrast":
 					props.theme === "danger",
 

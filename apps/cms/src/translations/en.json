@@ -34,6 +34,7 @@
 	"assign_forms_description": "Select the forms the environment should have access to.",
 	"update": "Update",
 	"save": "Save {{singular}}",
+	"toggle_details": "Toggle details",
 	"add_brick": "Add Brick",
 	"create": "Create",
 	"error_title": "Something went wrong",

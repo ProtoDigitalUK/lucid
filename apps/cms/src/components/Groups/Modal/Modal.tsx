@@ -23,7 +23,7 @@ export const Modal: Component<ModalProps> = (props) => {
 			onOpenChange={() => props.state.setOpen(!props.state.open)}
 		>
 			<Dialog.Portal>
-				<Dialog.Overlay class="fixed inset-0 z-50 bg-white bg-opacity-40 animate-animate-fade-out data-[expanded]:animate-animate-fade-in" />
+				<Dialog.Overlay class="fixed inset-0 z-40 bg-white bg-opacity-40 animate-animate-fade-out data-[expanded]:animate-animate-fade-in" />
 				<div class="fixed inset-0 z-50 flex items-center justify-center p-15 overflow-y-auto">
 					<Dialog.Content
 						class={classNames(

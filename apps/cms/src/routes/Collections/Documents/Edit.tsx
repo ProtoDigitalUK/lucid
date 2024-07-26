@@ -1,5 +1,5 @@
 import T from "@/translations";
-import { useParams, useNavigate, useLocation } from "@solidjs/router";
+import { useParams, useNavigate } from "@solidjs/router";
 import {
 	type Component,
 	createMemo,
@@ -17,7 +17,7 @@ import brickStore from "@/store/brickStore";
 import brickHelpers from "@/utils/brick-helpers";
 import { getBodyError } from "@/utils/error-helpers";
 import contentLocaleStore from "@/store/contentLocaleStore";
-import { FaSolidTrash } from "solid-icons/fa";
+import { FaSolidTrash, FaSolidArrowLeft } from "solid-icons/fa";
 import Layout from "@/components/Groups/Layout";
 import Button from "@/components/Partials/Button";
 import ContentLocaleSelect from "@/components/Partials/ContentLocaleSelect";
@@ -45,12 +45,10 @@ const CollectionsDocumentsEditRoute: Component<
 	// Hooks & State
 	const params = useParams();
 	const navigate = useNavigate();
-	const location = useLocation();
 	const navGuard = navGuardHook({
 		brickMutateLock: true,
 	});
 	const [getHeaderEle, setHeaderEle] = createSignal<HTMLElement>();
-	const [getContentEle, setContentEle] = createSignal<HTMLDivElement>();
 	const [getDeleteOpen, setDeleteOpen] = createSignal(false);
 	const [getHasScrolled, setHasScrolled] = createSignal(false);
 
@@ -153,16 +151,9 @@ const CollectionsDocumentsEditRoute: Component<
 		brickStore.set("documentMutated", false);
 	};
 	const windowScroll = (e: Event) => {
-		if (window.scrollY >= (getHeaderEle()?.offsetHeight || 0)) {
+		if (window.scrollY >= (getHeaderEle()?.offsetHeight || 0))
 			setHasScrolled(true);
-		} else {
-			setHasScrolled(false);
-		}
-	};
-	const updateContentHeight = () => {
-		const headerHeight = getHeaderEle()?.offsetHeight || 0;
-		const contentEle = getContentEle();
-		if (contentEle) contentEle.style.marginTop = `${headerHeight}px`;
+		else setHasScrolled(false);
 	};
 
 	// ---------------------------------
@@ -178,7 +169,9 @@ const CollectionsDocumentsEditRoute: Component<
 		}
 	});
 	createEffect(() => {
-		updateContentHeight();
+		collectionKey();
+		documentId();
+		setHasScrolled(false);
 	});
 	onMount(() => {
 		setHasScrolled(false);
@@ -186,7 +179,7 @@ const CollectionsDocumentsEditRoute: Component<
 	});
 	onCleanup(() => {
 		brickStore.get.reset();
-		setHeaderEle(undefined);
+		setHasScrolled(false);
 		document.removeEventListener("scroll", windowScroll, false);
 	});
 
@@ -205,16 +198,17 @@ const CollectionsDocumentsEditRoute: Component<
 				<header
 					ref={setHeaderEle}
 					class={classNames(
-						"bg-container-1 border-b border-border px-15 md:px-30 fixed top-0 left-[310px] right-0 z-10 duration-200 transition-all",
+						"before:absolute before:inset-0 overflow-hidden before:bg-container-1 border-b before:z-0 border-border px-15 md:px-30 fixed top-0 left-[310px] right-0 z-10 duration-200 transition-all",
 						{
-							"py-15 md:py-15": getHasScrolled(),
+							"py-15 md:py-15 before:bg-opacity-95":
+								getHasScrolled(),
 							"py-15 md:py-30": !getHasScrolled(),
 						},
 					)}
 				>
 					<div
 						class={classNames(
-							"overflow-hidden transform-gpu duration-200 transition-all",
+							"overflow-hidden transform-gpu duration-200 transition-all ",
 							{
 								"opacity-100": !getHasScrolled(),
 								"opacity-0 -translate-y-full max-h-0":
@@ -301,7 +295,7 @@ const CollectionsDocumentsEditRoute: Component<
 								}
 							>
 								<Button
-									theme="danger"
+									theme="border-outline"
 									size="xs-icon"
 									type="button"
 									onClick={() => setDeleteOpen(true)}
@@ -310,11 +304,22 @@ const CollectionsDocumentsEditRoute: Component<
 									<FaSolidTrash />
 								</Button>
 							</Show>
+							<Button
+								theme="border-outline"
+								size="xs-icon"
+								type="button"
+								onClick={() => alert("open details sidebar")}
+							>
+								<span class="sr-only">
+									{T()("toggle_details")}
+								</span>
+								<FaSolidArrowLeft />
+							</Button>
 						</div>
 					</div>
 				</header>
 				{/* content */}
-				<div ref={setContentEle} class="w-full">
+				<div class="w-full mt-[191px] lg:mt-[141px]">
 					<Document.CollectionPseudoBrick
 						fields={collection.data?.data.fields || []}
 					/>
