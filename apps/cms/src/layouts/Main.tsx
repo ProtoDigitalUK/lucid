@@ -63,7 +63,7 @@ const MainLayout: Component<MainLayoutProps> = (props) => {
 	return (
 		<div class="grid grid-cols-main-layout min-h-full relative">
 			<Layout.NavigationSidebar />
-			<main>
+			<main class="flex flex-col">
 				<Switch>
 					<Match when={isSuccess()}>{props.children}</Match>
 					<Match when={isLoading()}>

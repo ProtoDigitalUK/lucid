@@ -11,6 +11,7 @@ import {
 	onCleanup,
 	onMount,
 } from "solid-js";
+import classNames from "classnames";
 import type { CollectionResponse, FieldErrors } from "@lucidcms/core/types";
 import api from "@/services/api";
 import brickStore from "@/store/brickStore";
@@ -32,7 +33,7 @@ import SelectMediaPanel from "@/components/Panels/Media/SelectMedia";
 import LinkSelect from "@/components/Modals/CustomField/LinkSelect";
 import UserDisplay from "@/components/Partials/UserDisplay";
 import BrickImagePreview from "@/components/Modals/Bricks/ImagePreview";
-import classNames from "classnames";
+import Pill from "@/components/Partials/Pill";
 
 interface CollectionsDocumentsEditRouteProps {
 	mode: "create" | "edit";
@@ -251,7 +252,7 @@ const CollectionsDocumentsEditRoute: Component<
 							},
 						)}
 					>
-						<div class="w-full border-b border-border flex items-center gap-15">
+						<div class="w-full border-b border-border flex items-center gap-15 z-10">
 							<span class="text-lg font-display pr-1 py-2 font-semibold after:absolute after:-bottom-px after:left-0 after:right-0 after:h-px after:bg-primary-base relative cursor-pointer">
 								Content
 							</span>
@@ -304,122 +305,152 @@ const CollectionsDocumentsEditRoute: Component<
 									<FaSolidTrash />
 								</Button>
 							</Show>
-							<Button
-								theme="border-outline"
-								size="xs-icon"
-								type="button"
-								onClick={() => alert("open details sidebar")}
-							>
-								<span class="sr-only">
-									{T()("toggle_details")}
-								</span>
-								<FaSolidArrowLeft />
-							</Button>
 						</div>
 					</div>
 				</header>
-				{/* content */}
-				<div class="w-full mt-[191px] lg:mt-[141px]">
-					<Document.CollectionPseudoBrick
-						fields={collection.data?.data.fields || []}
-					/>
-					<Document.FixedBricks
-						brickConfig={collection.data?.data.fixedBricks || []}
-					/>
-					<Document.BuilderBricks
-						brickConfig={collection.data?.data.builderBricks || []}
-					/>
+				<div class="w-full mt-[191px] lg:mt-[141px] flex overflow-x-hidden flex-grow">
+					{/* Fields & Bricks */}
+					<div class="w-full">
+						<Document.CollectionPseudoBrick
+							fields={collection.data?.data.fields || []}
+						/>
+						<Document.FixedBricks
+							brickConfig={
+								collection.data?.data.fixedBricks || []
+							}
+						/>
+						<Document.BuilderBricks
+							brickConfig={
+								collection.data?.data.builderBricks || []
+							}
+						/>
+					</div>
+					{/* Sidebar */}
+					<Show when={props.mode === "edit"}>
+						<aside class="w-full lg:max-w-[300px] lg:overflow-y-auto bg-container-1 border-b lg:border-b-0 lg:border-l border-border">
+							<div class="p-15 md:p-30">
+								<h3 class="mb-15">{T()("metadata")}</h3>
+								<DetailsList
+									type="text"
+									items={[
+										{
+											label: T()("collection"),
+											value: collection.data?.data.title,
+										},
+										{
+											label: T()("document_id"),
+											value: doc.data?.data.id,
+										},
+										{
+											label: T()("fixed_bricks"),
+											value: collection.data?.data
+												.fixedBricks?.length,
+										},
+										{
+											label: T()(
+												"available_builder_bricks",
+											),
+											value: collection.data?.data
+												.builderBricks?.length,
+										},
+										{
+											label: T()("total_bricks"),
+											value: brickStore.get.bricks.length,
+										},
+										{
+											label: T()("field_errors"),
+											value: (
+												<Pill
+													theme={
+														brickStore.get
+															.fieldsErrors
+															?.length > 0
+															? "red"
+															: "grey"
+													}
+												>
+													{`${brickStore.get.fieldsErrors?.length || 0}`}
+												</Pill>
+											),
+										},
+										{
+											label: T()("created_at"),
+											value: (
+												<DateText
+													date={
+														doc.data?.data.createdAt
+													}
+												/>
+											),
+											show: props.mode === "edit",
+										},
+										{
+											label: T()("created_by"),
+											value: (
+												<UserDisplay
+													user={{
+														username:
+															doc.data?.data
+																.createdBy
+																?.username,
+														firstName:
+															doc.data?.data
+																.createdBy
+																?.firstName,
+														lastName:
+															doc.data?.data
+																.createdBy
+																?.lastName,
+														thumbnail: undefined,
+													}}
+													mode="long"
+												/>
+											),
+											stacked: true,
+											show: props.mode === "edit",
+										},
+										{
+											label: T()("last_updated_at"),
+											value: (
+												<DateText
+													date={
+														doc.data?.data.updatedAt
+													}
+												/>
+											),
+											show: props.mode === "edit",
+										},
+										{
+											label: T()("last_updated_by"),
+											value: (
+												<UserDisplay
+													user={{
+														username:
+															doc.data?.data
+																.updatedBy
+																?.username,
+														firstName:
+															doc.data?.data
+																.updatedBy
+																?.firstName,
+														lastName:
+															doc.data?.data
+																.updatedBy
+																?.lastName,
+														thumbnail: undefined,
+													}}
+													mode="long"
+												/>
+											),
+											stacked: true,
+											show: props.mode === "edit",
+										},
+									]}
+								/>
+							</div>
+						</aside>
+					</Show>
 				</div>
-				{/* Sidebar */}
-				{/* <aside class="w-full lg:max-w-[300px] lg:overflow-y-auto bg-container-1 border-b lg:border-b-0 lg:border-l border-border ">
-						<div class="p-15 md:p-30">
-							<h2 class="mb-15">{T()("document")}</h2>
-							<DetailsList
-								type="text"
-								items={[
-									{
-										label: T()("collection"),
-										value: collection.data?.data.title,
-									},
-									{
-										label: T()("created_by"),
-										value: (
-											<UserDisplay
-												user={{
-													username:
-														document.data?.data
-															.createdBy
-															?.username,
-													firstName:
-														document.data?.data
-															.createdBy
-															?.firstName,
-													lastName:
-														document.data?.data
-															.createdBy
-															?.lastName,
-													thumbnail: undefined,
-												}}
-												mode="long"
-											/>
-										),
-										stacked: true,
-										show: props.mode === "edit",
-									},
-									{
-										label: T()("created_at"),
-										value: (
-											<DateText
-												date={
-													document.data?.data
-														.createdAt
-												}
-											/>
-										),
-										show: props.mode === "edit",
-									},
-									{
-										label: T()("updated_by"),
-										value: (
-											<UserDisplay
-												user={{
-													username:
-														document.data?.data
-															.updatedBy
-															?.username,
-													firstName:
-														document.data?.data
-															.updatedBy
-															?.firstName,
-													lastName:
-														document.data?.data
-															.updatedBy
-															?.lastName,
-													thumbnail: undefined,
-												}}
-												mode="long"
-											/>
-										),
-										stacked: true,
-										show: props.mode === "edit",
-									},
-									{
-										label: T()("updated_at"),
-										value: (
-											<DateText
-												date={
-													document.data?.data
-														.updatedAt
-												}
-											/>
-										),
-										show: props.mode === "edit",
-									},
-								]}
-							/>
-						</div>
-					</aside> */}
-				{/* </div> */}
 				{/* Modals */}
 				<NavigationGuard
 					state={{
