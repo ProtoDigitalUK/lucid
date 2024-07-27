@@ -67,7 +67,7 @@ export const WYSIWYG: Component<WYSIWYGProps> = (props) => {
 	// Render
 	return (
 		<div
-			class={classnames("w-full", {
+			class={classnames("w-full max-w-full", {
 				"mb-0": props.noMargin,
 				"mb-5 last:mb-0": !props.noMargin,
 			})}
@@ -81,7 +81,7 @@ export const WYSIWYG: Component<WYSIWYGProps> = (props) => {
 				altLocaleError={props.altLocaleError}
 			/>
 			<div
-				class={classnames("mt-1", {
+				class={classnames("mt-1 bg-container-4 rounded-md", {
 					"cursor-not-allowed opacity-80 pointer-events-none":
 						props.disabled,
 				})}

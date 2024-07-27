@@ -62,7 +62,7 @@
 	"confirm_password": "Confirm Password",
 	"email": "Email",
 	"url": "URL",
-	"select_link": "Select link",
+	"select_link": "Select Link",
 	"set_page_link": "Set Page Link",
 	"set_link": "Set Link",
 	"either_title_or_slug_dont_have_translations": "Either the title or slug have missing translations",

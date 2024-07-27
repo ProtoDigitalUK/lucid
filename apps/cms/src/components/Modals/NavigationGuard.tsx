@@ -73,10 +73,13 @@ export const navGuardHook = (props?: {
 	};
 
 	onMount(() => {
+		const ignoreClasses = ["ql-action", "ql-remove"];
+
 		setTimeout(() => {
 			const links = document.querySelectorAll("a");
 			for (const link of links) {
 				if (link.target === "_blank") continue;
+				if (ignoreClasses.includes(link.className)) continue;
 				link.addEventListener("click", clickEvent);
 			}
 		}, 500);
