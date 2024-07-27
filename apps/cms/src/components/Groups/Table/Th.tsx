@@ -7,7 +7,7 @@ import {
 	createMemo,
 } from "solid-js";
 import { FaSolidCaretUp, FaSolidMinus } from "solid-icons/fa";
-import type useSearchParams from "@/hooks/useSearchParams";
+import type useSearchParamsLocation from "@/hooks/useSearchParamsLocation";
 
 interface ThProps {
 	key?: string;
@@ -15,7 +15,7 @@ interface ThProps {
 	classes?: string;
 	icon?: JSXElement;
 	label?: string;
-	searchParams?: ReturnType<typeof useSearchParams>;
+	searchParams?: ReturnType<typeof useSearchParamsLocation>;
 	options?: {
 		include?: boolean;
 		width?: number;

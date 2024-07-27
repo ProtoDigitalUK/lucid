@@ -22,25 +22,30 @@ export const Modal: Component<ModalProps> = (props) => {
 			open={props.state.open}
 			onOpenChange={() => props.state.setOpen(!props.state.open)}
 		>
-			<Dialog.Portal>
-				<Dialog.Overlay class="fixed inset-0 z-40 bg-white bg-opacity-40 animate-animate-fade-out data-[expanded]:animate-animate-fade-in" />
-				<div class="fixed inset-0 z-50 flex items-center justify-center p-15 overflow-y-auto">
-					<Dialog.Content
-						class={classNames(
-							"z-50 max-w-2xl w-full bg-container-1 shadow-md rounded-md overflow-hidden border-border border m-auto",
-							{
-								"max-w-7xl": props.options?.size === "large",
-							},
-						)}
-					>
-						<div
-							class={classNames({
-								"p-15 md:p-30": !props.options?.noPadding,
-							})}
+			<Dialog.Portal
+				mount={document.getElementById("portal") as HTMLElement}
+			>
+				<Dialog.Overlay class="fixed inset-0 z-10 bg-white bg-opacity-40 animate-animate-fade-out data-[expanded]:animate-animate-fade-in" />
+				<div class="overflow-y-auto">
+					<div class="fixed inset-0 z-20 flex items-center justify-center p-15 ">
+						<Dialog.Content
+							class={classNames(
+								"max-w-2xl w-full bg-container-1 shadow-md rounded-md overflow-hidden border-border border m-auto ",
+								{
+									"max-w-7xl":
+										props.options?.size === "large",
+								},
+							)}
 						>
-							{props.children}
-						</div>
-					</Dialog.Content>
+							<div
+								class={classNames({
+									"p-15 md:p-30": !props.options?.noPadding,
+								})}
+							>
+								{props.children}
+							</div>
+						</Dialog.Content>
+					</div>
 				</div>
 			</Dialog.Portal>
 		</Dialog.Root>

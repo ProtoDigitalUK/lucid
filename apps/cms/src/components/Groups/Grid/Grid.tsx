@@ -8,7 +8,7 @@ import {
 	createMemo,
 } from "solid-js";
 import type { ResponseBody } from "@lucidcms/core/types";
-import type useSearchParams from "@/hooks/useSearchParams";
+import type useSearchParamsLocation from "@/hooks/useSearchParamsLocation";
 import notifySvg from "@/assets/illustrations/notify.svg";
 import noPermission from "@/assets/illustrations/no-permission.svg";
 import Query from "@/components/Groups/Query";
@@ -36,7 +36,7 @@ interface GridRootProps {
 		noEntryDescription?: string;
 		noEntryButton?: string;
 	};
-	searchParams?: ReturnType<typeof useSearchParams>;
+	searchParams?: ReturnType<typeof useSearchParamsLocation>;
 	permission?: boolean;
 	meta?: ResponseBody<unknown>["meta"];
 	loadingCard?: JSXElement;
@@ -157,7 +157,9 @@ export const GridRoot: Component<GridRootProps> = (props) => {
 				<Query.Pagination
 					meta={props.meta}
 					searchParams={
-						props.searchParams as ReturnType<typeof useSearchParams>
+						props.searchParams as ReturnType<
+							typeof useSearchParamsLocation
+						>
 					}
 					mode="page"
 				/>

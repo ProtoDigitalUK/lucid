@@ -29,8 +29,8 @@ import NavigationGuard, {
 	navGuardHook,
 } from "@/components/Modals/NavigationGuard";
 import Document from "@/components/Groups/Document";
-import SelectMediaPanel from "@/components/Panels/Media/SelectMedia";
-import LinkSelect from "@/components/Modals/CustomField/LinkSelect";
+import MediaSelectModal from "@/components/Modals/Media/SelectMedia";
+import LinkSelectModal from "@/components/Modals/CustomField/LinkSelect";
 import UserDisplay from "@/components/Partials/UserDisplay";
 import BrickImagePreview from "@/components/Modals/Bricks/ImagePreview";
 import Pill from "@/components/Partials/Pill";
@@ -460,8 +460,8 @@ const CollectionsDocumentsEditRoute: Component<
 						targetCallback: navGuard.getTargetCallback(),
 					}}
 				/>
-				<SelectMediaPanel />
-				<LinkSelect />
+				<MediaSelectModal />
+				<LinkSelectModal />
 				<BrickImagePreview />
 				<DeleteDocument
 					id={doc.data?.data.id}

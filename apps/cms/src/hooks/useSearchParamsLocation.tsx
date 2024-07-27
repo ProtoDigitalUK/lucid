@@ -1,17 +1,27 @@
-import { createEffect, createMemo, createSignal } from "solid-js";
+import {
+	createEffect,
+	createMemo,
+	createSignal,
+	type Accessor,
+} from "solid-js";
 import { useLocation, useNavigate } from "@solidjs/router";
 
-const DEFAULT_PAGE = 1;
-const DEFAULT_PER_PAGE = 10;
+export const DEFAULT_PAGE = 1;
+export const DEFAULT_PER_PAGE = 10;
 
-type FilterValues = string | number | (string | number)[] | boolean | undefined;
+export type FilterValues =
+	| string
+	| number
+	| (string | number)[]
+	| boolean
+	| undefined;
 
 export type FilterSchema = Record<
 	string,
 	{ value: FilterValues; type: "text" | "number" | "boolean" | "array" }
 >;
 
-interface SearchParamsSchema {
+export interface SearchParamsSchema {
 	filters?: FilterSchema;
 	sorts?: Record<string, "asc" | "desc" | undefined>;
 	pagination?: { page?: number; perPage?: number };
@@ -22,13 +32,34 @@ interface SearchParamsConfig {
 	manualSettled?: boolean;
 }
 
-type FilterMap = Map<string, FilterValues>;
-type SortMap = Map<string, "asc" | "desc" | undefined>;
+export type FilterMap = Map<string, FilterValues>;
+export type SortMap = Map<string, "asc" | "desc" | undefined>;
 
-const useSearchParams = (
+export type SearchParamsResponse = {
+	getFilters: Accessor<FilterMap>;
+	getSorts: Accessor<SortMap>;
+	getPagination: Accessor<{
+		page: number;
+		perPage: number;
+	}>;
+	getSettled: Accessor<boolean>;
+	getQueryString: Accessor<string>;
+	setParams: (params: {
+		filters?: {
+			[key: string]: FilterValues;
+		};
+		sorts?: SearchParamsSchema["sorts"];
+		pagination?: SearchParamsSchema["pagination"];
+	}) => void;
+	setFilterSchema: (filters: SearchParamsSchema["filters"]) => void;
+	hasFiltersApplied: Accessor<boolean>;
+	resetFilters: () => void;
+};
+
+const useSearchParamsLocation = (
 	schemaDefaults?: SearchParamsSchema,
 	options?: SearchParamsConfig,
-) => {
+): SearchParamsResponse => {
 	const location = useLocation();
 	const navigate = useNavigate();
 
@@ -457,4 +488,4 @@ const useSearchParams = (
 	};
 };
 
-export default useSearchParams;
+export default useSearchParamsLocation;

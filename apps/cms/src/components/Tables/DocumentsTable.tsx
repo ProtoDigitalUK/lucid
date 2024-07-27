@@ -7,7 +7,7 @@ import type {
 	CFConfig,
 	FieldTypes,
 } from "@lucidcms/core/types";
-import type useSearchParams from "@/hooks/useSearchParams";
+import type useSearchParamsLocation from "@/hooks/useSearchParamsLocation";
 import useRowTarget from "@/hooks/useRowTarget";
 import api from "@/services/api";
 import contentLocaleStore from "@/store/contentLocaleStore";
@@ -19,7 +19,7 @@ import helpers from "@/utils/helpers";
 interface DocumentsTableProps {
 	collection: CollectionResponse;
 	fieldIncludes: Accessor<CFConfig<FieldTypes>[]>;
-	searchParams: ReturnType<typeof useSearchParams>;
+	searchParams: ReturnType<typeof useSearchParamsLocation>;
 }
 
 const DocumentsTable: Component<DocumentsTableProps> = (props) => {

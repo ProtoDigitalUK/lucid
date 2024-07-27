@@ -54,6 +54,7 @@
 	"no_translation": "No translation",
 	"inactive": "Inactive",
 	"select_media": "Select {{type}}",
+	"select_media_title": "Select Media",
 	"select_new_media": "Select new {{type}}",
 	"remove_media": "Remove {{type}}",
 	"username": "Username",

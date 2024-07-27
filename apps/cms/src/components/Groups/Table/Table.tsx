@@ -11,7 +11,7 @@ import {
 	Match,
 } from "solid-js";
 import type { ResponseBody } from "@lucidcms/core/types";
-import type useSearchParams from "@/hooks/useSearchParams";
+import type useSearchParamsLocation from "@/hooks/useSearchParamsLocation";
 import notifySvg from "@/assets/illustrations/notify.svg";
 import noPermission from "@/assets/illustrations/no-permission.svg";
 import Table from "@/components/Groups/Table";
@@ -28,7 +28,7 @@ interface TableRootProps {
 	permission?: boolean;
 	meta?: ResponseBody<unknown>["meta"];
 	caption?: string;
-	searchParams: ReturnType<typeof useSearchParams>;
+	searchParams: ReturnType<typeof useSearchParamsLocation>;
 
 	head: {
 		label: string;

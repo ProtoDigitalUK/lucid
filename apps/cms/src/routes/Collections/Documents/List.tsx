@@ -9,7 +9,9 @@ import type {
 import api from "@/services/api";
 import userStore from "@/store/userStore";
 import helpers from "@/utils/helpers";
-import useSearchParams, { type FilterSchema } from "@/hooks/useSearchParams";
+import useSearchParamsLocation, {
+	type FilterSchema,
+} from "@/hooks/useSearchParamsLocation";
 import Layout from "@/components/Groups/Layout";
 import DocumentsTable from "@/components/Tables/DocumentsTable";
 import Query from "@/components/Groups/Query";
@@ -19,7 +21,7 @@ const CollectionsDocumentsListRoute: Component = () => {
 	// Hooks & State
 	const params = useParams();
 	const navigate = useNavigate();
-	const searchParams = useSearchParams(undefined, {
+	const searchParams = useSearchParamsLocation(undefined, {
 		manualSettled: true,
 	});
 

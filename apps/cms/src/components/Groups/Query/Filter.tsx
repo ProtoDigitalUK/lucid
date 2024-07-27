@@ -10,7 +10,7 @@ import {
 	Show,
 } from "solid-js";
 import { FaSolidFilter, FaSolidXmark } from "solid-icons/fa";
-import type useSearchParams from "@/hooks/useSearchParams";
+import type { SearchParamsResponse } from "@/hooks/useSearchParamsLocation";
 import { DropdownMenu } from "@kobalte/core";
 import DropdownContent from "@/components/Partials/DropdownContent";
 import Form from "@/components/Groups/Form";
@@ -26,12 +26,12 @@ interface FilterItemProps {
 			value: string;
 		}>;
 	};
-	searchParams: ReturnType<typeof useSearchParams>;
+	searchParams: SearchParamsResponse;
 }
 
 export interface FilterProps {
 	filters: Array<FilterItemProps["filter"]>;
-	searchParams: ReturnType<typeof useSearchParams>;
+	searchParams: SearchParamsResponse;
 	disabled?: boolean;
 }
 

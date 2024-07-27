@@ -9,7 +9,7 @@ import {
 } from "solid-icons/fa";
 import api from "@/services/api";
 import useRowTarget from "@/hooks/useRowTarget";
-import type useSearchParams from "@/hooks/useSearchParams";
+import type useSearchParamsLocation from "@/hooks/useSearchParamsLocation";
 import Table from "@/components/Groups/Table";
 import UserRow from "@/components/Tables/Rows/UserRow";
 import UpdateUserPanel from "@/components/Panels/User/UpdateUserPanel";
@@ -17,7 +17,7 @@ import DeleteUser from "@/components/Modals/User/DeleteUser";
 import TriggerPasswordReset from "../Modals/User/TriggerPasswordReset";
 
 interface UsersTableProps {
-	searchParams: ReturnType<typeof useSearchParams>;
+	searchParams: ReturnType<typeof useSearchParamsLocation>;
 	state: {
 		setOpenCreateUserPanel: (state: boolean) => void;
 	};

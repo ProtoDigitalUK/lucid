@@ -2,7 +2,7 @@ import T from "@/translations";
 import { type Component, For, createMemo } from "solid-js";
 import api from "@/services/api";
 import useRowTarget from "@/hooks/useRowTarget";
-import type useSearchParams from "@/hooks/useSearchParams";
+import type useSearchParamsLocation from "@/hooks/useSearchParamsLocation";
 import contentLocaleStore from "@/store/contentLocaleStore";
 import Grid from "@/components/Groups/Grid";
 import MediaCard, { MediaCardLoading } from "@/components/Cards/MediaCard";
@@ -11,7 +11,7 @@ import DeleteMedia from "@/components/Modals/Media/DeleteMedia";
 import ClearProcessedMedia from "@/components/Modals/Media/ClearProcessedImages";
 
 interface MediaGridProps {
-	searchParams: ReturnType<typeof useSearchParams>;
+	searchParams: ReturnType<typeof useSearchParamsLocation>;
 	state: {
 		setOpenCreateMediaPanel: (state: boolean) => void;
 	};

@@ -1,6 +1,6 @@
 import T from "@/translations";
 import { type Component, createSignal, Show } from "solid-js";
-import useSearchParams from "@/hooks/useSearchParams";
+import useSearchParamsLocation from "@/hooks/useSearchParamsLocation";
 import userStore from "@/store/userStore";
 import api from "@/services/api";
 import Layout from "@/components/Groups/Layout";
@@ -12,7 +12,7 @@ import Alert from "@/components/Blocks/Alert";
 const MediaListRoute: Component = () => {
 	// ----------------------------------
 	// Hooks & State
-	const searchParams = useSearchParams(
+	const searchParams = useSearchParamsLocation(
 		{
 			filters: {
 				title: {

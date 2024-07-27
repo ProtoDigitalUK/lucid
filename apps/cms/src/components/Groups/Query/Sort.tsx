@@ -1,7 +1,7 @@
 import T from "@/translations";
 import { type Component, For, Switch, createMemo, Match } from "solid-js";
 import { FaSolidSort, FaSolidCaretUp, FaSolidMinus } from "solid-icons/fa";
-import type useSearchParams from "@/hooks/useSearchParams";
+import type { SearchParamsResponse } from "@/hooks/useSearchParamsLocation";
 import { DropdownMenu } from "@kobalte/core";
 import DropdownContent from "@/components/Partials/DropdownContent";
 import classNames from "classnames";
@@ -11,12 +11,12 @@ interface SortItemProps {
 		label: string;
 		key: string;
 	};
-	searchParams: ReturnType<typeof useSearchParams>;
+	searchParams: SearchParamsResponse;
 }
 
 export interface SortProps {
 	sorts: Array<SortItemProps["sort"]>;
-	searchParams: ReturnType<typeof useSearchParams>;
+	searchParams: SearchParamsResponse;
 }
 
 const SortItem: Component<SortItemProps> = (props) => {

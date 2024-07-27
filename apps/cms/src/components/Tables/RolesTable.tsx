@@ -3,14 +3,14 @@ import { type Component, Index } from "solid-js";
 import { FaSolidT, FaSolidCalendar } from "solid-icons/fa";
 import api from "@/services/api";
 import useRowTarget from "@/hooks/useRowTarget";
-import type useSearchParams from "@/hooks/useSearchParams";
+import type useSearchParamsLocation from "@/hooks/useSearchParamsLocation";
 import Table from "@/components/Groups/Table";
 import RoleRow from "@/components/Tables/Rows/RoleRow";
 import UpsertRolePanel from "@/components/Panels/Role/UpsertRolePanel";
 import DeleteRole from "@/components/Modals/Role/DeleteRole";
 
 interface RolesTableProps {
-	searchParams: ReturnType<typeof useSearchParams>;
+	searchParams: ReturnType<typeof useSearchParamsLocation>;
 	state: {
 		setOpenCreateRolePanel: (state: boolean) => void;
 	};

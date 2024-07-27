@@ -1,13 +1,13 @@
 import T from "@/translations";
 import type { Component } from "solid-js";
-import useSearchParams from "@/hooks/useSearchParams";
+import useSearchParamsLocation from "@/hooks/useSearchParamsLocation";
 import Layout from "@/components/Groups/Layout";
 import CollectionGrid from "@/components/Grids/CollectionGrid";
 
 const CollectionsListRoute: Component = () => {
 	// ----------------------------------
 	// Hooks & State
-	const searchParams = useSearchParams();
+	const searchParams = useSearchParamsLocation();
 
 	// ----------------------------------
 	// Render

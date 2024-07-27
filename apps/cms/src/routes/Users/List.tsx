@@ -1,7 +1,7 @@
 import T from "@/translations";
 import { type Component, createSignal } from "solid-js";
 import userStore from "@/store/userStore";
-import useSearchParams from "@/hooks/useSearchParams";
+import useSearchParamsLocation from "@/hooks/useSearchParamsLocation";
 import Layout from "@/components/Groups/Layout";
 import Query from "@/components/Groups/Query";
 import UsersTable from "@/components/Tables/UsersTable";
@@ -10,7 +10,7 @@ import CreateUserPanel from "@/components/Panels/User/CreateUserPanel";
 const UsersListRoute: Component = () => {
 	// ----------------------------------
 	// Hooks & State
-	const searchParams = useSearchParams(
+	const searchParams = useSearchParamsLocation(
 		{
 			filters: {
 				firstName: {

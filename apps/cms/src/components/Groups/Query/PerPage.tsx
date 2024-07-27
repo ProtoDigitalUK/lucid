@@ -1,14 +1,14 @@
 import T from "@/translations";
 import { type Component, For, createMemo } from "solid-js";
 import { FaSolidSort } from "solid-icons/fa";
-import type useSearchParams from "@/hooks/useSearchParams";
+import type { SearchParamsResponse } from "@/hooks/useSearchParamsLocation";
 import { DropdownMenu } from "@kobalte/core";
 import DropdownContent from "@/components/Partials/DropdownContent";
 import classNames from "classnames";
 
 export interface PerPageProps {
 	options?: Array<number>;
-	searchParams: ReturnType<typeof useSearchParams>;
+	searchParams: SearchParamsResponse;
 }
 
 export const PerPage: Component<PerPageProps> = (props) => {

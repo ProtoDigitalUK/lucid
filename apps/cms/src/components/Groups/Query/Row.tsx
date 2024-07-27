@@ -1,5 +1,5 @@
 import { type Component, Show } from "solid-js";
-import type useSearchParams from "@/hooks/useSearchParams";
+import type useSearchParamsLocation from "@/hooks/useSearchParamsLocation";
 import type { FilterProps } from "@/components/Groups/Query/Filter";
 import type { SortProps } from "@/components/Groups/Query/Sort";
 import Query from "@/components/Groups/Query";
@@ -8,7 +8,7 @@ interface QueryRowProps {
 	filters?: FilterProps["filters"];
 	sorts?: SortProps["sorts"];
 	perPage?: Array<number>;
-	searchParams: ReturnType<typeof useSearchParams>;
+	searchParams: ReturnType<typeof useSearchParamsLocation>;
 }
 
 export const QueryRow: Component<QueryRowProps> = (props) => {

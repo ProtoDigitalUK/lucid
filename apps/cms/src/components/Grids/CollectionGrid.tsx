@@ -1,14 +1,14 @@
 import T from "@/translations";
 import { type Component, For } from "solid-js";
 import api from "@/services/api";
-import type useSearchParams from "@/hooks/useSearchParams";
+import type useSearchParamsLocation from "@/hooks/useSearchParamsLocation";
 import Grid from "@/components/Groups/Grid";
 import CollectionCard, {
 	CollectionCardLoading,
 } from "@/components/Cards/CollectionCard";
 
 interface CollectionGridProps {
-	searchParams: ReturnType<typeof useSearchParams>;
+	searchParams: ReturnType<typeof useSearchParamsLocation>;
 }
 
 const CollectionGrid: Component<CollectionGridProps> = (props) => {

@@ -8,7 +8,7 @@ import {
 } from "solid-icons/fa";
 import api from "@/services/api";
 import useRowTarget from "@/hooks/useRowTarget";
-import type useSearchParams from "@/hooks/useSearchParams";
+import type useSearchParamsLocation from "@/hooks/useSearchParamsLocation";
 import Table from "@/components/Groups/Table";
 import EmailRow from "@/components/Tables/Rows/EmailRow";
 import PreviewEmailPanel from "../Panels/Email/PreviewEmailPanel";
@@ -16,7 +16,7 @@ import DeleteEmail from "@/components/Modals/Email/DeleteEmail";
 import ResendEmail from "@/components/Modals/Email/ResendEmail";
 
 interface EmailsTableProps {
-	searchParams: ReturnType<typeof useSearchParams>;
+	searchParams: ReturnType<typeof useSearchParamsLocation>;
 }
 
 const EmailsTable: Component<EmailsTableProps> = (props) => {

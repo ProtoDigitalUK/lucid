@@ -1,6 +1,6 @@
 import T from "@/translations";
 import { type Component, Show } from "solid-js";
-import useSearchParams from "@/hooks/useSearchParams";
+import useSearchParamsLocation from "@/hooks/useSearchParamsLocation";
 import api from "@/services/api";
 import Layout from "@/components/Groups/Layout";
 import Query from "@/components/Groups/Query";
@@ -10,7 +10,7 @@ import Alert from "@/components/Blocks/Alert";
 const EmailListRoute: Component = () => {
 	// ----------------------------------
 	// Hooks & State
-	const searchParams = useSearchParams(
+	const searchParams = useSearchParamsLocation(
 		{
 			filters: {
 				toAddress: {

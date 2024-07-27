@@ -1,7 +1,7 @@
 import T from "@/translations";
 import { type Component, Show, Switch, Match, type JSXElement } from "solid-js";
 import type { ResponseBody } from "@lucidcms/core/types";
-import type useSearchParams from "@/hooks/useSearchParams";
+import type { SearchParamsResponse } from "@/hooks/useSearchParamsLocation";
 import notifySvg from "@/assets/illustrations/notify.svg";
 import emptySvg from "@/assets/illustrations/empty.svg";
 import noPermission from "@/assets/illustrations/no-permission.svg";
@@ -17,7 +17,7 @@ interface ModalGridProps {
 		isError: boolean;
 		isSuccess: boolean;
 	};
-	searchParams?: ReturnType<typeof useSearchParams>;
+	searchParams?: SearchParamsResponse;
 	permission?: boolean;
 	meta?: ResponseBody<unknown>["meta"];
 	loadingCard?: JSXElement;
@@ -32,7 +32,7 @@ export const ModalGrid: Component<ModalGridProps> = (props) => {
 			<Switch>
 				<Match when={props.permission === false}>
 					<ErrorBlock
-						type="fill"
+						type="block"
 						content={{
 							image: noPermission,
 							title: T()("no_permission"),
@@ -42,7 +42,7 @@ export const ModalGrid: Component<ModalGridProps> = (props) => {
 				</Match>
 				<Match when={props.state.isError}>
 					<ErrorBlock
-						type="fill"
+						type="block"
 						content={{
 							image: notifySvg,
 							title: T()("error_title"),
@@ -54,7 +54,7 @@ export const ModalGrid: Component<ModalGridProps> = (props) => {
 					when={props.items === 0 && props.state.isLoading === false}
 				>
 					<ErrorBlock
-						type="fill"
+						type="block"
 						content={{
 							image: emptySvg,
 							title: T()("no_results"),
@@ -76,7 +76,7 @@ export const ModalGrid: Component<ModalGridProps> = (props) => {
 					</ErrorBlock>
 				</Match>
 				<Match when={props.state.isSuccess || props.state.isLoading}>
-					<ul class="grid grid-cols-2 md:grid-cols-3 gap-15">
+					<ul class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-15">
 						<Switch>
 							<Match when={props.state.isLoading}>
 								<Switch>
@@ -113,9 +113,7 @@ export const ModalGrid: Component<ModalGridProps> = (props) => {
 			<Show when={props.meta && props.searchParams}>
 				<Query.Pagination
 					meta={props.meta}
-					searchParams={
-						props.searchParams as ReturnType<typeof useSearchParams>
-					}
+					searchParams={props.searchParams as SearchParamsResponse}
 					mode="modal"
 				/>
 			</Show>
