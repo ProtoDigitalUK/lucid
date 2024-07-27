@@ -19,6 +19,11 @@ export const CollectionSubMenu: Component<{
 	// ----------------------------------------
 	// Memos
 	const showSubMenu = createMemo(() => {
+		if (
+			props.state.multiCollections.length === 0 &&
+			props.state.singleCollections.length === 0
+		)
+			return false;
 		if (location.pathname.includes("/admin/collections")) return true;
 	});
 
@@ -26,7 +31,7 @@ export const CollectionSubMenu: Component<{
 	// Render
 	return (
 		<Show when={showSubMenu()}>
-			<div class="w-60 py-15 h-full border-r border-border overflow-y-auto">
+			<div class="w-60 py-30 h-full border-r border-border overflow-y-auto">
 				<Switch>
 					<Match when={props.state.isLoading}>
 						<div class="px-15">
