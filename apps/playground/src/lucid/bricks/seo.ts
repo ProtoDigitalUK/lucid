@@ -41,6 +41,9 @@ const SEOBrick = new BrickBuilder("seo", {
 		labels: {
 			title: "Social Image",
 		},
+		validation: {
+			type: "image",
+		},
 	})
 	.addTab("advanced_tab", {
 		labels: {

@@ -48,7 +48,8 @@ const useSearchParamsState = (
 
 		if (params.filters) {
 			for (const [key, value] of Object.entries(params.filters)) {
-				newFilters.set(key, value);
+				if (value === "") newFilters.set(key, undefined);
+				else newFilters.set(key, value);
 			}
 		}
 		if (params.sorts) {
@@ -91,7 +92,11 @@ const useSearchParamsState = (
 		if (schema?.filters) {
 			const filterMap = new Map();
 			for (const [key, value] of Object.entries(schema.filters)) {
-				filterMap.set(key, value.value);
+				if (value.type === "array") {
+					filterMap.set(key, [value.value]);
+				} else if (value.value === "") {
+					filterMap.set(key, undefined);
+				} else filterMap.set(key, value.value);
 			}
 			setFilters(filterMap);
 		}

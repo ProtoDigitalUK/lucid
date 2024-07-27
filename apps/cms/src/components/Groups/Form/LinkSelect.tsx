@@ -63,7 +63,7 @@ export const LinkSelect: Component<LinkSelectProps> = (props) => {
 					<Match when={!linkLabel()}>
 						<Button
 							type="button"
-							theme="container-outline"
+							theme="border-outline"
 							size="x-small"
 							onClick={openLinkModal}
 						>
@@ -74,7 +74,7 @@ export const LinkSelect: Component<LinkSelectProps> = (props) => {
 						<button
 							type="button"
 							onClick={openLinkModal}
-							class="flex cursor-pointer disabled:cursor-not-allowed disabled:opacity-80 font-semibold items-center py-2 px-2.5 border-primary-base text-primary-base border text-sm rounded-md hover:bg-primary-hover hover:text-primary-contrast transition-colors duration-200 ease-in-out"
+							class="flex cursor-pointer disabled:cursor-not-allowed disabled:opacity-80 font-base items-center py-2 px-2.5 border-border text-body border text-sm rounded-md hover:bg-primary-hover hover:text-primary-contrast transition-colors duration-200 ease-in-out"
 							disabled={props.disabled}
 						>
 							<span class="line-clamp-1">{linkLabel()}</span>

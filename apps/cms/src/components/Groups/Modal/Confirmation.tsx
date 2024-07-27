@@ -73,7 +73,7 @@ export const Confirmation: Component<ConfirmationProps> = (props) => {
 									{T()("confirm")}
 								</Button>
 								<Button
-									theme="container-outline"
+									theme="border-outline"
 									size="small"
 									type={"button"}
 									classes="ml-2.5"

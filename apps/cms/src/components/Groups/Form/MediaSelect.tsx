@@ -99,10 +99,11 @@ export const MediaSelect: Component<MediaSelectProps> = (props) => {
 					<Match when={typeof props.value !== "number"}>
 						<Button
 							type="button"
-							theme="container-outline"
+							theme="border-outline"
 							size="x-small"
 							onClick={openMediaSelectModal}
 							disabled={props.disabled}
+							classes="capitalize"
 						>
 							{T()("select_media", {
 								type: props.type || "media",

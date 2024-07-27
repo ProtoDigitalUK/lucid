@@ -143,30 +143,6 @@ export const SelectMultiple: Component<SelectMultipleProps> = (props) => {
 						</div>
 						{/* Icons */}
 						<div class="flex items-center ml-2.5">
-							<Show when={props.values.length > 0}>
-								<button
-									type="button"
-									class="bg-primary-base pointer-events-auto h-5 w-5 flex items-center justify-center rounded-full mr-1 text-primary-contrast hover:bg-error-base hover:text-white duration-200 transition-colors focus:outline-none focus:ring-1 ring-error-base focus:text-error-base"
-									onClick={() => {
-										setValues([]);
-									}}
-									onKeyDown={(e) => {
-										if (
-											e.key === "Backspace" ||
-											e.key === "Delete" ||
-											e.key === "Enter" ||
-											e.key === " "
-										) {
-											setValues([]);
-										}
-									}}
-								>
-									<FaSolidXmark size={14} />
-									<span class="sr-only">
-										{T()("remove_all")}
-									</span>
-								</button>
-							</Show>
 							<FaSolidSort size={16} class="text-title ml-1" />
 						</div>
 					</div>

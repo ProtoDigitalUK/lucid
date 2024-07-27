@@ -43,15 +43,15 @@ const SelectMediaContent: Component = () => {
 		{
 			filters: {
 				name: {
-					value: undefined,
+					value: "",
 					type: "text",
 				},
 				extension: {
-					value: mediaSelectStore.get.extensions || undefined,
+					value: mediaSelectStore.get.extensions || "",
 					type: "text",
 				},
 				type: {
-					value: mediaSelectStore.get.type || undefined,
+					value: mediaSelectStore.get.type || "",
 					type: "array",
 				},
 			},

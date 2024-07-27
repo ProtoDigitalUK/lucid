@@ -102,7 +102,7 @@ const LinkSelect: Component = () => {
 				<div class="w-full flex justify-between mt-15">
 					<Button
 						type="button"
-						theme="container-outline"
+						theme="border-outline"
 						size="x-small"
 						onClick={() => {
 							linkFieldStore.set("open", false);

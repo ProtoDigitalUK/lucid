@@ -28,7 +28,7 @@ export const SelectAction: Component<SelectActionProps> = (props) => {
 				</p>
 				<div class="ml-15 flex">
 					<Button
-						theme="container-outline"
+						theme="border-outline"
 						size="x-small"
 						classes="!py-1"
 						onClick={props.callbacks.reset}

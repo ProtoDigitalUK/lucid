@@ -251,7 +251,7 @@ export const Panel: Component<PanelProps> = (props) => {
 									<div class="flex min-w-max pl-5">
 										<Button
 											size="medium"
-											theme="container-outline"
+											theme="border-outline"
 											type="button"
 											onClick={() => props.setOpen(false)}
 										>
