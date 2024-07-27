@@ -15,6 +15,7 @@ import { DropdownMenu } from "@kobalte/core";
 import DropdownContent from "@/components/Partials/DropdownContent";
 import Form from "@/components/Groups/Form";
 import Button from "@/components/Partials/Button";
+import classNames from "classnames";
 
 interface FilterItemProps {
 	filter: {
@@ -265,6 +266,25 @@ export const Filter: Component<FilterProps> = (props) => {
 					<FaSolidFilter />
 				</DropdownMenu.Icon>
 				<span class="ml-2">{T()("filter")}</span>
+
+				<button
+					type="button"
+					class={classNames(
+						"ml-2 z-20 relative !pointer-events-auto text-error-base",
+						{
+							"opacity-50":
+								!props.searchParams.hasFiltersApplied(),
+						},
+					)}
+					onClick={(e) => {
+						e.stopPropagation();
+						e.preventDefault();
+						props.searchParams.resetFilters();
+					}}
+				>
+					<FaSolidXmark />
+					<span class="sr-only">{T()("clear")}</span>
+				</button>
 			</DropdownMenu.Trigger>
 			<DropdownContent
 				options={{
