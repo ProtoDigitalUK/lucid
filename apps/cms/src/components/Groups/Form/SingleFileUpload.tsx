@@ -324,7 +324,7 @@ const FilePreviewScreen: Component<FilePreviewScreenProps> = (props) => {
 							src={props.data.url}
 							class="w-full h-full object-contain"
 							controls
-							preload="none"
+							preload="auto"
 						/>
 					</div>
 				</Match>

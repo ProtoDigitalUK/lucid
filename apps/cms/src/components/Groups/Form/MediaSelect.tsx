@@ -110,47 +110,53 @@ export const MediaSelect: Component<MediaSelectProps> = (props) => {
 						</Button>
 					</Match>
 					<Match when={typeof props.value === "number"}>
-						<div class="w-full mb-2.5 border border-border p-15 flex items-center justify-center rounded-md">
-							<div class="w-full max-w-xs rounded-md overflow-hidden border border-border">
-								<AspectRatio ratio="16:9">
-									<MediaPreview
-										media={{
-											url: props.meta?.url || "",
-											type: props.meta?.type || "image",
-										}}
-										alt={helpers.getTranslation(
-											props.meta?.altTranslations,
-											contentLocale(),
-										)}
-									/>
-								</AspectRatio>
+						<div class="w-full border border-border rounded-md bg-container-4">
+							<div class="p-15 flex items-center justify-center ">
+								<div class="w-full max-w-xs rounded-md overflow-hidden border border-border">
+									<AspectRatio ratio="16:9">
+										<MediaPreview
+											media={{
+												url: props.meta?.url || "",
+												type:
+													props.meta?.type || "image",
+											}}
+											alt={helpers.getTranslation(
+												props.meta?.altTranslations,
+												contentLocale(),
+											)}
+											richPreview={true}
+										/>
+									</AspectRatio>
+								</div>
 							</div>
-						</div>
-						<div class="flex flex-wrap gap-2.5">
-							<Button
-								type="button"
-								theme="container-outline"
-								size="x-small"
-								onClick={openMediaSelectModal}
-								disabled={props.disabled}
-							>
-								{T()("select_new_media", {
-									type: props.type || "media",
-								})}
-							</Button>
-							<Button
-								type="button"
-								theme="container-outline"
-								size="x-small"
-								onClick={() => {
-									props.onChange(null, null);
-								}}
-								disabled={props.disabled}
-							>
-								{T()("remove_media", {
-									type: props.type || "media",
-								})}
-							</Button>
+							<div class="grid grid-cols-2 gap-2.5 bg-container-2 p-15">
+								<Button
+									type="button"
+									theme="border-outline"
+									size="x-small"
+									onClick={openMediaSelectModal}
+									disabled={props.disabled}
+									classes="capitalize"
+								>
+									{T()("select_new_media", {
+										type: props.type || "media",
+									})}
+								</Button>
+								<Button
+									type="button"
+									theme="border-outline"
+									size="x-small"
+									onClick={() => {
+										props.onChange(null, null);
+									}}
+									disabled={props.disabled}
+									classes="capitalize"
+								>
+									{T()("remove_media", {
+										type: props.type || "media",
+									})}
+								</Button>
+							</div>
 						</div>
 					</Match>
 				</Switch>

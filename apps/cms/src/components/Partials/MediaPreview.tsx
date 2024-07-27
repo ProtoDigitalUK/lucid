@@ -8,12 +8,14 @@ import {
 } from "solid-icons/fa";
 import type { MediaResponse } from "@lucidcms/core/types";
 import Image from "@/components/Partials/Image";
+import classNames from "classnames";
 
 interface MediaPreviewProps {
 	media: {
 		type: MediaResponse["type"];
 		url: string;
 	};
+	richPreview?: boolean;
 	alt: string | null;
 }
 
@@ -36,40 +38,78 @@ const MediaPreview: Component<MediaPreviewProps> = (props) => {
 				<div class="w-full h-full bg-container-4 flex justify-center items-center group-hover:scale-110 transition duration-100">
 					<FaSolidFileZipper
 						size={40}
-						class="text-primary-base opacity-40"
+						class="text-icon-base opacity-40"
 					/>
 				</div>
 			</Match>
 			<Match when={props.media.type === "audio"}>
-				<div class="w-full h-full bg-container-4 flex justify-center items-center group-hover:scale-110 transition duration-100">
-					<FaSolidFileAudio
-						size={40}
-						class="text-primary-base opacity-40"
-					/>
+				<div
+					class={classNames(
+						"w-full h-full bg-container-4 flex justify-center items-center",
+						{
+							"group-hover:scale-110 transition duration-100":
+								!props.richPreview,
+						},
+					)}
+				>
+					<Switch>
+						<Match when={props.richPreview}>
+							{/* biome-ignore lint/a11y/useMediaCaption: <explanation> */}
+							<audio
+								src={props.media.url}
+								class="w-2/3"
+								controls
+							/>
+						</Match>
+						<Match when={!props.richPreview}>
+							<FaSolidFileAudio
+								size={40}
+								class="text-icon-base opacity-40"
+							/>
+						</Match>
+					</Switch>
 				</div>
 			</Match>
 			<Match when={props.media.type === "video"}>
-				<div class="w-full h-full bg-container-4 flex justify-center items-center group-hover:scale-110 transition duration-100">
-					<FaSolidFileVideo
-						size={40}
-						class="text-primary-base opacity-40"
-					/>
+				<div
+					class={classNames(
+						"w-full h-full bg-container-4 flex justify-center items-center",
+						{
+							"group-hover:scale-110 transition duration-100":
+								!props.richPreview,
+						},
+					)}
+				>
+					<Switch>
+						<Match when={props.richPreview}>
+							{/* biome-ignore lint/a11y/useMediaCaption: <explanation> */}
+							<video
+								src={props.media.url}
+								class="w-full h-full object-contain"
+								controls
+								preload="auto"
+							/>
+						</Match>
+						<Match when={!props.richPreview}>
+							<FaSolidFileVideo
+								size={40}
+								class="text-icon-base opacity-40"
+							/>
+						</Match>
+					</Switch>
 				</div>
 			</Match>
 			<Match when={props.media.type === "document"}>
 				<div class="w-full h-full bg-container-4 flex justify-center items-center group-hover:scale-110 transition duration-100">
 					<FaSolidFileLines
 						size={40}
-						class="text-primary-base opacity-40"
+						class="text-icon-base opacity-40"
 					/>
 				</div>
 			</Match>
 			<Match when={props.media.type === "unknown"}>
 				<div class="w-full h-full bg-container-4 flex justify-center items-center group-hover:scale-110 transition duration-100">
-					<FaSolidFile
-						size={40}
-						class="text-primary-base opacity-40"
-					/>
+					<FaSolidFile size={40} class="text-icon-base opacity-40" />
 				</div>
 			</Match>
 		</Switch>
