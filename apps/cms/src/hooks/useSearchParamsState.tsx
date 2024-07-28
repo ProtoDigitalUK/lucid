@@ -165,6 +165,17 @@ const useSearchParamsState = (
 			setHasFiltersApplied(false);
 		}
 	};
+	const resetFilters = () => {
+		const filters = getFilters();
+		const filterMap = new Map();
+		for (const [key] of filters) {
+			filterMap.set(key, undefined);
+		}
+		setFilters(filterMap);
+		buildQueryString();
+		updateHasFiltersApplied();
+		setSettled(true);
+	};
 
 	onMount(() => {
 		setDefaultParams();
@@ -177,7 +188,7 @@ const useSearchParamsState = (
 		getQueryString,
 		setParams,
 		hasFiltersApplied: getHasFiltersApplied,
-		resetFilters: setDefaultParams,
+		resetFilters: resetFilters,
 		getSettled,
 		setFilterSchema: (filters: SearchParamsSchema["filters"]) => {
 			setSchema((prev) => ({ ...prev, filters }));

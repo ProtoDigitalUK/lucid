@@ -3,7 +3,7 @@ import classNames from "classnames";
 import Link from "@/components/Partials/Link";
 
 interface ErrorBlockProps {
-	type: "fill" | "page-layout" | "table" | "block";
+	type: "fill" | "page-layout" | "table" | "block" | "block-grow";
 	content: {
 		image?: string;
 		title: string;
@@ -28,6 +28,7 @@ const ErrorBlock: Component<ErrorBlockProps> = (props) => {
 					props.type === "page-layout",
 				"border-t border-border page-layout-full-body bg-container-3":
 					props.type === "table",
+				"flex-grow": props.type === "block-grow",
 			})}
 		>
 			<div class="text-center max-w-xl w-full flex flex-col items-center p-30">

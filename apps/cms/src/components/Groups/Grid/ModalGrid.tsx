@@ -32,7 +32,7 @@ export const ModalGrid: Component<ModalGridProps> = (props) => {
 			<Switch>
 				<Match when={props.permission === false}>
 					<ErrorBlock
-						type="block"
+						type="block-grow"
 						content={{
 							image: noPermission,
 							title: T()("no_permission"),
@@ -42,7 +42,7 @@ export const ModalGrid: Component<ModalGridProps> = (props) => {
 				</Match>
 				<Match when={props.state.isError}>
 					<ErrorBlock
-						type="block"
+						type="block-grow"
 						content={{
 							image: notifySvg,
 							title: T()("error_title"),
@@ -54,7 +54,7 @@ export const ModalGrid: Component<ModalGridProps> = (props) => {
 					when={props.items === 0 && props.state.isLoading === false}
 				>
 					<ErrorBlock
-						type="block"
+						type="block-grow"
 						content={{
 							image: emptySvg,
 							title: T()("no_results"),
