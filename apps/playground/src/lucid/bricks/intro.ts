@@ -15,7 +15,7 @@ const IntroBrick = new BrickBuilder("intro", {
 			title: "Advanced",
 		},
 	})
-	.addText("json", {
+	.addJSON("json", {
 		labels: {
 			title: "JSON",
 		},
