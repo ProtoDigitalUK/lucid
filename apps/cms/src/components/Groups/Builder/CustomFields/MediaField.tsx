@@ -65,46 +65,44 @@ export const MediaField: Component<MediaFieldProps> = (props) => {
 	// -------------------------------
 	// Render
 	return (
-		<>
-			<Form.MediaSelect
-				id={brickHelpers.customFieldId({
-					key: props.state.fieldConfig.key,
-					brickIndex: props.state.brickIndex,
-					groupId: props.state.groupId,
-				})}
-				value={getValue()}
-				meta={getMeta()}
-				onChange={(value, meta) => {
-					batch(() => {
-						brickStore.get.setFieldValue({
-							brickIndex: props.state.brickIndex,
-							fieldConfig: props.state.fieldConfig,
-							key: props.state.fieldConfig.key,
-							groupId: props.state.groupId,
-							repeaterKey: props.state.repeaterKey,
-							value: value,
-							meta: meta,
-							contentLocale: props.state.contentLocale,
-						});
-						setValue(value ?? undefined);
-						setMeta(meta ?? undefined);
+		<Form.MediaSelect
+			id={brickHelpers.customFieldId({
+				key: props.state.fieldConfig.key,
+				brickIndex: props.state.brickIndex,
+				groupId: props.state.groupId,
+			})}
+			value={getValue()}
+			meta={getMeta()}
+			onChange={(value, meta) => {
+				batch(() => {
+					brickStore.get.setFieldValue({
+						brickIndex: props.state.brickIndex,
+						fieldConfig: props.state.fieldConfig,
+						key: props.state.fieldConfig.key,
+						groupId: props.state.groupId,
+						repeaterKey: props.state.repeaterKey,
+						value: value,
+						meta: meta,
+						contentLocale: props.state.contentLocale,
 					});
-				}}
-				copy={{
-					label: helpers.getLocaleValue({
-						value: props.state.fieldConfig.labels.title,
-					}),
-					describedBy: helpers.getLocaleValue({
-						value: props.state.fieldConfig.labels.description,
-					}),
-				}}
-				altLocaleError={props.state.altLocaleError}
-				disabled={props.state.fieldConfig.disabled}
-				extensions={props.state.fieldConfig.validation?.extensions}
-				type={props.state.fieldConfig.validation?.type}
-				errors={props.state.fieldError}
-				required={props.state.fieldConfig.validation?.required || false}
-			/>
-		</>
+					setValue(value ?? undefined);
+					setMeta(meta ?? undefined);
+				});
+			}}
+			copy={{
+				label: helpers.getLocaleValue({
+					value: props.state.fieldConfig.labels.title,
+				}),
+				describedBy: helpers.getLocaleValue({
+					value: props.state.fieldConfig.labels.description,
+				}),
+			}}
+			altLocaleError={props.state.altLocaleError}
+			disabled={props.state.fieldConfig.disabled}
+			extensions={props.state.fieldConfig.validation?.extensions}
+			type={props.state.fieldConfig.validation?.type}
+			errors={props.state.fieldError}
+			required={props.state.fieldConfig.validation?.required || false}
+		/>
 	);
 };

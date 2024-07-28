@@ -92,10 +92,10 @@ const useSearchParamsState = (
 		if (schema?.filters) {
 			const filterMap = new Map();
 			for (const [key, value] of Object.entries(schema.filters)) {
-				if (value.type === "array") {
-					filterMap.set(key, [value.value]);
-				} else if (value.value === "") {
+				if (value.value === "") {
 					filterMap.set(key, undefined);
+				} else if (value.type === "array") {
+					filterMap.set(key, [value.value]);
 				} else filterMap.set(key, value.value);
 			}
 			setFilters(filterMap);
