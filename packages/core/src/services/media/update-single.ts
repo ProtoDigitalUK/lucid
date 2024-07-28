@@ -8,11 +8,11 @@ const updateSingle: ServiceFn<
 		{
 			id: number;
 			fileData: MultipartFile | undefined;
-			titleTranslations?: {
+			title?: {
 				localeCode: string;
 				value: string | null;
 			}[];
-			altTranslations?: {
+			alt?: {
 				localeCode: string;
 				value: string | null;
 			}[];
@@ -60,11 +60,11 @@ const updateSingle: ServiceFn<
 			},
 			items: [
 				{
-					translations: data.titleTranslations || [],
+					translations: data.title || [],
 					key: "title",
 				},
 				{
-					translations: data.altTranslations || [],
+					translations: data.alt || [],
 					key: "alt",
 				},
 			],

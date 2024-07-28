@@ -91,11 +91,11 @@ export interface MediaResponse {
 	id: number;
 	key: string;
 	url: string;
-	titleTranslations: {
+	title: {
 		localeCode: string | null;
 		value: string | null;
 	}[];
-	altTranslations: {
+	alt: {
 		localeCode: string | null;
 		value: string | null;
 	}[];
@@ -234,11 +234,11 @@ export interface MediaMeta {
 	averageColour: string | null;
 	isDark: BooleanInt | null;
 	isLight: BooleanInt | null;
-	titleTranslations?: Array<{
+	title?: Array<{
 		value: string | null;
 		localeCode: string | null;
 	}>;
-	altTranslations?: Array<{
+	alt?: Array<{
 		value: string | null;
 		localeCode: string | null;
 	}>;

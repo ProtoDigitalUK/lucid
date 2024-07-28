@@ -58,18 +58,14 @@ class MediaCustomField extends CustomField<"media"> {
 				averageColour: props.data?.media_average_colour ?? null,
 				isDark: props.data?.media_is_dark ?? null,
 				isLight: props.data?.media_is_light ?? null,
-				titleTranslations: props.data?.media_title_translations?.map(
-					(t) => ({
-						value: t.value,
-						localeCode: t.locale_code,
-					}),
-				),
-				altTranslations: props.data?.media_alt_translations?.map(
-					(t) => ({
-						value: t.value,
-						localeCode: t.locale_code,
-					}),
-				),
+				title: props.data?.media_title_translations?.map((t) => ({
+					value: t.value,
+					localeCode: t.locale_code,
+				})),
+				alt: props.data?.media_alt_translations?.map((t) => ({
+					value: t.value,
+					localeCode: t.locale_code,
+				})),
 				type: (props.data?.media_type as MediaType) ?? null,
 			},
 		} satisfies CFResponse<"media">;

@@ -61,8 +61,8 @@ export const MediaSelect: Component<MediaSelectProps> = (props) => {
 					averageColour: media.meta.averageColour ?? null,
 					isDark: media.meta.isDark ?? null,
 					isLight: media.meta.isLight ?? null,
-					titleTranslations: media.titleTranslations,
-					altTranslations: media.altTranslations,
+					title: media.title,
+					alt: media.alt,
 				});
 			},
 			open: true,
@@ -122,7 +122,7 @@ export const MediaSelect: Component<MediaSelectProps> = (props) => {
 													props.meta?.type || "image",
 											}}
 											alt={helpers.getTranslation(
-												props.meta?.altTranslations,
+												props.meta?.alt,
 												contentLocale(),
 											)}
 											richPreview={true}

@@ -11,11 +11,11 @@ const uploadSingle: ServiceFn<
 	[
 		{
 			fileData: MultipartFile | undefined;
-			titleTranslations?: {
+			title?: {
 				localeCode: string;
 				value: string | null;
 			}[];
-			altTranslations?: {
+			alt?: {
 				localeCode: string;
 				value: string | null;
 			}[];
@@ -27,8 +27,8 @@ const uploadSingle: ServiceFn<
 	const localeExistsRes =
 		await context.services.locale.checks.checkLocalesExist(context, {
 			localeCodes: getUniqueLocaleCodes([
-				data.titleTranslations || [],
-				data.altTranslations || [],
+				data.title || [],
+				data.alt || [],
 			]),
 		});
 	if (localeExistsRes.error) return localeExistsRes;
@@ -38,11 +38,11 @@ const uploadSingle: ServiceFn<
 			keys: ["title", "alt"],
 			translations: mergeTranslationGroups([
 				{
-					translations: data.titleTranslations || [],
+					translations: data.title || [],
 					key: "title",
 				},
 				{
-					translations: data.altTranslations || [],
+					translations: data.alt || [],
 					key: "alt",
 				},
 			]),

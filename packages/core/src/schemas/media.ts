@@ -54,7 +54,7 @@ export default {
 	},
 	uploadSingle: {
 		body: z.object({
-			titleTranslations: z
+			title: z
 				.array(
 					z.object({
 						localeCode: z.string(),
@@ -62,7 +62,7 @@ export default {
 					}),
 				)
 				.optional(),
-			altTranslations: z
+			alt: z
 				.array(
 					z.object({
 						localeCode: z.string(),
@@ -76,7 +76,7 @@ export default {
 	},
 	updateSingle: {
 		body: z.object({
-			titleTranslations: z
+			title: z
 				.array(
 					z.object({
 						localeCode: z.string(),
@@ -84,7 +84,7 @@ export default {
 					}),
 				)
 				.optional(),
-			altTranslations: z
+			alt: z
 				.array(
 					z.object({
 						localeCode: z.string(),

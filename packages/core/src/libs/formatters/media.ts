@@ -53,12 +53,12 @@ export default class MediaFormatter {
 			id: props.media.id,
 			key: props.media.key,
 			url: createCdnUrl(props.host, props.media.key),
-			titleTranslations:
+			title:
 				props.media.title_translations?.map((t) => ({
 					value: t.value,
 					localeCode: t.locale_code,
 				})) ?? [],
-			altTranslations:
+			alt:
 				props.media.alt_translations?.map((t) => ({
 					value: t.value,
 					localeCode: t.locale_code,
@@ -85,7 +85,7 @@ export default class MediaFormatter {
 			id: { type: "number", example: 1 },
 			key: { type: "string", example: "placeholder-1708786317482" },
 			url: { type: "string", example: "https://example.com/cdn/v1/key" },
-			titleTranslations: {
+			title: {
 				type: "array",
 				items: {
 					type: "object",
@@ -95,7 +95,7 @@ export default class MediaFormatter {
 					},
 				},
 			},
-			altTranslations: {
+			alt: {
 				type: "array",
 				items: {
 					type: "object",

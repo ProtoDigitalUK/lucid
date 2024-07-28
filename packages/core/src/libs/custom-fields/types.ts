@@ -513,11 +513,11 @@ export type MediaResMeta = {
 	averageColour: string | null;
 	isDark: BooleanInt | null;
 	isLight: BooleanInt | null;
-	titleTranslations?: Array<{
+	title?: Array<{
 		value: string | null;
 		localeCode: string | null;
 	}>;
-	altTranslations?: Array<{
+	alt?: Array<{
 		value: string | null;
 		localeCode: string | null;
 	}>;

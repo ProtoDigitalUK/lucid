@@ -30,8 +30,8 @@ const uploadSingleController: RouteController<
 		},
 		{
 			fileData: await request.file(),
-			titleTranslations: request.body.titleTranslations,
-			altTranslations: request.body.altTranslations,
+			title: request.body.title,
+			alt: request.body.alt,
 			visible: 1,
 		},
 	);
@@ -96,7 +96,7 @@ export default {
 				body: {
 					type: "string",
 					description:
-						'Stringified JSON data containing tileTranslations and altTranslations for the media.<br><br>Example: <code>{"titleTranslations":[{"localeCode":"en","value":"title value"}],"altTranslations":[{"localeCode":"en","value":"alt value"}]}</code>.<br><br>Translations dont have to be passed.',
+						'Stringified JSON data containing tileTranslations and alt for the media.<br><br>Example: <code>{"title":[{"localeCode":"en","value":"title value"}],"alt":[{"localeCode":"en","value":"alt value"}]}</code>.<br><br>Translations dont have to be passed.',
 				},
 			},
 		},

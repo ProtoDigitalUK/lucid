@@ -48,12 +48,8 @@ const CreateUpdateMediaPanel: Component<CreateUpdateMediaPanelProps> = (
 
 	// ------------------------------
 	// State
-	const [getTitleTranslations, setTitleTranslations] = createSignal<
-		MediaResponse["titleTranslations"]
-	>([]);
-	const [getAltTranslations, setAltTranslations] = createSignal<
-		MediaResponse["altTranslations"]
-	>([]);
+	const [getTitle, setTitle] = createSignal<MediaResponse["title"]>([]);
+	const [getAlt, setAlt] = createSignal<MediaResponse["alt"]>([]);
 
 	// ---------------------------------
 	// Mutations
@@ -100,13 +96,10 @@ const CreateUpdateMediaPanel: Component<CreateUpdateMediaPanelProps> = (
 	});
 	const hasTranslationErrors = createMemo(() => {
 		const titleErrors = getBodyError(
-			"titleTranslations",
+			"title",
 			updateSingle.errors,
 		)?.children;
-		const altErrors = getBodyError(
-			"altTranslations",
-			updateSingle.errors,
-		)?.children;
+		const altErrors = getBodyError("alt", updateSingle.errors)?.children;
 		if (titleErrors) return titleErrors.length > 0;
 		if (altErrors) return altErrors.length > 0;
 		return false;
@@ -114,18 +107,18 @@ const CreateUpdateMediaPanel: Component<CreateUpdateMediaPanelProps> = (
 	const updateData = createMemo(() => {
 		const { changed, data } = helpers.updateData(
 			{
-				titleTranslations: media.data?.data.titleTranslations || [],
-				altTranslations: media.data?.data.altTranslations || [],
+				title: media.data?.data.title || [],
+				alt: media.data?.data.alt || [],
 			},
 			{
-				titleTranslations: getTitleTranslations(),
-				altTranslations: getAltTranslations(),
+				title: getTitle(),
+				alt: getAlt(),
 			},
 		);
 
 		let resData: {
-			titleTranslations?: MediaResponse["titleTranslations"];
-			altTranslations?: MediaResponse["altTranslations"];
+			title?: MediaResponse["title"];
+			alt?: MediaResponse["alt"];
 			file?: File;
 		} = data;
 		let resChanged = changed;
@@ -186,8 +179,8 @@ const CreateUpdateMediaPanel: Component<CreateUpdateMediaPanelProps> = (
 	// Effects
 	createEffect(() => {
 		if (media.isSuccess && panelMode() === "update") {
-			setTitleTranslations(media.data?.data.titleTranslations || []);
-			setAltTranslations(media.data?.data.altTranslations || []);
+			setTitle(media.data?.data.title || []);
+			setAlt(media.data?.data.alt || []);
 			MediaFile.reset();
 			MediaFile.setCurrentFile({
 				name: media.data.data.key,
@@ -209,16 +202,16 @@ const CreateUpdateMediaPanel: Component<CreateUpdateMediaPanelProps> = (
 				if (!props.id) {
 					createSingle.action.mutate({
 						file: MediaFile.getFile() as File,
-						titleTranslations: getTitleTranslations(),
-						altTranslations: getAltTranslations(),
+						title: getTitle(),
+						alt: getAlt(),
 					});
 				} else {
 					updateSingle.action.mutate({
 						id: props.id() as number,
 						body: {
 							file: MediaFile.getFile() as File,
-							titleTranslations: getTitleTranslations(),
-							altTranslations: getAltTranslations(),
+							title: getTitle(),
+							alt: getAlt(),
 						},
 					});
 				}
@@ -228,8 +221,8 @@ const CreateUpdateMediaPanel: Component<CreateUpdateMediaPanelProps> = (
 				createSingle.reset();
 				updateSingle.reset();
 				MediaFile.reset();
-				setTitleTranslations([]);
-				setAltTranslations([]);
+				setTitle([]);
+				setAlt([]);
 			}}
 			mutateState={{
 				isLoading: mutateIsLoading(),
@@ -258,18 +251,15 @@ const CreateUpdateMediaPanel: Component<CreateUpdateMediaPanelProps> = (
 									id={`name-${locale.code}`}
 									value={
 										helpers.getTranslation(
-											getTitleTranslations(),
+											getTitle(),
 											locale.code,
 										) || ""
 									}
 									onChange={(val) => {
-										helpers.updateTranslation(
-											setTitleTranslations,
-											{
-												localeCode: locale.code,
-												value: val,
-											},
-										);
+										helpers.updateTranslation(setTitle, {
+											localeCode: locale.code,
+											value: val,
+										});
 									}}
 									name={`name-${locale.code}`}
 									type="text"
@@ -286,18 +276,15 @@ const CreateUpdateMediaPanel: Component<CreateUpdateMediaPanelProps> = (
 										id={`alt-${locale.code}`}
 										value={
 											helpers.getTranslation(
-												getAltTranslations(),
+												getAlt(),
 												locale.code,
 											) || ""
 										}
 										onChange={(val) => {
-											helpers.updateTranslation(
-												setAltTranslations,
-												{
-													localeCode: locale.code,
-													value: val,
-												},
-											);
+											helpers.updateTranslation(setAlt, {
+												localeCode: locale.code,
+												value: val,
+											});
 										}}
 										name={`alt-${locale.code}`}
 										type="text"

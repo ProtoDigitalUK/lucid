@@ -5,11 +5,11 @@ import type { ResponseBody, MediaResponse } from "@lucidcms/core/types";
 
 interface Params {
 	file: File;
-	titleTranslations: Array<{
+	title: Array<{
 		localeCode: string | null;
 		value: string | null;
 	}>;
-	altTranslations: Array<{
+	alt: Array<{
 		localeCode: string | null;
 		value: string | null;
 	}>;
@@ -20,8 +20,8 @@ interface Response {
 
 export const createSingleReq = (params: Params) => {
 	const bodyQueryParam = JSON.stringify({
-		titleTranslations: params.titleTranslations,
-		altTranslations: params.altTranslations,
+		title: params.title,
+		alt: params.alt,
 	});
 
 	return request<ResponseBody<Response>>({

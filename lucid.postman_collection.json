@@ -1243,12 +1243,12 @@
 								{
 									"key": "file",
 									"type": "file",
-									"src": []
+									"src": "/Users/williamyallop/Documents/projects/protodigital/products/lucid/banner.jpg"
 								}
 							]
 						},
 						"url": {
-							"raw": "{{BASE_URL}}/api/v1/media?body={\"titleTranslations\":[{\"localeCode\":1,\"value\":\"title value\"}],\"altTranslations\":[{\"localeCode\":1,\"value\":\"alt value\"}]}",
+							"raw": "{{BASE_URL}}/api/v1/media?body={\"title\":[{\"localeCode\":\"en\",\"value\":\"title value\"}],\"alt\":[{\"localeCode\":\"en\",\"value\":\"alt value\"}]}",
 							"host": [
 								"{{BASE_URL}}"
 							],
@@ -1260,7 +1260,7 @@
 							"query": [
 								{
 									"key": "body",
-									"value": "{\"titleTranslations\":[{\"localeCode\":1,\"value\":\"title value\"}],\"altTranslations\":[{\"localeCode\":1,\"value\":\"alt value\"}]}"
+									"value": "{\"title\":[{\"localeCode\":\"en\",\"value\":\"title value\"}],\"alt\":[{\"localeCode\":\"en\",\"value\":\"alt value\"}]}"
 								}
 							]
 						}
@@ -1307,7 +1307,7 @@
 							"query": [
 								{
 									"key": "body",
-									"value": "{\"titleTranslations\":[{\"localeCode\":1,\"value\":\"title\"}],\"altTranslations\":[{\"localeCode\":1,\"value\":\"alt\"}]}",
+									"value": "{\"title\":[{\"localeCode\":1,\"value\":\"title\"}],\"alt\":[{\"localeCode\":1,\"value\":\"alt\"}]}",
 									"disabled": true
 								},
 								{

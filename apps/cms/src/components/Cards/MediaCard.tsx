@@ -40,17 +40,11 @@ const MediaCard: Component<MediaCardProps> = (props) => {
 		return userStore.get.hasPermission(["update_media"]).all;
 	});
 
-	const titleTranslation = createMemo(() => {
-		return helpers.getTranslation(
-			props.media.titleTranslations,
-			props.contentLocale,
-		);
+	const title = createMemo(() => {
+		return helpers.getTranslation(props.media.title, props.contentLocale);
 	});
-	const altTranslation = createMemo(() => {
-		return helpers.getTranslation(
-			props.media.altTranslations,
-			props.contentLocale,
-		);
+	const alt = createMemo(() => {
+		return helpers.getTranslation(props.media.alt, props.contentLocale);
 	});
 
 	// ----------------------------------
@@ -116,7 +110,7 @@ const MediaCard: Component<MediaCardProps> = (props) => {
 			<AspectRatio ratio="16:9" innerClass={"overflow-hidden"}>
 				<MediaPreview
 					media={props.media}
-					alt={altTranslation() || titleTranslation() || ""}
+					alt={alt() || title() || ""}
 				/>
 				<span class="inset-0 top-auto absolute flex gap-1 p-15">
 					<Pill theme="primary">
@@ -128,7 +122,7 @@ const MediaCard: Component<MediaCardProps> = (props) => {
 			{/* Content */}
 			<div class="p-15 border-t border-border">
 				<h3 class="mb-0.5 line-clamp-1">
-					{titleTranslation() || T()("no_translation")}
+					{title() || T()("no_translation")}
 				</h3>
 				<ClickToCopy
 					type="simple"

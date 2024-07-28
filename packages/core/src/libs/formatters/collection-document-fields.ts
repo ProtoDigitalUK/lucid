@@ -511,7 +511,7 @@ export default class CollectionDocumentFieldsFormatter {
 						type: "number",
 						nullable: true,
 					},
-					titleTranslations: {
+					title: {
 						type: "array",
 						items: {
 							type: "object",
@@ -528,7 +528,7 @@ export default class CollectionDocumentFieldsFormatter {
 							},
 						},
 					},
-					altTranslations: {
+					alt: {
 						type: "array",
 						items: {
 							type: "object",
