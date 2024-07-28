@@ -138,6 +138,9 @@ export const Select: Component<SelectProps> = (props) => {
 									props.theme === "full",
 								"bg-transparent pb-2 pt-1 rounded-b-md":
 									props.theme === "full",
+								"border-error-base":
+									props.hasError &&
+									props.theme === "basic-small",
 							},
 						)}
 						onFocus={() => setInputFocus(true)}
