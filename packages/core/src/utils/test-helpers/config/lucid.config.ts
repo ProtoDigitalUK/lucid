@@ -1,4 +1,4 @@
-import lucid, { SQLiteAdapter } from "@lucidcms/core";
+import lucid, { SQLiteAdapter } from "../../../index.js";
 import Database from "better-sqlite3";
 import testingConstants from "../../../constants/testing-constants.js";
 
