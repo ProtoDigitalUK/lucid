@@ -1,5 +1,29 @@
 # @lucidcms/core
 
+## v0.7.0-alpha.0
+
+### Features:
+
+- Document builder visual overhaul along with QOL changes to UI across the SPA.
+- Error message revamp for SPA document page builder with support for tabs highlighting if an error resides within it. ([c283824](https://github.com/ProtoDigitalUK/lucid/commit/c283824cf80d185666cd53d7641fbd92005d52ec))
+- Added support for returning nested repeater fields on client/toolkit document single and multiple fetches. ([befb65a](https://github.com/ProtoDigitalUK/lucid/commit/befb65af1c1ef3a032a0b247a2b08235f12e8138))
+- Image media now includes a blur hash that is generated on upload. ([7ee6461](https://github.com/ProtoDigitalUK/lucid/commit/7ee6461736f838bc858824d259770f7b6cc2351e))
+- Image media no includes average colour RGBA value and is light/dark information. ([be2a254](https://github.com/ProtoDigitalUK/lucid/commit/be2a2546a67f0901a33644bc9919f5cc88cda9c4))
+- Holding page styled and content added. ([b8ab6d0](https://github.com/ProtoDigitalUK/lucid/commit/b8ab6d08b0429b9352657187173b2019f234eea8))
+
+### Breaking changes:
+
+- Response format of client document endpoints is updated to return a field object instead of array to make consuming data easier. ([11aa7ce](https://github.com/ProtoDigitalUK/lucid/commit/11aa7ceee37c25bd71cbe0b741b594f6b849f684))
+- Existing migration file edit for media blur hash, average colour columns meaning db will need to be re-created. ([be2a254](https://github.com/ProtoDigitalUK/lucid/commit/be2a2546a67f0901a33644bc9919f5cc88cda9c4))
+- Response type of media strategies update to use ServiceResponse type to fall inline with how internal services work. ([af95561](https://github.com/ProtoDigitalUK/lucid/commit/af955617357e26ae6476a3a4873e8d68dbe29e3e))
+- Clear single processed image route fix to use media ID instead of key due to key containing slashes now. ([f340b2f](https://github.com/ProtoDigitalUK/lucid/commit/f340b2f033cee073b6a394b76d9b8880ca16772f))
+
+### Bug Fixes:
+
+- Fixed upsert document not updating the updated_at field. ([764f078](https://github.com/ProtoDigitalUK/lucid/commit/764f0783704bcefe8da0cd878fa819bf21a18f63))
+- Fixed issue with updated media panel trying to refetch deleted media when panel was closed. ([0b042db](https://github.com/ProtoDigitalUK/lucid/commit/0b042dbad3d6761d28e3521a657d62b7ea1d410b))
+- Flatten fields helper now adds field for every locale regardless if the locale has been given in the payload which fixes issues with required validation. ([65bd6ae](https://github.com/ProtoDigitalUK/lucid/commit/65bd6aea94b6e3fba1010190c05a134f6c9a1ffc))
+
 ## v0.6.0-alpha.0
 
 ### Features:
