@@ -57,20 +57,6 @@ const PageCollection = new CollectionBuilder("page", {
 	)
 	.addUser("author", undefined, {
 		list: true,
-	})
-	.addRepeater("testimonials", {
-		labels: {
-			title: "Testimonials",
-		},
-		validation: {
-			maxGroups: 3,
-		},
-	})
-	.addText("testimonials_title", {
-		labels: {
-			title: "Title",
-		},
-	})
-	.endRepeater();
+	});
 
 export default PageCollection;
