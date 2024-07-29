@@ -42,6 +42,15 @@ export type CustomFieldMap = {
 			meta: MediaResMeta;
 		};
 	};
+	"document-relation": {
+		props: DocumentRelationFieldProps;
+		config: DocumentRelationFieldConfig;
+		column: "document_id";
+		response: {
+			value: DocumentRelationResValue;
+			meta: DocumentRelationResMeta;
+		};
+	};
 	repeater: {
 		props: RepeaterFieldProps;
 		config: RepeaterFieldConfig;
@@ -236,6 +245,25 @@ export interface MediaFieldConfig extends SharedFieldConfig {
 		};
 	};
 }
+export interface DocumentRelationFieldConfig extends SharedFieldConfig {
+	type: "document-relation";
+
+	labels: {
+		title?: LocaleValue;
+		description?: LocaleValue;
+		placeholder?: LocaleValue;
+	};
+
+	translations: boolean;
+	hidden?: boolean;
+	disabled?: boolean;
+	default?: number | null;
+
+	validation?: {
+		required?: boolean;
+		zod?: ZodType<unknown>;
+	};
+}
 export interface RepeaterFieldConfig extends SharedFieldConfig {
 	type: "repeater";
 	fields: Exclude<CFConfig<FieldTypes>, TabFieldConfig>[];
@@ -428,6 +456,9 @@ export type MediaFieldProps = Partial<
 export type RepeaterFieldProps = Partial<
 	Omit<RepeaterFieldConfig, "type" | "fields">
 >;
+export type DocumentRelationFieldProps = Partial<
+	Omit<DocumentRelationFieldConfig, "type">
+>;
 export type NumberFieldProps = Partial<Omit<NumberFieldConfig, "type">>;
 export type CheckboxFieldProps = Partial<Omit<CheckboxFieldConfig, "type">>;
 export type SelectFieldProps = Partial<Omit<SelectFieldConfig, "type">>;
@@ -453,6 +484,7 @@ export type CFInsertItem<T extends FieldTypes> = {
 	jsonValue?: string | null;
 	mediaId?: number | null;
 	userId?: number | null;
+	documentId?: number | null;
 };
 
 // -----------------------------------------------
@@ -470,6 +502,7 @@ export type TextareaResValue = string | null;
 export type JsonResValue = Record<string, unknown> | null;
 export type ColourResValue = string | null;
 export type DatetimeResValue = string | null;
+export type DocumentRelationResValue = number | null;
 export type LinkResValue = {
 	url: string | null;
 	target: string | null;
@@ -523,6 +556,9 @@ export type MediaResMeta = {
 	}>;
 	type: MediaType | null;
 } | null;
+export type DocumentRelationResMeta = {
+	id: number | null;
+} | null;
 export type RepeaterResMeta = null;
 export type NumberResMeta = null;
 export type CheckboxResMeta = null;
@@ -554,6 +590,7 @@ export type FieldResponseMeta =
 	| DatetimeResMeta
 	| LinkResMeta
 	| UserResMeta
+	| DocumentRelationResMeta
 	| undefined;
 
 // -----------------------------------------------
@@ -581,4 +618,7 @@ export interface UserReferenceData {
 	firstName: string | null;
 	lastName: string | null;
 	email: string;
+}
+export interface DocumentReferenceData {
+	id: number;
 }

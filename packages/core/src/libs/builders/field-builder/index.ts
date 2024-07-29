@@ -12,6 +12,7 @@ import TextCustomField from "../../custom-fields/fields/text.js";
 import TextareaCustomField from "../../custom-fields/fields/textarea.js";
 import UserCustomField from "../../custom-fields/fields/user.js";
 import WysiwygCustomField from "../../custom-fields/fields/wysiwyg.js";
+import DocumentRelationCustomField from "../../custom-fields/fields/document-relation.js";
 import type {
 	FieldTypes,
 	CFProps,
@@ -46,6 +47,14 @@ class FieldBuilder {
 	}
 	public addMedia(key: string, props?: CFProps<"media">) {
 		this.fields.set(key, new MediaCustomField(key, props));
+		this.meta.fieldKeys.push(key);
+		return this;
+	}
+	public addDocumentRelation(
+		key: string,
+		props?: CFProps<"document-relation">,
+	) {
+		this.fields.set(key, new DocumentRelationCustomField(key, props));
 		this.meta.fieldKeys.push(key);
 		return this;
 	}

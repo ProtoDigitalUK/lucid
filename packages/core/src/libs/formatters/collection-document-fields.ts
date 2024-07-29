@@ -33,6 +33,7 @@ export interface FieldProp {
 	user_first_name?: string | null;
 	user_last_name?: string | null;
 	user_username?: string | null;
+	document_id?: number | null;
 	media_id?: number | null;
 	media_key?: string | null;
 	media_mime_type?: string | null;

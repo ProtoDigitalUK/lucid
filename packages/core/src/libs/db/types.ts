@@ -211,6 +211,7 @@ export interface HeadlessCollectionDocumentFields {
 	json_value: JSONString | null;
 	user_id: number | null;
 	media_id: number | null;
+	document_id: number | null;
 }
 
 export interface HeadlessClientIntegrations {
