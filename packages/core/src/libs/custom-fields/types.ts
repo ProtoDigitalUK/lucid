@@ -42,13 +42,13 @@ export type CustomFieldMap = {
 			meta: MediaResMeta;
 		};
 	};
-	"document-relation": {
-		props: DocumentRelationFieldProps;
-		config: DocumentRelationFieldConfig;
+	document: {
+		props: DocumentFieldProps;
+		config: DocumentFieldConfig;
 		column: "document_id";
 		response: {
-			value: DocumentRelationResValue;
-			meta: DocumentRelationResMeta;
+			value: DocumentResValue;
+			meta: DocumentResMeta;
 		};
 	};
 	repeater: {
@@ -245,8 +245,9 @@ export interface MediaFieldConfig extends SharedFieldConfig {
 		};
 	};
 }
-export interface DocumentRelationFieldConfig extends SharedFieldConfig {
-	type: "document-relation";
+export interface DocumentFieldConfig extends SharedFieldConfig {
+	type: "document";
+	collection: string;
 
 	labels: {
 		title?: LocaleValue;
@@ -456,9 +457,9 @@ export type MediaFieldProps = Partial<
 export type RepeaterFieldProps = Partial<
 	Omit<RepeaterFieldConfig, "type" | "fields">
 >;
-export type DocumentRelationFieldProps = Partial<
-	Omit<DocumentRelationFieldConfig, "type">
->;
+export type DocumentFieldProps = Partial<Omit<DocumentFieldConfig, "type">> & {
+	collection: string;
+};
 export type NumberFieldProps = Partial<Omit<NumberFieldConfig, "type">>;
 export type CheckboxFieldProps = Partial<Omit<CheckboxFieldConfig, "type">>;
 export type SelectFieldProps = Partial<Omit<SelectFieldConfig, "type">>;
@@ -502,7 +503,7 @@ export type TextareaResValue = string | null;
 export type JsonResValue = Record<string, unknown> | null;
 export type ColourResValue = string | null;
 export type DatetimeResValue = string | null;
-export type DocumentRelationResValue = number | null;
+export type DocumentResValue = number | null;
 export type LinkResValue = {
 	url: string | null;
 	target: string | null;
@@ -556,7 +557,7 @@ export type MediaResMeta = {
 	}>;
 	type: MediaType | null;
 } | null;
-export type DocumentRelationResMeta = {
+export type DocumentResMeta = {
 	id: number | null;
 } | null;
 export type RepeaterResMeta = null;
@@ -590,7 +591,7 @@ export type FieldResponseMeta =
 	| DatetimeResMeta
 	| LinkResMeta
 	| UserResMeta
-	| DocumentRelationResMeta
+	| DocumentResMeta
 	| undefined;
 
 // -----------------------------------------------

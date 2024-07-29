@@ -55,7 +55,8 @@ const PageCollection = new CollectionBuilder("page", {
 			filterable: true,
 		},
 	)
-	.addDocumentRelation("parent", {
+	.addDocument("parent", {
+		collection: "page",
 		labels: {
 			title: "Parent",
 		},

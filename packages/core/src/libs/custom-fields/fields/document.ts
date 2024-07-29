@@ -13,19 +13,20 @@ import type {
 import type { FieldProp } from "../../formatters/collection-document-fields.js";
 import type { FieldInsertItem } from "../../../services/collection-document-bricks/helpers/flatten-fields.js";
 
-class DocumentRelationCustomField extends CustomField<"document-relation"> {
-	type = "document-relation" as const;
+class DocumentCustomField extends CustomField<"document"> {
+	type = "document" as const;
 	column = "document_id" as const;
 	config;
 	key;
 	props;
-	constructor(key: string, props?: CFProps<"document-relation">) {
+	constructor(key: string, props: CFProps<"document">) {
 		super();
 		this.key = key;
 		this.props = props;
 		this.config = {
 			key: this.key,
 			type: this.type,
+			collection: this.props.collection,
 			labels: {
 				title: this.props?.labels?.title ?? keyToTitle(this.key),
 				description: this.props?.labels?.description,
@@ -34,7 +35,7 @@ class DocumentRelationCustomField extends CustomField<"document-relation"> {
 			hidden: this.props?.hidden,
 			disabled: this.props?.disabled,
 			validation: this.props?.validation,
-		} satisfies CFConfig<"document-relation">;
+		} satisfies CFConfig<"document">;
 	}
 	// Methods
 	responseValueFormat(props: {
@@ -46,7 +47,7 @@ class DocumentRelationCustomField extends CustomField<"document-relation"> {
 			meta: {
 				id: props.data?.document_id ?? null,
 			},
-		} satisfies CFResponse<"document-relation">;
+		} satisfies CFResponse<"document">;
 	}
 	getInsertField(props: {
 		item: FieldInsertItem;
@@ -66,7 +67,7 @@ class DocumentRelationCustomField extends CustomField<"document-relation"> {
 			mediaId: null,
 			documentId: props.item.value,
 			userId: null,
-		} satisfies CFInsertItem<"document-relation">;
+		} satisfies CFInsertItem<"document">;
 	}
 	cfSpecificValidation(value: unknown, relationData: DocumentReferenceData) {
 		const valueSchema = z.number();
@@ -85,4 +86,4 @@ class DocumentRelationCustomField extends CustomField<"document-relation"> {
 	}
 }
 
-export default DocumentRelationCustomField;
+export default DocumentCustomField;

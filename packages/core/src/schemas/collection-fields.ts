@@ -32,6 +32,7 @@ export const FieldBaseSchema = z.object({
 		z.literal("link"),
 		z.literal("repeater"),
 		z.literal("user"),
+		z.literal("document"),
 	]),
 	translations: z.record(FieldValueSchema).optional(),
 	value: FieldValueSchema.optional(),

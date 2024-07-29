@@ -12,7 +12,7 @@ import TextCustomField from "../../custom-fields/fields/text.js";
 import TextareaCustomField from "../../custom-fields/fields/textarea.js";
 import UserCustomField from "../../custom-fields/fields/user.js";
 import WysiwygCustomField from "../../custom-fields/fields/wysiwyg.js";
-import DocumentRelationCustomField from "../../custom-fields/fields/document-relation.js";
+import DocumentCustomField from "../../custom-fields/fields/document.js";
 import type {
 	FieldTypes,
 	CFProps,
@@ -50,11 +50,8 @@ class FieldBuilder {
 		this.meta.fieldKeys.push(key);
 		return this;
 	}
-	public addDocumentRelation(
-		key: string,
-		props?: CFProps<"document-relation">,
-	) {
-		this.fields.set(key, new DocumentRelationCustomField(key, props));
+	public addDocument(key: string, props?: CFProps<"document">) {
+		this.fields.set(key, new DocumentCustomField(key, props));
 		this.meta.fieldKeys.push(key);
 		return this;
 	}
