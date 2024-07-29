@@ -47,6 +47,11 @@ const lucidConfig = async (config: LucidConfig) => {
 		for (const collection of configRes.collections) {
 			CollectionConfigSchema.parse(collection.config);
 
+			for (const field of collection.flatFields) {
+				CustomFieldSchema.parse(field);
+				checks.checkField(field, configRes);
+			}
+
 			checks.checkDuplicateBuilderKeys(
 				"bricks",
 				collection.builderBricks.map((b) => b.key),
@@ -66,8 +71,11 @@ const lucidConfig = async (config: LucidConfig) => {
 
 			for (const brick of collection.brickInstances) {
 				BrickConfigSchema.parse(brick.config);
-				for (const field of brick.flatFields)
+				for (const field of brick.flatFields) {
 					CustomFieldSchema.parse(field);
+					checks.checkField(field, configRes);
+				}
+
 				checks.checkDuplicateFieldKeys(
 					"brick",
 					brick.key,

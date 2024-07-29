@@ -50,7 +50,7 @@ class FieldBuilder {
 		this.meta.fieldKeys.push(key);
 		return this;
 	}
-	public addDocument(key: string, props?: CFProps<"document">) {
+	public addDocument(key: string, props: CFProps<"document">) {
 		this.fields.set(key, new DocumentCustomField(key, props));
 		this.meta.fieldKeys.push(key);
 		return this;
