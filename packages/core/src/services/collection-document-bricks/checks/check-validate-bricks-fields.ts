@@ -164,6 +164,8 @@ export const validateField = (props: {
 	};
 
 	switch (props.field.type) {
+		// TODO: revisit validation for these fields
+
 		case "media": {
 			const media = props.data.media.find(
 				(m) => m.id === props.field.value,
@@ -179,10 +181,17 @@ export const validateField = (props: {
 						type: media.type,
 					} satisfies MediaReferenceData,
 				});
+			} else if (props.field.value !== undefined) {
+				// if the media doesnt exist, we treat the value as null
+				fieldValRes = fieldInstance.validate({
+					type: props.field.type,
+					value: null,
+					relationData: undefined,
+				});
 			} else {
 				fieldValRes = fieldInstance.validate({
 					type: props.field.type,
-					value: props.field.value,
+					value: undefined,
 					relationData: undefined,
 				});
 			}
@@ -203,10 +212,16 @@ export const validateField = (props: {
 						lastName: user.last_name,
 					} satisfies UserReferenceData,
 				});
+			} else if (props.field.value !== undefined) {
+				fieldValRes = fieldInstance.validate({
+					type: props.field.type,
+					value: null,
+					relationData: undefined,
+				});
 			} else {
 				fieldValRes = fieldInstance.validate({
 					type: props.field.type,
-					value: props.field.value,
+					value: undefined,
 					relationData: undefined,
 				});
 			}
