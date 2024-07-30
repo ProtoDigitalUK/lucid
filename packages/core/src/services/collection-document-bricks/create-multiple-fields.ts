@@ -39,6 +39,7 @@ const createMultipleFields: ServiceFn<
 				boolValue: field.boolValue ?? null,
 				jsonValue: field.jsonValue ?? null,
 				mediaId: field.mediaId ?? null,
+				documentId: field.documentId ?? null,
 				userId: field.userId ?? null,
 				localeCode: field.localeCode,
 			};

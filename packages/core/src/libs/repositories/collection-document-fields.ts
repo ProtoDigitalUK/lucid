@@ -22,6 +22,7 @@ export default class CollectionDocumentFieldsRepo {
 			jsonValue: string | null;
 			userId: number | null;
 			mediaId: number | null;
+			documentId: number | null;
 			localeCode: string;
 		}>;
 	}) => {
@@ -41,6 +42,7 @@ export default class CollectionDocumentFieldsRepo {
 						json_value: f.jsonValue,
 						user_id: f.userId,
 						media_id: f.mediaId,
+						document_id: f.documentId,
 						locale_code: f.localeCode,
 					};
 				}),
