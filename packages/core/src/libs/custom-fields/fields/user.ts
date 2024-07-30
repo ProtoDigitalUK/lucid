@@ -1,3 +1,4 @@
+import T from "../../../translations/index.js";
 import z from "zod";
 import CustomField from "../custom-field.js";
 import keyToTitle from "../utils/key-to-title.js";
@@ -77,7 +78,7 @@ class UserCustomField extends CustomField<"user"> {
 		if (relationData === undefined) {
 			return {
 				valid: false,
-				message: "We couldn't find the user you selected.",
+				message: T("field_user_not_found"),
 			};
 		}
 

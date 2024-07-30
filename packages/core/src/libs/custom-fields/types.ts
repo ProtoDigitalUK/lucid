@@ -596,9 +596,6 @@ export type FieldResponseMeta =
 
 // -----------------------------------------------
 // Alt
-export type CustomFieldErrorGetter = {
-	required: CustomFieldErrorItem;
-};
 export type CustomFieldErrorItem = {
 	condition?: (...args: unknown[]) => boolean;
 	message: string;
@@ -622,4 +619,5 @@ export interface UserReferenceData {
 }
 export interface DocumentReferenceData {
 	id: number;
+	collectionKey: string;
 }

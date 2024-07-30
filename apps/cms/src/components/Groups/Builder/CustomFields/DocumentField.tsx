@@ -80,7 +80,7 @@ export const DocumentField: Component<DocumentFieldProps> = (props) => {
 						key: props.state.fieldConfig.key,
 						groupId: props.state.groupId,
 						repeaterKey: props.state.repeaterKey,
-						value: Number(value),
+						value: !value ? null : Number(value),
 						contentLocale: props.state.contentLocale,
 					});
 					setValue(value);
@@ -95,9 +95,6 @@ export const DocumentField: Component<DocumentFieldProps> = (props) => {
 				describedBy: helpers.getLocaleValue({
 					value: props.state.fieldConfig.labels.description,
 				}),
-				// placeholder: helpers.getLocaleValue({
-				// 	value: props.state.fieldConfig.labels.placeholder,
-				// }),
 			}}
 			errors={props.state.fieldError}
 			altLocaleError={props.state.altLocaleError}

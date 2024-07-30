@@ -73,12 +73,13 @@ class DocumentCustomField extends CustomField<"document"> {
 		const valueSchema = z.number();
 
 		const valueValidate = zodSafeParse(value, valueSchema);
+
 		if (!valueValidate.valid) return valueValidate;
 
 		if (relationData === undefined) {
 			return {
 				valid: false,
-				message: T("field_media_not_found"),
+				message: T("field_document_not_found"),
 			};
 		}
 

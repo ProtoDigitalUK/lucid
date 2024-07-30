@@ -109,6 +109,8 @@
 	"field_media_type": "Media must be of type \"{{type}}\"",
 	"field_media_extension": "Media must be one of the following extensions: {{extensions}}",
 	"field_media_not_found": "We couldn't find the media you selected",
+	"field_user_not_found": "We couldn't find the user you selected",
+	"field_document_not_found": "We couldn't find the document you selected",
 	"field_media_doenst_have_type": "This media does not have a type",
 	"field_media_doenst_have_width": "This media does not have a width",
 	"field_media_doenst_have_height": "This media does not have a height",
@@ -223,5 +225,6 @@
 	"authorisation_error_message": "Please ensure you are logged in and have the correct permissions.",
 	"forbidden_error_message": "You do not have permission to perform this action.",
 	"send_email_error_name": "Send Email Error",
-	"field_document_collection_not_found": "The collection '{{collection}}' does not exist or is not of mode multiple for the document field '{{field}}'."
+	"field_document_collection_not_found": "The collection '{{collection}}' does not exist or is not of mode multiple for the document field '{{field}}'.",
+	"field_has_relation_data": "The is missing relation data"
 }

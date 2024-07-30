@@ -1,6 +1,6 @@
 import { expect, test } from "vitest";
 import T from "../../../translations/index.js";
-import z, { boolean } from "zod";
+import z from "zod";
 import constants from "../../../constants/constants.js";
 import CollectionBuilder from "../../../libs/builders/collection-builder/index.js";
 import flattenFields from "../helpers/flatten-fields.js";
@@ -8,6 +8,8 @@ import {
 	validateBrick,
 	validateField,
 } from "./check-validate-bricks-fields.js";
+
+// TODO: add test for document custom field
 
 const CONSTANTS = {
 	localisation: {
@@ -197,24 +199,27 @@ test("validate brick along with brick field validation", async () => {
 			groups: flatten.groups,
 		},
 		collection: Collection,
-		media: [
-			{
-				id: 1,
-				type: "image",
-				width: 1024,
-				height: 768,
-				file_extension: "png",
-			},
-		],
-		users: [
-			{
-				id: 1,
-				email: "test@test.com",
-				first_name: "Test",
-				last_name: "User",
-				username: "test-user",
-			},
-		],
+		data: {
+			media: [
+				{
+					id: 1,
+					type: "image",
+					width: 1024,
+					height: 768,
+					file_extension: "png",
+				},
+			],
+			users: [
+				{
+					id: 1,
+					email: "test@test.com",
+					first_name: "Test",
+					last_name: "User",
+					username: "test-user",
+				},
+			],
+			documents: [],
+		},
 	});
 
 	expect(validateRes.length).toBe(0);
@@ -246,8 +251,11 @@ test("successfully validate field - checkbox", async () => {
 			localeCode: "en",
 		},
 		instance: CheckboxCollection,
-		media: [],
-		users: [],
+		data: {
+			media: [],
+			users: [],
+			documents: [],
+		},
 	});
 	expect(standardValidate).toBe(null);
 
@@ -261,8 +269,11 @@ test("successfully validate field - checkbox", async () => {
 			localeCode: "en",
 		},
 		instance: CheckboxCollection,
-		media: [],
-		users: [],
+		data: {
+			media: [],
+			users: [],
+			documents: [],
+		},
 	});
 	expect(requiredValidate).toBe(null);
 });
@@ -277,8 +288,11 @@ test("fail to validate field - checkbox", async () => {
 			localeCode: "en",
 		},
 		instance: CheckboxCollection,
-		media: [],
-		users: [],
+		data: {
+			media: [],
+			users: [],
+			documents: [],
+		},
 	});
 	expect(standardValidate).toEqual({
 		key: "standard_checkbox",
@@ -299,8 +313,11 @@ test("fail to validate field - checkbox", async () => {
 			localeCode: "en",
 		},
 		instance: CheckboxCollection,
-		media: [],
-		users: [],
+		data: {
+			media: [],
+			users: [],
+			documents: [],
+		},
 	});
 	expect(requiredValidate).toEqual({
 		key: "required_chekbox",
@@ -336,8 +353,11 @@ test("successfully validate field - colour", async () => {
 			localeCode: "en",
 		},
 		instance: ColourCollection,
-		media: [],
-		users: [],
+		data: {
+			media: [],
+			users: [],
+			documents: [],
+		},
 	});
 	expect(standardValidate).toBe(null);
 
@@ -351,8 +371,11 @@ test("successfully validate field - colour", async () => {
 			localeCode: "en",
 		},
 		instance: ColourCollection,
-		media: [],
-		users: [],
+		data: {
+			media: [],
+			users: [],
+			documents: [],
+		},
 	});
 	expect(requiredValidate).toBe(null);
 });
@@ -367,8 +390,11 @@ test("fail to validate field - colour", async () => {
 			localeCode: "en",
 		},
 		instance: ColourCollection,
-		media: [],
-		users: [],
+		data: {
+			media: [],
+			users: [],
+			documents: [],
+		},
 	});
 	expect(standardValidate).toEqual({
 		key: "standard_colour",
@@ -389,8 +415,11 @@ test("fail to validate field - colour", async () => {
 				localeCode: "en",
 			},
 			instance: ColourCollection,
-			media: [],
-			users: [],
+			data: {
+				media: [],
+				users: [],
+				documents: [],
+			},
 		}),
 		null: validateField({
 			brickId: CONSTANTS.collectionBrickId,
@@ -401,8 +430,11 @@ test("fail to validate field - colour", async () => {
 				localeCode: "en",
 			},
 			instance: ColourCollection,
-			media: [],
-			users: [],
+			data: {
+				media: [],
+				users: [],
+				documents: [],
+			},
 		}),
 		undefined: validateField({
 			brickId: CONSTANTS.collectionBrickId,
@@ -413,8 +445,11 @@ test("fail to validate field - colour", async () => {
 				localeCode: "en",
 			},
 			instance: ColourCollection,
-			media: [],
-			users: [],
+			data: {
+				media: [],
+				users: [],
+				documents: [],
+			},
 		}),
 	};
 	expect(requiredValidate).toEqual({
@@ -468,8 +503,11 @@ test("successfully validate field - datetime", async () => {
 				localeCode: "en",
 			},
 			instance: DateTimeCollection,
-			media: [],
-			users: [],
+			data: {
+				media: [],
+				users: [],
+				documents: [],
+			},
 		}),
 		number: validateField({
 			brickId: CONSTANTS.collectionBrickId,
@@ -480,8 +518,11 @@ test("successfully validate field - datetime", async () => {
 				localeCode: "en",
 			},
 			instance: DateTimeCollection,
-			media: [],
-			users: [],
+			data: {
+				media: [],
+				users: [],
+				documents: [],
+			},
 		}),
 		date: validateField({
 			brickId: CONSTANTS.collectionBrickId,
@@ -492,8 +533,11 @@ test("successfully validate field - datetime", async () => {
 				localeCode: "en",
 			},
 			instance: DateTimeCollection,
-			media: [],
-			users: [],
+			data: {
+				media: [],
+				users: [],
+				documents: [],
+			},
 		}),
 	};
 	expect(standardValidate).toEqual({
@@ -512,8 +556,11 @@ test("successfully validate field - datetime", async () => {
 			localeCode: "en",
 		},
 		instance: DateTimeCollection,
-		media: [],
-		users: [],
+		data: {
+			media: [],
+			users: [],
+			documents: [],
+		},
 	});
 	expect(requiredValidate).toBe(null);
 });
@@ -529,8 +576,11 @@ test("fail to validate field - datetime", async () => {
 				localeCode: "en",
 			},
 			instance: DateTimeCollection,
-			media: [],
-			users: [],
+			data: {
+				media: [],
+				users: [],
+				documents: [],
+			},
 		}),
 		string: validateField({
 			brickId: CONSTANTS.collectionBrickId,
@@ -541,8 +591,11 @@ test("fail to validate field - datetime", async () => {
 				localeCode: "en",
 			},
 			instance: DateTimeCollection,
-			media: [],
-			users: [],
+			data: {
+				media: [],
+				users: [],
+				documents: [],
+			},
 		}),
 		invalid: validateField({
 			brickId: CONSTANTS.collectionBrickId,
@@ -553,8 +606,11 @@ test("fail to validate field - datetime", async () => {
 				localeCode: "en",
 			},
 			instance: DateTimeCollection,
-			media: [],
-			users: [],
+			data: {
+				media: [],
+				users: [],
+				documents: [],
+			},
 		}),
 	};
 	expect(standardValidate).toEqual({
@@ -592,8 +648,11 @@ test("fail to validate field - datetime", async () => {
 			localeCode: "en",
 		},
 		instance: DateTimeCollection,
-		media: [],
-		users: [],
+		data: {
+			media: [],
+			users: [],
+			documents: [],
+		},
 	});
 	expect(requiredValidate).toEqual({
 		key: "required_datetime",
@@ -639,8 +698,11 @@ test("successfully validate field - json", async () => {
 			localeCode: "en",
 		},
 		instance: JSONCollection,
-		media: [],
-		users: [],
+		data: {
+			media: [],
+			users: [],
+			documents: [],
+		},
 	});
 	expect(standardValidate).toBe(null);
 
@@ -656,8 +718,11 @@ test("successfully validate field - json", async () => {
 			localeCode: "en",
 		},
 		instance: JSONCollection,
-		media: [],
-		users: [],
+		data: {
+			media: [],
+			users: [],
+			documents: [],
+		},
 	});
 	expect(requiredValidate).toBe(null);
 
@@ -674,8 +739,11 @@ test("successfully validate field - json", async () => {
 			localeCode: "en",
 		},
 		instance: JSONCollection,
-		media: [],
-		users: [],
+		data: {
+			media: [],
+			users: [],
+			documents: [],
+		},
 	});
 	expect(zodValidate).toBe(null);
 });
@@ -690,8 +758,11 @@ test("fail to validate field - json", async () => {
 			localeCode: "en",
 		},
 		instance: JSONCollection,
-		media: [],
-		users: [],
+		data: {
+			media: [],
+			users: [],
+			documents: [],
+		},
 	});
 	expect(standardValidate).toEqual({
 		key: "standard_json",
@@ -711,8 +782,11 @@ test("fail to validate field - json", async () => {
 			localeCode: "en",
 		},
 		instance: JSONCollection,
-		media: [],
-		users: [],
+		data: {
+			media: [],
+			users: [],
+			documents: [],
+		},
 	});
 	expect(requiredValidate).toEqual({
 		key: "required_json",
@@ -735,8 +809,11 @@ test("fail to validate field - json", async () => {
 			localeCode: "en",
 		},
 		instance: JSONCollection,
-		media: [],
-		users: [],
+		data: {
+			media: [],
+			users: [],
+			documents: [],
+		},
 	});
 	expect(zodValidate).toEqual({
 		key: "zod_json",
@@ -776,8 +853,11 @@ test("successfully validate field - link", async () => {
 			localeCode: "en",
 		},
 		instance: LinkCollection,
-		media: [],
-		users: [],
+		data: {
+			media: [],
+			users: [],
+			documents: [],
+		},
 	});
 	expect(standardValidate).toBe(null);
 
@@ -795,8 +875,11 @@ test("successfully validate field - link", async () => {
 			localeCode: "en",
 		},
 		instance: LinkCollection,
-		media: [],
-		users: [],
+		data: {
+			media: [],
+			users: [],
+			documents: [],
+		},
 	});
 	expect(requiredValidate).toBe(null);
 });
@@ -816,8 +899,11 @@ test("fail to validate field - link", async () => {
 				localeCode: "en",
 			},
 			instance: LinkCollection,
-			media: [],
-			users: [],
+			data: {
+				media: [],
+				users: [],
+				documents: [],
+			},
 		}),
 		target: validateField({
 			brickId: CONSTANTS.collectionBrickId,
@@ -832,8 +918,11 @@ test("fail to validate field - link", async () => {
 				localeCode: "en",
 			},
 			instance: LinkCollection,
-			media: [],
-			users: [],
+			data: {
+				media: [],
+				users: [],
+				documents: [],
+			},
 		}),
 		label: validateField({
 			brickId: CONSTANTS.collectionBrickId,
@@ -848,8 +937,11 @@ test("fail to validate field - link", async () => {
 				localeCode: "en",
 			},
 			instance: LinkCollection,
-			media: [],
-			users: [],
+			data: {
+				media: [],
+				users: [],
+				documents: [],
+			},
 		}),
 	};
 	expect(standardValidate).toEqual({
@@ -888,8 +980,11 @@ test("fail to validate field - link", async () => {
 			localeCode: "en",
 		},
 		instance: LinkCollection,
-		media: [],
-		users: [],
+		data: {
+			media: [],
+			users: [],
+			documents: [],
+		},
 	});
 	expect(requiredValidate).toEqual({
 		key: "required_link",
@@ -964,16 +1059,19 @@ test("successfully validate field - media", async () => {
 			localeCode: "en",
 		},
 		instance: MediaCollection,
-		media: [
-			{
-				id: 1,
-				type: "image",
-				file_extension: "png",
-				width: 150,
-				height: 150,
-			},
-		],
-		users: [],
+		data: {
+			media: [
+				{
+					id: 1,
+					type: "image",
+					file_extension: "png",
+					width: 150,
+					height: 150,
+				},
+			],
+			users: [],
+			documents: [],
+		},
 	});
 	expect(standardValidate).toBe(null);
 
@@ -987,16 +1085,19 @@ test("successfully validate field - media", async () => {
 			localeCode: "en",
 		},
 		instance: MediaCollection,
-		media: [
-			{
-				id: 1,
-				type: "image",
-				file_extension: "png",
-				width: 150,
-				height: 150,
-			},
-		],
-		users: [],
+		data: {
+			media: [
+				{
+					id: 1,
+					type: "image",
+					file_extension: "png",
+					width: 150,
+					height: 150,
+				},
+			],
+			users: [],
+			documents: [],
+		},
 	});
 	expect(requiredValidate).toBe(null);
 
@@ -1010,16 +1111,19 @@ test("successfully validate field - media", async () => {
 			localeCode: "en",
 		},
 		instance: MediaCollection,
-		media: [
-			{
-				id: 1,
-				type: "image",
-				file_extension: "png",
-				width: 150,
-				height: 150,
-			},
-		],
-		users: [],
+		data: {
+			media: [
+				{
+					id: 1,
+					type: "image",
+					file_extension: "png",
+					width: 150,
+					height: 150,
+				},
+			],
+			users: [],
+			documents: [],
+		},
 	});
 	expect(minWidthValidate).toBe(null);
 
@@ -1033,16 +1137,19 @@ test("successfully validate field - media", async () => {
 			localeCode: "en",
 		},
 		instance: MediaCollection,
-		media: [
-			{
-				id: 1,
-				type: "image",
-				file_extension: "png",
-				width: 150,
-				height: 150,
-			},
-		],
-		users: [],
+		data: {
+			media: [
+				{
+					id: 1,
+					type: "image",
+					file_extension: "png",
+					width: 150,
+					height: 150,
+				},
+			],
+			users: [],
+			documents: [],
+		},
 	});
 	expect(maxWidthValidate).toBe(null);
 
@@ -1056,16 +1163,19 @@ test("successfully validate field - media", async () => {
 			localeCode: "en",
 		},
 		instance: MediaCollection,
-		media: [
-			{
-				id: 1,
-				type: "image",
-				file_extension: "png",
-				width: 150,
-				height: 150,
-			},
-		],
-		users: [],
+		data: {
+			media: [
+				{
+					id: 1,
+					type: "image",
+					file_extension: "png",
+					width: 150,
+					height: 150,
+				},
+			],
+			users: [],
+			documents: [],
+		},
 	});
 	expect(minHeightValidate).toBe(null);
 
@@ -1079,16 +1189,19 @@ test("successfully validate field - media", async () => {
 			localeCode: "en",
 		},
 		instance: MediaCollection,
-		media: [
-			{
-				id: 1,
-				type: "image",
-				file_extension: "png",
-				width: 150,
-				height: 150,
-			},
-		],
-		users: [],
+		data: {
+			media: [
+				{
+					id: 1,
+					type: "image",
+					file_extension: "png",
+					width: 150,
+					height: 150,
+				},
+			],
+			users: [],
+			documents: [],
+		},
 	});
 	expect(maxHeightValidate).toBe(null);
 
@@ -1102,16 +1215,19 @@ test("successfully validate field - media", async () => {
 			localeCode: "en",
 		},
 		instance: MediaCollection,
-		media: [
-			{
-				id: 1,
-				type: "image",
-				file_extension: "png",
-				width: 150,
-				height: 150,
-			},
-		],
-		users: [],
+		data: {
+			media: [
+				{
+					id: 1,
+					type: "image",
+					file_extension: "png",
+					width: 150,
+					height: 150,
+				},
+			],
+			users: [],
+			documents: [],
+		},
 	});
 	expect(typeValidate).toBe(null);
 
@@ -1125,16 +1241,19 @@ test("successfully validate field - media", async () => {
 			localeCode: "en",
 		},
 		instance: MediaCollection,
-		media: [
-			{
-				id: 1,
-				type: "image",
-				file_extension: "png",
-				width: 150,
-				height: 150,
-			},
-		],
-		users: [],
+		data: {
+			media: [
+				{
+					id: 1,
+					type: "image",
+					file_extension: "png",
+					width: 150,
+					height: 150,
+				},
+			],
+			users: [],
+			documents: [],
+		},
 	});
 	expect(extensionValidate).toBe(null);
 });
@@ -1150,8 +1269,11 @@ test("fail to validate field - media", async () => {
 				localeCode: "en",
 			},
 			instance: MediaCollection,
-			media: [],
-			users: [],
+			data: {
+				media: [],
+				users: [],
+				documents: [],
+			},
 		}),
 		null: validateField({
 			brickId: CONSTANTS.collectionBrickId,
@@ -1162,8 +1284,11 @@ test("fail to validate field - media", async () => {
 				localeCode: "en",
 			},
 			instance: MediaCollection,
-			media: [],
-			users: [],
+			data: {
+				media: [],
+				users: [],
+				documents: [],
+			},
 		}),
 	};
 	expect(requiredValidate).toEqual({
@@ -1193,16 +1318,19 @@ test("fail to validate field - media", async () => {
 			localeCode: "en",
 		},
 		instance: MediaCollection,
-		media: [
-			{
-				id: 1,
-				type: "image",
-				file_extension: "png",
-				width: 50,
-				height: 150,
-			},
-		],
-		users: [],
+		data: {
+			media: [
+				{
+					id: 1,
+					type: "image",
+					file_extension: "png",
+					width: 50,
+					height: 150,
+				},
+			],
+			users: [],
+			documents: [],
+		},
 	});
 	expect(minWidthValidate).toEqual({
 		key: "min_width_media",
@@ -1224,16 +1352,19 @@ test("fail to validate field - media", async () => {
 			localeCode: "en",
 		},
 		instance: MediaCollection,
-		media: [
-			{
-				id: 1,
-				type: "image",
-				file_extension: "png",
-				width: 1000,
-				height: 150,
-			},
-		],
-		users: [],
+		data: {
+			media: [
+				{
+					id: 1,
+					type: "image",
+					file_extension: "png",
+					width: 1000,
+					height: 150,
+				},
+			],
+			users: [],
+			documents: [],
+		},
 	});
 	expect(maxWidthValidate).toEqual({
 		key: "max_width_media",
@@ -1255,16 +1386,19 @@ test("fail to validate field - media", async () => {
 			localeCode: "en",
 		},
 		instance: MediaCollection,
-		media: [
-			{
-				id: 1,
-				type: "image",
-				file_extension: "png",
-				width: 150,
-				height: 50,
-			},
-		],
-		users: [],
+		data: {
+			media: [
+				{
+					id: 1,
+					type: "image",
+					file_extension: "png",
+					width: 150,
+					height: 50,
+				},
+			],
+			users: [],
+			documents: [],
+		},
 	});
 	expect(minHeightValidate).toEqual({
 		key: "min_height_media",
@@ -1286,16 +1420,19 @@ test("fail to validate field - media", async () => {
 			localeCode: "en",
 		},
 		instance: MediaCollection,
-		media: [
-			{
-				id: 1,
-				type: "image",
-				file_extension: "png",
-				width: 150,
-				height: 1000,
-			},
-		],
-		users: [],
+		data: {
+			media: [
+				{
+					id: 1,
+					type: "image",
+					file_extension: "png",
+					width: 150,
+					height: 1000,
+				},
+			],
+			users: [],
+			documents: [],
+		},
 	});
 	expect(maxHeightValidate).toEqual({
 		key: "max_height_media",
@@ -1317,16 +1454,19 @@ test("fail to validate field - media", async () => {
 			localeCode: "en",
 		},
 		instance: MediaCollection,
-		media: [
-			{
-				id: 1,
-				type: "document",
-				file_extension: "pdf",
-				width: null,
-				height: null,
-			},
-		],
-		users: [],
+		data: {
+			media: [
+				{
+					id: 1,
+					type: "document",
+					file_extension: "pdf",
+					width: null,
+					height: null,
+				},
+			],
+			users: [],
+			documents: [],
+		},
 	});
 	expect(typeValidate).toEqual({
 		key: "type_media",
@@ -1348,16 +1488,19 @@ test("fail to validate field - media", async () => {
 			localeCode: "en",
 		},
 		instance: MediaCollection,
-		media: [
-			{
-				id: 1,
-				type: "image",
-				file_extension: "jpg",
-				width: 150,
-				height: 150,
-			},
-		],
-		users: [],
+		data: {
+			media: [
+				{
+					id: 1,
+					type: "image",
+					file_extension: "jpg",
+					width: 150,
+					height: 150,
+				},
+			],
+			users: [],
+			documents: [],
+		},
 	});
 	expect(extensionValidate).toEqual({
 		key: "extension_media",
@@ -1400,8 +1543,11 @@ test("successfully validate field - number", async () => {
 			localeCode: "en",
 		},
 		instance: NumberCollection,
-		media: [],
-		users: [],
+		data: {
+			media: [],
+			users: [],
+			documents: [],
+		},
 	});
 	expect(standardValidate).toBe(null);
 
@@ -1415,8 +1561,11 @@ test("successfully validate field - number", async () => {
 			localeCode: "en",
 		},
 		instance: NumberCollection,
-		media: [],
-		users: [],
+		data: {
+			media: [],
+			users: [],
+			documents: [],
+		},
 	});
 	expect(requiredValidate).toBe(null);
 
@@ -1430,8 +1579,11 @@ test("successfully validate field - number", async () => {
 			localeCode: "en",
 		},
 		instance: NumberCollection,
-		media: [],
-		users: [],
+		data: {
+			media: [],
+			users: [],
+			documents: [],
+		},
 	});
 	expect(zodValidate).toBe(null);
 });
@@ -1446,8 +1598,11 @@ test("fail to validate field - number", async () => {
 			localeCode: "en",
 		},
 		instance: NumberCollection,
-		media: [],
-		users: [],
+		data: {
+			media: [],
+			users: [],
+			documents: [],
+		},
 	});
 	expect(standardValidate).toEqual({
 		key: "standard_number",
@@ -1467,8 +1622,11 @@ test("fail to validate field - number", async () => {
 			localeCode: "en",
 		},
 		instance: NumberCollection,
-		media: [],
-		users: [],
+		data: {
+			media: [],
+			users: [],
+			documents: [],
+		},
 	});
 	expect(requiredValidate).toEqual({
 		key: "required_number",
@@ -1488,8 +1646,11 @@ test("fail to validate field - number", async () => {
 			localeCode: "en",
 		},
 		instance: NumberCollection,
-		media: [],
-		users: [],
+		data: {
+			media: [],
+			users: [],
+			documents: [],
+		},
 	});
 	expect(zodValidate).toEqual({
 		key: "min_number",
@@ -1529,8 +1690,11 @@ test("successfully validate field - select", async () => {
 			localeCode: "en",
 		},
 		instance: SelectCollection,
-		media: [],
-		users: [],
+		data: {
+			media: [],
+			users: [],
+			documents: [],
+		},
 	});
 	expect(standardValidate).toBe(null);
 
@@ -1544,8 +1708,11 @@ test("successfully validate field - select", async () => {
 			localeCode: "en",
 		},
 		instance: SelectCollection,
-		media: [],
-		users: [],
+		data: {
+			media: [],
+			users: [],
+			documents: [],
+		},
 	});
 	expect(requiredValidate).toBe(null);
 });
@@ -1561,8 +1728,11 @@ test("fail to validate field - select", async () => {
 				localeCode: "en",
 			},
 			instance: SelectCollection,
-			media: [],
-			users: [],
+			data: {
+				media: [],
+				users: [],
+				documents: [],
+			},
 		}),
 		number: validateField({
 			brickId: CONSTANTS.collectionBrickId,
@@ -1573,8 +1743,11 @@ test("fail to validate field - select", async () => {
 				localeCode: "en",
 			},
 			instance: SelectCollection,
-			media: [],
-			users: [],
+			data: {
+				media: [],
+				users: [],
+				documents: [],
+			},
 		}),
 	};
 	expect(standardValidate).toEqual({
@@ -1604,8 +1777,11 @@ test("fail to validate field - select", async () => {
 			localeCode: "en",
 		},
 		instance: SelectCollection,
-		media: [],
-		users: [],
+		data: {
+			media: [],
+			users: [],
+			documents: [],
+		},
 	});
 	expect(requiredValidate).toEqual({
 		key: "required_select",
@@ -1647,8 +1823,11 @@ test("successfully validate field - text", async () => {
 			localeCode: "en",
 		},
 		instance: TextCollection,
-		media: [],
-		users: [],
+		data: {
+			media: [],
+			users: [],
+			documents: [],
+		},
 	});
 	expect(standardValidate).toBe(null);
 
@@ -1662,8 +1841,11 @@ test("successfully validate field - text", async () => {
 			localeCode: "en",
 		},
 		instance: TextCollection,
-		media: [],
-		users: [],
+		data: {
+			media: [],
+			users: [],
+			documents: [],
+		},
 	});
 	expect(requiredValidate).toBe(null);
 
@@ -1677,8 +1859,11 @@ test("successfully validate field - text", async () => {
 			localeCode: "en",
 		},
 		instance: TextCollection,
-		media: [],
-		users: [],
+		data: {
+			media: [],
+			users: [],
+			documents: [],
+		},
 	});
 	expect(minLengthValidate).toBe(null);
 });
@@ -1693,8 +1878,11 @@ test("fail to validate field - text", async () => {
 			localeCode: "en",
 		},
 		instance: TextCollection,
-		media: [],
-		users: [],
+		data: {
+			media: [],
+			users: [],
+			documents: [],
+		},
 	});
 	expect(standardValidate).toEqual({
 		key: "standard_text",
@@ -1715,8 +1903,11 @@ test("fail to validate field - text", async () => {
 				localeCode: "en",
 			},
 			instance: TextCollection,
-			media: [],
-			users: [],
+			data: {
+				media: [],
+				users: [],
+				documents: [],
+			},
 		}),
 		null: validateField({
 			brickId: CONSTANTS.collectionBrickId,
@@ -1727,8 +1918,11 @@ test("fail to validate field - text", async () => {
 				localeCode: "en",
 			},
 			instance: TextCollection,
-			media: [],
-			users: [],
+			data: {
+				media: [],
+				users: [],
+				documents: [],
+			},
 		}),
 		empty: validateField({
 			brickId: CONSTANTS.collectionBrickId,
@@ -1739,8 +1933,11 @@ test("fail to validate field - text", async () => {
 				localeCode: "en",
 			},
 			instance: TextCollection,
-			media: [],
-			users: [],
+			data: {
+				media: [],
+				users: [],
+				documents: [],
+			},
 		}),
 	};
 	expect(requiredValidate).toEqual({
@@ -1777,8 +1974,11 @@ test("fail to validate field - text", async () => {
 			localeCode: "en",
 		},
 		instance: TextCollection,
-		media: [],
-		users: [],
+		data: {
+			media: [],
+			users: [],
+			documents: [],
+		},
 	});
 	expect(minLengthValidate).toEqual({
 		key: "min_length_text",
@@ -1819,8 +2019,11 @@ test("successfully validate field - textarea", async () => {
 			localeCode: "en",
 		},
 		instance: TextareaCollection,
-		media: [],
-		users: [],
+		data: {
+			media: [],
+			users: [],
+			documents: [],
+		},
 	});
 	expect(standardValidate).toBe(null);
 
@@ -1834,8 +2037,11 @@ test("successfully validate field - textarea", async () => {
 			localeCode: "en",
 		},
 		instance: TextareaCollection,
-		media: [],
-		users: [],
+		data: {
+			media: [],
+			users: [],
+			documents: [],
+		},
 	});
 	expect(requiredValidate).toBe(null);
 
@@ -1849,8 +2055,11 @@ test("successfully validate field - textarea", async () => {
 			localeCode: "en",
 		},
 		instance: TextareaCollection,
-		media: [],
-		users: [],
+		data: {
+			media: [],
+			users: [],
+			documents: [],
+		},
 	});
 	expect(minLengthValidate).toBe(null);
 });
@@ -1865,8 +2074,11 @@ test("fail to validate field - textarea", async () => {
 			localeCode: "en",
 		},
 		instance: TextareaCollection,
-		media: [],
-		users: [],
+		data: {
+			media: [],
+			users: [],
+			documents: [],
+		},
 	});
 	expect(standardValidate).toEqual({
 		key: "standard_textarea",
@@ -1886,8 +2098,11 @@ test("fail to validate field - textarea", async () => {
 			localeCode: "en",
 		},
 		instance: TextareaCollection,
-		media: [],
-		users: [],
+		data: {
+			media: [],
+			users: [],
+			documents: [],
+		},
 	});
 	expect(requiredValidate).toEqual({
 		key: "required_textarea",
@@ -1907,8 +2122,11 @@ test("fail to validate field - textarea", async () => {
 			localeCode: "en",
 		},
 		instance: TextareaCollection,
-		media: [],
-		users: [],
+		data: {
+			media: [],
+			users: [],
+			documents: [],
+		},
 	});
 	expect(minLengthValidate).toEqual({
 		key: "min_length_textarea",
@@ -1944,16 +2162,19 @@ test("successfully validate field - user", async () => {
 			localeCode: "en",
 		},
 		instance: UserCollection,
-		media: [],
-		users: [
-			{
-				id: 1,
-				email: "test@test.com",
-				first_name: "Test",
-				last_name: "User",
-				username: "test-user",
-			},
-		],
+		data: {
+			media: [],
+			users: [
+				{
+					id: 1,
+					email: "test@test.com",
+					first_name: "Test",
+					last_name: "User",
+					username: "test-user",
+				},
+			],
+			documents: [],
+		},
 	});
 	expect(standardValidate).toBe(null);
 
@@ -1967,16 +2188,19 @@ test("successfully validate field - user", async () => {
 			localeCode: "en",
 		},
 		instance: UserCollection,
-		media: [],
-		users: [
-			{
-				id: 1,
-				email: "test@test.com",
-				first_name: "Test",
-				last_name: "User",
-				username: "test-user",
-			},
-		],
+		data: {
+			media: [],
+			users: [
+				{
+					id: 1,
+					email: "test@test.com",
+					first_name: "Test",
+					last_name: "User",
+					username: "test-user",
+				},
+			],
+			documents: [],
+		},
 	});
 	expect(requiredValidate).toBe(null);
 });
@@ -1992,8 +2216,11 @@ test("fail to validate field - user", async () => {
 				localeCode: "en",
 			},
 			instance: UserCollection,
-			media: [],
-			users: [],
+			data: {
+				media: [],
+				users: [],
+				documents: [],
+			},
 		}),
 		null: validateField({
 			brickId: CONSTANTS.collectionBrickId,
@@ -2004,8 +2231,11 @@ test("fail to validate field - user", async () => {
 				localeCode: "en",
 			},
 			instance: UserCollection,
-			media: [],
-			users: [],
+			data: {
+				media: [],
+				users: [],
+				documents: [],
+			},
 		}),
 	};
 	expect(requiredValidate).toEqual({
@@ -2056,8 +2286,11 @@ test("successfully validate field - wysiwyg", async () => {
 			localeCode: "en",
 		},
 		instance: WysiwygCollection,
-		media: [],
-		users: [],
+		data: {
+			media: [],
+			users: [],
+			documents: [],
+		},
 	});
 	expect(standardValidate).toBe(null);
 
@@ -2071,8 +2304,11 @@ test("successfully validate field - wysiwyg", async () => {
 			localeCode: "en",
 		},
 		instance: WysiwygCollection,
-		media: [],
-		users: [],
+		data: {
+			media: [],
+			users: [],
+			documents: [],
+		},
 	});
 	expect(requiredValidate).toBe(null);
 
@@ -2086,8 +2322,11 @@ test("successfully validate field - wysiwyg", async () => {
 			localeCode: "en",
 		},
 		instance: WysiwygCollection,
-		media: [],
-		users: [],
+		data: {
+			media: [],
+			users: [],
+			documents: [],
+		},
 	});
 	expect(minLengthValidate).toBe(null);
 });
@@ -2102,8 +2341,11 @@ test("fail to validate field - wysiwyg", async () => {
 			localeCode: "en",
 		},
 		instance: WysiwygCollection,
-		media: [],
-		users: [],
+		data: {
+			media: [],
+			users: [],
+			documents: [],
+		},
 	});
 	expect(standardValidate).toEqual({
 		key: "standard_wysiwyg",
@@ -2124,8 +2366,11 @@ test("fail to validate field - wysiwyg", async () => {
 				localeCode: "en",
 			},
 			instance: WysiwygCollection,
-			media: [],
-			users: [],
+			data: {
+				media: [],
+				users: [],
+				documents: [],
+			},
 		}),
 		null: validateField({
 			brickId: CONSTANTS.collectionBrickId,
@@ -2136,8 +2381,11 @@ test("fail to validate field - wysiwyg", async () => {
 				localeCode: "en",
 			},
 			instance: WysiwygCollection,
-			media: [],
-			users: [],
+			data: {
+				media: [],
+				users: [],
+				documents: [],
+			},
 		}),
 	};
 	expect(requiredValidate).toEqual({
@@ -2167,8 +2415,11 @@ test("fail to validate field - wysiwyg", async () => {
 			localeCode: "en",
 		},
 		instance: WysiwygCollection,
-		media: [],
-		users: [],
+		data: {
+			media: [],
+			users: [],
+			documents: [],
+		},
 	});
 	expect(minLengthValidate).toEqual({
 		key: "min_length_wysiwyg",

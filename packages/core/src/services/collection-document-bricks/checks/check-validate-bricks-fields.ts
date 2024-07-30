@@ -6,6 +6,7 @@ import type {
 	FieldTypes,
 	MediaReferenceData,
 	UserReferenceData,
+	DocumentReferenceData,
 } from "../../../libs/custom-fields/types.js";
 import type { FieldInsertItem } from "../helpers/flatten-fields.js";
 import type BrickBuilder from "../../../libs/builders/brick-builder/index.js";
@@ -30,9 +31,10 @@ const checkValidateBricksFields: ServiceFn<
 			return brick.fields || [];
 		}) || [];
 
-	const [media, users] = await Promise.all([
+	const [media, users, documents] = await Promise.all([
 		getAllMedia(context, flatFields),
 		getAllUsers(context, flatFields),
+		getAllDocuments(context, flatFields),
 	]);
 
 	const errors: FieldErrors[] = [];
@@ -43,8 +45,11 @@ const checkValidateBricksFields: ServiceFn<
 			...validateBrick({
 				brick: b,
 				collection: data.collection,
-				media: media,
-				users: users,
+				data: {
+					media: media,
+					users: users,
+					documents: documents,
+				},
 			}),
 		);
 	}
@@ -75,8 +80,11 @@ const checkValidateBricksFields: ServiceFn<
 export const validateBrick = (props: {
 	brick: BrickInsertItem;
 	collection: CollectionBuilder;
-	media: Awaited<ReturnType<typeof getAllMedia>>;
-	users: Awaited<ReturnType<typeof getAllUsers>>;
+	data: {
+		media: Awaited<ReturnType<typeof getAllMedia>>;
+		users: Awaited<ReturnType<typeof getAllUsers>>;
+		documents: Awaited<ReturnType<typeof getAllDocuments>>;
+	};
 }): FieldErrors[] => {
 	const errors: FieldErrors[] = [];
 
@@ -118,8 +126,7 @@ export const validateBrick = (props: {
 			field: field,
 			brickId: props.brick.id,
 			instance: instance,
-			media: props.media,
-			users: props.users,
+			data: props.data,
 		});
 		if (fieldRes === null) continue;
 		errors.push(fieldRes);
@@ -131,8 +138,11 @@ export const validateField = (props: {
 	field: FieldInsertItem;
 	brickId: number | string;
 	instance: CollectionBuilder | BrickBuilder;
-	media: Awaited<ReturnType<typeof getAllMedia>>;
-	users: Awaited<ReturnType<typeof getAllUsers>>;
+	data: {
+		media: Awaited<ReturnType<typeof getAllMedia>>;
+		users: Awaited<ReturnType<typeof getAllUsers>>;
+		documents: Awaited<ReturnType<typeof getAllDocuments>>;
+	};
 }): FieldErrors | null => {
 	const fieldInstance = props.instance.fields.get(props.field.key);
 	if (!fieldInstance) {
@@ -155,7 +165,9 @@ export const validateField = (props: {
 
 	switch (props.field.type) {
 		case "media": {
-			const media = props.media.find((m) => m.id === props.field.value);
+			const media = props.data.media.find(
+				(m) => m.id === props.field.value,
+			);
 			if (media) {
 				fieldValRes = fieldInstance.validate({
 					type: props.field.type,
@@ -167,24 +179,19 @@ export const validateField = (props: {
 						type: media.type,
 					} satisfies MediaReferenceData,
 				});
-			} else if (props.field.value !== undefined) {
-				// if the media doesnt exist, we treat the value as null
-				fieldValRes = fieldInstance.validate({
-					type: props.field.type,
-					value: null,
-					relationData: undefined,
-				});
 			} else {
 				fieldValRes = fieldInstance.validate({
 					type: props.field.type,
-					value: undefined,
+					value: props.field.value,
 					relationData: undefined,
 				});
 			}
 			break;
 		}
 		case "user": {
-			const user = props.users.find((u) => u.id === props.field.value);
+			const user = props.data.users.find(
+				(u) => u.id === props.field.value,
+			);
 			if (user) {
 				fieldValRes = fieldInstance.validate({
 					type: props.field.type,
@@ -196,17 +203,32 @@ export const validateField = (props: {
 						lastName: user.last_name,
 					} satisfies UserReferenceData,
 				});
-			} else if (props.field.value !== undefined) {
-				// if the user doesnt exist, we treat the value as null
+			} else {
 				fieldValRes = fieldInstance.validate({
 					type: props.field.type,
-					value: null,
+					value: props.field.value,
 					relationData: undefined,
+				});
+			}
+			break;
+		}
+		case "document": {
+			const document = props.data.documents.find(
+				(d) => d.id === props.field.value,
+			);
+			if (document) {
+				fieldValRes = fieldInstance.validate({
+					type: props.field.type,
+					value: props.field.value,
+					relationData: {
+						id: document.id,
+						collectionKey: document.collection_key,
+					} satisfies DocumentReferenceData,
 				});
 			} else {
 				fieldValRes = fieldInstance.validate({
 					type: props.field.type,
-					value: undefined,
+					value: props.field.value,
 					relationData: undefined,
 				});
 			}
@@ -281,6 +303,34 @@ const getAllUsers = async (
 
 		return await UsersRepo.selectMultiple({
 			select: ["id", "username", "email", "first_name", "last_name"],
+			where: [
+				{
+					key: "id",
+					operator: "in",
+					value: ids,
+				},
+			],
+		});
+	} catch (err) {
+		return [];
+	}
+};
+
+const getAllDocuments = async (
+	context: ServiceContext,
+	fields: FieldInsertItem[],
+) => {
+	try {
+		const ids = allFieldIdsOfType<number>(fields, "document");
+		if (ids.length === 0) return [];
+
+		const DocumentsRepo = Repository.get(
+			"collection-documents",
+			context.db,
+		);
+
+		return await DocumentsRepo.selectMultiple({
+			select: ["id", "collection_key"],
 			where: [
 				{
 					key: "id",
