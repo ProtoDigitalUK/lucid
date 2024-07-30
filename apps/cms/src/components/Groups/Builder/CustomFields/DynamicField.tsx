@@ -178,6 +178,21 @@ export const DynamicField: Component<DynamicFieldProps> = (props) => {
 								}}
 							/>
 						</Match>
+						<Match when={fieldConfig().type === "document"}>
+							<CustomFields.DocumentField
+								state={{
+									brickIndex: props.state.brickIndex,
+									fieldConfig:
+										fieldConfig() as CFConfig<"document">,
+									fieldData: fieldData(),
+									groupId: props.state.groupId,
+									repeaterKey: props.state.repeaterKey,
+									contentLocale: contentLocale(),
+									fieldError: fieldError(),
+									altLocaleError: altLocaleError(),
+								}}
+							/>
+						</Match>
 						<Match when={fieldConfig().type === "number"}>
 							<CustomFields.InputField
 								type="number"

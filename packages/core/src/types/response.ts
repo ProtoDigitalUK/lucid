@@ -245,6 +245,10 @@ export interface MediaMeta {
 	type: MediaType | null;
 }
 
+export interface DocumentMeta {
+	id: number | null;
+}
+
 export interface UserMeta {
 	username: string | null;
 	email: string | null;

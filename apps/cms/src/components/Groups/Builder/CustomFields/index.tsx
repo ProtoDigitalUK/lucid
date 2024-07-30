@@ -11,6 +11,7 @@ import { TextareaField } from "./TextareaField";
 import { WYSIWYGField } from "./WYSIWYGField";
 import { UserField } from "./UserField";
 import { TabField } from "./TabField";
+import { DocumentField } from "./DocumentField";
 
 const CustomFields = {
 	DynamicField,
@@ -26,6 +27,7 @@ const CustomFields = {
 	WYSIWYGField,
 	UserField,
 	TabField,
+	DocumentField,
 };
 
 export default CustomFields;

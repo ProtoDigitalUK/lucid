@@ -95,6 +95,7 @@ export default class CollectionDocumentBricksRepo {
 								"lucid_collection_document_fields.bool_value",
 								"lucid_collection_document_fields.json_value",
 								"lucid_collection_document_fields.media_id",
+								"lucid_collection_document_fields.document_id",
 								"lucid_collection_document_fields.collection_document_id",
 								// User fields
 								"lucid_users.id as user_id",
