@@ -69,13 +69,15 @@ class UserCustomField extends CustomField<"user"> {
 			userId: props.item.value,
 		} satisfies CFInsertItem<"user">;
 	}
-	cfSpecificValidation(value: unknown, relationData: UserReferenceData) {
+	cfSpecificValidation(value: unknown, relationData?: UserReferenceData[]) {
 		const valueSchema = z.number();
 
 		const valueValidate = zodSafeParse(value, valueSchema);
 		if (!valueValidate.valid) return valueValidate;
 
-		if (relationData === undefined) {
+		const findUser = relationData?.find((u) => u.id === value);
+
+		if (findUser === undefined) {
 			return {
 				valid: false,
 				message: T("field_user_not_found"),

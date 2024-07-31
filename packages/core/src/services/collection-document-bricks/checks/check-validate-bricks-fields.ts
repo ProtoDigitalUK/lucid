@@ -164,89 +164,28 @@ export const validateField = (props: {
 	};
 
 	switch (props.field.type) {
-		// TODO: revisit validation for these fields
-
 		case "media": {
-			const media = props.data.media.find(
-				(m) => m.id === props.field.value,
-			);
-			if (media) {
-				fieldValRes = fieldInstance.validate({
-					type: props.field.type,
-					value: props.field.value,
-					relationData: {
-						extension: media.file_extension,
-						width: media.width,
-						height: media.height,
-						type: media.type,
-					} satisfies MediaReferenceData,
-				});
-			} else if (props.field.value !== undefined) {
-				// if the media doesnt exist, we treat the value as null
-				fieldValRes = fieldInstance.validate({
-					type: props.field.type,
-					value: null,
-					relationData: undefined,
-				});
-			} else {
-				fieldValRes = fieldInstance.validate({
-					type: props.field.type,
-					value: undefined,
-					relationData: undefined,
-				});
-			}
+			fieldValRes = fieldInstance.validate({
+				type: props.field.type,
+				value: props.field.value,
+				relationData: props.data.media,
+			});
 			break;
 		}
 		case "user": {
-			const user = props.data.users.find(
-				(u) => u.id === props.field.value,
-			);
-			if (user) {
-				fieldValRes = fieldInstance.validate({
-					type: props.field.type,
-					value: props.field.value,
-					relationData: {
-						username: user.username,
-						email: user.email,
-						firstName: user.first_name,
-						lastName: user.last_name,
-					} satisfies UserReferenceData,
-				});
-			} else if (props.field.value !== undefined) {
-				fieldValRes = fieldInstance.validate({
-					type: props.field.type,
-					value: null,
-					relationData: undefined,
-				});
-			} else {
-				fieldValRes = fieldInstance.validate({
-					type: props.field.type,
-					value: undefined,
-					relationData: undefined,
-				});
-			}
+			fieldValRes = fieldInstance.validate({
+				type: props.field.type,
+				value: props.field.value,
+				relationData: props.data.users,
+			});
 			break;
 		}
 		case "document": {
-			const document = props.data.documents.find(
-				(d) => d.id === props.field.value,
-			);
-			if (document) {
-				fieldValRes = fieldInstance.validate({
-					type: props.field.type,
-					value: props.field.value,
-					relationData: {
-						id: document.id,
-						collectionKey: document.collection_key,
-					} satisfies DocumentReferenceData,
-				});
-			} else {
-				fieldValRes = fieldInstance.validate({
-					type: props.field.type,
-					value: props.field.value,
-					relationData: undefined,
-				});
-			}
+			fieldValRes = fieldInstance.validate({
+				type: props.field.type,
+				value: props.field.value,
+				relationData: props.data.documents,
+			});
 			break;
 		}
 		default: {

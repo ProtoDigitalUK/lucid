@@ -1297,7 +1297,7 @@ test("fail to validate field - media", async () => {
 			brickId: CONSTANTS.collectionBrickId,
 			localeCode: "en",
 			groupId: undefined,
-			message: T("generic_field_required"),
+			message: T("field_media_not_found"),
 		},
 		null: {
 			key: "required_media",
@@ -2244,7 +2244,7 @@ test("fail to validate field - user", async () => {
 			brickId: CONSTANTS.collectionBrickId,
 			localeCode: "en",
 			groupId: undefined,
-			message: T("generic_field_required"),
+			message: T("field_user_not_found"),
 		},
 		null: {
 			key: "required_user",

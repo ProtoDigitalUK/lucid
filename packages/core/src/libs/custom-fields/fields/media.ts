@@ -89,13 +89,15 @@ class MediaCustomField extends CustomField<"media"> {
 			userId: null,
 		} satisfies CFInsertItem<"media">;
 	}
-	cfSpecificValidation(value: unknown, relationData: MediaReferenceData) {
+	cfSpecificValidation(value: unknown, relationData?: MediaReferenceData[]) {
 		const valueSchema = z.number();
 
 		const valueValidate = zodSafeParse(value, valueSchema);
 		if (!valueValidate.valid) return valueValidate;
 
-		if (relationData === undefined) {
+		const findMedia = relationData?.find((m) => m.id === value);
+
+		if (findMedia === undefined) {
 			return {
 				valid: false,
 				message: T("field_media_not_found"),
@@ -104,7 +106,7 @@ class MediaCustomField extends CustomField<"media"> {
 
 		// Check if value is in the options
 		if (this.config.validation?.extensions?.length) {
-			const extension = relationData.extension;
+			const extension = findMedia.file_extension;
 			if (!this.config.validation.extensions.includes(extension)) {
 				return {
 					valid: false,
@@ -118,7 +120,7 @@ class MediaCustomField extends CustomField<"media"> {
 
 		// Check type
 		if (this.config.validation?.type) {
-			const type = relationData.type;
+			const type = findMedia.type;
 			if (!type) {
 				return {
 					valid: false,
@@ -137,8 +139,8 @@ class MediaCustomField extends CustomField<"media"> {
 		}
 
 		// Check width
-		if (this.config.validation?.width && relationData.type === "image") {
-			const width = relationData.width;
+		if (this.config.validation?.width && findMedia.type === "image") {
+			const width = findMedia.width;
 			if (!width) {
 				return {
 					valid: false,
@@ -171,8 +173,8 @@ class MediaCustomField extends CustomField<"media"> {
 		}
 
 		// Check height
-		if (this.config.validation?.height && relationData.type === "image") {
-			const height = relationData.height;
+		if (this.config.validation?.height && findMedia.type === "image") {
+			const height = findMedia.height;
 			if (!height) {
 				return {
 					valid: false,

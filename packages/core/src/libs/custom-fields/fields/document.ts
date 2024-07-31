@@ -69,17 +69,31 @@ class DocumentCustomField extends CustomField<"document"> {
 			userId: null,
 		} satisfies CFInsertItem<"document">;
 	}
-	cfSpecificValidation(value: unknown, relationData: DocumentReferenceData) {
+	cfSpecificValidation(
+		value: unknown,
+		relationData?: DocumentReferenceData[],
+	) {
 		const valueSchema = z.number();
 
 		const valueValidate = zodSafeParse(value, valueSchema);
-
 		if (!valueValidate.valid) return valueValidate;
 
-		if (relationData === undefined) {
+		const findDocument = relationData?.find((d) => d.id === value);
+
+		if (findDocument === undefined) {
 			return {
 				valid: false,
 				message: T("field_document_not_found"),
+			};
+		}
+
+		if (findDocument.collection_key !== this.config.collection) {
+			return {
+				valid: false,
+				message: T("field_document_collection_key_mismatch", {
+					expected: this.config.collection,
+					received: findDocument.collection_key,
+				}),
 			};
 		}
 

@@ -606,18 +606,20 @@ export type CustomFieldValidateResponse = {
 };
 
 export interface MediaReferenceData {
-	extension: string;
+	id: number;
+	file_extension: string;
 	width: number | null;
 	height: number | null;
 	type: string;
 }
 export interface UserReferenceData {
+	id: number;
 	username: string;
-	firstName: string | null;
-	lastName: string | null;
+	first_name: string | null;
+	last_name: string | null;
 	email: string;
 }
 export interface DocumentReferenceData {
 	id: number;
-	collectionKey: string;
+	collection_key: string;
 }
