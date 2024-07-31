@@ -252,7 +252,6 @@ export interface DocumentFieldConfig extends SharedFieldConfig {
 	labels: {
 		title?: LocaleValue;
 		description?: LocaleValue;
-		placeholder?: LocaleValue;
 	};
 
 	translations: boolean;
@@ -262,7 +261,6 @@ export interface DocumentFieldConfig extends SharedFieldConfig {
 
 	validation?: {
 		required?: boolean;
-		zod?: ZodType<unknown>;
 	};
 }
 export interface RepeaterFieldConfig extends SharedFieldConfig {

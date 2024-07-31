@@ -34,14 +34,7 @@ const CustomFieldSchema = z.object({
 			}),
 		)
 		.optional(),
-	presets: z
-		.array(
-			z.object({
-				label: z.string(),
-				value: z.string(),
-			}),
-		)
-		.optional(),
+	presets: z.array(z.string()).optional(),
 	validation: z
 		.object({
 			zod: z.any().optional(),
