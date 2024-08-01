@@ -59,7 +59,7 @@ const LinkSelect: Component = () => {
 		>
 			<div class="p-15">
 				<div class="mb-15 pb-15 border-b border-border">
-					<h2>{T()("set_page_link")}</h2>
+					<h2>{T()("set_link")}</h2>
 				</div>
 				<div class="mb-15 pb-15 border-b border-border">
 					<Form.Input
