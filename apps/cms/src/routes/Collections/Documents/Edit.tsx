@@ -30,6 +30,7 @@ import NavigationGuard, {
 } from "@/components/Modals/NavigationGuard";
 import Document from "@/components/Groups/Document";
 import MediaSelectModal from "@/components/Modals/Media/MediaSelect";
+import DocumentSelectModal from "@/components/Modals/Documents/DocumentSelect";
 import LinkSelectModal from "@/components/Modals/CustomField/LinkSelect";
 import UserDisplay from "@/components/Partials/UserDisplay";
 import BrickImagePreview from "@/components/Modals/Bricks/ImagePreview";
@@ -461,6 +462,7 @@ const CollectionsDocumentsEditRoute: Component<
 					}}
 				/>
 				<MediaSelectModal />
+				<DocumentSelectModal />
 				<LinkSelectModal />
 				<BrickImagePreview />
 				<DeleteDocument

@@ -1,6 +1,5 @@
 import T from "@/translations";
-import { type Component, createMemo, For, onCleanup } from "solid-js";
-import { useNavigate, useLocation } from "@solidjs/router";
+import { type Component, createMemo, For } from "solid-js";
 import useSearchParamsState from "@/hooks/useSearchParamsState";
 import mediaSelectStore from "@/store/forms/mediaSelectStore";
 import contentLocaleStore from "@/store/contentLocaleStore";
@@ -36,9 +35,6 @@ const MediaSelectModal: Component = () => {
 const SelectMediaContent: Component = () => {
 	// ------------------------------
 	// Hooks
-	const location = useLocation();
-	const navigate = useNavigate();
-
 	const searchParams = useSearchParamsState(
 		{
 			filters: {
@@ -87,12 +83,6 @@ const SelectMediaContent: Component = () => {
 				"lucid-content-locale": contentLocale,
 			},
 		},
-	});
-
-	// ----------------------------------
-	// Mount
-	onCleanup(() => {
-		navigate(location.pathname);
 	});
 
 	// ----------------------------------

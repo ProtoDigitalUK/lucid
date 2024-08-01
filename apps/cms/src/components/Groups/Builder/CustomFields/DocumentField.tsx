@@ -10,11 +10,13 @@ import type {
 	FieldResponse,
 	FieldErrors,
 	DocumentMeta,
+	CollectionDocumentResponse,
 } from "@lucidcms/core/types";
 import brickStore from "@/store/brickStore";
 import brickHelpers from "@/utils/brick-helpers";
 import helpers from "@/utils/helpers";
 import Form from "@/components/Groups/Form";
+import documentSelectStore from "@/store/forms/documentSelectStore";
 
 interface DocumentFieldProps {
 	state: {
@@ -65,42 +67,58 @@ export const DocumentField: Component<DocumentFieldProps> = (props) => {
 	// -------------------------------
 	// Render
 	return (
-		<Form.Input
-			id={brickHelpers.customFieldId({
-				key: props.state.fieldConfig.key,
-				brickIndex: props.state.brickIndex,
-				groupId: props.state.groupId,
-			})}
-			value={getValue() || ""}
-			onChange={(value) => {
-				batch(() => {
-					brickStore.get.setFieldValue({
-						brickIndex: props.state.brickIndex,
-						fieldConfig: props.state.fieldConfig,
-						key: props.state.fieldConfig.key,
-						groupId: props.state.groupId,
-						repeaterKey: props.state.repeaterKey,
-						value: !value ? null : Number(value),
-						contentLocale: props.state.contentLocale,
+		<>
+			<Form.Input
+				id={brickHelpers.customFieldId({
+					key: props.state.fieldConfig.key,
+					brickIndex: props.state.brickIndex,
+					groupId: props.state.groupId,
+				})}
+				value={getValue() || ""}
+				onChange={(value) => {
+					batch(() => {
+						brickStore.get.setFieldValue({
+							brickIndex: props.state.brickIndex,
+							fieldConfig: props.state.fieldConfig,
+							key: props.state.fieldConfig.key,
+							groupId: props.state.groupId,
+							repeaterKey: props.state.repeaterKey,
+							value: !value ? null : Number(value),
+							contentLocale: props.state.contentLocale,
+						});
+						setValue(value);
 					});
-					setValue(value);
-				});
-			}}
-			name={props.state.fieldConfig.key}
-			type={"number"}
-			copy={{
-				label: helpers.getLocaleValue({
-					value: props.state.fieldConfig.labels.title,
-				}),
-				describedBy: helpers.getLocaleValue({
-					value: props.state.fieldConfig.labels.description,
-				}),
-			}}
-			errors={props.state.fieldError}
-			altLocaleError={props.state.altLocaleError}
-			disabled={props.state.fieldConfig.disabled}
-			required={props.state.fieldConfig.validation?.required || false}
-			theme={"basic"}
-		/>
+				}}
+				name={props.state.fieldConfig.key}
+				type={"number"}
+				copy={{
+					label: helpers.getLocaleValue({
+						value: props.state.fieldConfig.labels.title,
+					}),
+					describedBy: helpers.getLocaleValue({
+						value: props.state.fieldConfig.labels.description,
+					}),
+				}}
+				errors={props.state.fieldError}
+				altLocaleError={props.state.altLocaleError}
+				disabled={props.state.fieldConfig.disabled}
+				required={props.state.fieldConfig.validation?.required || false}
+				theme={"basic"}
+			/>
+			<button
+				type="button"
+				onClick={() => {
+					documentSelectStore.set({
+						onSelectCallback: (
+							doc: CollectionDocumentResponse,
+						) => {},
+						open: true,
+						collectionKey: props.state.fieldConfig.collection,
+					});
+				}}
+			>
+				Open Modal
+			</button>
+		</>
 	);
 };

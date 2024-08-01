@@ -232,6 +232,8 @@
 	"excerpt": "Excerpt",
 	"author": "Author",
 	"select_media_description": "Click the media you wish to use.",
+	"select_document_title": "Select Document",
+	"select_document_description": "Click the document you wish to use.",
 	"search_by_username": "Search by username",
 	"no_users": "No Users Found",
 	"no_users_description": "We cannot find any users. You can create a new user by clicking the button below.",
