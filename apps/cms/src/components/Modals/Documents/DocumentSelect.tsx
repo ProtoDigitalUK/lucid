@@ -198,11 +198,11 @@ const DocumentSelectContent: Component = () => {
 			</div>
 			{/* Body */}
 			<div class="relative w-full flex h-full flex-col justify-between px-15 md:px-30 pb-15 md:pb-30 mt-15 flex-grow">
-				<DocumentsTable
+				{/* <DocumentsTable
 					searchParams={searchParams}
 					collection={collection.data?.data as CollectionResponse}
 					fieldIncludes={collectionFieldInclude}
-				/>
+				/> */}
 			</div>
 		</div>
 	);
