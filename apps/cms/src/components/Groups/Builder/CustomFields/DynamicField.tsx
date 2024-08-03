@@ -82,6 +82,8 @@ export const DynamicField: Component<DynamicFieldProps> = (props) => {
 		<div
 			class={classNames("w-full mb-15 last:mb-0 relative", {
 				"!mb-0": !activeTab(),
+				// @ts-expect-error
+				"invisible h-0 opacity-0 !mb-0": fieldConfig()?.hidden === true,
 			})}
 		>
 			<Show when={fieldConfig().type !== "tab"}>
@@ -138,214 +140,199 @@ export const DynamicField: Component<DynamicFieldProps> = (props) => {
 						/>
 					</Match>
 
-					<Show
-						when={
-							(
-								fieldConfig() as CFConfig<
-									Exclude<FieldTypes, "repeater" | "tab">
-								>
-							).hidden !== true
-						}
-					>
-						<Match when={fieldConfig().type === "text"}>
-							<CustomFields.InputField
-								type="text"
-								state={{
-									brickIndex: props.state.brickIndex,
-									fieldConfig:
-										fieldConfig() as CFConfig<"text">,
-									fieldData: fieldData(),
-									groupId: props.state.groupId,
-									repeaterKey: props.state.repeaterKey,
-									contentLocale: contentLocale(),
-									fieldError: fieldError(),
-									altLocaleError: altLocaleError(),
-								}}
-							/>
-						</Match>
-						<Match when={fieldConfig().type === "user"}>
-							<CustomFields.UserField
-								state={{
-									brickIndex: props.state.brickIndex,
-									fieldConfig:
-										fieldConfig() as CFConfig<"user">,
-									fieldData: fieldData(),
-									groupId: props.state.groupId,
-									repeaterKey: props.state.repeaterKey,
-									contentLocale: contentLocale(),
-									fieldError: fieldError(),
-									altLocaleError: altLocaleError(),
-								}}
-							/>
-						</Match>
-						<Match when={fieldConfig().type === "document"}>
-							<CustomFields.DocumentField
-								state={{
-									brickIndex: props.state.brickIndex,
-									fieldConfig:
-										fieldConfig() as CFConfig<"document">,
-									fieldData: fieldData(),
-									groupId: props.state.groupId,
-									repeaterKey: props.state.repeaterKey,
-									contentLocale: contentLocale(),
-									fieldError: fieldError(),
-									altLocaleError: altLocaleError(),
-								}}
-							/>
-						</Match>
-						<Match when={fieldConfig().type === "number"}>
-							<CustomFields.InputField
-								type="number"
-								state={{
-									brickIndex: props.state.brickIndex,
-									fieldConfig:
-										fieldConfig() as CFConfig<"number">,
-									fieldData: fieldData(),
-									groupId: props.state.groupId,
-									repeaterKey: props.state.repeaterKey,
-									contentLocale: contentLocale(),
-									fieldError: fieldError(),
-									altLocaleError: altLocaleError(),
-								}}
-							/>
-						</Match>
-						<Match when={fieldConfig().type === "datetime"}>
-							<CustomFields.InputField
-								type="datetime-local"
-								state={{
-									brickIndex: props.state.brickIndex,
-									fieldConfig:
-										fieldConfig() as CFConfig<"datetime">,
-									fieldData: fieldData(),
-									groupId: props.state.groupId,
-									repeaterKey: props.state.repeaterKey,
-									contentLocale: contentLocale(),
-									fieldError: fieldError(),
-									altLocaleError: altLocaleError(),
-								}}
-							/>
-						</Match>
-						<Match when={fieldConfig().type === "checkbox"}>
-							<CustomFields.CheckboxField
-								state={{
-									brickIndex: props.state.brickIndex,
-									fieldConfig:
-										fieldConfig() as CFConfig<"checkbox">,
-									fieldData: fieldData(),
-									groupId: props.state.groupId,
-									repeaterKey: props.state.repeaterKey,
-									contentLocale: contentLocale(),
-									fieldError: fieldError(),
-									altLocaleError: altLocaleError(),
-								}}
-							/>
-						</Match>
-						<Match when={fieldConfig().type === "colour"}>
-							<CustomFields.ColourField
-								state={{
-									brickIndex: props.state.brickIndex,
-									fieldConfig:
-										fieldConfig() as CFConfig<"colour">,
-									fieldData: fieldData(),
-									groupId: props.state.groupId,
-									repeaterKey: props.state.repeaterKey,
-									contentLocale: contentLocale(),
-									fieldError: fieldError(),
-									altLocaleError: altLocaleError(),
-								}}
-							/>
-						</Match>
-						<Match when={fieldConfig().type === "json"}>
-							<CustomFields.JSONField
-								state={{
-									brickIndex: props.state.brickIndex,
-									fieldConfig:
-										fieldConfig() as CFConfig<"json">,
-									fieldData: fieldData(),
-									groupId: props.state.groupId,
-									repeaterKey: props.state.repeaterKey,
-									contentLocale: contentLocale(),
-									fieldError: fieldError(),
-									altLocaleError: altLocaleError(),
-								}}
-							/>
-						</Match>
-						<Match when={fieldConfig().type === "link"}>
-							<CustomFields.LinkField
-								state={{
-									brickIndex: props.state.brickIndex,
-									fieldConfig:
-										fieldConfig() as CFConfig<"link">,
-									fieldData: fieldData(),
-									groupId: props.state.groupId,
-									repeaterKey: props.state.repeaterKey,
-									contentLocale: contentLocale(),
-									fieldError: fieldError(),
-									altLocaleError: altLocaleError(),
-								}}
-							/>
-						</Match>
-						<Match when={fieldConfig().type === "media"}>
-							<CustomFields.MediaField
-								state={{
-									brickIndex: props.state.brickIndex,
-									fieldConfig:
-										fieldConfig() as CFConfig<"media">,
-									fieldData: fieldData(),
-									groupId: props.state.groupId,
-									repeaterKey: props.state.repeaterKey,
-									contentLocale: contentLocale(),
-									fieldError: fieldError(),
-									altLocaleError: altLocaleError(),
-								}}
-							/>
-						</Match>
-						<Match when={fieldConfig().type === "select"}>
-							<CustomFields.SelectField
-								state={{
-									brickIndex: props.state.brickIndex,
-									fieldConfig:
-										fieldConfig() as CFConfig<"select">,
-									fieldData: fieldData(),
-									groupId: props.state.groupId,
-									repeaterKey: props.state.repeaterKey,
-									contentLocale: contentLocale(),
-									fieldError: fieldError(),
-									altLocaleError: altLocaleError(),
-								}}
-							/>
-						</Match>
-						<Match when={fieldConfig().type === "textarea"}>
-							<CustomFields.TextareaField
-								state={{
-									brickIndex: props.state.brickIndex,
-									fieldConfig:
-										fieldConfig() as CFConfig<"textarea">,
-									fieldData: fieldData(),
-									groupId: props.state.groupId,
-									repeaterKey: props.state.repeaterKey,
-									contentLocale: contentLocale(),
-									fieldError: fieldError(),
-									altLocaleError: altLocaleError(),
-								}}
-							/>
-						</Match>
-						<Match when={fieldConfig().type === "wysiwyg"}>
-							<CustomFields.WYSIWYGField
-								state={{
-									brickIndex: props.state.brickIndex,
-									fieldConfig:
-										fieldConfig() as CFConfig<"wysiwyg">,
-									fieldData: fieldData(),
-									groupId: props.state.groupId,
-									repeaterKey: props.state.repeaterKey,
-									contentLocale: contentLocale(),
-									fieldError: fieldError(),
-									altLocaleError: altLocaleError(),
-								}}
-							/>
-						</Match>
-					</Show>
+					<Match when={fieldConfig().type === "text"}>
+						<CustomFields.InputField
+							type="text"
+							state={{
+								brickIndex: props.state.brickIndex,
+								fieldConfig: fieldConfig() as CFConfig<"text">,
+								fieldData: fieldData(),
+								groupId: props.state.groupId,
+								repeaterKey: props.state.repeaterKey,
+								contentLocale: contentLocale(),
+								fieldError: fieldError(),
+								altLocaleError: altLocaleError(),
+							}}
+						/>
+					</Match>
+					<Match when={fieldConfig().type === "user"}>
+						<CustomFields.UserField
+							state={{
+								brickIndex: props.state.brickIndex,
+								fieldConfig: fieldConfig() as CFConfig<"user">,
+								fieldData: fieldData(),
+								groupId: props.state.groupId,
+								repeaterKey: props.state.repeaterKey,
+								contentLocale: contentLocale(),
+								fieldError: fieldError(),
+								altLocaleError: altLocaleError(),
+							}}
+						/>
+					</Match>
+					<Match when={fieldConfig().type === "document"}>
+						<CustomFields.DocumentField
+							state={{
+								brickIndex: props.state.brickIndex,
+								fieldConfig:
+									fieldConfig() as CFConfig<"document">,
+								fieldData: fieldData(),
+								groupId: props.state.groupId,
+								repeaterKey: props.state.repeaterKey,
+								contentLocale: contentLocale(),
+								fieldError: fieldError(),
+								altLocaleError: altLocaleError(),
+							}}
+						/>
+					</Match>
+					<Match when={fieldConfig().type === "number"}>
+						<CustomFields.InputField
+							type="number"
+							state={{
+								brickIndex: props.state.brickIndex,
+								fieldConfig:
+									fieldConfig() as CFConfig<"number">,
+								fieldData: fieldData(),
+								groupId: props.state.groupId,
+								repeaterKey: props.state.repeaterKey,
+								contentLocale: contentLocale(),
+								fieldError: fieldError(),
+								altLocaleError: altLocaleError(),
+							}}
+						/>
+					</Match>
+					<Match when={fieldConfig().type === "datetime"}>
+						<CustomFields.InputField
+							type="datetime-local"
+							state={{
+								brickIndex: props.state.brickIndex,
+								fieldConfig:
+									fieldConfig() as CFConfig<"datetime">,
+								fieldData: fieldData(),
+								groupId: props.state.groupId,
+								repeaterKey: props.state.repeaterKey,
+								contentLocale: contentLocale(),
+								fieldError: fieldError(),
+								altLocaleError: altLocaleError(),
+							}}
+						/>
+					</Match>
+					<Match when={fieldConfig().type === "checkbox"}>
+						<CustomFields.CheckboxField
+							state={{
+								brickIndex: props.state.brickIndex,
+								fieldConfig:
+									fieldConfig() as CFConfig<"checkbox">,
+								fieldData: fieldData(),
+								groupId: props.state.groupId,
+								repeaterKey: props.state.repeaterKey,
+								contentLocale: contentLocale(),
+								fieldError: fieldError(),
+								altLocaleError: altLocaleError(),
+							}}
+						/>
+					</Match>
+					<Match when={fieldConfig().type === "colour"}>
+						<CustomFields.ColourField
+							state={{
+								brickIndex: props.state.brickIndex,
+								fieldConfig:
+									fieldConfig() as CFConfig<"colour">,
+								fieldData: fieldData(),
+								groupId: props.state.groupId,
+								repeaterKey: props.state.repeaterKey,
+								contentLocale: contentLocale(),
+								fieldError: fieldError(),
+								altLocaleError: altLocaleError(),
+							}}
+						/>
+					</Match>
+					<Match when={fieldConfig().type === "json"}>
+						<CustomFields.JSONField
+							state={{
+								brickIndex: props.state.brickIndex,
+								fieldConfig: fieldConfig() as CFConfig<"json">,
+								fieldData: fieldData(),
+								groupId: props.state.groupId,
+								repeaterKey: props.state.repeaterKey,
+								contentLocale: contentLocale(),
+								fieldError: fieldError(),
+								altLocaleError: altLocaleError(),
+							}}
+						/>
+					</Match>
+					<Match when={fieldConfig().type === "link"}>
+						<CustomFields.LinkField
+							state={{
+								brickIndex: props.state.brickIndex,
+								fieldConfig: fieldConfig() as CFConfig<"link">,
+								fieldData: fieldData(),
+								groupId: props.state.groupId,
+								repeaterKey: props.state.repeaterKey,
+								contentLocale: contentLocale(),
+								fieldError: fieldError(),
+								altLocaleError: altLocaleError(),
+							}}
+						/>
+					</Match>
+					<Match when={fieldConfig().type === "media"}>
+						<CustomFields.MediaField
+							state={{
+								brickIndex: props.state.brickIndex,
+								fieldConfig: fieldConfig() as CFConfig<"media">,
+								fieldData: fieldData(),
+								groupId: props.state.groupId,
+								repeaterKey: props.state.repeaterKey,
+								contentLocale: contentLocale(),
+								fieldError: fieldError(),
+								altLocaleError: altLocaleError(),
+							}}
+						/>
+					</Match>
+					<Match when={fieldConfig().type === "select"}>
+						<CustomFields.SelectField
+							state={{
+								brickIndex: props.state.brickIndex,
+								fieldConfig:
+									fieldConfig() as CFConfig<"select">,
+								fieldData: fieldData(),
+								groupId: props.state.groupId,
+								repeaterKey: props.state.repeaterKey,
+								contentLocale: contentLocale(),
+								fieldError: fieldError(),
+								altLocaleError: altLocaleError(),
+							}}
+						/>
+					</Match>
+					<Match when={fieldConfig().type === "textarea"}>
+						<CustomFields.TextareaField
+							state={{
+								brickIndex: props.state.brickIndex,
+								fieldConfig:
+									fieldConfig() as CFConfig<"textarea">,
+								fieldData: fieldData(),
+								groupId: props.state.groupId,
+								repeaterKey: props.state.repeaterKey,
+								contentLocale: contentLocale(),
+								fieldError: fieldError(),
+								altLocaleError: altLocaleError(),
+							}}
+						/>
+					</Match>
+					<Match when={fieldConfig().type === "wysiwyg"}>
+						<CustomFields.WYSIWYGField
+							state={{
+								brickIndex: props.state.brickIndex,
+								fieldConfig:
+									fieldConfig() as CFConfig<"wysiwyg">,
+								fieldData: fieldData(),
+								groupId: props.state.groupId,
+								repeaterKey: props.state.repeaterKey,
+								contentLocale: contentLocale(),
+								fieldError: fieldError(),
+								altLocaleError: altLocaleError(),
+							}}
+						/>
+					</Match>
 				</Switch>
 			</div>
 		</div>

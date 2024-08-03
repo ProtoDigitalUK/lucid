@@ -33,12 +33,12 @@ export const Confirmation: Component<ConfirmationProps> = (props) => {
 			<AlertDialog.Portal>
 				<AlertDialog.Overlay class="fixed inset-0 z-40 bg-black bg-opacity-80 animate-animate-fade-out data-[expanded]:animate-animate-fade-in" />
 				<div class="fixed inset-0 z-50 flex items-center justify-center p-15 overflow-y-auto">
-					<AlertDialog.Content class="z-50 max-w-2xl w-full bg-container-1 shadow-md rounded-md border-border border m-auto">
+					<AlertDialog.Content class="z-50 max-w-2xl w-full bg-container-3 shadow-md rounded-md border-border border m-auto">
 						<div class="flex items-baseline justify-between p-15 md:p-5 border-b border-border">
 							<AlertDialog.Title>
 								{props.content.title}
 							</AlertDialog.Title>
-							<AlertDialog.CloseButton class="hover:fill-error-contrast h-8 w-8 min-w-[32px] rounded-full flex justify-center items-center bg-container-1 hover:bg-error-base duration-200 transition-colors">
+							<AlertDialog.CloseButton class="hover:fill-error-contrast h-8 w-8 min-w-[32px] rounded-full flex justify-center items-center bg-container-3 hover:bg-error-base duration-200 transition-colors">
 								<FaSolidXmark />
 							</AlertDialog.CloseButton>
 						</div>
