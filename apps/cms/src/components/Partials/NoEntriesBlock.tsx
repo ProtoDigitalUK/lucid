@@ -4,6 +4,7 @@ import classNames from "classnames";
 import Button from "@/components/Partials/Button";
 
 interface NoEntriesBlockProps {
+	type: "page-layout" | "block-grow";
 	copy: {
 		title?: string;
 		description?: string;
@@ -18,7 +19,11 @@ const NoEntriesBlock: Component<NoEntriesBlockProps> = (props) => {
 	return (
 		<div
 			class={classNames(
-				"flex items-center page-layout-full-body justify-center bg-container-3 border-t border-border ",
+				"flex items-center justify-center bg-container-3 border-t border-border ",
+				{
+					"page-layout-full-body": props.type === "page-layout",
+					"flex-grow": props.type === "block-grow",
+				},
 			)}
 		>
 			<div class="text-center flex flex-col items-center">

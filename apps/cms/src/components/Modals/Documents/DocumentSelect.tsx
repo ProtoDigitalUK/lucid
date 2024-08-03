@@ -1,5 +1,6 @@
 import T from "@/translations";
-import { type Component, createMemo, createEffect } from "solid-js";
+import { type Component, createMemo, createEffect, Index } from "solid-js";
+import { FaSolidT, FaSolidCalendar, FaSolidUser } from "solid-icons/fa";
 import type {
 	CFConfig,
 	FieldTypes,
@@ -8,11 +9,13 @@ import type {
 import useSearchParamsState from "@/hooks/useSearchParamsState";
 import type { FilterSchema } from "@/hooks/useSearchParamsLocation";
 import documentSelectStore from "@/store/forms/documentSelectStore";
+import contentLocaleStore from "@/store/contentLocaleStore";
 import api from "@/services/api";
 import Query from "@/components/Groups/Query";
 import helpers from "@/utils/helpers";
 import Modal from "@/components/Groups/Modal";
-import DocumentsTable from "@/components/Tables/DocumentsTable";
+import Table from "@/components/Groups/Table";
+import DocumentRow from "@/components/Tables/Rows/DocumentRow";
 
 const DocumentSelectModal: Component = () => {
 	const open = createMemo(() => documentSelectStore.get.open);
@@ -51,6 +54,9 @@ const DocumentSelectContent: Component = () => {
 	const collectionKey = createMemo(
 		() => documentSelectStore.get.collectionKey,
 	);
+	const contentLocale = createMemo(
+		() => contentLocaleStore.get.contentLocale ?? "",
+	);
 
 	// ----------------------------------
 	// Queries
@@ -61,6 +67,15 @@ const DocumentSelectContent: Component = () => {
 			},
 		},
 		enabled: () => !!collectionKey(),
+	});
+	const documents = api.collections.document.useGetMultiple({
+		queryParams: {
+			queryString: searchParams.getQueryString,
+			location: {
+				collectionKey: collectionKey,
+			},
+		},
+		enabled: () => searchParams.getSettled() && collection.isSuccess,
 	});
 
 	// ----------------------------------
@@ -103,6 +118,39 @@ const DocumentSelectContent: Component = () => {
 
 		return fieldsRes;
 	});
+	const tableHeadColumns = createMemo(() => {
+		return collectionFieldInclude().map((field) => {
+			switch (field.type) {
+				case "user":
+					return {
+						label: helpers.getLocaleValue({
+							value: field.labels.title,
+							fallback: field.key,
+						}),
+						key: field.key,
+						icon: <FaSolidUser />,
+					};
+				default: {
+					return {
+						label: helpers.getLocaleValue({
+							value: field.labels.title,
+							fallback: field.key,
+						}),
+						key: field.key,
+						icon: <FaSolidT />,
+					};
+				}
+			}
+		});
+	});
+
+	const isLoading = createMemo(
+		() => documents.isLoading || collection.isLoading,
+	);
+	const isSuccess = createMemo(
+		() => documents.isSuccess || collection.isSuccess,
+	);
+	const isError = createMemo(() => documents.isError || collection.isError);
 
 	// ----------------------------------
 	// Effects
@@ -129,10 +177,10 @@ const DocumentSelectContent: Component = () => {
 	return (
 		<div class="min-h-[70vh] flex flex-col">
 			{/* Header */}
-			<div class="px-15 md:px-30 pt-15 md:pt-30">
+			<div class="p-15 md:p-30 border-b border-border">
 				<h2>{T()("select_document_title")}</h2>
 				<p class="mt-1">{T()("select_document_description")}</p>
-				<div class="w-full mt-15 flex justify-between pb-15 border-b border-border">
+				<div class="w-full mt-15 flex justify-between">
 					<div class="flex gap-5">
 						<Query.Filter
 							filters={collectionFieldFilter().map((field) => {
@@ -197,12 +245,93 @@ const DocumentSelectContent: Component = () => {
 				</div>
 			</div>
 			{/* Body */}
-			<div class="relative w-full flex h-full flex-col justify-between px-15 md:px-30 pb-15 md:pb-30 mt-15 flex-grow">
-				{/* <DocumentsTable
+			<div class="relative w-full flex h-full flex-col justify-between pb-15 md:pb-30 flex-grow -mt-px">
+				<Modal.Table
+					rows={documents.data?.data.length || 0}
+					meta={documents.data?.meta}
 					searchParams={searchParams}
-					collection={collection.data?.data as CollectionResponse}
-					fieldIncludes={collectionFieldInclude}
-				/> */}
+					state={{
+						isLoading: isLoading(),
+						isError: isError(),
+						isSuccess: isSuccess(),
+					}}
+					options={{
+						showNoEntries: true,
+					}}
+					copy={{
+						noEntryTitle: T()("no_documents", {
+							collectionMultiple: collection.data?.data.title,
+						}),
+						noEntryDescription: T()(
+							"no_documents_description_doc_select",
+							{
+								collectionMultiple:
+									collection.data?.data?.title.toLowerCase(),
+								collectionSingle:
+									collection.data?.data?.singular.toLowerCase(),
+							},
+						),
+						noEntryButton: T()("create_document", {
+							collectionSingle: collection.data?.data?.singular,
+						}),
+					}}
+				>
+					<Table.Root
+						key={`collections.document.list.${collection.data?.data?.key}`}
+						rows={documents.data?.data.length || 0}
+						searchParams={searchParams}
+						head={[
+							...tableHeadColumns(),
+							{
+								label: T()("updated_at"),
+								key: "updated_at",
+								icon: <FaSolidCalendar />,
+							},
+						]}
+						state={{
+							isLoading: documents.isLoading,
+							isSuccess: documents.isSuccess,
+						}}
+					>
+						{({ include, isSelectable, selected, setSelected }) => (
+							<Index each={documents.data?.data || []}>
+								{(doc, i) => (
+									<DocumentRow
+										index={i}
+										document={doc()}
+										fieldInclude={collectionFieldInclude()}
+										collection={
+											collection.data
+												?.data as CollectionResponse
+										}
+										include={include}
+										contentLocale={contentLocale()}
+										selected={selected[i]}
+										options={{
+											isSelectable,
+										}}
+										callbacks={{
+											setSelected: setSelected,
+											onClick: () => {
+												documentSelectStore.get.onSelectCallback(
+													doc(),
+												);
+												documentSelectStore.set(
+													"open",
+													false,
+												);
+											},
+										}}
+										current={
+											doc().id ===
+											documentSelectStore.get.selected
+										}
+									/>
+								)}
+							</Index>
+						)}
+					</Table.Root>
+				</Modal.Table>
 			</div>
 		</div>
 	);

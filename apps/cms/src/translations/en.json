@@ -30,6 +30,7 @@
 	"last_success_at": "Last Success At",
 	"change_order": "Change Order",
 	"details_lang": "Details ({{code}})",
+	"select": "Select",
 	"updated_by": "Updated By",
 	"assign_forms_description": "Select the forms the environment should have access to.",
 	"update": "Update",
@@ -250,6 +251,7 @@
 	"no_collections_description": "We cannot find any collections. To create one, use the CollectionBuilder and import the instance in the lucid.config file.",
 	"no_documents": "No {{collectionMultiple}} Found",
 	"no_documents_description": "We cannot find any {{collectionMultiple}}. You can create a new {{collectionSingle}} by clicking the button below.",
+	"no_documents_description_doc_select": "We cannot find any {{collectionMultiple}}. You can create new a new {{collectionSingle}} navigating to the collection page.",
 	"create_document": "Create {{collectionSingle}}",
 
 	"delete_environment_modal_title": "Delete Environment",

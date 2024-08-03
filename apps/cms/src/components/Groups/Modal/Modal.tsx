@@ -23,12 +23,12 @@ export const Modal: Component<ModalProps> = (props) => {
 			onOpenChange={() => props.state.setOpen(!props.state.open)}
 		>
 			<Dialog.Portal>
-				<Dialog.Overlay class="fixed inset-0 z-40 bg-white bg-opacity-40 animate-animate-fade-out data-[expanded]:animate-animate-fade-in" />
+				<Dialog.Overlay class="fixed inset-0 z-40 bg-black bg-opacity-80 animate-animate-fade-out data-[expanded]:animate-animate-fade-in" />
 				<div class="fixed inset-0 z-40">
 					<Dialog.Content class="overflow-y-auto h-full p-15 !pointer-events-none flex items-center justify-center">
 						<div
 							class={classNames(
-								"max-w-2xl w-full bg-container-1 shadow-md rounded-md overflow-hidden border-border border m-auto pointer-events-auto",
+								"max-w-2xl w-full bg-container-3 shadow-md rounded-md overflow-hidden border-border border m-auto pointer-events-auto",
 								{
 									"max-w-7xl":
 										props.options?.size === "large",

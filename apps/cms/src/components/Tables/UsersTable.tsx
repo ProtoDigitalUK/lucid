@@ -14,6 +14,7 @@ import Table from "@/components/Groups/Table";
 import UserRow from "@/components/Tables/Rows/UserRow";
 import UpdateUserPanel from "@/components/Panels/User/UpdateUserPanel";
 import DeleteUser from "@/components/Modals/User/DeleteUser";
+import Layout from "@/components/Groups/Layout";
 import TriggerPasswordReset from "../Modals/User/TriggerPasswordReset";
 
 interface UsersTableProps {
@@ -47,51 +48,16 @@ const UsersTable: Component<UsersTableProps> = (props) => {
 	// Render
 	return (
 		<>
-			<Table.Root
-				key={"users.list"}
+			<Layout.PageTable
 				rows={users.data?.data.length || 0}
 				meta={users.data?.meta}
 				searchParams={props.searchParams}
-				head={[
-					{
-						label: T()("username"),
-						key: "username",
-						icon: <FaSolidIdCard />,
-					},
-					{
-						label: T()("first_name"),
-						key: "firstName",
-						icon: <FaSolidT />,
-					},
-					{
-						label: T()("last_name"),
-						key: "lastName",
-						icon: <FaSolidT />,
-					},
-					{
-						label: T()("super_admin"),
-						key: "superAdmin",
-						icon: <FaSolidUserTie />,
-					},
-					{
-						label: T()("email"),
-						key: "email",
-						icon: <FaSolidEnvelope />,
-					},
-					{
-						label: T()("created_at"),
-						key: "createdAt",
-						icon: <FaSolidCalendar />,
-						sortable: true,
-					},
-				]}
 				state={{
 					isLoading: users.isLoading,
 					isError: users.isError,
 					isSuccess: users.isSuccess,
 				}}
 				options={{
-					isSelectable: false,
 					showNoEntries: true,
 				}}
 				callbacks={{
@@ -105,26 +71,73 @@ const UsersTable: Component<UsersTableProps> = (props) => {
 					noEntryButton: T()("create_user"),
 				}}
 			>
-				{({ include, isSelectable, selected, setSelected }) => (
-					<Index each={users.data?.data || []}>
-						{(user, i) => (
-							<UserRow
-								index={i}
-								user={user()}
-								include={include}
-								selected={selected[i]}
-								rowTarget={rowTarget}
-								options={{
-									isSelectable,
-								}}
-								callbacks={{
-									setSelected: setSelected,
-								}}
-							/>
-						)}
-					</Index>
-				)}
-			</Table.Root>
+				<Table.Root
+					key={"users.list"}
+					rows={users.data?.data.length || 0}
+					searchParams={props.searchParams}
+					head={[
+						{
+							label: T()("username"),
+							key: "username",
+							icon: <FaSolidIdCard />,
+						},
+						{
+							label: T()("first_name"),
+							key: "firstName",
+							icon: <FaSolidT />,
+						},
+						{
+							label: T()("last_name"),
+							key: "lastName",
+							icon: <FaSolidT />,
+						},
+						{
+							label: T()("super_admin"),
+							key: "superAdmin",
+							icon: <FaSolidUserTie />,
+						},
+						{
+							label: T()("email"),
+							key: "email",
+							icon: <FaSolidEnvelope />,
+						},
+						{
+							label: T()("created_at"),
+							key: "createdAt",
+							icon: <FaSolidCalendar />,
+							sortable: true,
+						},
+					]}
+					state={{
+						isLoading: users.isLoading,
+						isSuccess: users.isSuccess,
+					}}
+					options={{
+						isSelectable: false,
+					}}
+				>
+					{({ include, isSelectable, selected, setSelected }) => (
+						<Index each={users.data?.data || []}>
+							{(user, i) => (
+								<UserRow
+									index={i}
+									user={user()}
+									include={include}
+									selected={selected[i]}
+									rowTarget={rowTarget}
+									options={{
+										isSelectable,
+									}}
+									callbacks={{
+										setSelected: setSelected,
+									}}
+								/>
+							)}
+						</Index>
+					)}
+				</Table.Root>
+			</Layout.PageTable>
+
 			<UpdateUserPanel
 				id={rowTarget.getTargetId}
 				state={{

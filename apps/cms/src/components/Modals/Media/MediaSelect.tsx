@@ -197,7 +197,7 @@ const SelectMediaContent: Component = () => {
 							<MediaBasicCard
 								media={item}
 								contentLocale={contentLocale()}
-								selected={
+								current={
 									item.id === mediaSelectStore.get.selected
 								}
 								onClick={() => {

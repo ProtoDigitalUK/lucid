@@ -8,6 +8,7 @@ import Table from "@/components/Groups/Table";
 import RoleRow from "@/components/Tables/Rows/RoleRow";
 import UpsertRolePanel from "@/components/Panels/Role/UpsertRolePanel";
 import DeleteRole from "@/components/Modals/Role/DeleteRole";
+import Layout from "@/components/Groups/Layout";
 
 interface RolesTableProps {
 	searchParams: ReturnType<typeof useSearchParamsLocation>;
@@ -42,37 +43,16 @@ const RolesTable: Component<RolesTableProps> = (props) => {
 	// Render
 	return (
 		<>
-			<Table.Root
-				key={"roles.list"}
+			<Layout.PageTable
 				rows={roles.data?.data.length || 0}
 				meta={roles.data?.meta}
 				searchParams={props.searchParams}
-				head={[
-					{
-						label: T()("name"),
-						key: "name",
-						icon: <FaSolidT />,
-						sortable: true,
-					},
-					{
-						label: T()("created_at"),
-						key: "createdAt",
-						icon: <FaSolidCalendar />,
-						sortable: true,
-					},
-					{
-						label: T()("updated_at"),
-						key: "updatedAt",
-						icon: <FaSolidCalendar />,
-					},
-				]}
 				state={{
 					isLoading: roles.isLoading,
 					isError: roles.isError,
 					isSuccess: roles.isSuccess,
 				}}
 				options={{
-					isSelectable: false,
 					showNoEntries: true,
 				}}
 				callbacks={{
@@ -86,26 +66,59 @@ const RolesTable: Component<RolesTableProps> = (props) => {
 					noEntryButton: T()("create_role"),
 				}}
 			>
-				{({ include, isSelectable, selected, setSelected }) => (
-					<Index each={roles.data?.data || []}>
-						{(role, i) => (
-							<RoleRow
-								index={i}
-								role={role()}
-								include={include}
-								selected={selected[i]}
-								rowTarget={rowTarget}
-								options={{
-									isSelectable,
-								}}
-								callbacks={{
-									setSelected: setSelected,
-								}}
-							/>
-						)}
-					</Index>
-				)}
-			</Table.Root>
+				<Table.Root
+					key={"roles.list"}
+					rows={roles.data?.data.length || 0}
+					searchParams={props.searchParams}
+					head={[
+						{
+							label: T()("name"),
+							key: "name",
+							icon: <FaSolidT />,
+							sortable: true,
+						},
+						{
+							label: T()("created_at"),
+							key: "createdAt",
+							icon: <FaSolidCalendar />,
+							sortable: true,
+						},
+						{
+							label: T()("updated_at"),
+							key: "updatedAt",
+							icon: <FaSolidCalendar />,
+						},
+					]}
+					state={{
+						isLoading: roles.isLoading,
+						isSuccess: roles.isSuccess,
+					}}
+					options={{
+						isSelectable: false,
+					}}
+				>
+					{({ include, isSelectable, selected, setSelected }) => (
+						<Index each={roles.data?.data || []}>
+							{(role, i) => (
+								<RoleRow
+									index={i}
+									role={role()}
+									include={include}
+									selected={selected[i]}
+									rowTarget={rowTarget}
+									options={{
+										isSelectable,
+									}}
+									callbacks={{
+										setSelected: setSelected,
+									}}
+								/>
+							)}
+						</Index>
+					)}
+				</Table.Root>
+			</Layout.PageTable>
+
 			<UpsertRolePanel
 				id={rowTarget.getTargetId}
 				state={{

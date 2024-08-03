@@ -5,6 +5,7 @@ import { PageLayout } from "./PageLayout";
 import { PageContent } from "./PageContent";
 import { NavigationTabs } from "./NavigationTabs";
 import { PageBreadcrumbs } from "./PageBreadcrumbs";
+import { PageTable } from "./PageTable";
 
 const Layout = {
 	NavigationSidebar,
@@ -14,6 +15,7 @@ const Layout = {
 	PageContent,
 	NavigationTabs,
 	PageBreadcrumbs,
+	PageTable,
 };
 
 export default Layout;

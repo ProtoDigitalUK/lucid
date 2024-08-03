@@ -1,11 +1,11 @@
 import T from "@/translations";
 import {
 	type Component,
+	type JSXElement,
 	Show,
+	createMemo,
 	Switch,
 	Match,
-	type JSXElement,
-	createMemo,
 } from "solid-js";
 import type { ResponseBody } from "@lucidcms/core/types";
 import type useSearchParamsLocation from "@/hooks/useSearchParamsLocation";
@@ -14,12 +14,13 @@ import noPermission from "@/assets/illustrations/no-permission.svg";
 import Query from "@/components/Groups/Query";
 import ErrorBlock from "@/components/Partials/ErrorBlock";
 import Button from "@/components/Partials/Button";
-import SkeletonCard from "@/components/Cards/SkeletonCard";
-import Layout from "@/components/Groups/Layout";
 import NoEntriesBlock from "@/components/Partials/NoEntriesBlock";
 
-interface GridRootProps {
-	items: number;
+interface PageTableProps {
+	rows: number;
+	permission?: boolean;
+	meta?: ResponseBody<unknown>["meta"];
+	searchParams: ReturnType<typeof useSearchParamsLocation>;
 	state: {
 		isLoading: boolean;
 		isError: boolean;
@@ -28,39 +29,37 @@ interface GridRootProps {
 	options?: {
 		showNoEntries?: boolean;
 	};
-	callbacks?: {
-		createEntry?: () => void;
-	};
 	copy?: {
 		noEntryTitle?: string;
 		noEntryDescription?: string;
 		noEntryButton?: string;
+		noResultTitle?: string;
+		noResultDescription?: string;
 	};
-	searchParams?: ReturnType<typeof useSearchParamsLocation>;
-	permission?: boolean;
-	meta?: ResponseBody<unknown>["meta"];
-	loadingCard?: JSXElement;
+	callbacks?: {
+		createEntry?: () => void;
+	};
 	children: JSXElement;
 }
 
-export const GridRoot: Component<GridRootProps> = (props) => {
-	// ----------------------------------
+export const PageTable: Component<PageTableProps> = (props) => {
+	// ----------------------------------------
 	// Memos
 	const showNoEntries = createMemo(() => {
 		return (
 			props.options?.showNoEntries === true &&
-			!props.searchParams?.hasFiltersApplied()
+			!props.searchParams.hasFiltersApplied()
 		);
 	});
 
-	// ----------------------------------
+	// ----------------------------------------
 	// Render
 	return (
 		<>
 			<Switch>
 				<Match when={props.permission === false}>
 					<ErrorBlock
-						type="page-layout"
+						type="table"
 						content={{
 							image: noPermission,
 							title: T()("no_permission"),
@@ -70,7 +69,7 @@ export const GridRoot: Component<GridRootProps> = (props) => {
 				</Match>
 				<Match when={props.state.isError}>
 					<ErrorBlock
-						type="page-layout"
+						type="table"
 						content={{
 							image: notifySvg,
 							title: T()("error_title"),
@@ -79,7 +78,7 @@ export const GridRoot: Component<GridRootProps> = (props) => {
 					/>
 				</Match>
 				<Match
-					when={props.items === 0 && props.state.isLoading === false}
+					when={props.rows === 0 && props.state.isLoading === false}
 				>
 					<Show when={showNoEntries()}>
 						<NoEntriesBlock
@@ -94,21 +93,23 @@ export const GridRoot: Component<GridRootProps> = (props) => {
 					</Show>
 					<Show when={!showNoEntries()}>
 						<ErrorBlock
-							type="page-layout"
+							type="table"
 							content={{
-								title: T()("no_results"),
-								description: T()("no_results_message"),
+								title:
+									props.copy?.noResultTitle ??
+									T()("no_results"),
+								description:
+									props.copy?.noResultDescription ??
+									T()("no_results_message"),
 							}}
 						>
-							<Show
-								when={props.searchParams?.hasFiltersApplied()}
-							>
+							<Show when={props.searchParams.hasFiltersApplied()}>
 								<Button
 									type="submit"
 									theme="primary"
 									size="medium"
 									onClick={() => {
-										props.searchParams?.resetFilters();
+										props.searchParams.resetFilters();
 									}}
 								>
 									{T()("reset_filters")}
@@ -118,50 +119,14 @@ export const GridRoot: Component<GridRootProps> = (props) => {
 					</Show>
 				</Match>
 				<Match when={props.state.isSuccess || props.state.isLoading}>
-					<Layout.PageContent>
-						<ul class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-15">
-							<Switch>
-								<Match when={props.state.isLoading}>
-									<Switch>
-										<Match when={props.loadingCard}>
-											{props.loadingCard}
-											{props.loadingCard}
-											{props.loadingCard}
-											{props.loadingCard}
-											{props.loadingCard}
-											{props.loadingCard}
-											{props.loadingCard}
-											{props.loadingCard}
-										</Match>
-										<Match when={!props.loadingCard}>
-											<SkeletonCard size="medium" />
-											<SkeletonCard size="medium" />
-											<SkeletonCard size="medium" />
-											<SkeletonCard size="medium" />
-											<SkeletonCard size="medium" />
-											<SkeletonCard size="medium" />
-											<SkeletonCard size="medium" />
-											<SkeletonCard size="medium" />
-										</Match>
-									</Switch>
-								</Match>
-								<Match when={props.state.isSuccess}>
-									{props.children}
-								</Match>
-							</Switch>
-						</ul>
-					</Layout.PageContent>
+					{props.children}
 				</Match>
 			</Switch>
 			{/* Pagination */}
-			<Show when={props.meta && props.searchParams}>
+			<Show when={props.meta}>
 				<Query.Pagination
 					meta={props.meta}
-					searchParams={
-						props.searchParams as ReturnType<
-							typeof useSearchParamsLocation
-						>
-					}
+					searchParams={props.searchParams}
 					mode="page"
 				/>
 			</Show>

@@ -26,7 +26,7 @@ const T = createMemo(() => {
 	document.documentElement.lang = getLocale();
 	return i18next.t.bind(i18next) as (
 		key: keyof typeof en,
-		data?: Record<string, string | number>,
+		data?: Record<string, string | number | undefined>,
 	) => string;
 });
 

@@ -8,6 +8,7 @@ type DocumentSelectStoreT = {
 	onSelectCallback: SelectCallbackT;
 
 	collectionKey: string | undefined;
+	selected?: CollectionDocumentResponse["id"];
 };
 
 const [get, set] = createStore<DocumentSelectStoreT>({

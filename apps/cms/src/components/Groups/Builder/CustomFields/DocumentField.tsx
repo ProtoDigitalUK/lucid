@@ -9,7 +9,7 @@ import type {
 	CFConfig,
 	FieldResponse,
 	FieldErrors,
-	DocumentMeta,
+	// DocumentMeta,
 	CollectionDocumentResponse,
 } from "@lucidcms/core/types";
 import brickStore from "@/store/brickStore";
@@ -109,11 +109,23 @@ export const DocumentField: Component<DocumentFieldProps> = (props) => {
 				type="button"
 				onClick={() => {
 					documentSelectStore.set({
-						onSelectCallback: (
-							doc: CollectionDocumentResponse,
-						) => {},
+						onSelectCallback: (doc: CollectionDocumentResponse) => {
+							batch(() => {
+								brickStore.get.setFieldValue({
+									brickIndex: props.state.brickIndex,
+									fieldConfig: props.state.fieldConfig,
+									key: props.state.fieldConfig.key,
+									groupId: props.state.groupId,
+									repeaterKey: props.state.repeaterKey,
+									value: !doc.id ? null : Number(doc.id),
+									contentLocale: props.state.contentLocale,
+								});
+								setValue(doc.id.toString());
+							});
+						},
 						open: true,
 						collectionKey: props.state.fieldConfig.collection,
+						selected: Number(getValue()),
 					});
 				}}
 			>

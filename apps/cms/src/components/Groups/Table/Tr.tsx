@@ -8,6 +8,8 @@ import classNames from "classnames";
 
 interface TrProps extends TableRowProps {
 	actions?: ActionDropdownProps["actions"];
+	onClick?: () => void;
+	current?: boolean;
 	children: JSXElement;
 }
 
@@ -31,6 +33,11 @@ export const Tr: Component<TrProps> = (props) => {
 	// ----------------------------------------
 	// Functions
 	const onClickHandler = () => {
+		if (props.onClick) {
+			props.onClick();
+			return;
+		}
+
 		const action = firstPermittedAction();
 
 		if (action) {
@@ -49,7 +56,10 @@ export const Tr: Component<TrProps> = (props) => {
 			class={classNames(
 				"bg-container-3 hover:bg-container-4 duration-200 transition-colors",
 				{
-					"cursor-pointer": firstPermittedAction() !== undefined,
+					"cursor-pointer":
+						firstPermittedAction() !== undefined || props.onClick,
+					"after:border-l-4 after:border-primary-base after:left-0 after:top-0 after:bottom-0 after:absolute relative":
+						props.current,
 				},
 			)}
 			onClick={onClickHandler}

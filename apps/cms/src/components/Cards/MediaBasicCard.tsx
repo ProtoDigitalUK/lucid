@@ -8,7 +8,7 @@ import MediaPreview from "@/components/Partials/MediaPreview";
 
 interface MediaBasicCardProps {
 	media: MediaResponse;
-	selected: boolean;
+	current: boolean;
 	contentLocale?: string;
 	onClick?: () => void;
 }
@@ -46,7 +46,7 @@ const MediaBasicCard: Component<MediaBasicCardProps> = (props) => {
 			class={classNames(
 				"bg-container-2 border-border border rounded-md group overflow-hidden relative cursor-pointer",
 				{
-					"border-primary-base": props.selected,
+					"border-primary-base": props.current,
 				},
 			)}
 			onClick={() => {

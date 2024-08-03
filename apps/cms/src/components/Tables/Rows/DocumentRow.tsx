@@ -1,6 +1,5 @@
 import T from "@/translations";
 import { type Component, For, Switch, Match, createMemo } from "solid-js";
-import type useRowTarget from "@/hooks/useRowTarget";
 import type { TableRowProps } from "@/types/components";
 import type {
 	CollectionDocumentResponse,
@@ -9,8 +8,8 @@ import type {
 	UserMeta,
 	FieldTypes,
 } from "@lucidcms/core/types";
+import type { ActionDropdownProps } from "@/components/Partials/ActionDropdown";
 import brickHelpers from "@/utils/brick-helpers";
-import userStore from "@/store/userStore";
 import contentLocaleStore from "@/store/contentLocaleStore";
 import Table from "@/components/Groups/Table";
 import DateCol from "@/components/Tables/Columns/DateCol";
@@ -23,8 +22,13 @@ interface DocumentRowProps extends TableRowProps {
 	collection: CollectionResponse;
 	fieldInclude: CFConfig<FieldTypes>[];
 	include: boolean[];
-	rowTarget: ReturnType<typeof useRowTarget<"delete">>;
+	actions?: ActionDropdownProps["actions"];
 	contentLocale?: string;
+	callbacks?: {
+		setSelected?: (i: number) => void;
+		onClick?: () => void;
+	};
+	active?: boolean;
 }
 
 const DocumentRow: Component<DocumentRowProps> = (props) => {
@@ -36,25 +40,9 @@ const DocumentRow: Component<DocumentRowProps> = (props) => {
 			selected={props.selected}
 			options={props.options}
 			callbacks={props.callbacks}
-			actions={[
-				{
-					label: T()("edit"),
-					type: "link",
-					href: `/admin/collections/${props.collection.key}/${props.document.id}`,
-					permission: userStore.get.hasPermission(["update_content"])
-						.all,
-				},
-				{
-					label: T()("delete"),
-					type: "button",
-					onClick: () => {
-						props.rowTarget.setTargetId(props.document.id);
-						props.rowTarget.setTrigger("delete", true);
-					},
-					permission: userStore.get.hasPermission(["delete_content"])
-						.all,
-				},
-			]}
+			actions={props.actions}
+			onClick={props.callbacks?.onClick}
+			current={props.current}
 		>
 			<For each={props.fieldInclude}>
 				{(field, i) => {
