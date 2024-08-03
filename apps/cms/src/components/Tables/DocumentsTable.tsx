@@ -1,6 +1,6 @@
 import T from "@/translations";
 import { type Component, type Accessor, Index, createMemo } from "solid-js";
-import { FaSolidT, FaSolidCalendar, FaSolidUser } from "solid-icons/fa";
+import { FaSolidCalendar } from "solid-icons/fa";
 import { useParams, useNavigate } from "@solidjs/router";
 import type {
 	CollectionResponse,
@@ -15,8 +15,8 @@ import contentLocaleStore from "@/store/contentLocaleStore";
 import Table from "@/components/Groups/Table";
 import DocumentRow from "@/components/Tables/Rows/DocumentRow";
 import DeleteDocument from "@/components/Modals/Documents/DeleteDocument";
-import helpers from "@/utils/helpers";
 import Layout from "@/components/Groups/Layout";
+import { tableHeadColumns } from "@/utils/document-table-helpers";
 
 interface DocumentsTableProps {
 	collection: CollectionResponse;
@@ -41,31 +41,9 @@ const DocumentsTable: Component<DocumentsTableProps> = (props) => {
 	const contentLocale = createMemo(
 		() => contentLocaleStore.get.contentLocale ?? "",
 	);
-	const tableHeadColumns = createMemo(() => {
-		return props.fieldIncludes().map((field) => {
-			switch (field.type) {
-				case "user":
-					return {
-						label: helpers.getLocaleValue({
-							value: field.labels.title,
-							fallback: field.key,
-						}),
-						key: field.key,
-						icon: <FaSolidUser />,
-					};
-				default: {
-					return {
-						label: helpers.getLocaleValue({
-							value: field.labels.title,
-							fallback: field.key,
-						}),
-						key: field.key,
-						icon: <FaSolidT />,
-					};
-				}
-			}
-		});
-	});
+	const getTableHeadColumns = createMemo(() =>
+		tableHeadColumns(props.fieldIncludes()),
+	);
 
 	// ----------------------------------
 	// Queries
@@ -128,7 +106,7 @@ const DocumentsTable: Component<DocumentsTableProps> = (props) => {
 					rows={documents.data?.data.length || 0}
 					searchParams={props.searchParams}
 					head={[
-						...tableHeadColumns(),
+						...getTableHeadColumns(),
 						{
 							label: T()("updated_at"),
 							key: "updated_at",

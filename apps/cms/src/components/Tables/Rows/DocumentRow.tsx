@@ -28,7 +28,7 @@ interface DocumentRowProps extends TableRowProps {
 		setSelected?: (i: number) => void;
 		onClick?: () => void;
 	};
-	active?: boolean;
+	current?: boolean;
 }
 
 const DocumentRow: Component<DocumentRowProps> = (props) => {

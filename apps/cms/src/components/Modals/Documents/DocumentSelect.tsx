@@ -1,11 +1,7 @@
 import T from "@/translations";
 import { type Component, createMemo, createEffect, Index } from "solid-js";
-import { FaSolidT, FaSolidCalendar, FaSolidUser } from "solid-icons/fa";
-import type {
-	CFConfig,
-	FieldTypes,
-	CollectionResponse,
-} from "@lucidcms/core/types";
+import { FaSolidCalendar } from "solid-icons/fa";
+import type { CollectionResponse } from "@lucidcms/core/types";
 import useSearchParamsState from "@/hooks/useSearchParamsState";
 import type { FilterSchema } from "@/hooks/useSearchParamsLocation";
 import documentSelectStore from "@/store/forms/documentSelectStore";
@@ -16,6 +12,11 @@ import helpers from "@/utils/helpers";
 import Modal from "@/components/Groups/Modal";
 import Table from "@/components/Groups/Table";
 import DocumentRow from "@/components/Tables/Rows/DocumentRow";
+import {
+	tableHeadColumns,
+	collectionFieldFilters,
+	collectionFieldIncludes,
+} from "@/utils/document-table-helpers";
 
 const DocumentSelectModal: Component = () => {
 	const open = createMemo(() => documentSelectStore.get.open);
@@ -80,69 +81,15 @@ const DocumentSelectContent: Component = () => {
 
 	// ----------------------------------
 	// Memos
-	const collectionFieldInclude = createMemo(() => {
-		const fieldsRes: CFConfig<FieldTypes>[] = [];
-
-		const fieldRecursive = (fields?: CFConfig<FieldTypes>[]) => {
-			if (!fields) return;
-			for (const field of fields) {
-				if (field.type === "repeater" && field.fields) {
-					fieldRecursive(field.fields);
-					return;
-				}
-				if (collection.data?.data.fieldIncludes.includes(field.key)) {
-					fieldsRes.push(field);
-				}
-			}
-		};
-		fieldRecursive(collection.data?.data.fields);
-
-		return fieldsRes;
-	});
-	const collectionFieldFilter = createMemo(() => {
-		const fieldsRes: CFConfig<FieldTypes>[] = [];
-
-		const fieldRecursive = (fields?: CFConfig<FieldTypes>[]) => {
-			if (!fields) return;
-			for (const field of fields) {
-				if (field.type === "repeater" && field.fields) {
-					fieldRecursive(field.fields);
-					return;
-				}
-				if (collection.data?.data.fieldFilters.includes(field.key)) {
-					fieldsRes.push(field);
-				}
-			}
-		};
-		fieldRecursive(collection.data?.data.fields);
-
-		return fieldsRes;
-	});
-	const tableHeadColumns = createMemo(() => {
-		return collectionFieldInclude().map((field) => {
-			switch (field.type) {
-				case "user":
-					return {
-						label: helpers.getLocaleValue({
-							value: field.labels.title,
-							fallback: field.key,
-						}),
-						key: field.key,
-						icon: <FaSolidUser />,
-					};
-				default: {
-					return {
-						label: helpers.getLocaleValue({
-							value: field.labels.title,
-							fallback: field.key,
-						}),
-						key: field.key,
-						icon: <FaSolidT />,
-					};
-				}
-			}
-		});
-	});
+	const getCollectionFieldIncludes = createMemo(() =>
+		collectionFieldIncludes(collection.data?.data),
+	);
+	const getCollectionFieldFilters = createMemo(() =>
+		collectionFieldFilters(collection.data?.data),
+	);
+	const getTableHeadColumns = createMemo(() =>
+		tableHeadColumns(getCollectionFieldIncludes()),
+	);
 
 	const isLoading = createMemo(
 		() => documents.isLoading || collection.isLoading,
@@ -157,7 +104,7 @@ const DocumentSelectContent: Component = () => {
 	createEffect(() => {
 		if (collection.isSuccess) {
 			const filterConfig: FilterSchema = {};
-			for (const field of collectionFieldFilter()) {
+			for (const field of getCollectionFieldFilters()) {
 				switch (field.type) {
 					default: {
 						filterConfig[field.key] = {
@@ -183,56 +130,58 @@ const DocumentSelectContent: Component = () => {
 				<div class="w-full mt-15 flex justify-between">
 					<div class="flex gap-5">
 						<Query.Filter
-							filters={collectionFieldFilter().map((field) => {
-								switch (field.type) {
-									case "checkbox": {
-										return {
-											label: helpers.getLocaleValue({
-												value: field.labels.title,
-												fallback: field.key,
-											}),
-											key: field.key,
-											type: "boolean",
-										};
-									}
-									case "select": {
-										return {
-											label: helpers.getLocaleValue({
-												value: field.labels.title,
-												fallback: field.key,
-											}),
-											key: field.key,
-											type: "select",
-											options: field.options?.map(
-												(option, i) => ({
-													value: option.value,
-													label: helpers.getLocaleValue(
-														{
-															value: option.label,
-															fallback: T()(
-																"option_label",
-																{
-																	count: i,
-																},
-															),
-														},
-													),
+							filters={getCollectionFieldFilters().map(
+								(field) => {
+									switch (field.type) {
+										case "checkbox": {
+											return {
+												label: helpers.getLocaleValue({
+													value: field.labels.title,
+													fallback: field.key,
 												}),
-											),
-										};
+												key: field.key,
+												type: "boolean",
+											};
+										}
+										case "select": {
+											return {
+												label: helpers.getLocaleValue({
+													value: field.labels.title,
+													fallback: field.key,
+												}),
+												key: field.key,
+												type: "select",
+												options: field.options?.map(
+													(option, i) => ({
+														value: option.value,
+														label: helpers.getLocaleValue(
+															{
+																value: option.label,
+																fallback: T()(
+																	"option_label",
+																	{
+																		count: i,
+																	},
+																),
+															},
+														),
+													}),
+												),
+											};
+										}
+										default: {
+											return {
+												label: helpers.getLocaleValue({
+													value: field.labels.title,
+													fallback: field.key,
+												}),
+												key: field.key,
+												type: "text",
+											};
+										}
 									}
-									default: {
-										return {
-											label: helpers.getLocaleValue({
-												value: field.labels.title,
-												fallback: field.key,
-											}),
-											key: field.key,
-											type: "text",
-										};
-									}
-								}
-							})}
+								},
+							)}
 							searchParams={searchParams}
 						/>
 					</div>
@@ -281,7 +230,7 @@ const DocumentSelectContent: Component = () => {
 						rows={documents.data?.data.length || 0}
 						searchParams={searchParams}
 						head={[
-							...tableHeadColumns(),
+							...getTableHeadColumns(),
 							{
 								label: T()("updated_at"),
 								key: "updated_at",
@@ -299,7 +248,7 @@ const DocumentSelectContent: Component = () => {
 									<DocumentRow
 										index={i}
 										document={doc()}
-										fieldInclude={collectionFieldInclude()}
+										fieldInclude={getCollectionFieldIncludes()}
 										collection={
 											collection.data
 												?.data as CollectionResponse

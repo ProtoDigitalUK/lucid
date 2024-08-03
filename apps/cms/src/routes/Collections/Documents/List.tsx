@@ -15,6 +15,10 @@ import useSearchParamsLocation, {
 import Layout from "@/components/Groups/Layout";
 import DocumentsTable from "@/components/Tables/DocumentsTable";
 import Query from "@/components/Groups/Query";
+import {
+	collectionFieldFilters,
+	collectionFieldIncludes,
+} from "@/utils/document-table-helpers";
 
 const CollectionsDocumentsListRoute: Component = () => {
 	// ----------------------------------
@@ -42,44 +46,12 @@ const CollectionsDocumentsListRoute: Component = () => {
 
 	// ----------------------------------
 	// Memos
-	const collectionFieldInclude = createMemo(() => {
-		const fieldsRes: CFConfig<FieldTypes>[] = [];
-
-		const fieldRecursive = (fields?: CFConfig<FieldTypes>[]) => {
-			if (!fields) return;
-			for (const field of fields) {
-				if (field.type === "repeater" && field.fields) {
-					fieldRecursive(field.fields);
-					return;
-				}
-				if (collection.data?.data.fieldIncludes.includes(field.key)) {
-					fieldsRes.push(field);
-				}
-			}
-		};
-		fieldRecursive(collection.data?.data.fields);
-
-		return fieldsRes;
-	});
-	const collectionFieldFilter = createMemo(() => {
-		const fieldsRes: CFConfig<FieldTypes>[] = [];
-
-		const fieldRecursive = (fields?: CFConfig<FieldTypes>[]) => {
-			if (!fields) return;
-			for (const field of fields) {
-				if (field.type === "repeater" && field.fields) {
-					fieldRecursive(field.fields);
-					return;
-				}
-				if (collection.data?.data.fieldFilters.includes(field.key)) {
-					fieldsRes.push(field);
-				}
-			}
-		};
-		fieldRecursive(collection.data?.data.fields);
-
-		return fieldsRes;
-	});
+	const getCollectionFieldIncludes = createMemo(() =>
+		collectionFieldIncludes(collection.data?.data),
+	);
+	const getCollectionFieldFilters = createMemo(() =>
+		collectionFieldFilters(collection.data?.data),
+	);
 
 	// ----------------------------------
 	// Effects
@@ -94,7 +66,7 @@ const CollectionsDocumentsListRoute: Component = () => {
 	createEffect(() => {
 		if (collection.isSuccess) {
 			const filterConfig: FilterSchema = {};
-			for (const field of collectionFieldFilter()) {
+			for (const field of getCollectionFieldFilters()) {
 				switch (field.type) {
 					default: {
 						filterConfig[field.key] = {
@@ -137,7 +109,7 @@ const CollectionsDocumentsListRoute: Component = () => {
 			headingChildren={
 				<Query.Row
 					searchParams={searchParams}
-					filters={collectionFieldFilter().map((field) => {
+					filters={getCollectionFieldFilters().map((field) => {
 						switch (field.type) {
 							case "checkbox": {
 								return {
@@ -189,7 +161,7 @@ const CollectionsDocumentsListRoute: Component = () => {
 			<DocumentsTable
 				searchParams={searchParams}
 				collection={collection.data?.data as CollectionResponse}
-				fieldIncludes={collectionFieldInclude}
+				fieldIncludes={getCollectionFieldIncludes}
 			/>
 		</Layout.PageLayout>
 	);
