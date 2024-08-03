@@ -142,7 +142,7 @@ export const PageHeading: Component<PageHeadingProps> = (props) => {
 							<Button
 								type="submit"
 								theme="primary"
-								size="xs-icon"
+								size="x-icon"
 								onClick={() => {
 									props.actions?.create?.setOpen(true);
 								}}
@@ -162,7 +162,7 @@ export const PageHeading: Component<PageHeadingProps> = (props) => {
 						>
 							<Link
 								theme="primary"
-								size="xs-icon"
+								size="x-icon"
 								href={props.actions?.createLink?.link}
 							>
 								<FaSolidPlus />
@@ -180,7 +180,7 @@ export const PageHeading: Component<PageHeadingProps> = (props) => {
 						>
 							<Link
 								theme="primary"
-								size="xs-icon"
+								size="x-icon"
 								href={props.actions?.link?.href}
 								target={
 									props.actions?.link?.newTab
@@ -202,7 +202,7 @@ export const PageHeading: Component<PageHeadingProps> = (props) => {
 						>
 							<Button
 								theme="danger"
-								size="xs-icon"
+								size="x-icon"
 								type="button"
 								onClick={() =>
 									props.actions?.delete?.setOpen(true)

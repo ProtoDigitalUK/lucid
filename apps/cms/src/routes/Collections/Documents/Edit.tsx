@@ -298,7 +298,7 @@ const CollectionsDocumentsEditRoute: Component<
 							>
 								<Button
 									theme="border-outline"
-									size="xs-icon"
+									size="x-icon"
 									type="button"
 									onClick={() => setDeleteOpen(true)}
 								>

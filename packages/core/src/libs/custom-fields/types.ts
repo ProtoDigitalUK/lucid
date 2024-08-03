@@ -555,9 +555,7 @@ export type MediaResMeta = {
 	}>;
 	type: MediaType | null;
 } | null;
-export type DocumentResMeta = {
-	id: number | null;
-} | null;
+export type DocumentResMeta = null;
 export type RepeaterResMeta = null;
 export type NumberResMeta = null;
 export type CheckboxResMeta = null;

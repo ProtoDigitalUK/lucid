@@ -12,6 +12,7 @@ import { WYSIWYG } from "./WYSIWYG";
 import { MediaSelect } from "./MediaSelect";
 import { LinkSelect } from "./LinkSelect";
 import { Search } from "./Search";
+import { DocumentSelect } from "./DocumentSelect";
 
 import { ErrorMessage } from "./ErrorMessage";
 import { DescribedBy } from "./DescribedBy";
@@ -25,6 +26,7 @@ const Form = {
 	Textarea,
 	Select,
 	SelectMultiple,
+	DocumentSelect,
 	SingleFileUpload,
 	Colour,
 	Switch,

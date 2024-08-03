@@ -16,6 +16,8 @@ const CustomFieldSchema = z.object({
 				.optional(),
 		})
 		.optional(),
+	collection: z.string().optional(),
+	previewField: z.string().optional(),
 	default: z
 		.union([
 			z.boolean(),

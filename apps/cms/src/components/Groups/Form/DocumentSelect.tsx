@@ -1,16 +1,21 @@
 import T from "@/translations";
 import { type Component, Match, Switch } from "solid-js";
 import classNames from "classnames";
-import { FaSolidPen, FaSolidXmark } from "solid-icons/fa";
-import type { ErrorResult, FieldErrors, LinkValue } from "@lucidcms/core/types";
-import linkFieldStore from "@/store/forms/linkFieldStore";
+import { FaSolidXmark, FaSolidPen } from "solid-icons/fa";
+import type {
+	ErrorResult,
+	FieldErrors,
+	CollectionDocumentResponse,
+} from "@lucidcms/core/types";
+import documentSelectStore from "@/store/forms/documentSelectStore";
 import Button from "@/components/Partials/Button";
 import Form from "@/components/Groups/Form";
 
-interface LinkSelectProps {
+interface DocumentSelectProps {
 	id: string;
-	value: LinkValue | undefined | null;
-	onChange: (_value: LinkValue | null) => void;
+	collection: string;
+	value: number | undefined;
+	onChange: (_value: number | null) => void;
 	copy?: {
 		label?: string;
 		describedBy?: string;
@@ -22,24 +27,18 @@ interface LinkSelectProps {
 	altLocaleError?: boolean;
 }
 
-export const LinkSelect: Component<LinkSelectProps> = (props) => {
+export const DocumentSelect: Component<DocumentSelectProps> = (props) => {
 	// -------------------------------
 	// Functions
-	const openLinkModal = () => {
-		linkFieldStore.set({
-			onSelectCallback: (link) => {
-				props.onChange(link);
+	const openDocuSelectModal = () => {
+		documentSelectStore.set({
+			onSelectCallback: (doc: CollectionDocumentResponse) => {
+				props.onChange(doc.id);
 			},
 			open: true,
-			selectedLink: props.value as LinkValue,
+			collectionKey: props.collection,
+			selected: props.value,
 		});
-	};
-
-	// -------------------------------
-	// Memos
-	const linkLabel = () => {
-		const value = props.value as LinkValue;
-		return value?.label || value?.url;
 	};
 
 	// -------------------------------
@@ -58,29 +57,35 @@ export const LinkSelect: Component<LinkSelectProps> = (props) => {
 				theme={"basic"}
 				altLocaleError={props.altLocaleError}
 			/>
-			<div class="mt-2.5 w-full flex flex-wrap gap-2.5">
+			<div class="mt-2.5 w-full">
 				<Switch>
-					<Match when={!linkLabel()}>
+					<Match when={typeof props.value !== "number"}>
 						<Button
 							type="button"
 							theme="border-outline"
 							size="x-small"
-							onClick={openLinkModal}
+							onClick={openDocuSelectModal}
+							disabled={props.disabled}
+							classes="capitalize"
 						>
-							{T()("select_link")}
+							{T()("select_document")}
 						</Button>
 					</Match>
-					<Match when={props.value}>
+					<Match when={typeof props.value === "number"}>
 						<div class="w-full flex items-center gap-2.5">
 							<Button
 								type="button"
 								theme="border-outline"
 								size="x-small"
-								onClick={openLinkModal}
+								onClick={openDocuSelectModal}
 								disabled={props.disabled}
 								classes="capitalize"
 							>
-								<span class="line-clamp-1">{linkLabel()}</span>
+								<span class="line-clamp-1">
+									{T()("selected_document", {
+										id: props.value,
+									})}
+								</span>
 								<span class="ml-2.5 flex items-center border-l border-current pl-2.5">
 									<FaSolidPen
 										size={12}

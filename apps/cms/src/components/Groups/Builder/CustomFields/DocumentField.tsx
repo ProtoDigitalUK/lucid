@@ -34,8 +34,7 @@ interface DocumentFieldProps {
 export const DocumentField: Component<DocumentFieldProps> = (props) => {
 	// -------------------------------
 	// State
-	const [getValue, setValue] = createSignal<string>("");
-	// const [getMeta, setMeta] = createSignal<DocumentMeta | undefined>();
+	const [getValue, setValue] = createSignal<number | undefined>();
 
 	// -------------------------------
 	// Memos
@@ -49,88 +48,50 @@ export const DocumentField: Component<DocumentFieldProps> = (props) => {
 			contentLocale: props.state.contentLocale,
 		});
 	});
-	// const fieldMeta = createMemo(() => {
-	// 	return brickHelpers.getFieldMeta<DocumentMeta>({
-	// 		fieldData: fieldData(),
-	// 		fieldConfig: props.state.fieldConfig,
-	// 		contentLocale: props.state.contentLocale,
-	// 	});
-	// });
 
 	// -------------------------------
 	// Effects
 	createEffect(() => {
-		setValue(fieldValue()?.toString() || "");
-		// setMeta(fieldMeta());
+		setValue(fieldValue());
 	});
 
 	// -------------------------------
 	// Render
 	return (
-		<>
-			<Form.Input
-				id={brickHelpers.customFieldId({
-					key: props.state.fieldConfig.key,
-					brickIndex: props.state.brickIndex,
-					groupId: props.state.groupId,
-				})}
-				value={getValue() || ""}
-				onChange={(value) => {
-					batch(() => {
-						brickStore.get.setFieldValue({
-							brickIndex: props.state.brickIndex,
-							fieldConfig: props.state.fieldConfig,
-							key: props.state.fieldConfig.key,
-							groupId: props.state.groupId,
-							repeaterKey: props.state.repeaterKey,
-							value: !value ? null : Number(value),
-							contentLocale: props.state.contentLocale,
-						});
-						setValue(value);
+		<Form.DocumentSelect
+			id={brickHelpers.customFieldId({
+				key: props.state.fieldConfig.key,
+				brickIndex: props.state.brickIndex,
+				groupId: props.state.groupId,
+			})}
+			collection={props.state.fieldConfig.collection}
+			value={getValue()}
+			onChange={(value) => {
+				batch(() => {
+					brickStore.get.setFieldValue({
+						brickIndex: props.state.brickIndex,
+						fieldConfig: props.state.fieldConfig,
+						key: props.state.fieldConfig.key,
+						groupId: props.state.groupId,
+						repeaterKey: props.state.repeaterKey,
+						value: !value ? null : Number(value),
+						contentLocale: props.state.contentLocale,
 					});
-				}}
-				name={props.state.fieldConfig.key}
-				type={"number"}
-				copy={{
-					label: helpers.getLocaleValue({
-						value: props.state.fieldConfig.labels.title,
-					}),
-					describedBy: helpers.getLocaleValue({
-						value: props.state.fieldConfig.labels.description,
-					}),
-				}}
-				errors={props.state.fieldError}
-				altLocaleError={props.state.altLocaleError}
-				disabled={props.state.fieldConfig.disabled}
-				required={props.state.fieldConfig.validation?.required || false}
-				theme={"basic"}
-			/>
-			<button
-				type="button"
-				onClick={() => {
-					documentSelectStore.set({
-						onSelectCallback: (doc: CollectionDocumentResponse) => {
-							batch(() => {
-								brickStore.get.setFieldValue({
-									brickIndex: props.state.brickIndex,
-									fieldConfig: props.state.fieldConfig,
-									key: props.state.fieldConfig.key,
-									groupId: props.state.groupId,
-									repeaterKey: props.state.repeaterKey,
-									value: !doc.id ? null : Number(doc.id),
-									contentLocale: props.state.contentLocale,
-								});
-								setValue(doc.id.toString());
-							});
-						},
-						open: true,
-						collectionKey: props.state.fieldConfig.collection,
-						selected: Number(getValue()),
-					});
-				}}
-			>
-				Open Modal
-			</button>
-		</>
+					setValue(value ?? undefined);
+				});
+			}}
+			copy={{
+				label: helpers.getLocaleValue({
+					value: props.state.fieldConfig.labels.title,
+				}),
+				describedBy: helpers.getLocaleValue({
+					value: props.state.fieldConfig.labels.description,
+				}),
+			}}
+			errors={props.state.fieldError}
+			altLocaleError={props.state.altLocaleError}
+			disabled={props.state.fieldConfig.disabled}
+			required={props.state.fieldConfig.validation?.required || false}
+		/>
 	);
 };
