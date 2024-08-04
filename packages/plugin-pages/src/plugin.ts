@@ -41,6 +41,7 @@ const plugin: LucidPluginOptions<PluginOptions> = async (config, plugin) => {
 			event: "afterUpsert",
 			handler: afterUpsertHandler,
 		});
+		// TODO: when revision support is added, run the afterUpsertHandler when a revision is made the active revision
 	}
 
 	return {
