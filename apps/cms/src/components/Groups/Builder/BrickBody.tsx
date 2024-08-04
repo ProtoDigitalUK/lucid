@@ -51,10 +51,11 @@ export const BrickBody: Component<BrickProps> = (props) => {
 	return (
 		<div
 			class={classNames(
-				"transform-gpu origin-top duration-200 transition-all overflow-hidden",
+				"transform-gpu origin-top duration-200 transition-all",
 				{
 					"scale-y-100 h-auto opacity-100 visible": props.state.open,
-					"scale-y-0 h-0 opacity-0 invisible": !props.state.open,
+					"scale-y-0 h-0 opacity-0 invisible overflow-hidden":
+						!props.state.open,
 				},
 			)}
 			role="region"

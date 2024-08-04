@@ -309,7 +309,7 @@ const CollectionsDocumentsEditRoute: Component<
 						</div>
 					</div>
 				</header>
-				<div class="w-full mt-[191px] lg:mt-[141px] flex overflow-x-hidden flex-grow">
+				<div class="w-full mt-[191px] lg:mt-[141px] flex flex-grow">
 					{/* Fields & Bricks */}
 					<div class="w-full">
 						<Document.CollectionPseudoBrick
