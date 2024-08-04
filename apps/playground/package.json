@@ -13,9 +13,10 @@
 		"@lucidcms/plugin-local-storage": "*",
 		"@lucidcms/plugin-nodemailer": "*",
 		"@lucidcms/plugin-s3": "*",
+		"@lucidcms/plugin-pages": "*",
 		"better-sqlite3": "^11.1.2",
 		"nodemailer": "^6.9.14",
-		"typescript": "^5.5.3"
+		"typescript": "^5.5.4"
 	},
 	"author": "",
 	"license": "ISC",

@@ -7,7 +7,8 @@ import Database from "better-sqlite3";
 import transporter from "./src/services/email-transporter.js";
 // Plugins
 import LucidNodemailer from "@lucidcms/plugin-nodemailer";
-import LucidS3 from "@lucidcms/plugin-s3";
+// import LucidS3 from "@lucidcms/plugin-s3";
+import LucidPages from "@lucidcms/plugin-pages";
 import LucidLocalStorage from "@lucidcms/plugin-local-storage";
 // Collections
 import PageCollection from "./src/lucid/collections/pages.js";
@@ -63,6 +64,14 @@ export default lucid.config({
 	// ],
 	collections: [PageCollection, BlogCollection, SettingsCollection],
 	plugins: [
+		LucidPages({
+			collections: [
+				{
+					key: "page",
+					homepage: true,
+				},
+			],
+		}),
 		LucidNodemailer({
 			from: {
 				email: "admin@lucidcms.io",
