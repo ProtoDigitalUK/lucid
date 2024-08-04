@@ -101,7 +101,8 @@ const upsertSingle: ServiceFn<
 			data: data,
 		},
 	);
-	const bodyData = merge(data, hookResponse);
+	if (hookResponse.error) return hookResponse;
+	const bodyData = merge(data, hookResponse.data);
 
 	const document = await CollectionDocumentsRepo.upsertSingle({
 		id: data.documentId,
@@ -134,7 +135,7 @@ const upsertSingle: ServiceFn<
 		);
 	if (createMultipleBricks.error) return createMultipleBricks;
 
-	await executeHooks(
+	const hookAfterRes = await executeHooks(
 		{
 			service: "collection-documents",
 			event: "afterUpsert",
@@ -154,6 +155,7 @@ const upsertSingle: ServiceFn<
 			},
 		},
 	);
+	if (hookAfterRes.error) return hookAfterRes;
 
 	return {
 		error: undefined,

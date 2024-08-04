@@ -90,7 +90,7 @@ const deleteMultiple: ServiceFn<
 		};
 	}
 
-	await executeHooks(
+	const hookBeforeRes = await executeHooks(
 		{
 			service: "collection-documents",
 			event: "beforeDelete",
@@ -108,6 +108,7 @@ const deleteMultiple: ServiceFn<
 			},
 		},
 	);
+	if (hookBeforeRes.error) return hookBeforeRes;
 
 	const deletePages = await CollectionDocumentsRepo.updateMultiple({
 		where: [
@@ -134,7 +135,7 @@ const deleteMultiple: ServiceFn<
 		};
 	}
 
-	await executeHooks(
+	const hookAfterRes = await executeHooks(
 		{
 			service: "collection-documents",
 			event: "afterDelete",
@@ -152,6 +153,7 @@ const deleteMultiple: ServiceFn<
 			},
 		},
 	);
+	if (hookAfterRes.error) return hookAfterRes;
 
 	return {
 		error: undefined,

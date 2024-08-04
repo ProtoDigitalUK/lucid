@@ -13,19 +13,41 @@ const PageCollection = new CollectionBuilder("page", {
 		{
 			event: "beforeUpsert",
 			handler: async (props) => {
-				console.log("beforeUpsert hook collection", props.data);
+				// console.log("beforeUpsert hook collection", props.data);
+				return {
+					error: undefined,
+					data: undefined,
+				};
+			},
+		},
+		{
+			event: "afterUpsert",
+			handler: async (props) => {
+				// console.log("afterUpsert hook collection", props.data);
+				return {
+					error: undefined,
+					data: undefined,
+				};
 			},
 		},
 		{
 			event: "beforeDelete",
 			handler: async (props) => {
-				console.log("beforeDelete hook collection", props.data);
+				// console.log("beforeDelete hook collection", props.data);
+				return {
+					error: undefined,
+					data: undefined,
+				};
 			},
 		},
 		{
 			event: "afterDelete",
 			handler: async (props) => {
-				console.log("afterDelete hook collection", props.data);
+				// console.log("afterDelete hook collection", props.data);
+				return {
+					error: undefined,
+					data: undefined,
+				};
 			},
 		},
 	],

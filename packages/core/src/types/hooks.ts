@@ -1,6 +1,7 @@
 import type { BrickSchema } from "../schemas/collection-bricks.js";
 import type { FieldSchemaType } from "../schemas/collection-fields.js";
 import type { KyselyDB } from "../libs/db/types.js";
+import type { ServiceResponse } from "../utils/services/types.js";
 
 // --------------------------------------------------
 // types
@@ -41,13 +42,14 @@ export type HookServiceHandlers = {
 				bricks?: Array<BrickSchema>;
 				fields?: Array<FieldSchemaType>;
 			};
-		}) =>
-			| Promise<{
+		}) => ServiceResponse<
+			| {
 					documentId?: number;
 					bricks?: Array<BrickSchema>;
 					fields?: Array<FieldSchemaType>;
-			  }>
-			| Promise<void>;
+			  }
+			| undefined
+		>;
 		afterUpsert: (props: {
 			db: KyselyDB;
 			meta: {
@@ -59,7 +61,7 @@ export type HookServiceHandlers = {
 				bricks?: Array<BrickSchema>;
 				fields?: Array<FieldSchemaType>;
 			};
-		}) => Promise<void>;
+		}) => ServiceResponse<undefined>;
 		beforeDelete: (props: {
 			db: KyselyDB;
 			meta: {
@@ -69,7 +71,7 @@ export type HookServiceHandlers = {
 			data: {
 				ids: number[];
 			};
-		}) => Promise<void>;
+		}) => ServiceResponse<undefined>;
 		afterDelete: (props: {
 			db: KyselyDB;
 			meta: {
@@ -79,7 +81,7 @@ export type HookServiceHandlers = {
 			data: {
 				ids: number[];
 			};
-		}) => Promise<void>;
+		}) => ServiceResponse<undefined>;
 	};
 };
 

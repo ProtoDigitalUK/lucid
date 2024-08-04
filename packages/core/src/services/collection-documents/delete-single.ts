@@ -71,7 +71,7 @@ const deleteSingle: ServiceFn<
 		};
 	}
 
-	await executeHooks(
+	const hookBeforeRes = await executeHooks(
 		{
 			service: "collection-documents",
 			event: "beforeDelete",
@@ -89,6 +89,7 @@ const deleteSingle: ServiceFn<
 			},
 		},
 	);
+	if (hookBeforeRes.error) return hookBeforeRes;
 
 	const deletePage = await CollectionDocumentsRepo.updateSingle({
 		where: [
@@ -115,7 +116,7 @@ const deleteSingle: ServiceFn<
 		};
 	}
 
-	await executeHooks(
+	const hookAfterRes = await executeHooks(
 		{
 			service: "collection-documents",
 			event: "afterDelete",
@@ -133,6 +134,7 @@ const deleteSingle: ServiceFn<
 			},
 		},
 	);
+	if (hookAfterRes.error) return hookAfterRes;
 
 	return {
 		error: undefined,

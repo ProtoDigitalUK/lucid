@@ -2,6 +2,7 @@ import merge from "lodash.merge";
 import type { Config } from "../../types/config.js";
 import type { HookServiceHandlers, ArgumentsType } from "../../types/hooks.js";
 import type CollectionBuilder from "../../libs/builders/collection-builder/index.js";
+import type { ServiceResponse } from "../services/types.js";
 
 const executeHooks = async <
 	S extends keyof HookServiceHandlers,
@@ -17,7 +18,7 @@ const executeHooks = async <
 		collectionInstance?: CollectionBuilder;
 	},
 	...args: HandlerArgs
-): Promise<Result> => {
+): ServiceResponse<Result> => {
 	const results: Array<Result> = [];
 
 	for (let i = 0; i < options.config.hooks.length; i++) {
@@ -38,7 +39,11 @@ const executeHooks = async <
 		if (hook === undefined) continue;
 		if (hook.event === options.event) {
 			// @ts-expect-error
-			results.push(await hook.handler(...args));
+			const res = await hook.handler(...args);
+			if (res.error) return res;
+
+			// @ts-expect-error
+			results.push(res);
 		}
 	}
 
