@@ -55,12 +55,6 @@ const PageCollection = new CollectionBuilder("page", {
 			filterable: true,
 		},
 	)
-	.addDocument("parent", {
-		collection: "page",
-		labels: {
-			title: "Parent",
-		},
-	})
 	.addUser("author", undefined, {
 		list: true,
 	});

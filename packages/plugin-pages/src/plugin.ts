@@ -3,7 +3,12 @@ import type { LucidPluginOptions } from "@lucidcms/core/types";
 import type { PluginOptions } from "./types/index.js";
 import { PLUGIN_KEY, LUCID_VERSION } from "./constants.js";
 import { logger } from "@lucidcms/core";
-import { registerFields, pluginOptions } from "./services/index.js";
+import {
+	registerFields,
+	pluginOptions,
+	beforeUpsertHandler,
+	afterUpsertHandler,
+} from "./services/index.js";
 
 const plugin: LucidPluginOptions<PluginOptions> = async (config, plugin) => {
 	const options = pluginOptions(plugin);
@@ -23,6 +28,19 @@ const plugin: LucidPluginOptions<PluginOptions> = async (config, plugin) => {
 		}
 
 		registerFields(collectionInstance, collectionConfig);
+
+		if (!collectionInstance.config.hooks) {
+			collectionInstance.config.hooks = [];
+		}
+
+		collectionInstance.config.hooks.push({
+			event: "beforeUpsert",
+			handler: beforeUpsertHandler,
+		});
+		collectionInstance.config.hooks.push({
+			event: "afterUpsert",
+			handler: afterUpsertHandler,
+		});
 	}
 
 	return {
