@@ -1,1 +1,0 @@
-# @lucidcms/plugin-nested-documents
