@@ -6,7 +6,7 @@ const registerFields = (
 	config: CollectionConfig,
 ) => {
 	collection
-		.addText("full_slug", {
+		.addText("fullSlug", {
 			labels: {
 				title: "Full Slug",
 			},
