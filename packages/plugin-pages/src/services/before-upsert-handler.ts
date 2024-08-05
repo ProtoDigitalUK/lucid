@@ -1,15 +1,30 @@
 import type { LucidHookCollection } from "@lucidcms/core/types";
 
-// Get the parent page of the document - and the parent of those pages (recursively)
-// Work out the fullSlug based on the slugs of the parent pages and this page
-// Set the fullSlug value against the coresponding field
-// Do this for all translations of the field if translations are enabled
+/*
+    ! Not 100% decided on the homepage flag (over complicates things and can be managed by the user)
+
+    * 1. Fetch all of the field values from props.data.fields (slug, fullSlug, parentPage, homepage)
+    * 2. If parentPage is equal to props.data.documentId - return error
+    * 3. If parentPage is set and its also a homepage - return error (homepages cant have parents)
+
+    / If a parentPage is found and its not a homepage
+        * 3.1. Recursively fetch all parent fields
+        * 3.2. Check none of the parents are the homepage, homepages cant be or have parents - return error
+        * 3.3. Check that none of the parents have the current documentId as their parentPage (query might need updating - currently might be infinite loop?)
+        * 3.4. Group parent fields by the collection_document_id to make easier to work with
+        * 3.5. Construct the fullSlug by concatenating the slugs of the parent pages (use the plugin config prefix if set as well)
+        * 3.6. Set the computed fullSlug value against the coresponding field
+        * 3.7. Set homepage to false (0)
+    / If no parentPage is found and its not a homepage
+        * 3.1. Set the fullSlug to the slug and set homepage to false (0)
+
+    / If it is a homepage
+        * 4.1. Find the current homepage and set the fullSlug, slug to generated value and set homepage to false (0)
+        * 4.2. Set the fullSlug and slug to / and set homepage to true (1)
+*/
 
 const beforeUpsertHandler: LucidHookCollection<"beforeUpsert">["handler"] =
 	async (props) => {
-		//* Probably should be able to set a homepage as a parentPage as it would have no effect on the slug?
-		//* Needs a solution for making sure parentPages arent also children of this page or equal to this page
-
 		// IF we have a parentPage field, get its slug, fullSlug, homepage and parentPage fields - then those same fields of its parent page (recursively)
 		const parentPage = props.data.fields?.find(
 			(f) => f.key === "parentPage",
