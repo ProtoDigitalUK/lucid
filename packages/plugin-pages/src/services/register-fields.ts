@@ -30,7 +30,6 @@ const registerFields = (
 				zod: z.string().min(2).max(128),
 			},
 		})
-		// TODO: when customfields support conditional fields, this should be hidden if the isHomepage field is true
 		.addDocument("parentPage", {
 			collection: collection.key,
 			labels: {
@@ -39,17 +38,6 @@ const registerFields = (
 			hidden: false,
 			disabled: false,
 		});
-
-	if (config.homepage) {
-		collection.addCheckbox("homepage", {
-			labels: {
-				title: "Homepage",
-			},
-			translations: false,
-			hidden: false,
-			disabled: false,
-		});
-	}
 };
 
 export default registerFields;
