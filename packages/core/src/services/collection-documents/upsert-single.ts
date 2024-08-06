@@ -98,6 +98,7 @@ const upsertSingle: ServiceFn<
 				collectionKey: data.collectionKey,
 				userId: data.userId,
 			},
+			config: context.config,
 			data: data,
 		},
 	);
@@ -153,6 +154,7 @@ const upsertSingle: ServiceFn<
 				bricks: bodyData.bricks,
 				fields: bodyData.fields,
 			},
+			config: context.config,
 		},
 	);
 	if (hookAfterRes.error) return hookAfterRes;

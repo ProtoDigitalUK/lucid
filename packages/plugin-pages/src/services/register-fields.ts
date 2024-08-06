@@ -1,3 +1,4 @@
+import constants from "../constants.js";
 import type { CollectionConfig } from "../types/index.js";
 import { type CollectionBuilder, z } from "@lucidcms/core";
 
@@ -6,7 +7,7 @@ const registerFields = (
 	config: CollectionConfig,
 ) => {
 	collection
-		.addText("fullSlug", {
+		.addText(constants.fields.fullSlug.key, {
 			labels: {
 				title: "Full Slug",
 			},
@@ -18,7 +19,7 @@ const registerFields = (
 				zod: z.string().min(2).max(128),
 			},
 		})
-		.addText("slug", {
+		.addText(constants.fields.slug.key, {
 			labels: {
 				title: "Slug",
 			},
@@ -30,7 +31,7 @@ const registerFields = (
 				zod: z.string().min(2).max(128),
 			},
 		})
-		.addDocument("parentPage", {
+		.addDocument(constants.fields.parentPage.key, {
 			collection: collection.key,
 			labels: {
 				title: "Parent Page",

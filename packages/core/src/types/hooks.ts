@@ -2,6 +2,7 @@ import type { BrickSchema } from "../schemas/collection-bricks.js";
 import type { FieldSchemaType } from "../schemas/collection-fields.js";
 import type { KyselyDB } from "../libs/db/types.js";
 import type { ServiceResponse } from "../utils/services/types.js";
+import type { Config } from "./config.js";
 
 // --------------------------------------------------
 // types
@@ -42,6 +43,7 @@ export type HookServiceHandlers = {
 				bricks?: Array<BrickSchema>;
 				fields?: Array<FieldSchemaType>;
 			};
+			config: Config;
 		}) => ServiceResponse<
 			| {
 					documentId?: number;
@@ -61,6 +63,7 @@ export type HookServiceHandlers = {
 				bricks?: Array<BrickSchema>;
 				fields?: Array<FieldSchemaType>;
 			};
+			config: Config;
 		}) => ServiceResponse<undefined>;
 		beforeDelete: (props: {
 			db: KyselyDB;
