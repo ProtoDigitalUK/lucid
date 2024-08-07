@@ -2,11 +2,7 @@ import type z from "zod";
 import type { FastifyRequest, FastifyReply } from "fastify";
 import type { Config } from "./config.js";
 import type lucidServices from "../services/index.js";
-import type {
-	UserPermissionsResponse,
-	LocalesResponse,
-	MediaResponse,
-} from "./response.js";
+import type { UserPermissionsResponse, LocalesResponse } from "./response.js";
 import type { BooleanInt } from "../libs/db/types.js";
 import type logger from "../utils/logging/index.js";
 

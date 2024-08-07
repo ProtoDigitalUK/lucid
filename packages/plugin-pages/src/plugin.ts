@@ -35,7 +35,7 @@ const plugin: LucidPluginOptions<PluginOptions> = async (config, plugin) => {
 
 		collectionInstance.config.hooks.push({
 			event: "beforeUpsert",
-			handler: beforeUpsertHandler,
+			handler: beforeUpsertHandler(options),
 		});
 		collectionInstance.config.hooks.push({
 			event: "afterUpsert",

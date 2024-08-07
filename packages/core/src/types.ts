@@ -5,3 +5,5 @@ export * from "./types/errors.js";
 export * from "./types/shared.js";
 export * from "./libs/builders/collection-builder/types.js";
 export * from "./libs/custom-fields/types.js";
+export * from "./types/misc.js";
+export * from "./utils/services/types.js";
