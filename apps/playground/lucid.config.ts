@@ -57,8 +57,8 @@ export default lucid.config({
 	// 	{
 	// 		service: "collection-documents",
 	// 		event: "beforeUpsert",
-	// 		handler: async (props) => {
-	// 			console.log("collection doc hook", props.meta.collectionKey);
+	// 		handler: async (context, data) => {
+	// 			console.log("collection doc hook", data.meta.collectionKey);
 	// 		},
 	// 	},
 	// ],

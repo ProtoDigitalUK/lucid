@@ -1,8 +1,11 @@
 import type { BrickSchema } from "../schemas/collection-bricks.js";
 import type { FieldSchemaType } from "../schemas/collection-fields.js";
 import type { KyselyDB } from "../libs/db/types.js";
-import type { ServiceResponse } from "../utils/services/types.js";
-import type { Config } from "./config.js";
+import type {
+	ServiceContext,
+	ServiceResponse,
+	ServiceFn,
+} from "../utils/services/types.js";
 
 // --------------------------------------------------
 // types
@@ -32,19 +35,20 @@ export type ArgumentsType<T> = T extends (...args: infer U) => unknown
 
 export type HookServiceHandlers = {
 	"collection-documents": {
-		beforeUpsert: (props: {
-			db: KyselyDB;
-			meta: {
-				collectionKey: string;
-				userId: number;
-			};
-			data: {
-				documentId?: number;
-				bricks?: Array<BrickSchema>;
-				fields?: Array<FieldSchemaType>;
-			};
-			config: Config;
-		}) => ServiceResponse<
+		beforeUpsert: ServiceFn<
+			[
+				{
+					meta: {
+						collectionKey: string;
+						userId: number;
+					};
+					data: {
+						documentId?: number;
+						bricks?: Array<BrickSchema>;
+						fields?: Array<FieldSchemaType>;
+					};
+				},
+			],
 			| {
 					documentId?: number;
 					bricks?: Array<BrickSchema>;
@@ -52,39 +56,50 @@ export type HookServiceHandlers = {
 			  }
 			| undefined
 		>;
-		afterUpsert: (props: {
-			db: KyselyDB;
-			meta: {
-				collectionKey: string;
-				userId: number;
-			};
-			data: {
-				documentId?: number;
-				bricks?: Array<BrickSchema>;
-				fields?: Array<FieldSchemaType>;
-			};
-			config: Config;
-		}) => ServiceResponse<undefined>;
-		beforeDelete: (props: {
-			db: KyselyDB;
-			meta: {
-				collectionKey: string;
-				userId: number;
-			};
-			data: {
-				ids: number[];
-			};
-		}) => ServiceResponse<undefined>;
-		afterDelete: (props: {
-			db: KyselyDB;
-			meta: {
-				collectionKey: string;
-				userId: number;
-			};
-			data: {
-				ids: number[];
-			};
-		}) => ServiceResponse<undefined>;
+		afterUpsert: ServiceFn<
+			[
+				{
+					meta: {
+						collectionKey: string;
+						userId: number;
+					};
+					data: {
+						documentId?: number;
+						bricks?: Array<BrickSchema>;
+						fields?: Array<FieldSchemaType>;
+					};
+				},
+			],
+			undefined
+		>;
+		beforeDelete: ServiceFn<
+			[
+				{
+					meta: {
+						collectionKey: string;
+						userId: number;
+					};
+					data: {
+						ids: number[];
+					};
+				},
+			],
+			undefined
+		>;
+		afterDelete: ServiceFn<
+			[
+				{
+					meta: {
+						collectionKey: string;
+						userId: number;
+					};
+					data: {
+						ids: number[];
+					};
+				},
+			],
+			undefined
+		>;
 	};
 };
 

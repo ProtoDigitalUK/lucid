@@ -92,13 +92,12 @@ const upsertSingle: ServiceFn<
 			config: context.config,
 			collectionInstance: collectionRes.data,
 		},
+		context,
 		{
-			db: context.db,
 			meta: {
 				collectionKey: data.collectionKey,
 				userId: data.userId,
 			},
-			config: context.config,
 			data: data,
 		},
 	);
@@ -143,8 +142,8 @@ const upsertSingle: ServiceFn<
 			config: context.config,
 			collectionInstance: collectionRes.data,
 		},
+		context,
 		{
-			db: context.db,
 			meta: {
 				collectionKey: data.collectionKey,
 				userId: data.userId,
@@ -154,7 +153,6 @@ const upsertSingle: ServiceFn<
 				bricks: bodyData.bricks,
 				fields: bodyData.fields,
 			},
-			config: context.config,
 		},
 	);
 	if (hookAfterRes.error) return hookAfterRes;

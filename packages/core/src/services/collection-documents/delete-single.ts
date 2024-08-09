@@ -78,8 +78,8 @@ const deleteSingle: ServiceFn<
 			config: context.config,
 			collectionInstance: collectionRes.data,
 		},
+		context,
 		{
-			db: context.db,
 			meta: {
 				collectionKey: data.collectionKey,
 				userId: data.userId,
@@ -123,8 +123,8 @@ const deleteSingle: ServiceFn<
 			config: context.config,
 			collectionInstance: collectionRes.data,
 		},
+		context,
 		{
-			db: context.db,
 			meta: {
 				collectionKey: data.collectionKey,
 				userId: data.userId,
