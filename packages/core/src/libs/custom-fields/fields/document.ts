@@ -44,9 +44,7 @@ class DocumentCustomField extends CustomField<"document"> {
 	}) {
 		return {
 			value: props.data?.document_id ?? null,
-			meta: {
-				id: props.data?.document_id ?? null,
-			},
+			meta: null,
 		} satisfies CFResponse<"document">;
 	}
 	getInsertField(props: {
