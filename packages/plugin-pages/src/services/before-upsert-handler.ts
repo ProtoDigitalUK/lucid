@@ -1,13 +1,11 @@
 import T from "../translations/index.js";
 import constants from "../constants.js";
-import { sql } from "kysely";
+import { checkDuplicateSlugParents } from "./checks/index.js";
 import type { PluginOptionsInternal } from "../types/index.js";
 import type {
 	LucidHookCollection,
-	FieldSchemaType,
-	Config,
-	ServiceResponse,
 	FieldErrors,
+	FieldSchemaType,
 } from "@lucidcms/core/types";
 
 /*
@@ -33,11 +31,11 @@ const beforeUpsertHandler =
 	(
 		options: PluginOptionsInternal,
 	): LucidHookCollection<"beforeUpsert">["handler"] =>
-	async (props) => {
+	async (context, data) => {
 		//----------------------------------------------------------------
 		// Setup
 		const targetCollection = options.collections.find(
-			(c) => c.key === props.meta.collectionKey,
+			(c) => c.key === data.meta.collectionKey,
 		);
 		//* should never happen
 		if (!targetCollection) {
@@ -46,7 +44,7 @@ const beforeUpsertHandler =
 					type: "basic",
 					status: 500,
 					message: T("cannot_find_collection", {
-						collection: props.meta.collectionKey,
+						collection: data.meta.collectionKey,
 					}),
 				},
 				data: undefined,
@@ -54,16 +52,16 @@ const beforeUpsertHandler =
 		}
 
 		// target fields
-		const parentPageField = props.data.fields?.find(
+		const parentPageField = data.data.fields?.find(
 			(f) =>
 				f.key === constants.fields.parentPage.key &&
 				f.type === "document",
 		);
-		const slugField = props.data.fields?.find(
+		const slugField = data.data.fields?.find(
 			(f) => f.key === constants.fields.slug.key && f.type === "text",
 		);
 		//* dont care what this value is - only needed to update translations/value
-		const fullSlugField = props.data.fields?.find(
+		const fullSlugField = data.data.fields?.find(
 			(f) => f.key === constants.fields.fullSlug.key && f.type === "text",
 		);
 
@@ -91,7 +89,7 @@ const beforeUpsertHandler =
 		//! Page parent of itself
 		if (
 			parentPageField?.value &&
-			parentPageField.value === props.data.documentId
+			parentPageField.value === data.data.documentId
 		) {
 			return {
 				error: {
@@ -106,7 +104,8 @@ const beforeUpsertHandler =
 									groupId: undefined,
 									key: constants.fields.parentPage.key,
 									localeCode:
-										props.config.localisation.defaultLocale, //* parentPage doesnt use translations so always use default locale
+										context.config.localisation
+											.defaultLocale, //* parentPage doesnt use translations so always use default locale
 									message: T(
 										"cannot_have_self_as_parent_page_message",
 									),
@@ -168,7 +167,8 @@ const beforeUpsertHandler =
 									groupId: undefined,
 									key: constants.fields.parentPage.key,
 									localeCode:
-										props.config.localisation.defaultLocale,
+										context.config.localisation
+											.defaultLocale,
 									message: T(
 										"slug_cannot_be_slash_and_parent_page_set_message",
 									),
@@ -181,81 +181,29 @@ const beforeUpsertHandler =
 			};
 		}
 
-		//! TODO: Query for document fields that have same slug and parentPage (would cause duplicate fullSlug)
-		// query not this document
-
-		const allSlugs = targetCollection.slug.translations
-			? Object.values(slugField?.translations || {})
-			: [slugField?.value];
-
-		// take into account translations support or value otherwise
-		// TODO: WIp
-		const duplicates = await props.db
-			.selectFrom("lucid_collection_documents")
-			.select((eb) => [
-				"lucid_collection_documents.id",
-				props.config.db
-					.jsonArrayFrom(
-						eb
-							.selectFrom("lucid_collection_document_fields")
-							.select([
-								"lucid_collection_document_fields.fields_id",
-								"lucid_collection_document_fields.locale_code",
-								"lucid_collection_document_fields.key",
-								"lucid_collection_document_fields.type",
-								"lucid_collection_document_fields.text_value",
-								"lucid_collection_document_fields.document_id",
-							])
-							.where(
-								"lucid_collection_document_fields.key",
-								"in",
-								[
-									constants.fields.slug.key,
-									constants.fields.parentPage.key,
-								],
-							)
-							.where(({ eb, and }) =>
-								and([
-									eb(
-										"lucid_collection_document_fields.key",
-										"=",
-										constants.fields.slug.key,
-									),
-									eb(
-										"lucid_collection_document_fields.text_value",
-										"in",
-										allSlugs,
-									),
-								]),
-							)
-							.whereRef(
-								"lucid_collection_document_fields.collection_document_id",
-								"=",
-								"lucid_collection_documents.id",
-							),
-					)
-					.as("fields"),
-			])
-			.where(
-				"lucid_collection_documents.id",
-				"!=",
-				props.data.documentId || null,
-			)
-			.where(
-				"lucid_collection_documents.collection_key",
-				"=",
-				targetCollection.key,
-			)
-			.execute();
-		console.log(duplicates);
+		//! Query for document fields that have same slug and parentPage for each slug translation (would cause duplicate fullSlug)
+		const checkDuplicateSlugParentsRes = await checkDuplicateSlugParents(
+			context,
+			{
+				documentId: data.data.documentId,
+				collectionKey: targetCollection.key,
+				fields: {
+					slug: slugField as FieldSchemaType,
+					parentPage: parentPageField as FieldSchemaType,
+				},
+			},
+		);
+		if (checkDuplicateSlugParentsRes.error)
+			return checkDuplicateSlugParentsRes;
 
 		// ----------------------------------------------------------------
 		// Construct fullSlug
 
+		// TODO: bellow is WIP
 		if (parentPageField?.value) {
 			// If we have a parentPage field, get its slug, fullSlug and parentPage fields - then those same fields of its parent page (recursively)
 			// TODO: will currently loop forever if documents have parents pointing to each other
-			const parentFields = await props.db
+			const parentFields = await context.db
 				.withRecursive(
 					"ancestorFields(key, text_value, document_id, bool_value, collection_brick_id, locale_code, collection_document_id)",
 					(db) =>
@@ -369,7 +317,7 @@ const beforeUpsertHandler =
 
 		return {
 			error: undefined,
-			data: props.data,
+			data: data.data,
 		};
 	};
 
