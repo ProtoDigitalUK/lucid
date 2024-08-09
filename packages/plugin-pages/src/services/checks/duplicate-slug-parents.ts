@@ -6,6 +6,9 @@ import type {
 	FieldErrors,
 } from "@lucidcms/core/types";
 
+/**
+ *  Query for document fields that have same slug and parentPage for each slug translation (would cause duplicate fullSlug)
+ */
 const checkDuplicateSlugParents: ServiceFn<
 	[
 		{

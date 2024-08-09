@@ -16,7 +16,7 @@ const registerFields = (
 			disabled: true,
 			validation: {
 				required: true,
-				zod: z.string().min(2).max(128),
+				zod: z.string().min(1).max(128),
 			},
 		})
 		.addText(constants.fields.slug.key, {
@@ -28,7 +28,7 @@ const registerFields = (
 			disabled: false,
 			validation: {
 				required: true,
-				zod: z.string().min(2).max(128),
+				zod: z.string().min(1).max(128),
 			},
 		})
 		.addDocument(constants.fields.parentPage.key, {
