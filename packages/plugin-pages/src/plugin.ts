@@ -31,17 +31,19 @@ const plugin: LucidPluginOptions<PluginOptions> = async (config, plugin) => {
 		if (!collectionInstance.config.hooks) {
 			collectionInstance.config.hooks = [];
 		}
-
-		collectionInstance.config.hooks.push({
-			event: "beforeUpsert",
-			handler: beforeUpsertHandler(options),
-		});
-		collectionInstance.config.hooks.push({
-			event: "afterUpsert",
-			handler: afterUpsertHandler,
-		});
-		// TODO: when revision support is added, run the afterUpsertHandler when a revision is made the active revision
 	}
+
+	config.hooks.push({
+		service: "collection-documents",
+		event: "beforeUpsert",
+		handler: beforeUpsertHandler(options),
+	});
+	config.hooks.push({
+		service: "collection-documents",
+		event: "afterUpsert",
+		handler: afterUpsertHandler,
+	});
+	// TODO: when revision support is added, we will have to run the afterUpsertHandler when a revision is made the active revision to ensure all of its children slugs are correct.
 
 	return {
 		key: PLUGIN_KEY,
