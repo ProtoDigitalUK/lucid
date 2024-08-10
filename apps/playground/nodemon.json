@@ -1,5 +1,10 @@
 {
 	"ext": "ts",
-	"watch": ["src", "./lucid.config.ts", "../../packages/core/restart.txt"],
+	"watch": [
+		"src",
+		"./lucid.config.ts",
+		"../../packages/core/restart.txt",
+		"../../packages/plugin-pages/restart.txt"
+	],
 	"exec": "npm run start"
 }
