@@ -5,5 +5,7 @@
 	"slug_cannot_be_slash_and_parent_page_set_message": "The slug cannot be / when a parent page is set.",
 	"duplicate_slug_field_found_message": "Please ensure the slug field is unique within the collection.",
 	"duplicate_slug_and_parent_page_field_found_message": "Another document in this collection has the same slug and parent page selected. Please ensure the slug field is unique within the collection.",
-	"an_unknown_error_occurred_checking_for_duplicate_slugs": "An error occurred while checking for duplicate slugs."
+	"an_unknown_error_occurred_checking_for_duplicate_slugs": "An error occurred while checking for duplicate slugs.",
+	"an_unknown_error_occurred_checking_for_circular_parents": "An error occurred while checking for circular parents.",
+	"circular_parents_error_message": "The selected page is either a child/grandchild of this one. Please select a different parent page."
 }

@@ -3,6 +3,7 @@ export const LUCID_VERSION = "0.x.x";
 
 export default {
 	collectionFieldBrickId: "collection-pseudo-brick",
+	maxHierarchyDepth: 10,
 	fields: {
 		parentPage: {
 			key: "parentPage",

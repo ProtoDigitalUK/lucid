@@ -4,6 +4,7 @@ import {
 	checkRootSlugWithParent,
 	checkParentIsPageOfSelf,
 	checkFieldsExist,
+	checkCircularParents,
 } from "../checks/index.js";
 import { getTargetCollection } from "../index.js";
 import type { PluginOptionsInternal } from "../../types/index.js";
@@ -105,8 +106,15 @@ const beforeUpsertHandler =
 
 		// TODO: bellow is WIP
 		if (parentPage.value) {
+			const circularParentsRes = await checkCircularParents(context, {
+				defaultLocale: context.config.localisation.defaultLocale,
+				fields: {
+					parentPage: parentPage,
+				},
+			});
+			if (circularParentsRes.error) return circularParentsRes;
+
 			// If we have a parentPage field, get its slug, fullSlug and parentPage fields - then those same fields of its parent page (recursively)
-			// TODO: will currently loop forever if documents have parents pointing to each other
 			const parentFields = await context.db
 				.withRecursive(
 					"ancestorFields(key, text_value, document_id, bool_value, collection_brick_id, locale_code, collection_document_id)",
