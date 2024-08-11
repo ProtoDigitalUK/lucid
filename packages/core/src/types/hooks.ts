@@ -64,9 +64,9 @@ export type HookServiceHandlers = {
 						userId: number;
 					};
 					data: {
-						documentId?: number;
-						bricks?: Array<BrickSchema>;
-						fields?: Array<FieldSchemaType>;
+						documentId: number;
+						bricks: Array<BrickSchema>;
+						fields: Array<FieldSchemaType>;
 					};
 				},
 			],

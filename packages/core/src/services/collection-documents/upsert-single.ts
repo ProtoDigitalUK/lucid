@@ -150,8 +150,8 @@ const upsertSingle: ServiceFn<
 			},
 			data: {
 				documentId: document.id,
-				bricks: bodyData.bricks,
-				fields: bodyData.fields,
+				bricks: bodyData.bricks || [],
+				fields: bodyData.fields || [],
 			},
 		},
 	);
