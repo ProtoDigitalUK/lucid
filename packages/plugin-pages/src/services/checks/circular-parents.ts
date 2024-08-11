@@ -4,6 +4,8 @@ import type { ServiceFn, FieldSchemaType } from "@lucidcms/core/types";
 
 //* Query works as expected - but not very elegant as its only checking the first 10 levels of parents, update in the future if this is an issue
 
+// TODO: this needs checking out - doesnt seem to be working - throws error when trying to set a second doc to have the same parentPage
+
 /**
  *  Recursively checks all parent pages for a circular reference and errors in that case
  */

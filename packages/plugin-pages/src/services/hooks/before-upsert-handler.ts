@@ -6,7 +6,12 @@ import {
 	checkFieldsExist,
 	checkCircularParents,
 } from "../checks/index.js";
-import { getTargetCollection } from "../index.js";
+import {
+	getTargetCollection,
+	getParentFields,
+	constructFullSlug,
+	setFullSlug,
+} from "../index.js";
 import type { PluginOptionsInternal } from "../../types/index.js";
 import type { LucidHookCollection } from "@lucidcms/core/types";
 
@@ -102,9 +107,20 @@ const beforeUpsertHandler =
 			return checkDuplicateSlugParentsRes;
 
 		// ----------------------------------------------------------------
-		// Construct fullSlug
+		// Build and set fullSlug
 
-		// TODO: bellow is WIP
+		let parentFieldsData:
+			| Array<{
+					key: string;
+					collection_document_id: number;
+					collection_brick_id: number;
+					locale_code: string;
+					text_value: string | null;
+					document_id: number | null;
+			  }>
+			| undefined = undefined;
+
+		// parent page checks and query
 		if (parentPage.value) {
 			const circularParentsRes = await checkCircularParents(context, {
 				defaultLocale: context.config.localisation.defaultLocale,
@@ -114,97 +130,36 @@ const beforeUpsertHandler =
 			});
 			if (circularParentsRes.error) return circularParentsRes;
 
-			// If we have a parentPage field, get its slug, fullSlug and parentPage fields - then those same fields of its parent page (recursively)
-			//* Can this just fetch the first parent and use the fullSlug? It should always be in sync
-			const parentFields = await context.db
-				.withRecursive(
-					"ancestorFields(key, text_value, document_id, bool_value, collection_brick_id, locale_code, collection_document_id)",
-					(db) =>
-						db
-							// Base case: Select fields for the initial parentPage value
-							.selectFrom("lucid_collection_document_fields")
-							.where(
-								"collection_document_id",
-								"=",
-								parentPage.value,
-							)
-							.where("key", "in", [
-								constants.fields.slug.key,
-								constants.fields.fullSlug.key,
-								constants.fields.parentPage.key,
-							])
-							.select([
-								"key",
-								"text_value",
-								"document_id",
-								"bool_value",
-								"collection_brick_id",
-								"locale_code",
-								"collection_document_id",
-							])
-							.unionAll(
-								// Recursive case: Find fields for each parent
-								db
-									.selectFrom(
-										"lucid_collection_document_fields",
-									)
-									.innerJoin(
-										"ancestorFields",
-										"lucid_collection_document_fields.collection_document_id",
-										"ancestorFields.document_id",
-									)
-									.where(
-										"lucid_collection_document_fields.key",
-										"in",
-										[
-											constants.fields.slug.key,
-											constants.fields.fullSlug.key,
-											constants.fields.parentPage.key,
-										],
-									)
-									.select([
-										"lucid_collection_document_fields.key",
-										"lucid_collection_document_fields.text_value",
-										"lucid_collection_document_fields.document_id",
-										"lucid_collection_document_fields.bool_value",
-										"lucid_collection_document_fields.collection_brick_id",
-										"lucid_collection_document_fields.locale_code",
-										"lucid_collection_document_fields.collection_document_id",
-									]),
-							),
-				)
-				.selectFrom("ancestorFields")
-				.selectAll()
-				.execute();
+			const parentFieldsRes = await getParentFields(context, {
+				defaultLocale: context.config.localisation.defaultLocale,
+				fields: {
+					parentPage: parentPage,
+				},
+			});
+			if (parentFieldsRes.error) return parentFieldsRes;
 
-			// ----------------------------------------------------------------
-			// Testing only - remove
-			if (
-				targetCollectionRes.data.slug.translations &&
-				slug.translations
-			) {
-				for (const [key, value] of Object.entries(slug.translations)) {
-					if (!fullSlug?.translations) fullSlug.translations = {};
-					fullSlug.translations[key] = value;
-				}
-			} else {
-				fullSlug.value = slug.value;
-			}
-			// ----------------------------------------------------------------
-		} else {
-			// set fullSlug to slug for each slug translation
-			if (
-				targetCollectionRes.data.slug.translations &&
-				slug.translations
-			) {
-				for (const [key, value] of Object.entries(slug.translations)) {
-					if (!fullSlug?.translations) fullSlug.translations = {};
-					fullSlug.translations[key] = value;
-				}
-			} else {
-				fullSlug.value = slug.value;
-			}
+			parentFieldsData = parentFieldsRes.data;
 		}
+
+		// fullSlug construction
+		const fullSlugRes = constructFullSlug({
+			parentFields: parentFieldsData,
+			localisation: context.config.localisation,
+			collection: targetCollectionRes.data,
+			fields: {
+				slug: slug,
+			},
+		});
+		if (fullSlugRes.error) return fullSlugRes;
+
+		setFullSlug({
+			fullSlug: fullSlugRes.data,
+			defaultLocale: context.config.localisation.defaultLocale,
+			collection: targetCollectionRes.data,
+			fields: {
+				fullSlug: fullSlug,
+			},
+		});
 
 		return {
 			error: undefined,
