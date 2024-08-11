@@ -9,5 +9,6 @@
 	"an_unknown_error_occurred_checking_for_circular_parents": "An error occurred while checking for circular parents.",
 	"circular_parents_error_message": "The selected page is either a child/grandchild of this one. Please select a different parent page.",
 	"parent_page_not_found": "The parent page document was not found.",
-	"an_unknown_error_occurred_getting_parent_fields": "An error occurred while getting the parent page fields."
+	"an_unknown_error_occurred_getting_parent_fields": "An error occurred while getting the parent page fields.",
+	"an_unknown_error_occurred_getting_descendant_fields": "An error occurred while getting the descendant page fields."
 }

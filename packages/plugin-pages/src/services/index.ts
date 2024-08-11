@@ -4,3 +4,4 @@ export { default as getTargetCollection } from "./get-target-collection.js";
 export { default as getParentFields } from "./get-parent-fields.js";
 export { default as constructFullSlug } from "./construct-full-slug.js";
 export { default as setFullSlug } from "./set-full-slug.js";
+export { default as getDescendantFields } from "./get-descendant-fields.js";

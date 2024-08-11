@@ -23,20 +23,17 @@ const checkDuplicateSlugParents: ServiceFn<
 	undefined
 > = async (context, data) => {
 	try {
-		const slugTranslations = data.fields.slug.translations || {};
-		const defaultSlug = data.fields.slug.value;
+		const slugConditions = Object.entries(
+			data.fields.slug.translations || {},
+		).map(([localeCode, slug]) => ({
+			localeCode,
+			slug,
+		}));
 
-		const slugConditions = Object.entries(slugTranslations).map(
-			([localeCode, slug]) => ({
-				localeCode,
-				slug,
-			}),
-		);
-
-		if (defaultSlug) {
+		if (data.fields.slug.value) {
 			slugConditions.push({
 				localeCode: context.config.localisation.defaultLocale,
-				slug: defaultSlug,
+				slug: data.fields.slug.value,
 			});
 		}
 

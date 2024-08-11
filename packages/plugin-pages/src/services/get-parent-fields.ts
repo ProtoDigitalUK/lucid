@@ -23,49 +23,49 @@ const getParentFields: ServiceFn<
 		document_id: number | null;
 	}>
 > = async (context, data) => {
-	const parentFields = await context.db
-		.selectFrom("lucid_collection_document_fields")
-		.select([
-			"key",
-			"text_value",
-			"document_id",
-			"collection_brick_id",
-			"locale_code",
-			"collection_document_id",
-		])
-		.where("key", "in", [
-			constants.fields.slug.key,
-			constants.fields.fullSlug.key,
-			constants.fields.parentPage.key,
-		])
-		.where("collection_document_id", "=", data.fields.parentPage.value)
-		.execute();
+	try {
+		const parentFields = await context.db
+			.selectFrom("lucid_collection_document_fields")
+			.select([
+				"key",
+				"text_value",
+				"document_id",
+				"collection_brick_id",
+				"locale_code",
+				"collection_document_id",
+			])
+			.where("key", "in", [
+				constants.fields.slug.key,
+				constants.fields.fullSlug.key,
+				constants.fields.parentPage.key,
+			])
+			.where("collection_document_id", "=", data.fields.parentPage.value)
+			.execute();
 
-	if (!parentFields || parentFields.length === 0) {
-		return {
-			error: {
-				type: "basic",
-				status: 404,
-				message: T("parent_page_not_found"),
-				errorResponse: {
-					body: {
-						fields: [
-							{
-								brickId: constants.collectionFieldBrickId,
-								groupId: undefined,
-								key: constants.fields.parentPage.key,
-								localeCode: data.defaultLocale,
-								message: T("parent_page_not_found"),
-							},
-						],
+		if (!parentFields || parentFields.length === 0) {
+			return {
+				error: {
+					type: "basic",
+					status: 404,
+					message: T("parent_page_not_found"),
+					errorResponse: {
+						body: {
+							fields: [
+								{
+									brickId: constants.collectionFieldBrickId,
+									groupId: undefined,
+									key: constants.fields.parentPage.key,
+									localeCode: data.defaultLocale,
+									message: T("parent_page_not_found"),
+								},
+							],
+						},
 					},
 				},
-			},
-			data: undefined,
-		};
-	}
+				data: undefined,
+			};
+		}
 
-	try {
 		return {
 			error: undefined,
 			data: parentFields,

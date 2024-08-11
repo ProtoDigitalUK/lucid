@@ -16,7 +16,7 @@ const registerFields = (
 			disabled: true,
 			validation: {
 				required: true,
-				zod: z.string().min(1).max(128),
+				zod: z.string().min(1).max(128), // TODO: probs doesnt need validation beyond required?
 			},
 		})
 		.addText(
@@ -30,6 +30,7 @@ const registerFields = (
 				disabled: false,
 				validation: {
 					required: true,
+					// TODO: work on validation rules - no slashes, no spaces, no special characters etc (only slash is allowed if its by itself)
 					zod: z.string().min(1).max(128),
 				},
 			},

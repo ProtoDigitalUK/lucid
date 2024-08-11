@@ -15,25 +15,6 @@ import {
 import type { PluginOptionsInternal } from "../../types/index.js";
 import type { LucidHookCollection } from "@lucidcms/core/types";
 
-/*
-    / slug validation: either / or string with no slashes and limited characters types
-
-
-    * 1. Fetch all of the field values from props.data.fields (slug, fullSlug, parentPage)
-    * 2. If parentPage is equal to props.data.documentId - return error
-    * 3. If parentPage is set and the slug is '/' - return error (would cause fullSlug to be same as parents fullSlug just with trainling slash)
-    * 4. Query documents that have same slug and parentPage as the current document - return duplicate error (would also stop duplicate homepages* (/))
-
-    / If a parentPage is found 
-        * 5.1. Recursively fetch all parent fields
-        * 5.2. Check that none of the parents have the current documentId as their parentPage (query might need updating - currently might be infinite loop?)
-        * 5.3. Group parent fields by the collection_document_id to make easier to work with
-        * 5.4. Construct the fullSlug by concatenating the slugs of the parent pages (use the plugin config prefix if set as well)
-        * 5.5. Set the computed fullSlug value against the coresponding field
-    / If no parentPage is found
-        * 5.1. Set the fullSlug to the slug
-*/
-
 const beforeUpsertHandler =
 	(
 		options: PluginOptionsInternal,
