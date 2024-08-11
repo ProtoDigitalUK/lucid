@@ -19,18 +19,25 @@ const registerFields = (
 				zod: z.string().min(1).max(128),
 			},
 		})
-		.addText(constants.fields.slug.key, {
-			labels: {
-				title: "Slug",
+		.addText(
+			constants.fields.slug.key,
+			{
+				labels: {
+					title: "Slug",
+				},
+				translations: config.slug.translations,
+				hidden: false,
+				disabled: false,
+				validation: {
+					required: true,
+					zod: z.string().min(1).max(128),
+				},
 			},
-			translations: config.slug.translations,
-			hidden: false,
-			disabled: false,
-			validation: {
-				required: true,
-				zod: z.string().min(1).max(128),
+			{
+				list: true,
+				filterable: true,
 			},
-		})
+		)
 		.addDocument(constants.fields.parentPage.key, {
 			collection: collection.key,
 			labels: {
