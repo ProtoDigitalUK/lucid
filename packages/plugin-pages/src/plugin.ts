@@ -51,7 +51,7 @@ const plugin: LucidPluginOptions<PluginOptions> = async (config, plugin) => {
 	config.hooks.push({
 		service: "collection-documents",
 		event: "afterUpsert",
-		handler: afterUpsertHandler,
+		handler: afterUpsertHandler(options),
 	});
 	// TODO: when revision support is added, we will have to run the afterUpsertHandler when a revision is made the active revision to ensure all of its children slugs are correct.
 

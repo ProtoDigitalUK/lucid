@@ -2,6 +2,17 @@ import T from "../translations/index.js";
 import constants from "../constants.js";
 import type { ServiceFn } from "@lucidcms/core/types";
 
+export type DescendantFieldsResponse = {
+	collection_document_id: number;
+	fields: {
+		key: string;
+		collection_document_id: number;
+		locale_code: string;
+		text_value: string | null;
+		document_id: number | null;
+	}[];
+};
+
 /**
  *  Get the descendant document pages fields
  */
@@ -11,16 +22,7 @@ const getDescendantFields: ServiceFn<
 			documentId: number;
 		},
 	],
-	Array<{
-		collection_document_id: number;
-		fields: {
-			key: string;
-			collection_document_id: number;
-			locale_code: string;
-			text_value: string | null;
-			document_id: number | null;
-		}[];
-	}>
+	Array<DescendantFieldsResponse>
 > = async (context, data) => {
 	try {
 		const descendants = await context.db

@@ -1,4 +1,4 @@
-import buildFullSlug from "../utils/build-full-slug.js";
+import buildFullSlug from "../utils/build-fullslug-from-fullslug.js";
 import type {
 	Config,
 	FieldSchemaType,
