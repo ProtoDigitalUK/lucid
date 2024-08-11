@@ -115,6 +115,7 @@ const beforeUpsertHandler =
 			if (circularParentsRes.error) return circularParentsRes;
 
 			// If we have a parentPage field, get its slug, fullSlug and parentPage fields - then those same fields of its parent page (recursively)
+			//* Can this just fetch the first parent and use the fullSlug? It should always be in sync
 			const parentFields = await context.db
 				.withRecursive(
 					"ancestorFields(key, text_value, document_id, bool_value, collection_brick_id, locale_code, collection_document_id)",

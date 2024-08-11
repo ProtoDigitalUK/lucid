@@ -9,6 +9,16 @@ import {
 	afterUpsertHandler,
 } from "./services/hooks/index.js";
 
+/*
+    TODO:
+
+    - Add config option to make the slug not required but instead use a text field and slugify it
+        - If the slug supported translations, this would need to update the target fiedl to also support translations. It could be a optional as well
+    - Apply slug prefix before response 
+        - If it were set in the DB instead, if the prefix was edited all slugs would be invalid and need to be updated
+        - will need a beforeResponse hook to set the prefix
+*/
+
 const plugin: LucidPluginOptions<PluginOptions> = async (config, plugin) => {
 	const options = pluginOptions(plugin);
 
