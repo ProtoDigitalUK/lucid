@@ -1,10 +1,7 @@
 import T from "../../translations/index.js";
 import constants from "../../constants.js";
+import { sql } from "kysely";
 import type { ServiceFn, FieldSchemaType } from "@lucidcms/core/types";
-
-//* Query works as expected - but not very elegant as its only checking the first 10 levels of parents, update in the future if this is an issue
-
-// TODO: this needs checking out - doesnt seem to be working - throws error when trying to set a second doc to have the same parentPage
 
 /**
  *  Recursively checks all parent pages for a circular reference and errors in that case
@@ -13,6 +10,7 @@ const checkCircularParents: ServiceFn<
 	[
 		{
 			defaultLocale: string;
+			documentId?: number;
 			fields: {
 				parentPage: FieldSchemaType;
 			};
@@ -21,43 +19,63 @@ const checkCircularParents: ServiceFn<
 	undefined
 > = async (context, data) => {
 	try {
-		let query = context.db
-			.selectFrom("lucid_collection_document_fields as fields")
-			.select("fields.document_id")
-			.where("fields.key", "=", "parentPage")
-			.where("fields.document_id", "=", data.fields.parentPage.value);
-
-		for (let i = 1; i < constants.maxHierarchyDepth; i++) {
-			query = query.unionAll(
-				context.db
-					.selectFrom("lucid_collection_document_fields as fields")
-					.select("fields.document_id")
-					.where("fields.key", "=", "parentPage")
-					.where(
-						"fields.collection_document_id",
-						"=",
-						context.db
-							.selectFrom("lucid_collection_document_fields")
-							.select("document_id")
-							.where("key", "=", "parentPage")
-							.where(
-								"collection_document_id",
-								"=",
-								data.fields.parentPage.value,
-							),
-					),
-			);
+		if (!data.documentId) {
+			return {
+				error: undefined,
+				data: undefined,
+			};
 		}
 
-		const result = await query
-			.where(
-				"fields.collection_document_id",
-				"=",
-				data.fields.parentPage.value,
+		const result = await context.db
+			.with("recursive_cte", (db) =>
+				db
+					.selectFrom("lucid_collection_document_fields")
+					.select([
+						"collection_document_id",
+						"document_id",
+						sql<number>`1`.as("depth"),
+					])
+					.where(
+						"collection_document_id",
+						"=",
+						data.fields.parentPage.value,
+					)
+					.where("key", "=", "parentPage")
+					.unionAll(
+						db
+							.selectFrom(
+								"lucid_collection_document_fields as lcdf",
+							)
+							.innerJoin(
+								// @ts-expect-error
+								"recursive_cte as rc",
+								"rc.document_id",
+								"lcdf.collection_document_id",
+							)
+							// @ts-expect-error
+							.select([
+								"lcdf.collection_document_id",
+								"lcdf.document_id",
+								sql<number>`rc.depth + 1`.as("depth"),
+							])
+							.where("lcdf.key", "=", "parentPage")
+							.where(
+								"rc.depth",
+								"<",
+								constants.maxHierarchyDepth,
+							),
+					),
 			)
-			.execute();
+			.selectFrom("recursive_cte")
+			.select(
+				sql<number>`case when count(*) > 0 then 1 else 0 end`.as(
+					"has_circular_ref",
+				),
+			)
+			.where("document_id", "=", data.documentId)
+			.executeTakeFirstOrThrow();
 
-		if (result.length > 0) {
+		if (result.has_circular_ref === 1) {
 			return {
 				error: {
 					type: "basic",

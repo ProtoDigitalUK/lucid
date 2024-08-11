@@ -123,6 +123,7 @@ const beforeUpsertHandler =
 		// parent page checks and query
 		if (parentPage.value) {
 			const circularParentsRes = await checkCircularParents(context, {
+				documentId: data.data.documentId,
 				defaultLocale: context.config.localisation.defaultLocale,
 				fields: {
 					parentPage: parentPage,
