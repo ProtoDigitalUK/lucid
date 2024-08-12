@@ -9,7 +9,7 @@ import {
 import {
 	getTargetCollection,
 	getParentFields,
-	constructFullSlug,
+	constructParentFullSlug,
 	setFullSlug,
 } from "../index.js";
 import type { PluginOptionsInternal } from "../../types/index.js";
@@ -124,7 +124,7 @@ const beforeUpsertHandler =
 		}
 
 		// fullSlug construction
-		const fullSlugRes = constructFullSlug({
+		const fullSlugRes = constructParentFullSlug({
 			parentFields: parentFieldsData,
 			localisation: context.config.localisation,
 			collection: targetCollectionRes.data,

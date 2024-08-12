@@ -11,7 +11,6 @@ import {
 
 /*
     TODO:
-    - [] tidy up afterUpseet hook handler
     - [] update zod validation for slug custom field, only allow slug with slashes if it’s a slash by itself.
     - [] test how what we have currently works with translations disabled. With 1 locale (with and without translations on) and also with locale added when documents already exist (update a child’s translation for new locale - see what breaks? Default to default locale?)
     - [] register a new before delete hook handler that will update all child documents to unset the parent and recompute all descendant fullSlugs

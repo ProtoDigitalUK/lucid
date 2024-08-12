@@ -1,5 +1,9 @@
-import { getDescendantFields, getTargetCollection } from "../index.js";
-import buildFullSlug from "../../utils/build-fullslug-from-slugs.js";
+import {
+	getDescendantFields,
+	getTargetCollection,
+	constructChildFullSlug,
+	updateFullSlugFields,
+} from "../index.js";
 import constants from "../../constants.js";
 import type { LucidHookCollection } from "@lucidcms/core/types";
 import type { PluginOptionsInternal } from "../../types/index.js";
@@ -42,64 +46,17 @@ const afterUpsertHandler =
 			};
 		}
 
-		// TODO: move bellow into own services
+		const docFullSlugsRes = constructChildFullSlug({
+			descendants: descendantsRes.data,
+			localisation: context.config.localisation,
+			parentFullSlugField: currentFullSlugField,
+			collection: targetCollectionRes.data,
+		});
+		if (docFullSlugsRes.error) return docFullSlugsRes;
 
-		const documentFullSlugs: Array<{
-			documentId: number;
-			fullSlugs: Record<string, string | null>;
-		}> = [];
-
-		for (const descendant of descendantsRes.data) {
-			const fullSlug: Record<string, string | null> = {};
-
-			if (targetCollectionRes.data.translations) {
-				if (!currentFullSlugField.translations) break;
-
-				for (const locale of context.config.localisation.locales) {
-					const currentFullSlugValue =
-						currentFullSlugField.translations[locale.code];
-					if (!currentFullSlugValue) continue;
-
-					fullSlug[locale.code] = buildFullSlug({
-						targetLocale: locale.code,
-						currentDescendant: descendant,
-						descendants: descendantsRes.data,
-						topLevelFullSlug: currentFullSlugValue,
-					});
-				}
-			} else {
-				if (!currentFullSlugField.value) break;
-
-				fullSlug[context.config.localisation.defaultLocale] =
-					buildFullSlug({
-						targetLocale: context.config.localisation.defaultLocale,
-						currentDescendant: descendant,
-						descendants: descendantsRes.data,
-						topLevelFullSlug: currentFullSlugField.value,
-					});
-			}
-
-			documentFullSlugs.push({
-				documentId: descendant.collection_document_id,
-				fullSlugs: fullSlug,
-			});
-		}
-
-		const updateFullSlugsPromises = [];
-		for (const doc of documentFullSlugs) {
-			for (const [locale, fullSlug] of Object.entries(doc.fullSlugs)) {
-				updateFullSlugsPromises.push(
-					context.db
-						.updateTable("lucid_collection_document_fields")
-						.set({ text_value: fullSlug })
-						.where("collection_document_id", "=", doc.documentId)
-						.where("locale_code", "=", locale)
-						.where("key", "=", constants.fields.fullSlug.key)
-						.execute(),
-				);
-			}
-		}
-		await Promise.all(updateFullSlugsPromises);
+		await updateFullSlugFields(context, {
+			docFullSlugs: docFullSlugsRes.data,
+		});
 
 		return {
 			error: undefined,

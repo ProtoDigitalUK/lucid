@@ -9,7 +9,7 @@ import type { CollectionConfig } from "../types/index.js";
 /**
  *  Constructs the fullSlug from the slug and parentPage fields
  */
-const constructFullSlug = (data: {
+const constructParentFullSlug = (data: {
 	collection: CollectionConfig;
 	parentFields?: Array<{
 		key: string;
@@ -60,4 +60,4 @@ const constructFullSlug = (data: {
 	};
 };
 
-export default constructFullSlug;
+export default constructParentFullSlug;

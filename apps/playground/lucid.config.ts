@@ -68,9 +68,7 @@ export default lucid.config({
 			collections: [
 				{
 					key: "page",
-					slug: {
-						translations: true,
-					},
+					translations: true,
 				},
 			],
 		}),
