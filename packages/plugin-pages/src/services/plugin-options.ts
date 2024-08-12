@@ -4,10 +4,7 @@ const pluginOptions = (given: PluginOptions): PluginOptionsInternal => {
 	return {
 		collections: given.collections.map((c) => ({
 			key: c.key,
-			slug: {
-				// prefix: c.slug?.prefix ?? null,
-				translations: c.slug?.translations ?? false,
-			},
+			translations: c?.translations ?? false,
 		})),
 	};
 };

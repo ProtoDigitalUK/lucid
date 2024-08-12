@@ -11,7 +11,7 @@ const registerFields = (
 			labels: {
 				title: "Full Slug",
 			},
-			translations: config.slug.translations,
+			translations: config.translations,
 			hidden: false, // TODO: make this true once testing is done
 			disabled: true,
 			validation: {
@@ -25,7 +25,7 @@ const registerFields = (
 				labels: {
 					title: "Slug",
 				},
-				translations: config.slug.translations,
+				translations: config.translations,
 				hidden: false,
 				disabled: false,
 				validation: {

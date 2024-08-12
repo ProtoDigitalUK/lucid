@@ -1,10 +1,7 @@
 export interface PluginOptions {
 	collections: Array<{
 		key: string;
-		slug?: {
-			// prefix?: string;
-			translations?: boolean;
-		};
+		translations?: boolean;
 	}>;
 }
 
@@ -14,8 +11,5 @@ export interface PluginOptionsInternal extends PluginOptions {
 
 export interface CollectionConfig {
 	key: string;
-	slug: {
-		// prefix: string | null;
-		translations: boolean;
-	};
+	translations: boolean;
 }

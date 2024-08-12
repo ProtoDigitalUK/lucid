@@ -52,7 +52,7 @@ const afterUpsertHandler =
 		for (const descendant of descendantsRes.data) {
 			const fullSlug: Record<string, string | null> = {};
 
-			if (targetCollectionRes.data.slug.translations) {
+			if (targetCollectionRes.data.translations) {
 				if (!currentFullSlugField.translations) break;
 
 				for (const locale of context.config.localisation.locales) {

@@ -11,8 +11,6 @@ import {
 
 /*
     TODO:
-    - [] let’s no longer do slug prefix
-    - [] change up plugin options to drop slug object - move translations flag to top level.
     - [] tidy up afterUpseet hook handler
     - [] update zod validation for slug custom field, only allow slug with slashes if it’s a slash by itself.
     - [] test how what we have currently works with translations disabled. With 1 locale (with and without translations on) and also with locale added when documents already exist (update a child’s translation for new locale - see what breaks? Default to default locale?)
