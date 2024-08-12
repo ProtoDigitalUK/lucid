@@ -11,12 +11,14 @@ import {
 
 /*
     TODO:
-
-    - Add config option to make the slug not required but instead use a text field and slugify it
-        - If the slug supported translations, this would need to update the target fiedl to also support translations. It could be a optional as well
-    - Apply slug prefix before response 
-        - If it were set in the DB instead, if the prefix was edited all slugs would be invalid and need to be updated
-        - will need a beforeResponse hook to set the prefix
+    - [] let’s no longer do slug prefix
+    - [] change up plugin options to drop slug object - move translations flag to top level.
+    - [] tidy up afterUpseet hook handler
+    - [] update zod validation for slug custom field, only allow slug with slashes if it’s a slash by itself.
+    - [] test how what we have currently works with translations disabled. With 1 locale (with and without translations on) and also with locale added when documents already exist (update a child’s translation for new locale - see what breaks? Default to default locale?)
+    - [] register a new before delete hook handler that will update all child documents to unset the parent and recompute all descendant fullSlugs
+    - [] add new slug use field feature so if the slug is empty it will use a slugified version of a given collection text field - if the slug has a value ignore this.
+    - [] make a note about revision system - when that’s added, the plugin page queries should only try and recompute fullSlugs of active revisions to limit the amount of work needed. Add new hook so after a revision is made active it recompute its own fullSlugs via parents and then all of its descendants.
 */
 
 const plugin: LucidPluginOptions<PluginOptions> = async (config, plugin) => {
