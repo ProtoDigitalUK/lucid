@@ -8,14 +8,23 @@ const registerFields = (
 	config: CollectionConfig,
 ) => {
 	collection
-		.addText(constants.fields.fullSlug.key, {
-			labels: {
-				title: T("full_slug"),
+		.addText(
+			constants.fields.fullSlug.key,
+			{
+				labels: {
+					title: T("full_slug"),
+				},
+				translations: config.translations,
+				hidden: !config.showFullSlug,
+				disabled: true,
 			},
-			translations: config.translations,
-			hidden: false, // TODO: make this true once testing is done
-			disabled: true,
-		})
+			{
+				// @ts-expect-error
+				list: config.showFullSlug,
+				// @ts-expect-error
+				filterable: config.showFullSlug,
+			},
+		)
 		.addText(
 			constants.fields.slug.key,
 			{

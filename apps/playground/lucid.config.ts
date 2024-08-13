@@ -69,6 +69,7 @@ export default lucid.config({
 				{
 					key: "page",
 					translations: true,
+					showFullSlug: true,
 				},
 			],
 		}),

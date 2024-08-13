@@ -14,7 +14,6 @@ import {
     TODO:
     - [] test how what we have currently works with translations disabled. With 1 locale (with and without translations on) and also with locale added when documents already exist (update a child’s translation for new locale - see what breaks? Default to default locale?)
     - [] add new slug use field feature so if the slug is empty it will use a slugified version of a given collection text field - if the slug has a value ignore this.
-    - [] hide fullSlug field from the collection document page builder - make optional?
 */
 
 const plugin: LucidPluginOptions<PluginOptions> = async (config, plugin) => {

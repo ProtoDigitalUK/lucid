@@ -5,6 +5,7 @@ const pluginOptions = (given: PluginOptions): PluginOptionsInternal => {
 		collections: given.collections.map((c) => ({
 			key: c.key,
 			translations: c?.translations ?? false,
+			showFullSlug: c?.showFullSlug ?? false,
 		})),
 	};
 };
