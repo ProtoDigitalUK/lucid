@@ -94,10 +94,7 @@ export default defineConfig({
             // 	label: "Forms",
             // 	link: "/plugins/forms/",
             // },
-            // {
-            // 	label: "Nested Documents",
-            // 	link: "/plugins/nested-documents/",
-            // },
+
             // {
             // 	label: "Cookie Consent",
             // 	link: "/plugins/cookie-consent/",
@@ -106,6 +103,10 @@ export default defineConfig({
             // 	label: "Resend",
             // 	link: "/plugins/resend/",
             // },
+            {
+              label: "Pages",
+              link: "/plugins/pages/",
+            },
             {
               label: "Nodemailer",
               link: "/plugins/nodemailer/",
