@@ -11,5 +11,9 @@
 	"parent_page_not_found": "The parent page document was not found.",
 	"an_unknown_error_occurred_getting_parent_fields": "An error occurred while getting the parent page fields.",
 	"an_unknown_error_occurred_getting_descendant_fields": "An error occurred while getting the descendant page fields.",
-	"an_unknown_error_occurred_updating_fullslug_fields": "An error occurred while updating the fullSlug children fields."
+	"an_unknown_error_occurred_updating_fullslug_fields": "An error occurred while updating the fullSlug children fields.",
+	"slug_field_validation_error_message": "The slug field may only contain letters, numbers, underscores, and hyphens.",
+	"full_slug": "Full Slug",
+	"slug": "Slug",
+	"parent_page": "Parent Page"
 }

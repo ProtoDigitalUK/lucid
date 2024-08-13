@@ -12,10 +12,9 @@ import {
 
 /*
     TODO:
-    - [] update zod validation for slug custom field, only allow slug with slashes if it’s a slash by itself.
     - [] test how what we have currently works with translations disabled. With 1 locale (with and without translations on) and also with locale added when documents already exist (update a child’s translation for new locale - see what breaks? Default to default locale?)
     - [] add new slug use field feature so if the slug is empty it will use a slugified version of a given collection text field - if the slug has a value ignore this.
-    - [] make a note about revision system - when that’s added, the plugin page queries should only try and recompute fullSlugs of active revisions to limit the amount of work needed. Add new hook so after a revision is made active it recompute its own fullSlugs via parents and then all of its descendants.
+    - [] hide fullSlug field from the collection document page builder - make optional?
 */
 
 const plugin: LucidPluginOptions<PluginOptions> = async (config, plugin) => {

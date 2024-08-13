@@ -23,9 +23,7 @@ const buildFullSlugFromSlugs = (data: {
 
 	if (!parentPageField || !parentPageField.document_id) {
 		return postSlugFormat(
-			data.topLevelFullSlug
-				? `${data.topLevelFullSlug}/${slugFieldValue}`
-				: slugFieldValue,
+			joinSlugs(data.topLevelFullSlug || "", slugFieldValue),
 		);
 	}
 
@@ -36,9 +34,7 @@ const buildFullSlugFromSlugs = (data: {
 
 	if (!parentDescendant) {
 		return postSlugFormat(
-			data.topLevelFullSlug
-				? `/${data.topLevelFullSlug}/${slugFieldValue}`
-				: slugFieldValue,
+			joinSlugs(data.topLevelFullSlug || "", slugFieldValue),
 		);
 	}
 
@@ -49,17 +45,17 @@ const buildFullSlugFromSlugs = (data: {
 		topLevelFullSlug: data.topLevelFullSlug,
 	});
 
-	const fullSlug = parentFullSlug
-		? `/${parentFullSlug}/${slugFieldValue}`
-		: slugFieldValue;
-
-	if (data.topLevelFullSlug === undefined) {
-		return postSlugFormat(fullSlug);
-	}
-
 	return postSlugFormat(
-		parentFullSlug ? fullSlug : `/${data.topLevelFullSlug}/${fullSlug}`,
+		joinSlugs(
+			data.topLevelFullSlug || "",
+			parentFullSlug || "",
+			slugFieldValue,
+		),
 	);
+};
+
+const joinSlugs = (...parts: string[]): string => {
+	return parts.filter(Boolean).join("/").replace(/\/+/g, "/");
 };
 
 const postSlugFormat = (slug: string | null): string | null => {

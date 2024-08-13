@@ -1,6 +1,7 @@
+import T from "../translations/index.js";
 import constants from "../constants.js";
-import type { CollectionConfig } from "../types/index.js";
 import { type CollectionBuilder, z } from "@lucidcms/core";
+import type { CollectionConfig } from "../types/index.js";
 
 const registerFields = (
 	collection: CollectionBuilder,
@@ -9,29 +10,32 @@ const registerFields = (
 	collection
 		.addText(constants.fields.fullSlug.key, {
 			labels: {
-				title: "Full Slug",
+				title: T("full_slug"),
 			},
 			translations: config.translations,
 			hidden: false, // TODO: make this true once testing is done
 			disabled: true,
-			validation: {
-				required: true,
-				zod: z.string().min(1).max(128), // TODO: probs doesnt need validation beyond required?
-			},
 		})
 		.addText(
 			constants.fields.slug.key,
 			{
 				labels: {
-					title: "Slug",
+					title: T("slug"),
 				},
 				translations: config.translations,
 				hidden: false,
 				disabled: false,
 				validation: {
 					required: true,
-					// TODO: work on validation rules - no slashes, no spaces, no special characters etc (only slash is allowed if its by itself)
-					zod: z.string().min(1).max(128),
+					zod: z.union([
+						z.literal("/"),
+						z
+							.string()
+							.regex(
+								/^[a-zA-Z0-9_-]+$/,
+								T("slug_field_validation_error_message"),
+							),
+					]),
 				},
 			},
 			{
@@ -42,7 +46,7 @@ const registerFields = (
 		.addDocument(constants.fields.parentPage.key, {
 			collection: collection.key,
 			labels: {
-				title: "Parent Page",
+				title: T("parent_page"),
 			},
 			hidden: false,
 			disabled: false,
