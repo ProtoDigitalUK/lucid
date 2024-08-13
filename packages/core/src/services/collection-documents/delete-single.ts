@@ -38,6 +38,10 @@ const deleteSingle: ServiceFn<
 		"collection-documents",
 		context.db,
 	);
+	const CollectionDocumentFieldsRepo = Repository.get(
+		"collection-document-fields",
+		context.db,
+	);
 
 	const getDocument = await CollectionDocumentsRepo.selectSingle({
 		select: ["id"],
@@ -91,20 +95,34 @@ const deleteSingle: ServiceFn<
 	);
 	if (hookBeforeRes.error) return hookBeforeRes;
 
-	const deletePage = await CollectionDocumentsRepo.updateSingle({
-		where: [
-			{
-				key: "id",
-				operator: "=",
-				value: data.id,
+	const [deletePage] = await Promise.all([
+		CollectionDocumentsRepo.updateSingle({
+			where: [
+				{
+					key: "id",
+					operator: "=",
+					value: data.id,
+				},
+			],
+			data: {
+				isDeleted: 1,
+				isDeletedAt: new Date().toISOString(),
+				deletedBy: data.userId,
 			},
-		],
-		data: {
-			isDeleted: 1,
-			isDeletedAt: new Date().toISOString(),
-			deletedBy: data.userId,
-		},
-	});
+		}),
+		CollectionDocumentFieldsRepo.updateMultiple({
+			where: [
+				{
+					key: "document_id",
+					operator: "=",
+					value: data.id,
+				},
+			],
+			data: {
+				documentId: null,
+			},
+		}),
+	]);
 
 	if (deletePage === undefined) {
 		return {

@@ -51,6 +51,24 @@ export default class CollectionDocumentFieldsRepo {
 			.execute();
 	};
 	// ----------------------------------------
+	// update
+	updateMultiple = async (props: {
+		where: QueryBuilderWhere<"lucid_collection_document_fields">;
+		data: {
+			documentId?: number | null;
+		};
+	}) => {
+		let query = this.db
+			.updateTable("lucid_collection_document_fields")
+			.set({
+				document_id: props.data.documentId,
+			});
+
+		query = queryBuilder.update(query, props.where);
+
+		return query.execute();
+	};
+	// ----------------------------------------
 	// delete
 	deleteMultiple = async (props: {
 		where: QueryBuilderWhere<"lucid_collection_document_fields">;

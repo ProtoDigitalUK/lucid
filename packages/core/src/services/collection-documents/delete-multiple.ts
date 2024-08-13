@@ -45,6 +45,10 @@ const deleteMultiple: ServiceFn<
 		"collection-documents",
 		context.db,
 	);
+	const CollectionDocumentFieldsRepo = Repository.get(
+		"collection-document-fields",
+		context.db,
+	);
 
 	const getDocuments = await CollectionDocumentsRepo.selectMultiple({
 		select: ["id"],
@@ -110,20 +114,34 @@ const deleteMultiple: ServiceFn<
 	);
 	if (hookBeforeRes.error) return hookBeforeRes;
 
-	const deletePages = await CollectionDocumentsRepo.updateMultiple({
-		where: [
-			{
-				key: "id",
-				operator: "in",
-				value: data.ids,
+	const [deletePages] = await Promise.all([
+		CollectionDocumentsRepo.updateMultiple({
+			where: [
+				{
+					key: "id",
+					operator: "in",
+					value: data.ids,
+				},
+			],
+			data: {
+				isDeleted: 1,
+				isDeletedAt: new Date().toISOString(),
+				deletedBy: data.userId,
 			},
-		],
-		data: {
-			isDeleted: 1,
-			isDeletedAt: new Date().toISOString(),
-			deletedBy: data.userId,
-		},
-	});
+		}),
+		CollectionDocumentFieldsRepo.updateMultiple({
+			where: [
+				{
+					key: "document_id",
+					operator: "in",
+					value: data.ids,
+				},
+			],
+			data: {
+				documentId: null,
+			},
+		}),
+	]);
 
 	if (deletePages.length === 0) {
 		return {
