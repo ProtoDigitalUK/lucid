@@ -13,7 +13,7 @@ import type { CollectionConfig } from "../types/index.js";
 const constructChildFullSlug = (data: {
 	descendants: DescendantFieldsResponse[];
 	localisation: Config["localisation"];
-	parentFullSlugField: FieldSchemaType;
+	parentFullSlugField?: FieldSchemaType;
 	collection: CollectionConfig;
 }): Awaited<
 	ServiceResponse<
@@ -32,12 +32,21 @@ const constructChildFullSlug = (data: {
 		const fullSlug: Record<string, string | null> = {};
 
 		if (data.collection.translations) {
-			if (!data.parentFullSlugField.translations) break;
+			if (
+				data.parentFullSlugField !== undefined &&
+				!data.parentFullSlugField.translations
+			)
+				break;
 
 			for (const locale of data.localisation.locales) {
 				const currentFullSlugValue =
-					data.parentFullSlugField.translations[locale.code];
-				if (!currentFullSlugValue) continue;
+					data.parentFullSlugField?.translations?.[locale.code];
+				if (
+					data.parentFullSlugField !== undefined &&
+					!currentFullSlugValue
+				) {
+					continue;
+				}
 
 				fullSlug[locale.code] = buildFullSlug({
 					targetLocale: locale.code,
@@ -47,13 +56,17 @@ const constructChildFullSlug = (data: {
 				});
 			}
 		} else {
-			if (!data.parentFullSlugField.value) break;
+			if (
+				data.parentFullSlugField !== undefined &&
+				!data.parentFullSlugField.value
+			)
+				break;
 
 			fullSlug[data.localisation.defaultLocale] = buildFullSlug({
 				targetLocale: data.localisation.defaultLocale,
 				currentDescendant: descendant,
 				descendants: data.descendants,
-				topLevelFullSlug: data.parentFullSlugField.value,
+				topLevelFullSlug: data.parentFullSlugField?.value,
 			});
 		}
 

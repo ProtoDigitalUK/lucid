@@ -7,13 +7,13 @@ import { registerFields, pluginOptions } from "./services/index.js";
 import {
 	beforeUpsertHandler,
 	afterUpsertHandler,
+	beforeDeleteHandler,
 } from "./services/hooks/index.js";
 
 /*
     TODO:
     - [] update zod validation for slug custom field, only allow slug with slashes if it’s a slash by itself.
     - [] test how what we have currently works with translations disabled. With 1 locale (with and without translations on) and also with locale added when documents already exist (update a child’s translation for new locale - see what breaks? Default to default locale?)
-    - [] register a new before delete hook handler that will update all child documents to unset the parent and recompute all descendant fullSlugs
     - [] add new slug use field feature so if the slug is empty it will use a slugified version of a given collection text field - if the slug has a value ignore this.
     - [] make a note about revision system - when that’s added, the plugin page queries should only try and recompute fullSlugs of active revisions to limit the amount of work needed. Add new hook so after a revision is made active it recompute its own fullSlugs via parents and then all of its descendants.
 */
@@ -52,6 +52,12 @@ const plugin: LucidPluginOptions<PluginOptions> = async (config, plugin) => {
 		event: "afterUpsert",
 		handler: afterUpsertHandler(options),
 	});
+	config.hooks.push({
+		service: "collection-documents",
+		event: "beforeDelete",
+		handler: beforeDeleteHandler(options),
+	});
+
 	// TODO: when revision support is added, we will have to run the afterUpsertHandler when a revision is made the active revision to ensure all of its children slugs are correct.
 
 	return {

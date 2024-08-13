@@ -19,7 +19,7 @@ export type DescendantFieldsResponse = {
 const getDescendantFields: ServiceFn<
 	[
 		{
-			documentId: number;
+			ids: number[];
 		},
 	],
 	Array<DescendantFieldsResponse>
@@ -30,7 +30,7 @@ const getDescendantFields: ServiceFn<
 				db
 					.selectFrom("lucid_collection_document_fields as lcdf")
 					.select(["lcdf.collection_document_id", "lcdf.document_id"])
-					.where("lcdf.document_id", "=", data.documentId)
+					.where("lcdf.document_id", "in", data.ids)
 					.where("lcdf.key", "=", "parentPage")
 					.unionAll(
 						db
@@ -82,7 +82,15 @@ const getDescendantFields: ServiceFn<
 
 		return {
 			error: undefined,
-			data: descendants,
+			data: descendants.filter((d, i, self) => {
+				return (
+					self.findIndex(
+						(e) =>
+							e.collection_document_id ===
+							d.collection_document_id,
+					) === i
+				);
+			}),
 		};
 	} catch (error) {
 		return {

@@ -5,7 +5,7 @@ const buildFullSlugFromSlugs = (data: {
 	targetLocale: string;
 	currentDescendant: DescendantFieldsResponse;
 	descendants: Array<DescendantFieldsResponse>;
-	topLevelFullSlug: string;
+	topLevelFullSlug?: string;
 }): string | null => {
 	const slugField = data.currentDescendant.fields.find(
 		(field) =>
@@ -52,6 +52,10 @@ const buildFullSlugFromSlugs = (data: {
 	const fullSlug = parentFullSlug
 		? `/${parentFullSlug}/${slugFieldValue}`
 		: slugFieldValue;
+
+	if (data.topLevelFullSlug === undefined) {
+		return postSlugFormat(fullSlug);
+	}
 
 	return postSlugFormat(
 		parentFullSlug ? fullSlug : `/${data.topLevelFullSlug}/${fullSlug}`,

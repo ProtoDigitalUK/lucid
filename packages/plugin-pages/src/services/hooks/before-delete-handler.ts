@@ -1,17 +1,16 @@
 import {
-	getDescendantFields,
 	getTargetCollection,
 	constructChildFullSlug,
+	getDescendantFields,
 	updateFullSlugFields,
 } from "../index.js";
-import constants from "../../constants.js";
-import type { LucidHookCollection } from "@lucidcms/core/types";
 import type { PluginOptionsInternal } from "../../types/index.js";
+import type { LucidHookCollection } from "@lucidcms/core/types";
 
-const afterUpsertHandler =
+const beforeDeleteHandler =
 	(
 		options: PluginOptionsInternal,
-	): LucidHookCollection<"afterUpsert">["handler"] =>
+	): LucidHookCollection<"beforeDelete">["handler"] =>
 	async (context, data) => {
 		// ----------------------------------------------------------------
 		// Validation / Setup
@@ -26,10 +25,8 @@ const afterUpsertHandler =
 			};
 		}
 
-		// ----------------------------------------------------------------
-		// Build and store fullSlugs
 		const descendantsRes = await getDescendantFields(context, {
-			ids: [data.data.documentId],
+			ids: data.data.ids,
 		});
 		if (descendantsRes.error) return descendantsRes;
 
@@ -41,20 +38,9 @@ const afterUpsertHandler =
 			};
 		}
 
-		const currentFullSlugField = data.data.fields.find((field) => {
-			return field.key === constants.fields.fullSlug.key;
-		});
-		if (!currentFullSlugField) {
-			return {
-				error: undefined,
-				data: undefined,
-			};
-		}
-
 		const docFullSlugsRes = constructChildFullSlug({
 			descendants: descendantsRes.data,
 			localisation: context.config.localisation,
-			parentFullSlugField: currentFullSlugField,
 			collection: targetCollectionRes.data,
 		});
 		if (docFullSlugsRes.error) return docFullSlugsRes;
@@ -69,4 +55,4 @@ const afterUpsertHandler =
 		};
 	};
 
-export default afterUpsertHandler;
+export default beforeDeleteHandler;
