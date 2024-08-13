@@ -19,7 +19,12 @@ const afterUpsertHandler =
 			options,
 			collectionKey: data.meta.collectionKey,
 		});
-		if (targetCollectionRes.error) return targetCollectionRes;
+		if (targetCollectionRes.error) {
+			return {
+				error: undefined,
+				data: undefined,
+			};
+		}
 
 		// ----------------------------------------------------------------
 		// Build and store fullSlugs

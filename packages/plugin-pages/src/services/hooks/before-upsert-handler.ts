@@ -29,7 +29,12 @@ const beforeUpsertHandler =
 			options,
 			collectionKey: data.meta.collectionKey,
 		});
-		if (targetCollectionRes.error) return targetCollectionRes;
+		if (targetCollectionRes.error) {
+			return {
+				error: undefined,
+				data: data.data,
+			};
+		}
 
 		const checkFieldsExistRes = checkFieldsExist({
 			fields: {
