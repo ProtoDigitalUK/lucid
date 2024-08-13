@@ -12,7 +12,6 @@ import {
 
 /*
     TODO:
-    - [] test how what we have currently works with translations disabled. With 1 locale (with and without translations on) and also with locale added when documents already exist (update a child’s translation for new locale - see what breaks? Default to default locale?)
     - [] add new slug use field feature so if the slug is empty it will use a slugified version of a given collection text field - if the slug has a value ignore this.
 */
 
@@ -21,12 +20,12 @@ const plugin: LucidPluginOptions<PluginOptions> = async (config, plugin) => {
 
 	for (const collectionConfig of options.collections) {
 		const collectionInstance = config.collections.find(
-			(c) => c.key === collectionConfig.key,
+			(c) => c.key === collectionConfig.collectionKey,
 		);
 		if (!collectionInstance) {
 			logger("warn", {
 				message: T("cannot_find_collection", {
-					collection: collectionConfig.key,
+					collection: collectionConfig.collectionKey,
 				}),
 				scope: PLUGIN_KEY,
 			});

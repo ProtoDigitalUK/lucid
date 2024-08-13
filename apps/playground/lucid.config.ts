@@ -67,9 +67,9 @@ export default lucid.config({
 		LucidPages({
 			collections: [
 				{
-					key: "page",
-					translations: true,
-					showFullSlug: true,
+					collectionKey: "page",
+					enableTranslations: true,
+					displayFullSlug: true,
 				},
 			],
 		}),

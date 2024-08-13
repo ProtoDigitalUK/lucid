@@ -82,7 +82,7 @@ const beforeUpsertHandler =
 			context,
 			{
 				documentId: data.data.documentId,
-				collectionKey: targetCollectionRes.data.key,
+				collectionKey: targetCollectionRes.data.collectionKey,
 				fields: {
 					slug: slug,
 					parentPage: parentPage,

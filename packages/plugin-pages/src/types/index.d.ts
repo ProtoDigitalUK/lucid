@@ -1,8 +1,9 @@
 export interface PluginOptions {
 	collections: Array<{
-		key: string;
-		translations?: boolean;
-		showFullSlug?: boolean;
+		collectionKey: string;
+		enableTranslations?: boolean;
+		displayFullSlug?: boolean;
+		fallbackSlugSource?: string;
 	}>;
 }
 
@@ -11,7 +12,8 @@ export interface PluginOptionsInternal extends PluginOptions {
 }
 
 export interface CollectionConfig {
-	key: string;
-	translations: boolean;
-	showFullSlug: boolean;
+	collectionKey: string;
+	enableTranslations: boolean;
+	displayFullSlug: boolean;
+	fallbackSlugSource: string | undefined;
 }

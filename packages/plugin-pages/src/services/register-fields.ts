@@ -14,15 +14,15 @@ const registerFields = (
 				labels: {
 					title: T("full_slug"),
 				},
-				translations: config.translations,
-				hidden: !config.showFullSlug,
+				translations: config.enableTranslations,
+				hidden: !config.displayFullSlug,
 				disabled: true,
 			},
 			{
 				// @ts-expect-error
-				list: config.showFullSlug,
+				list: config.displayFullSlug,
 				// @ts-expect-error
-				filterable: config.showFullSlug,
+				filterable: config.displayFullSlug,
 			},
 		)
 		.addText(
@@ -31,7 +31,7 @@ const registerFields = (
 				labels: {
 					title: T("slug"),
 				},
-				translations: config.translations,
+				translations: config.enableTranslations,
 				hidden: false,
 				disabled: false,
 				validation: {

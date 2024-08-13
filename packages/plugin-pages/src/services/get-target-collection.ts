@@ -13,7 +13,7 @@ const getTargetCollection = (data: {
 	collectionKey: string;
 }): Awaited<ServiceResponse<CollectionConfig>> => {
 	const targetCollection = data.options.collections.find(
-		(c) => c.key === data.collectionKey,
+		(c) => c.collectionKey === data.collectionKey,
 	);
 	//* should never happen
 	if (!targetCollection) {
