@@ -3,7 +3,7 @@ export interface PluginOptions {
 		collectionKey: string;
 		enableTranslations?: boolean;
 		displayFullSlug?: boolean;
-		fallbackSlugSource?: string;
+		// fallbackSlugSource?: string;
 	}>;
 }
 
@@ -15,5 +15,5 @@ export interface CollectionConfig {
 	collectionKey: string;
 	enableTranslations: boolean;
 	displayFullSlug: boolean;
-	fallbackSlugSource: string | undefined;
+	// fallbackSlugSource: string | undefined;
 }

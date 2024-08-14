@@ -20,8 +20,6 @@ const beforeUpsertHandler =
 		options: PluginOptionsInternal,
 	): LucidHookCollection<"beforeUpsert">["handler"] =>
 	async (context, data) => {
-		// TODO: should slug be validated here as the hook happens pre validation. Alternative is we allow generating invalid/slight wrong slugs and let field validation throw in that case?
-
 		// ----------------------------------------------------------------
 		// Validation / Setup
 

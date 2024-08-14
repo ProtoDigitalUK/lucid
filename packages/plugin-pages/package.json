@@ -1,6 +1,6 @@
 {
 	"name": "@lucidcms/plugin-pages",
-	"version": "0.0.1",
+	"version": "0.1.0",
 	"description": "The official Pages plugin for Lucid",
 	"type": "module",
 	"types": "./dist/index.d.ts",
@@ -19,9 +19,7 @@
 		"lint": "biome lint ./src",
 		"lint:fix": "biome lint --apply ./src"
 	},
-	"files": [
-		"dist"
-	],
+	"files": ["dist"],
 	"author": "Proto Digital",
 	"repository": {
 		"type": "git",
@@ -35,8 +33,7 @@
 		"Proto Digital",
 		"Pages",
 		"Plugin",
-		"Slug",
-		"Homepage"
+		"Slug"
 	],
 	"devDependencies": {
 		"@biomejs/biome": "^1.8.3",

@@ -6,7 +6,7 @@ const pluginOptions = (given: PluginOptions): PluginOptionsInternal => {
 			collectionKey: c.collectionKey,
 			enableTranslations: c?.enableTranslations ?? false,
 			displayFullSlug: c?.displayFullSlug ?? false,
-			fallbackSlugSource: c?.fallbackSlugSource ?? undefined,
+			// fallbackSlugSource: c?.fallbackSlugSource ?? undefined,
 		})),
 	};
 };

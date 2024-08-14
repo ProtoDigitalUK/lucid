@@ -10,11 +10,6 @@ import {
 	beforeDeleteHandler,
 } from "./services/hooks/index.js";
 
-/*
-    TODO:
-    - [] add new slug use field feature so if the slug is empty it will use a slugified version of a given collection text field - if the slug has a value ignore this.
-*/
-
 const plugin: LucidPluginOptions<PluginOptions> = async (config, plugin) => {
 	const options = pluginOptions(plugin);
 
