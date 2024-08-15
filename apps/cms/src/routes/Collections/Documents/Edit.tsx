@@ -12,6 +12,7 @@ import {
 	onMount,
 } from "solid-js";
 import classNames from "classnames";
+import { useQueryClient } from "@tanstack/solid-query";
 import type { CollectionResponse, FieldErrors } from "@lucidcms/core/types";
 import api from "@/services/api";
 import brickStore from "@/store/brickStore";
@@ -50,6 +51,7 @@ const CollectionsDocumentsEditRoute: Component<
 	const navGuard = navGuardHook({
 		brickMutateLock: true,
 	});
+	const queryClient = useQueryClient();
 	const [getHeaderEle, setHeaderEle] = createSignal<HTMLElement>();
 	const [getDeleteOpen, setDeleteOpen] = createSignal(false);
 	const [getHasScrolled, setHasScrolled] = createSignal(false);
@@ -101,6 +103,9 @@ const CollectionsDocumentsEditRoute: Component<
 				navigate(
 					`/admin/collections/${collectionKey()}/${data.data.id}`,
 				);
+				queryClient.invalidateQueries({
+					queryKey: ["collections.getAll"],
+				});
 			}
 		},
 		onError: (errors) => {
