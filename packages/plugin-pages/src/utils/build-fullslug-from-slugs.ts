@@ -47,8 +47,7 @@ const buildFullSlugFromSlugs = (data: {
 
 	return postSlugFormat(
 		joinSlugs(
-			data.topLevelFullSlug || "",
-			parentFullSlug || "",
+			parentFullSlug || data.topLevelFullSlug || "",
 			slugFieldValue,
 		),
 	);
