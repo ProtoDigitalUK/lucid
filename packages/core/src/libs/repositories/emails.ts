@@ -29,7 +29,26 @@ export default class EmailsRepo {
 	}) => {
 		return this.db
 			.selectFrom("lucid_emails")
-			.selectAll()
+			.select([
+				"id",
+				"email_hash",
+				"from_address",
+				"from_name",
+				"to_address",
+				"subject",
+				"cc",
+				"bcc",
+				"delivery_status",
+				"template",
+				"data",
+				"type",
+				"sent_count",
+				"error_count",
+				"last_error_message",
+				"last_attempt_at",
+				"last_success_at",
+				"created_at",
+			])
 			.where("id", "=", props.id)
 			.executeTakeFirst();
 	};
