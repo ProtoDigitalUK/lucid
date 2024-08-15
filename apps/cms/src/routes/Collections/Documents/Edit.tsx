@@ -18,7 +18,7 @@ import brickStore from "@/store/brickStore";
 import brickHelpers from "@/utils/brick-helpers";
 import { getBodyError } from "@/utils/error-helpers";
 import contentLocaleStore from "@/store/contentLocaleStore";
-import { FaSolidTrash, FaSolidArrowLeft } from "solid-icons/fa";
+import { FaSolidTrash } from "solid-icons/fa";
 import Layout from "@/components/Groups/Layout";
 import Button from "@/components/Partials/Button";
 import ContentLocaleSelect from "@/components/Partials/ContentLocaleSelect";
@@ -162,7 +162,9 @@ const CollectionsDocumentsEditRoute: Component<
 	// Effects
 	createEffect(() => {
 		if (isSuccess()) {
-			brickStore.get.reset();
+			if (props.mode === "edit") {
+				brickStore.get.reset();
+			}
 			brickStore.set(
 				"collectionTranslations",
 				collection.data?.data.translations || false,
@@ -255,19 +257,19 @@ const CollectionsDocumentsEditRoute: Component<
 					>
 						<div class="w-full border-b border-border flex items-center gap-15 z-10">
 							<span class="text-lg font-display pr-1 py-2 font-semibold after:absolute after:-bottom-px after:left-0 after:right-0 after:h-px after:bg-primary-base relative cursor-pointer">
-								Content
+								{T()("content")}
 							</span>
 							<span
 								class="text-lg font-display px-1 py-2 font-semibold opacity-50 cursor-not-allowed"
 								title="Coming soon"
 							>
-								Preview
+								{T()("preview")}
 							</span>
 							<span
 								class="text-lg font-display px-1 py-2 font-semibold opacity-50 cursor-not-allowed"
 								title="Coming soon"
 							>
-								Revisions
+								{T()("revisions")}
 							</span>
 						</div>
 						<div class="w-full md:w-auto flex items-center gap-2.5">
