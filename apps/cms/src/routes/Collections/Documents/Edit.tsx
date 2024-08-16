@@ -10,6 +10,7 @@ import {
 	createEffect,
 	onCleanup,
 	onMount,
+	on,
 } from "solid-js";
 import classNames from "classnames";
 import { useQueryClient } from "@tanstack/solid-query";
@@ -85,7 +86,7 @@ const CollectionsDocumentsEditRoute: Component<
 		queryParams: {
 			location: {
 				collectionKey: collectionKey,
-				id: documentId(),
+				id: documentId,
 			},
 			include: {
 				bricks: true,
@@ -107,6 +108,7 @@ const CollectionsDocumentsEditRoute: Component<
 				queryClient.invalidateQueries({
 					queryKey: ["collections.getAll"],
 				});
+				return;
 			}
 		},
 		onError: (errors) => {
@@ -131,7 +133,7 @@ const CollectionsDocumentsEditRoute: Component<
 		return collection.isSuccess && doc.isSuccess;
 	});
 	const isSaving = createMemo(() => {
-		return upsertDocument.action.isPending;
+		return upsertDocument.action.isPending || doc.isRefetching;
 	});
 	const mutateErrors = createMemo(() => {
 		return upsertDocument.errors();
@@ -163,33 +165,37 @@ const CollectionsDocumentsEditRoute: Component<
 			setHasScrolled(true);
 		else setHasScrolled(false);
 	};
+	const setDocumentState = () => {
+		brickStore.get.reset();
+		brickStore.set(
+			"collectionTranslations",
+			collection.data?.data.translations || false,
+		);
+		brickStore.get.setBricks(doc.data?.data, collection.data?.data);
+	};
 
 	// ---------------------------------
 	// Effects
-	createEffect(() => {
-		if (isSuccess()) {
-			if (props.mode === "edit") {
-				brickStore.get.reset();
-			}
-			brickStore.set(
-				"collectionTranslations",
-				collection.data?.data.translations || false,
-			);
-			brickStore.get.setBricks(doc.data?.data, collection.data?.data);
-		}
-	});
-	createEffect(() => {
-		collectionKey();
-		documentId();
-		setHasScrolled(false);
-	});
+	createEffect(
+		on(
+			() => doc.data,
+			() => {
+				setDocumentState();
+			},
+		),
+	);
+	createEffect(
+		on(
+			() => collection.isSuccess,
+			() => {
+				setDocumentState();
+			},
+		),
+	);
 	onMount(() => {
-		setHasScrolled(false);
 		document.addEventListener("scroll", windowScroll, false);
 	});
 	onCleanup(() => {
-		brickStore.get.reset();
-		setHasScrolled(false);
 		document.removeEventListener("scroll", windowScroll, false);
 	});
 
