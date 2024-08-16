@@ -19,7 +19,7 @@ import brickStore from "@/store/brickStore";
 import brickHelpers from "@/utils/brick-helpers";
 import { getBodyError } from "@/utils/error-helpers";
 import contentLocaleStore from "@/store/contentLocaleStore";
-import { FaSolidTrash } from "solid-icons/fa";
+import { FaSolidChevronLeft, FaSolidTrash } from "solid-icons/fa";
 import Layout from "@/components/Groups/Layout";
 import Button from "@/components/Partials/Button";
 import ContentLocaleSelect from "@/components/Partials/ContentLocaleSelect";
@@ -55,6 +55,7 @@ const CollectionsDocumentsEditRoute: Component<
 	const [getHeaderEle, setHeaderEle] = createSignal<HTMLElement>();
 	const [getDeleteOpen, setDeleteOpen] = createSignal(false);
 	const [getHasScrolled, setHasScrolled] = createSignal(false);
+	const [getPanelOpen, setPanelOpen] = createSignal(false);
 
 	// ----------------------------------
 	// Memos
@@ -313,12 +314,34 @@ const CollectionsDocumentsEditRoute: Component<
 									<FaSolidTrash />
 								</Button>
 							</Show>
+							<Show when={props.mode === "edit"}>
+								<Button
+									theme="border-outline"
+									size="x-icon"
+									type="button"
+									onClick={() =>
+										setPanelOpen(!getPanelOpen())
+									}
+								>
+									<span class="sr-only">
+										{T()("toggle_panel")}
+									</span>
+									<FaSolidChevronLeft
+										class={classNames(
+											"transform-gpu transition-transform duration-200",
+											{
+												"rotate-180": getPanelOpen(),
+											},
+										)}
+									/>
+								</Button>
+							</Show>
 						</div>
 					</div>
 				</header>
-				<div class="w-full mt-[191px] lg:mt-[141px] flex flex-grow">
+				<div class="w-full mt-[191px] lg:mt-[141px] flex flex-grow overflow-hidden">
 					{/* Fields & Bricks */}
-					<div class="w-full">
+					<div class="w-full flex flex-col">
 						<Document.CollectionPseudoBrick
 							fields={collection.data?.data.fields || []}
 						/>
@@ -335,7 +358,14 @@ const CollectionsDocumentsEditRoute: Component<
 					</div>
 					{/* Sidebar */}
 					<Show when={props.mode === "edit"}>
-						<aside class="w-full lg:max-w-[300px] lg:overflow-y-auto bg-container-1 border-b lg:border-b-0 lg:border-l border-border">
+						<aside
+							class={classNames(
+								"w-full lg:max-w-[300px] lg:overflow-y-auto bg-container-1 border-b lg:border-b-0 lg:border-l border-border animate-animate-slide-from-right-in",
+								{
+									hidden: getPanelOpen() === false,
+								},
+							)}
+						>
 							<div class="p-15 md:p-30">
 								<h3 class="mb-15">{T()("metadata")}</h3>
 								<DetailsList
