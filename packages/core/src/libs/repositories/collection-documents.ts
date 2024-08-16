@@ -38,6 +38,7 @@ export default class CollectionDocumentsRepo {
 	};
 	selectSingleById = async (props: {
 		id: number;
+		collectionKey: string;
 		config: Config;
 	}) => {
 		return this.db
@@ -74,6 +75,11 @@ export default class CollectionDocumentsRepo {
 			])
 			.where("lucid_collection_documents.id", "=", props.id)
 			.where("lucid_collection_documents.is_deleted", "=", 0)
+			.where(
+				"lucid_collection_documents.collection_key",
+				"=",
+				props.collectionKey,
+			)
 			.executeTakeFirst();
 	};
 	selectSingleFitlered = async (props: {

@@ -10,6 +10,7 @@ const getSingle: ServiceFn<
 	[
 		{
 			id: number;
+			collectionKey: string;
 			query: z.infer<typeof collectionDocumentsSchema.getSingle.query>;
 		},
 	],
@@ -23,6 +24,7 @@ const getSingle: ServiceFn<
 
 	const document = await CollectionDocumentsRepo.selectSingleById({
 		id: data.id,
+		collectionKey: data.collectionKey,
 		config: context.config,
 	});
 
