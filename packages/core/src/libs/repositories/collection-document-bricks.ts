@@ -1,3 +1,4 @@
+import constants from "../../constants/constants.js";
 import queryBuilder, {
 	type QueryBuilderWhere,
 } from "../query-builder/index.js";
@@ -156,6 +157,87 @@ export default class CollectionDocumentBricksRepo {
 											),
 									)
 									.as("media_alt_translations"),
+								props.config.db
+									.jsonArrayFrom(
+										eb
+											.selectFrom(
+												"lucid_collection_document_fields as doc_fields",
+											)
+											.leftJoin(
+												"lucid_collection_document_bricks as doc_bricks",
+												(join) =>
+													join.onRef(
+														"doc_bricks.id",
+														"=",
+														"doc_fields.collection_brick_id",
+													),
+											)
+											.select([
+												"doc_fields.fields_id",
+												"doc_fields.collection_brick_id",
+												"doc_fields.group_id",
+												"doc_fields.locale_code",
+												"doc_fields.key",
+												"doc_fields.type",
+												"doc_fields.text_value",
+												"doc_fields.int_value",
+												"doc_fields.bool_value",
+												"doc_fields.json_value",
+												"doc_fields.media_id",
+												"doc_fields.document_id",
+												"doc_fields.collection_document_id",
+											])
+											.where(
+												"doc_bricks.brick_type",
+												"=",
+												constants.brickTypes
+													.collectionFields,
+											)
+											.whereRef(
+												"doc_fields.collection_document_id",
+												"=",
+												"lucid_collection_document_fields.document_id",
+											),
+									)
+									.as("document_fields"),
+								props.config.db
+									.jsonArrayFrom(
+										eb
+											.selectFrom(
+												"lucid_collection_document_groups as doc_groups",
+											)
+											.leftJoin(
+												"lucid_collection_document_bricks as doc_bricks",
+												(join) =>
+													join.onRef(
+														"doc_bricks.id",
+														"=",
+														"doc_groups.collection_brick_id",
+													),
+											)
+											.select([
+												"doc_groups.group_id",
+												"doc_groups.collection_document_id",
+												"doc_groups.collection_brick_id",
+												"doc_groups.parent_group_id",
+												"doc_groups.repeater_key",
+												"doc_groups.group_order",
+												"doc_groups.group_open",
+												"doc_groups.ref",
+											])
+											.where(
+												"doc_bricks.brick_type",
+												"=",
+												constants.brickTypes
+													.collectionFields,
+											)
+											.whereRef(
+												"doc_groups.collection_document_id",
+												"=",
+												"lucid_collection_document_fields.document_id",
+											),
+									)
+									.as("document_groups"),
 							])
 							.whereRef(
 								"lucid_collection_document_fields.collection_brick_id",

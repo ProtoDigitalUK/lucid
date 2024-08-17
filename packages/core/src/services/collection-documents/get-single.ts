@@ -22,13 +22,17 @@ const getSingle: ServiceFn<
 	);
 	const CollectionDocumentsFormatter = Formatter.get("collection-documents");
 
-	const document = await CollectionDocumentsRepo.selectSingleById({
-		id: data.id,
-		collectionKey: data.collectionKey,
-		config: context.config,
-	});
-
-	if (document === undefined || document.collection_key === null) {
+	const [document, collectionRes] = await Promise.all([
+		CollectionDocumentsRepo.selectSingleById({
+			id: data.id,
+			collectionKey: data.collectionKey,
+			config: context.config,
+		}),
+		context.services.collection.getSingleInstance(context, {
+			key: data.collectionKey,
+		}),
+	]);
+	if (document === undefined) {
 		return {
 			error: {
 				type: "basic",
@@ -38,13 +42,6 @@ const getSingle: ServiceFn<
 			data: undefined,
 		};
 	}
-
-	const collectionRes = await context.services.collection.getSingleInstance(
-		context,
-		{
-			key: document.collection_key,
-		},
-	);
 	if (collectionRes.error) return collectionRes;
 
 	if (data.query.include?.includes("bricks")) {

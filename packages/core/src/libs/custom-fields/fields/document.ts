@@ -42,6 +42,10 @@ class DocumentCustomField extends CustomField<"document"> {
 		data: FieldProp;
 		host: string;
 	}) {
+		console.log(props.data.document_fields);
+		console.log(props.data.document_groups);
+		// TODO: build out nested fields in meta
+
 		return {
 			value: props.data?.document_id ?? null,
 			meta: null,

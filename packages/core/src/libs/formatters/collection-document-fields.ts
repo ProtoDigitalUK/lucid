@@ -6,7 +6,7 @@ import type {
 import type { JSONString, BooleanInt } from "../db/types.js";
 import type CollectionBuilder from "../builders/collection-builder/index.js";
 import type BrickBuilder from "../builders/brick-builder/index.js";
-import type { BrickProp } from "./collection-document-bricks.js";
+import type { BrickProp, GroupProp } from "./collection-document-bricks.js";
 import type {
 	CFConfig,
 	FieldTypes,
@@ -26,7 +26,7 @@ export interface FieldProp {
 	type: string;
 	text_value: string | null;
 	int_value: number | null;
-	bool_value: 1 | 0 | null;
+	bool_value: BooleanInt | null;
 	json_value?: JSONString | null;
 	user_id?: number | null;
 	user_email?: string | null;
@@ -54,6 +54,22 @@ export interface FieldProp {
 		value: string | null;
 		locale_code: string | null;
 	}>;
+	document_fields?: Array<{
+		fields_id: number;
+		collection_brick_id: number;
+		group_id: number | null;
+		locale_code: string;
+		key: string;
+		type: string;
+		text_value: string | null;
+		int_value: number | null;
+		bool_value: BooleanInt | null;
+		json_value: string | null;
+		media_id: number | null;
+		document_id: number | null;
+		collection_document_id: number | null;
+	}>;
+	document_groups?: Array<GroupProp>;
 }
 
 export default class CollectionDocumentFieldsFormatter {
