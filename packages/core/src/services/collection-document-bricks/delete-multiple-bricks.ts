@@ -1,4 +1,5 @@
 import Repository from "../../libs/repositories/index.js";
+import constants from "../../constants/constants.js";
 import type { ServiceFn } from "../../utils/services/types.js";
 
 const deleteMultipleBricks: ServiceFn<
@@ -29,7 +30,7 @@ const deleteMultipleBricks: ServiceFn<
 				{
 					key: "brick_type",
 					operator: "=",
-					value: "collection-fields",
+					value: constants.brickTypes.collectionFields,
 				},
 			],
 		});
@@ -45,7 +46,7 @@ const deleteMultipleBricks: ServiceFn<
 				{
 					key: "brick_type",
 					operator: "!=",
-					value: "collection-fields",
+					value: constants.brickTypes.collectionFields,
 				},
 			],
 		});

@@ -2,6 +2,7 @@ import type { Kysely } from "kysely";
 import type { Migration, Generated, ColumnType } from "kysely";
 import type { FieldTypes } from "../custom-fields/types.js";
 import type { OptionName } from "../../types/response.js";
+import type { BrickTypes } from "../builders/brick-builder/types.js";
 
 export type KyselyDB = Kysely<LucidDB>;
 
@@ -180,7 +181,7 @@ export interface HeadlessCollectionDocuments {
 export interface HeadlessCollectionDocumentBricks {
 	id: Generated<number>;
 	collection_document_id: number;
-	brick_type: "builder" | "fixed" | "collection-fields";
+	brick_type: BrickTypes;
 	brick_key: string | null;
 	brick_order: number | null;
 	brick_open: BooleanInt | null;

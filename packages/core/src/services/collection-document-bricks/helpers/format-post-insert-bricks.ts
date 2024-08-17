@@ -1,11 +1,12 @@
 import type { BrickInsertItem } from "./format-insert-bricks.js";
 import type { GroupInsertItem, FieldInsertItem } from "./flatten-fields.js";
+import type { BrickTypes } from "../../../libs/builders/brick-builder/types.js";
 
 const formatPostInsertBricks = (
 	bricks: Array<BrickInsertItem>,
 	insertedBricks: Array<{
 		id: number;
-		brick_type: "builder" | "fixed" | "collection-fields";
+		brick_type: BrickTypes;
 		brick_key: string | null;
 		brick_order: number | null;
 	}>,
@@ -13,7 +14,7 @@ const formatPostInsertBricks = (
 	id: number;
 	key: string | undefined;
 	order: number | undefined;
-	type: "builder" | "fixed" | "collection-fields";
+	type: BrickTypes;
 	groups: GroupInsertItem[];
 	fields: FieldInsertItem[];
 }[] =>

@@ -1,3 +1,4 @@
+import constants from "../../../constants/constants.js";
 import type CollectionBuilder from "../../../libs/builders/collection-builder/index.js";
 import type { BrickSchema } from "../../../schemas/collection-bricks.js";
 import type { FieldSchemaType } from "../../../schemas/collection-fields.js";
@@ -53,7 +54,7 @@ const formatInsertBricks = (props: {
 		);
 		bricksRes.push({
 			id: "collection-pseudo-brick",
-			type: "collection-fields",
+			type: constants.brickTypes.collectionFields,
 			fields: flat.fields,
 			groups: flat.groups,
 		});

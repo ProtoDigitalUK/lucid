@@ -1,11 +1,6 @@
 import type { BrickSchema } from "../schemas/collection-bricks.js";
 import type { FieldSchemaType } from "../schemas/collection-fields.js";
-import type { KyselyDB } from "../libs/db/types.js";
-import type {
-	ServiceContext,
-	ServiceResponse,
-	ServiceFn,
-} from "../utils/services/types.js";
+import type { ServiceFn } from "../utils/services/types.js";
 
 // --------------------------------------------------
 // types

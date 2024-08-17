@@ -1,11 +1,12 @@
+import Formatter from "./index.js";
+import constants from "../../constants/constants.js";
+import CollectionDocumentFieldsFormatter, {
+	type FieldProp,
+} from "./collection-document-fields.js";
 import type { BrickResponse, FieldResponse } from "../../types/response.js";
 import type CollectionBuilder from "../builders/collection-builder/index.js";
 import type BrickBuilder from "../builders/brick-builder/index.js";
 import type { BooleanInt } from "../db/types.js";
-import Formatter from "./index.js";
-import CollectionDocumentFieldsFormatter, {
-	type FieldProp,
-} from "./collection-document-fields.js";
 
 export interface GroupProp {
 	group_id: number;
@@ -45,7 +46,8 @@ export default class CollectionDocumentBricksFormatter {
 
 		return props.bricks
 			.filter((brick) => {
-				if (brick.brick_type === "collection-fields") return false;
+				if (brick.brick_type === constants.brickTypes.collectionFields)
+					return false;
 
 				const builder = props.collection.brickInstances.find((b) => {
 					return b.key === brick.brick_key;
@@ -96,7 +98,8 @@ export default class CollectionDocumentBricksFormatter {
 
 		return props.bricks
 			.filter((brick) => {
-				if (brick.brick_type !== "collection-fields") return false;
+				if (brick.brick_type !== constants.brickTypes.collectionFields)
+					return false;
 				return true;
 			})
 			.flatMap((brick) =>

@@ -1,3 +1,4 @@
+import constants from "../../../constants/constants.js";
 import type { GroupSimpleResponse } from "../create-multiple-groups.js";
 import type { FieldInsertItem } from "./flatten-fields.js";
 import type CollectionBuilder from "../../../libs/builders/collection-builder/index.js";
@@ -5,13 +6,14 @@ import type {
 	CFInsertItem,
 	FieldTypes,
 } from "../../../libs/custom-fields/types.js";
+import type { BrickTypes } from "../../../libs/builders/brick-builder/types.js";
 import type CustomField from "../../../libs/custom-fields/custom-field.js";
 
 const formatInsertFields = (props: {
 	brick: {
 		id: number;
 		key: string | undefined;
-		type: "builder" | "fixed" | "collection-fields";
+		type: BrickTypes;
 		fields: FieldInsertItem[];
 	};
 	groups: GroupSimpleResponse[];
@@ -42,20 +44,20 @@ const getFieldInstance = (props: {
 	collection: CollectionBuilder;
 	fieldKey: string;
 	brick: {
-		type: "builder" | "fixed" | "collection-fields";
+		type: BrickTypes;
 		key: string | undefined;
 	};
 }): CustomField<FieldTypes> | undefined => {
-	if (props.brick.type === "collection-fields") {
+	if (props.brick.type === constants.brickTypes.collectionFields) {
 		return props.collection.fields.get(props.fieldKey);
 	}
-	if (props.brick.type === "fixed") {
+	if (props.brick.type === constants.brickTypes.fixed) {
 		const fixedBrick = props.collection.config.bricks?.fixed?.find(
 			(b) => b.key === props.brick.key,
 		);
 		return fixedBrick?.fields.get(props.fieldKey);
 	}
-	if (props.brick.type === "builder") {
+	if (props.brick.type === constants.brickTypes.builder) {
 		const builderBrick = props.collection.config.bricks?.builder?.find(
 			(b) => b.key === props.brick.key,
 		);

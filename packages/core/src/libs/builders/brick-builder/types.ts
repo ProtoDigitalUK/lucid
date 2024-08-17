@@ -1,3 +1,4 @@
+import type constants from "../../../constants/constants.js";
 import type { LocaleValue } from "../../../types/shared.js";
 
 export interface BrickConfigProps {
@@ -14,3 +15,6 @@ export interface BrickConfig {
 		image?: string;
 	};
 }
+
+export type BrickTypes =
+	(typeof constants.brickTypes)[keyof typeof constants.brickTypes];

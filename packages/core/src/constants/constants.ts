@@ -76,6 +76,11 @@ export default {
 		max: 100,
 		timeWindow: "1 minute", // ms format - https://github.com/vercel/ms
 	},
+	brickTypes: {
+		builder: "builder",
+		fixed: "fixed",
+		collectionFields: "collection-fields",
+	} as const,
 	cronSchedule: "0 0 * * *",
 	csrfExpiration: 604800, // 7 days in seconds
 	refreshTokenExpiration: 604800, // 7 days in seconds

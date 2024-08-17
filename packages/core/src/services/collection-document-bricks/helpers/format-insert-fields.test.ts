@@ -3,6 +3,7 @@ import CollectionBuilder from "../../../libs/builders/collection-builder/index.j
 import BrickBuilder from "../../../libs/builders/brick-builder/index.js";
 import formatInsertFields from "./format-insert-fields.js";
 import flattenFields from "./flatten-fields.js";
+import constants from "../../../constants/constants.js";
 
 const Brick = new BrickBuilder("brick")
 	.addText("text_test")
@@ -97,7 +98,7 @@ test("collection format insert fields", async () => {
 		brick: {
 			id: 1,
 			key: undefined,
-			type: "collection-fields",
+			type: constants.brickTypes.collectionFields,
 			fields: collectionFlatten.fields,
 		},
 		groups: collectionFlatten.groups.map((g, i) => ({
@@ -273,7 +274,7 @@ test("collection brick format insert fields for each custom field type", async (
 		brick: {
 			id: 1,
 			key: "brick",
-			type: "builder",
+			type: constants.brickTypes.builder,
 			fields: brickFlatten.fields,
 		},
 		groups: [],
