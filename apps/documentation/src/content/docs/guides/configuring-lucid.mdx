@@ -8,7 +8,8 @@ At the core of any Lucid project is the Lucid configuration file, located at the
 ## Example
 
 ```ts title="lucid.config.ts"
-import lucid, { LibSQLAdapter } from "@lucidcms/core";
+import lucid from "@lucidcms/core";
+import { LibSQLAdapter } from "@lucidcms/core/adapters";
 // Plugins
 import LucidNodemailer from "@lucidcms/plugin-nodemailer";
 import LucidS3 from "@lucidcms/plugin-s3";

@@ -45,7 +45,8 @@ The lucid.config file is the heart of Lucid and is where you will define everyth
 Here is the minimum required file to get Lucid up and running:
 
 ```ts title="lucid.config.ts"
-import lucid, { SQLiteAdapter } from "@lucidcms/core";
+import lucid from "@lucidcms/core";
+import { SQLiteAdapter } from "@lucidcms/core/adapters";
 import Database from "better-sqlite3";
 
 export default lucid.config({

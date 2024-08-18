@@ -12,11 +12,8 @@ When paired up with Fastify, you can create custom endpoints to better tailor Lu
 All services return errors as values giving you the flexibility to handle them as you see fit, however you can use the `LucidAPIError` class to throw them to Lucid which will handle the error appropriately and return a formatted error response to the client.
 
 ```ts title="index.ts"
-import lucid, {
-  toolkit,
-  LucidAPIError,
-  formatAPIResponse,
-} from "@lucidcms/core";
+import lucid, { toolkit } from "@lucidcms/core";
+import { LucidAPIError, formatAPIResponse } from "@lucidcms/core/api";
 
 lucid.fastify.get("/get-documents", async (request, reply) => {
   const PAGE = 1;
