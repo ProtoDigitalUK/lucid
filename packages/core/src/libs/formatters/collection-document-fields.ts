@@ -15,7 +15,7 @@ import type {
 	RepeaterFieldConfig,
 	TabFieldConfig,
 } from "../custom-fields/types.js";
-import type { Config } from "../../types.js";
+import type { Config } from "../../exports/types.js";
 
 export interface FieldProp {
 	fields_id: number;

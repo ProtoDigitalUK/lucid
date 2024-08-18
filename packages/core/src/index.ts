@@ -1,34 +1,13 @@
 import("dotenv/config.js");
 import { start, fastify } from "./server.js";
 import config from "./libs/config/lucid-config.js";
-import BrickBuilder from "./libs/builders/brick-builder/index.js";
-import CollectionBuilder from "./libs/builders/collection-builder/index.js";
-import LibSQLAdapter from "./libs/db/adapters/libsql/index.js";
-import PostgresAdapter from "./libs/db/adapters/postgres/index.js";
-import SQLiteAdapter from "./libs/db/adapters/sqlite/index.js";
-import { LucidAPIError, LucidError } from "./utils/errors/index.js";
-import logger from "./utils/logging/index.js";
 import toolkit from "./libs/toolkit/toolkit.js";
+import { LucidError } from "./utils/errors/index.js";
+import logger from "./utils/logging/index.js";
 import z from "zod";
-import formatAPIResponse from "./utils/build-response.js";
+import lucidPlugin from "./lucid-plugin.js";
 
-export {
-	toolkit,
-	logger,
-	z,
-	// Utils
-	formatAPIResponse,
-	// Builders
-	BrickBuilder,
-	CollectionBuilder,
-	// Adapters
-	LibSQLAdapter,
-	SQLiteAdapter,
-	PostgresAdapter,
-	// Errors
-	LucidError,
-	LucidAPIError,
-};
+export { toolkit, logger, z, LucidError, lucidPlugin };
 
 export default {
 	start,

@@ -1,4 +1,6 @@
-import lucid, { SQLiteAdapter, CollectionBuilder } from "../../../index.js";
+import lucid from "../../../index.js";
+import { SQLiteAdapter } from "../../../exports/adapters.js";
+import { CollectionBuilder } from "../../../exports/builders.js";
 import Database from "better-sqlite3";
 import testingConstants from "../../../constants/testing-constants.js";
 
