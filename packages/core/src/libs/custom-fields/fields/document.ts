@@ -62,26 +62,31 @@ class DocumentCustomField extends CustomField<"document"> {
 			};
 		}
 
+		const documentFields = FieldsFormatter.objectifyFields(
+			FieldsFormatter.formatMultiple(
+				{
+					fields: props.data.document_fields || [],
+					groups: props.data.document_groups || [],
+				},
+				{
+					builder: CollectionBuilder,
+					collectionTranslations:
+						CollectionBuilder.data.config.translations,
+					localisation: props.formatMeta.localisation,
+					collections: props.formatMeta.collections,
+					host: props.formatMeta.host,
+				},
+			),
+		);
+
 		return {
 			value: props.data?.document_id ?? null,
 			meta: {
 				id: props.data.document_id ?? null,
-				fields: FieldsFormatter.objectifyFields(
-					FieldsFormatter.formatMultiple(
-						{
-							fields: props.data.document_fields || [],
-							groups: props.data.document_groups || [],
-						},
-						{
-							builder: CollectionBuilder,
-							collectionTranslations:
-								CollectionBuilder.data.config.translations,
-							localisation: props.formatMeta.localisation,
-							collections: props.formatMeta.collections,
-							host: props.formatMeta.host,
-						},
-					),
-				),
+				fields:
+					Object.keys(documentFields).length > 0
+						? documentFields
+						: null,
 			},
 		} satisfies CFResponse<"document">;
 	}

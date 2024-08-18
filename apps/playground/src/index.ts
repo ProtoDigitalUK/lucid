@@ -62,9 +62,10 @@ lucid.fastify.get("/get-document", async (request, reply) => {
 		query: {
 			filter: {
 				documentId: {
-					value: 1,
+					value: 2,
 				},
 			},
+			include: ["bricks"],
 		},
 	});
 	if (res.error) throw new LucidAPIError(res.error);

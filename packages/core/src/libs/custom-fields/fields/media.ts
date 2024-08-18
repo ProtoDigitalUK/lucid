@@ -64,6 +64,7 @@ class MediaCustomField extends CustomField<"media"> {
 				averageColour: props.data?.media_average_colour ?? null,
 				isDark: props.data?.media_is_dark ?? null,
 				isLight: props.data?.media_is_light ?? null,
+				// TODO: update format of these translations fields to be a record <localeCode, value>
 				title: props.data?.media_title_translations?.map((t) => ({
 					value: t.value,
 					localeCode: t.locale_code,
