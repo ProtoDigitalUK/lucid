@@ -13,6 +13,7 @@ import LucidLocalStorage from "@lucidcms/plugin-local-storage";
 // Collections
 import PageCollection from "./src/lucid/collections/pages.js";
 import BlogCollection from "./src/lucid/collections/blogs.js";
+import MainMenuCollection from "./src/lucid/collections/main-menu.js";
 import SettingsCollection from "./src/lucid/collections/settings.js";
 
 export default lucid.config({
@@ -62,7 +63,12 @@ export default lucid.config({
 	// 		},
 	// 	},
 	// ],
-	collections: [PageCollection, BlogCollection, SettingsCollection],
+	collections: [
+		PageCollection,
+		BlogCollection,
+		MainMenuCollection,
+		SettingsCollection,
+	],
 	plugins: [
 		LucidPages({
 			collections: [

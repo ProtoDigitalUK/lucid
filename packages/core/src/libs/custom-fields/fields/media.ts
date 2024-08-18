@@ -12,7 +12,10 @@ import type {
 	CFInsertItem,
 	MediaReferenceData,
 } from "../types.js";
-import type { FieldProp } from "../../formatters/collection-document-fields.js";
+import type {
+	FieldProp,
+	FieldFormatMeta,
+} from "../../formatters/collection-document-fields.js";
 import type { FieldInsertItem } from "../../../services/collection-document-bricks/helpers/flatten-fields.js";
 
 class MediaCustomField extends CustomField<"media"> {
@@ -41,13 +44,16 @@ class MediaCustomField extends CustomField<"media"> {
 	// Methods
 	responseValueFormat(props: {
 		data: FieldProp;
-		host: string;
+		formatMeta: FieldFormatMeta;
 	}) {
 		return {
 			value: props.data?.media_id ?? null,
 			meta: {
 				id: props.data?.media_id ?? null,
-				url: createCdnUrl(props.host, props.data?.media_key ?? ""),
+				url: createCdnUrl(
+					props.formatMeta.host,
+					props.data?.media_key ?? "",
+				),
 				key: props.data?.media_key ?? null,
 				mimeType: props.data?.media_mime_type ?? null,
 				extension: props.data?.media_file_extension ?? null,

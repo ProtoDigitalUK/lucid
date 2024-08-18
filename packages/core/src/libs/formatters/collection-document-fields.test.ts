@@ -317,6 +317,7 @@ test("document field formatter success with translation support", async () => {
 				locales: ["en", "fr"],
 				default: "en",
 			},
+			collections: [],
 		},
 	);
 
@@ -394,6 +395,7 @@ test("document field formatter success with translation disabled", async () => {
 				locales: ["en", "fr"],
 				default: "en",
 			},
+			collections: [],
 		},
 	);
 
@@ -410,6 +412,7 @@ test("document field formatter success with translation disabled", async () => {
 				locales: ["en", "fr"],
 				default: "fr",
 			},
+			collections: [],
 		},
 	);
 
@@ -444,6 +447,7 @@ test("document field flat formatter success with translation support", async () 
 				locales: ["en", "fr"],
 				default: "en",
 			},
+			collections: [],
 		},
 	);
 

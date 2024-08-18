@@ -15,6 +15,7 @@ import type {
 	RepeaterFieldConfig,
 	TabFieldConfig,
 } from "../custom-fields/types.js";
+import type { Config } from "../../types.js";
 
 export interface FieldProp {
 	fields_id: number;
@@ -54,22 +55,18 @@ export interface FieldProp {
 		value: string | null;
 		locale_code: string | null;
 	}>;
-	document_fields?: Array<{
-		fields_id: number;
-		collection_brick_id: number;
-		group_id: number | null;
-		locale_code: string;
-		key: string;
-		type: string;
-		text_value: string | null;
-		int_value: number | null;
-		bool_value: BooleanInt | null;
-		json_value: string | null;
-		media_id: number | null;
-		document_id: number | null;
-		collection_document_id: number | null;
-	}>;
+	document_fields?: Array<FieldProp>;
 	document_groups?: Array<GroupProp>;
+}
+export interface FieldFormatMeta {
+	builder: BrickBuilder | CollectionBuilder;
+	host: string;
+	collectionTranslations: boolean;
+	localisation: {
+		locales: string[];
+		default: string;
+	};
+	collections: CollectionBuilder[];
 }
 
 export default class CollectionDocumentFieldsFormatter {
@@ -78,15 +75,7 @@ export default class CollectionDocumentFieldsFormatter {
 			fields: FieldProp[];
 			groups: BrickProp["groups"];
 		},
-		meta: {
-			builder: BrickBuilder | CollectionBuilder;
-			host: string;
-			collectionTranslations: boolean;
-			localisation: {
-				locales: string[];
-				default: string;
-			};
-		},
+		meta: FieldFormatMeta,
 	): FieldResponse[] => {
 		const fieldConfigTree = meta.builder.fieldTreeNoTab;
 		const sortedGroups = data.groups.sort(
@@ -106,6 +95,7 @@ export default class CollectionDocumentFieldsFormatter {
 				collectionTranslations: meta.collectionTranslations,
 				groupId: null,
 				parentGroupId: null,
+				collections: meta.collections,
 			},
 		);
 	};
@@ -113,15 +103,7 @@ export default class CollectionDocumentFieldsFormatter {
 		data: {
 			fields: FieldProp[];
 		},
-		meta: {
-			builder: BrickBuilder | CollectionBuilder;
-			host: string;
-			collectionTranslations: boolean;
-			localisation: {
-				locales: string[];
-				default: string;
-			};
-		},
+		meta: FieldFormatMeta,
 	): FieldResponse[] => {
 		if (data.fields.length === 0) return [];
 		const fieldsRes: FieldResponse[] = [];
@@ -149,6 +131,7 @@ export default class CollectionDocumentFieldsFormatter {
 					includeGroupId: true,
 					collectionTranslations: meta.collectionTranslations,
 					localisation: meta.localisation,
+					collections: meta.collections,
 				},
 			);
 			if (field) fieldsRes.push(field);
@@ -185,17 +168,10 @@ export default class CollectionDocumentFieldsFormatter {
 			fields: FieldProp[];
 			groups: BrickProp["groups"];
 		},
-		meta: {
-			builder: BrickBuilder | CollectionBuilder;
+		meta: FieldFormatMeta & {
 			fieldConfig: CFConfig<FieldTypes>[];
-			host: string;
 			groupId: number | null;
 			parentGroupId: number | null;
-			collectionTranslations: boolean;
-			localisation: {
-				locales: string[];
-				default: string;
-			};
 		},
 	): FieldResponse[] => {
 		const fieldsRes: FieldResponse[] = [];
@@ -218,6 +194,7 @@ export default class CollectionDocumentFieldsFormatter {
 							parentGroupId: meta.groupId,
 							localisation: meta.localisation,
 							collectionTranslations: meta.collectionTranslations,
+							collections: meta.collections,
 						},
 					),
 				});
@@ -242,6 +219,7 @@ export default class CollectionDocumentFieldsFormatter {
 					includeGroupId: true,
 					localisation: meta.localisation,
 					collectionTranslations: meta.collectionTranslations,
+					collections: meta.collections,
 				},
 			);
 			if (field) fieldsRes.push(field);
@@ -253,16 +231,9 @@ export default class CollectionDocumentFieldsFormatter {
 		data: {
 			fields: FieldProp[];
 		},
-		meta: {
-			builder: BrickBuilder | CollectionBuilder;
+		meta: FieldFormatMeta & {
 			fieldConfig: CFConfig<FieldTypes>;
-			host: string;
 			includeGroupId: boolean;
-			collectionTranslations: boolean;
-			localisation: {
-				locales: string[];
-				default: string;
-			};
 		},
 	): FieldResponse | null => {
 		if (
@@ -301,7 +272,7 @@ export default class CollectionDocumentFieldsFormatter {
 				: undefined,
 			...cfInstance.responseValueFormat({
 				data: defaultField,
-				host: meta.host,
+				formatMeta: meta,
 			}),
 		};
 	};
@@ -310,16 +281,9 @@ export default class CollectionDocumentFieldsFormatter {
 			fields: FieldProp[];
 			groups: BrickProp["groups"];
 		},
-		meta: {
-			builder: BrickBuilder | CollectionBuilder;
+		meta: FieldFormatMeta & {
 			repeaterConfig: CFConfig<"repeater">;
-			host: string;
 			parentGroupId: number | null;
-			collectionTranslations: boolean;
-			localisation: {
-				locales: string[];
-				default: string;
-			};
 		},
 	): FieldGroupResponse[] => {
 		const groups: FieldGroupResponse[] = [];
@@ -351,6 +315,7 @@ export default class CollectionDocumentFieldsFormatter {
 						parentGroupId: group.parent_group_id,
 						collectionTranslations: meta.collectionTranslations,
 						localisation: meta.localisation,
+						collections: meta.collections,
 					},
 				),
 			});
@@ -362,10 +327,8 @@ export default class CollectionDocumentFieldsFormatter {
 		data: {
 			fields: FieldProp[];
 		},
-		meta: {
-			builder: BrickBuilder | CollectionBuilder;
+		meta: FieldFormatMeta & {
 			fieldConfig: CFConfig<FieldTypes>;
-			host: string;
 			includeGroupId?: boolean;
 		},
 	): FieldResponse => {
@@ -384,7 +347,7 @@ export default class CollectionDocumentFieldsFormatter {
 
 				const fieldRes = cfInstance.responseValueFormat({
 					data: field,
-					host: meta.host,
+					formatMeta: meta,
 				});
 
 				acc.translations[field.locale_code] = fieldRes.value;

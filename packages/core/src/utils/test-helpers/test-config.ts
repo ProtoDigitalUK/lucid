@@ -4,16 +4,17 @@ import { getDirName } from "../../utils/helpers/index.js";
 
 const currentDir = getDirName(import.meta.url);
 
-const getBasicConfig = async () => {
+const getBasicConfig = (file: string) => async () => {
 	const config = await getConfig({
-		givenPath: path.resolve(currentDir, "./config/lucid.config.ts"),
+		givenPath: path.resolve(currentDir, "./config/", file),
 	});
 
 	return config;
 };
 
+//* Note when using this, as config is stored globally in memory, when you fetch another config it will overwrite the previous one
 const testConfig = {
-	basic: getBasicConfig,
+	basic: getBasicConfig("lucid.config.ts"),
 };
 
 export default testConfig;

@@ -42,25 +42,13 @@ const getMultiple: ServiceFn<
 			bricks: CollectionDocumentBricksFormatter.formatMultiple({
 				bricks: bricks,
 				collection: collectionRes.data,
-				host: context.config.host,
-				localisation: {
-					locales: context.config.localisation.locales.map(
-						(l) => l.code,
-					),
-					default: context.config.localisation.defaultLocale,
-				},
+				config: context.config,
 			}),
 			fields: CollectionDocumentBricksFormatter.formatCollectionPseudoBrick(
 				{
 					bricks: bricks,
 					collection: collectionRes.data,
-					host: context.config.host,
-					localisation: {
-						locales: context.config.localisation.locales.map(
-							(l) => l.code,
-						),
-						default: context.config.localisation.defaultLocale,
-					},
+					config: context.config,
 				},
 			),
 		},

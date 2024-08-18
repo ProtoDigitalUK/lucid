@@ -56,13 +56,7 @@ const getMultiple: ServiceFn<
 			data: CollectionDocumentsFormatter.formatClientMultiple({
 				documents: documents,
 				collection: collectionRes.data,
-				host: context.config.host,
-				localisation: {
-					locales: context.config.localisation.locales.map(
-						(l) => l.code,
-					),
-					default: context.config.localisation.defaultLocale,
-				},
+				config: context.config,
 			}),
 			count: Formatter.parseCount(documentCount?.count),
 		},

@@ -3,7 +3,10 @@ import CustomField from "../custom-field.js";
 import keyToTitle from "../utils/key-to-title.js";
 import zodSafeParse from "../utils/zod-safe-parse.js";
 import type { CFConfig, CFProps, CFResponse, CFInsertItem } from "../types.js";
-import type { FieldProp } from "../../formatters/collection-document-fields.js";
+import type {
+	FieldProp,
+	FieldFormatMeta,
+} from "../../formatters/collection-document-fields.js";
 import type { FieldInsertItem } from "../../../services/collection-document-bricks/helpers/flatten-fields.js";
 
 class TextareaCustomField extends CustomField<"textarea"> {
@@ -34,6 +37,7 @@ class TextareaCustomField extends CustomField<"textarea"> {
 	// Methods
 	responseValueFormat(props: {
 		data: FieldProp;
+		formatMeta: FieldFormatMeta;
 	}) {
 		return {
 			value: props.data.text_value ?? this.config.default ?? null,

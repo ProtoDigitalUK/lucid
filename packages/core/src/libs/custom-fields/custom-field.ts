@@ -10,7 +10,10 @@ import type {
 	CustomFieldValidateResponse,
 } from "./types.js";
 import zodSafeParse from "./utils/zod-safe-parse.js";
-import type { FieldProp } from "../formatters/collection-document-fields.js";
+import type {
+	FieldProp,
+	FieldFormatMeta,
+} from "../formatters/collection-document-fields.js";
 import type { FieldInsertItem } from "../../services/collection-document-bricks/helpers/flatten-fields.js";
 
 abstract class CustomField<T extends FieldTypes> {
@@ -23,7 +26,7 @@ abstract class CustomField<T extends FieldTypes> {
 	abstract config: CFConfig<T>;
 	abstract responseValueFormat(props?: {
 		data?: FieldProp;
-		host?: string;
+		formatMeta: FieldFormatMeta;
 	}): CFResponse<T>;
 	abstract cfSpecificValidation(
 		value: unknown,

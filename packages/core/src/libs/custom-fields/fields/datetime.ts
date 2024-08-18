@@ -3,9 +3,12 @@ import z from "zod";
 import CustomField from "../custom-field.js";
 import keyToTitle from "../utils/key-to-title.js";
 import zodSafeParse from "../utils/zod-safe-parse.js";
-import { isValid, parse } from "date-fns";
+import { isValid } from "date-fns";
 import type { CFConfig, CFProps, CFResponse, CFInsertItem } from "../types.js";
-import type { FieldProp } from "../../formatters/collection-document-fields.js";
+import type {
+	FieldProp,
+	FieldFormatMeta,
+} from "../../formatters/collection-document-fields.js";
 import type { FieldInsertItem } from "../../../services/collection-document-bricks/helpers/flatten-fields.js";
 
 class DatetimeCustomField extends CustomField<"datetime"> {
@@ -36,6 +39,7 @@ class DatetimeCustomField extends CustomField<"datetime"> {
 	// Methods
 	responseValueFormat(props: {
 		data: FieldProp;
+		formatMeta: FieldFormatMeta;
 	}) {
 		return {
 			value: props.data.text_value ?? this.config.default ?? null,

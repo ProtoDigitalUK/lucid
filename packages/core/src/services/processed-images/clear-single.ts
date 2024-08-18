@@ -53,8 +53,6 @@ const clearSingle: ServiceFn<
 	]);
 	if (storageUsedRes.error) return storageUsedRes;
 
-	console.log("processedImages", processedImages);
-
 	if (processedImages.length === 0) {
 		return {
 			error: undefined,

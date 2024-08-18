@@ -13,6 +13,7 @@ import Formatter from "./index.js";
 import CollectionDocumentBricksFormatter, {
 	type GroupProp,
 } from "./collection-document-bricks.js";
+import type { Config } from "../../types.js";
 
 interface DocumentPropT {
 	id: number;
@@ -42,18 +43,13 @@ export default class CollectionDocumentsFormatter {
 	formatMultiple = (props: {
 		documents: DocumentPropT[];
 		collection: CollectionBuilder;
-		host: string;
-		localisation: {
-			locales: string[];
-			default: string;
-		};
+		config: Config;
 	}) => {
 		return props.documents.map((d) =>
 			this.formatSingle({
 				document: d,
 				collection: props.collection,
-				host: props.host,
-				localisation: props.localisation,
+				config: props.config,
 			}),
 		);
 	};
@@ -62,11 +58,7 @@ export default class CollectionDocumentsFormatter {
 		collection: CollectionBuilder;
 		bricks?: BrickResponse[];
 		fields?: FieldResponse[] | null;
-		host: string;
-		localisation: {
-			locales: string[];
-			default: string;
-		};
+		config: Config;
 	}) => {
 		let fields: FieldResponse[] | null = props.fields ?? null;
 		const FieldsFormatter = Formatter.get("collection-document-fields");
@@ -80,11 +72,17 @@ export default class CollectionDocumentsFormatter {
 						groups: props.document.groups,
 					},
 					{
-						host: props.host,
+						host: props.config.host,
 						builder: props.collection,
 						collectionTranslations:
 							props.collection.data.config.translations,
-						localisation: props.localisation,
+						localisation: {
+							locales: props.config.localisation.locales.map(
+								(l) => l.code,
+							),
+							default: props.config.localisation.defaultLocale,
+						},
+						collections: props.config.collections,
 					},
 				);
 			} else {
@@ -95,11 +93,17 @@ export default class CollectionDocumentsFormatter {
 						fields: props.document.fields,
 					},
 					{
-						host: props.host,
+						host: props.config.host,
 						builder: props.collection,
 						collectionTranslations:
 							props.collection.data.config.translations,
-						localisation: props.localisation,
+						localisation: {
+							locales: props.config.localisation.locales.map(
+								(l) => l.code,
+							),
+							default: props.config.localisation.defaultLocale,
+						},
+						collections: props.config.collections,
 					},
 				);
 			}
@@ -137,18 +141,13 @@ export default class CollectionDocumentsFormatter {
 	formatClientMultiple = (props: {
 		documents: DocumentPropT[];
 		collection: CollectionBuilder;
-		host: string;
-		localisation: {
-			locales: string[];
-			default: string;
-		};
+		config: Config;
 	}) => {
 		return props.documents.map((d) =>
 			this.formatClientSingle({
 				document: d,
 				collection: props.collection,
-				host: props.host,
-				localisation: props.localisation,
+				config: props.config,
 			}),
 		);
 	};
@@ -157,11 +156,7 @@ export default class CollectionDocumentsFormatter {
 		collection: CollectionBuilder;
 		bricks?: BrickResponse[];
 		fields?: FieldResponse[] | null;
-		host: string;
-		localisation: {
-			locales: string[];
-			default: string;
-		};
+		config: Config;
 	}): ClientDocumentResponse => {
 		const FieldsFormatter = Formatter.get("collection-document-fields");
 
@@ -170,8 +165,7 @@ export default class CollectionDocumentsFormatter {
 			collection: props.collection,
 			bricks: props.bricks,
 			fields: props.fields,
-			host: props.host,
-			localisation: props.localisation,
+			config: props.config,
 		});
 
 		return {

@@ -74,13 +74,7 @@ const getSingle: ServiceFn<
 				collection: collectionRes.data,
 				bricks: bricksRes.data.bricks,
 				fields: bricksRes.data.fields,
-				host: context.config.host,
-				localisation: {
-					locales: context.config.localisation.locales.map(
-						(l) => l.code,
-					),
-					default: context.config.localisation.defaultLocale,
-				},
+				config: context.config,
 			}),
 		};
 	}
@@ -90,11 +84,7 @@ const getSingle: ServiceFn<
 		data: CollectionDocumentsFormatter.formatClientSingle({
 			document: documentRes,
 			collection: collectionRes.data,
-			host: context.config.host,
-			localisation: {
-				locales: context.config.localisation.locales.map((l) => l.code),
-				default: context.config.localisation.defaultLocale,
-			},
+			config: context.config,
 		}),
 	};
 };

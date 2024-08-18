@@ -1,5 +1,5 @@
 import type { ZodType } from "zod";
-import type { MediaType } from "../../types/response.js";
+import type { FieldAltResponse, MediaType } from "../../types/response.js";
 import type { BooleanInt } from "../db/types.js";
 import type { LocaleValue } from "../../types/shared.js";
 
@@ -555,7 +555,10 @@ export type MediaResMeta = {
 	}>;
 	type: MediaType | null;
 } | null;
-export type DocumentResMeta = null;
+export type DocumentResMeta = {
+	id: number | null;
+	fields: Record<string, FieldAltResponse> | null;
+};
 export type RepeaterResMeta = null;
 export type NumberResMeta = null;
 export type CheckboxResMeta = null;

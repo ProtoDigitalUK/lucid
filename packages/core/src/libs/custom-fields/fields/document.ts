@@ -3,6 +3,7 @@ import z from "zod";
 import CustomField from "../custom-field.js";
 import keyToTitle from "../utils/key-to-title.js";
 import zodSafeParse from "../utils/zod-safe-parse.js";
+import Formatter from "../../formatters/index.js";
 import type {
 	CFConfig,
 	CFProps,
@@ -10,8 +11,14 @@ import type {
 	CFInsertItem,
 	DocumentReferenceData,
 } from "../types.js";
-import type { FieldProp } from "../../formatters/collection-document-fields.js";
+import type {
+	FieldProp,
+	FieldFormatMeta,
+} from "../../formatters/collection-document-fields.js";
 import type { FieldInsertItem } from "../../../services/collection-document-bricks/helpers/flatten-fields.js";
+import type { Config } from "../../../types.js";
+
+const FieldsFormatter = Formatter.get("collection-document-fields");
 
 class DocumentCustomField extends CustomField<"document"> {
 	type = "document" as const;
@@ -40,15 +47,42 @@ class DocumentCustomField extends CustomField<"document"> {
 	// Methods
 	responseValueFormat(props: {
 		data: FieldProp;
-		host: string;
+		formatMeta: FieldFormatMeta;
 	}) {
-		console.log(props.data.document_fields);
-		console.log(props.data.document_groups);
-		// TODO: build out nested fields in meta
+		const CollectionBuilder = props.formatMeta.collections.find(
+			(c) => c.key === this.props.collection,
+		);
+		if (!CollectionBuilder) {
+			return {
+				value: props.data?.document_id ?? null,
+				meta: {
+					id: props.data.document_id ?? null,
+					fields: null,
+				},
+			};
+		}
 
 		return {
 			value: props.data?.document_id ?? null,
-			meta: null,
+			meta: {
+				id: props.data.document_id ?? null,
+				fields: FieldsFormatter.objectifyFields(
+					FieldsFormatter.formatMultiple(
+						{
+							fields: props.data.document_fields || [],
+							groups: props.data.document_groups || [],
+						},
+						{
+							builder: CollectionBuilder,
+							collectionTranslations:
+								CollectionBuilder.data.config.translations,
+							localisation: props.formatMeta.localisation,
+							collections: props.formatMeta.collections,
+							host: props.formatMeta.host,
+						},
+					),
+				),
+			},
 		} satisfies CFResponse<"document">;
 	}
 	getInsertField(props: {

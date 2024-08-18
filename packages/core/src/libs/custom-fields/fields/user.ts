@@ -10,7 +10,10 @@ import type {
 	CFInsertItem,
 	UserReferenceData,
 } from "../types.js";
-import type { FieldProp } from "../../formatters/collection-document-fields.js";
+import type {
+	FieldProp,
+	FieldFormatMeta,
+} from "../../formatters/collection-document-fields.js";
 import type { FieldInsertItem } from "../../../services/collection-document-bricks/helpers/flatten-fields.js";
 
 class UserCustomField extends CustomField<"user"> {
@@ -39,6 +42,7 @@ class UserCustomField extends CustomField<"user"> {
 	// Methods
 	responseValueFormat(props: {
 		data: FieldProp;
+		formatMeta: FieldFormatMeta;
 	}) {
 		return {
 			value: props.data.user_id ?? null,

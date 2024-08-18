@@ -7,6 +7,7 @@ import type { BrickResponse, FieldResponse } from "../../types/response.js";
 import type CollectionBuilder from "../builders/collection-builder/index.js";
 import type BrickBuilder from "../builders/brick-builder/index.js";
 import type { BooleanInt } from "../db/types.js";
+import type { Config } from "../../types.js";
 
 export interface GroupProp {
 	group_id: number;
@@ -34,11 +35,7 @@ export default class CollectionDocumentBricksFormatter {
 	formatMultiple = (props: {
 		bricks: BrickProp[];
 		collection: CollectionBuilder;
-		host: string;
-		localisation: {
-			locales: string[];
-			default: string;
-		};
+		config: Config;
 	}): BrickResponse[] => {
 		const CollectionDocumentFieldsFormatter = Formatter.get(
 			"collection-document-fields",
@@ -73,11 +70,18 @@ export default class CollectionDocumentBricksFormatter {
 							groups: brick.groups,
 						},
 						{
-							host: props.host,
+							host: props.config.host,
 							builder: builder,
-							localisation: props.localisation,
+							localisation: {
+								locales: props.config.localisation.locales.map(
+									(l) => l.code,
+								),
+								default:
+									props.config.localisation.defaultLocale,
+							},
 							collectionTranslations:
 								props.collection.data.config.translations,
+							collections: props.config.collections,
 						},
 					),
 				};
@@ -86,11 +90,7 @@ export default class CollectionDocumentBricksFormatter {
 	formatCollectionPseudoBrick = (props: {
 		bricks: BrickProp[];
 		collection: CollectionBuilder;
-		host: string;
-		localisation: {
-			locales: string[];
-			default: string;
-		};
+		config: Config;
 	}): FieldResponse[] => {
 		const CollectionDocumentFieldsFormatter = Formatter.get(
 			"collection-document-fields",
@@ -109,11 +109,17 @@ export default class CollectionDocumentBricksFormatter {
 						groups: brick.groups,
 					},
 					{
-						host: props.host,
+						host: props.config.host,
 						builder: props.collection,
 						collectionTranslations:
 							props.collection.data.config.translations,
-						localisation: props.localisation,
+						localisation: {
+							locales: props.config.localisation.locales.map(
+								(l) => l.code,
+							),
+							default: props.config.localisation.defaultLocale,
+						},
+						collections: props.config.collections,
 					},
 				),
 			);
