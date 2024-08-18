@@ -4,6 +4,7 @@ import CustomField from "../custom-field.js";
 import keyToTitle from "../utils/key-to-title.js";
 import { createCdnUrl } from "../../../utils/media/index.js";
 import zodSafeParse from "../utils/zod-safe-parse.js";
+import { objectifyTranslations } from "../../../utils/translations/index.js";
 import type { MediaType } from "../../../types.js";
 import type {
 	CFConfig,
@@ -64,15 +65,14 @@ class MediaCustomField extends CustomField<"media"> {
 				averageColour: props.data?.media_average_colour ?? null,
 				isDark: props.data?.media_is_dark ?? null,
 				isLight: props.data?.media_is_light ?? null,
-				// TODO: update format of these translations fields to be a record <localeCode, value>
-				title: props.data?.media_title_translations?.map((t) => ({
-					value: t.value,
-					localeCode: t.locale_code,
-				})),
-				alt: props.data?.media_alt_translations?.map((t) => ({
-					value: t.value,
-					localeCode: t.locale_code,
-				})),
+				title: objectifyTranslations(
+					props.data?.media_title_translations || [],
+					props.formatMeta.localisation.locales,
+				),
+				alt: objectifyTranslations(
+					props.data?.media_alt_translations || [],
+					props.formatMeta.localisation.locales,
+				),
 				type: (props.data?.media_type as MediaType) ?? null,
 			},
 		} satisfies CFResponse<"media">;

@@ -61,8 +61,19 @@ export const MediaSelect: Component<MediaSelectProps> = (props) => {
 					averageColour: media.meta.averageColour ?? null,
 					isDark: media.meta.isDark ?? null,
 					isLight: media.meta.isLight ?? null,
-					title: media.title,
-					alt: media.alt,
+					title: media.title.reduce<Record<string, string>>(
+						(acc, t) => {
+							if (!t.localeCode) return acc;
+							acc[t.localeCode] = t.value ?? "";
+							return acc;
+						},
+						{},
+					),
+					alt: media.alt.reduce<Record<string, string>>((acc, t) => {
+						if (!t.localeCode) return acc;
+						acc[t.localeCode] = t.value ?? "";
+						return acc;
+					}, {}),
 				});
 			},
 			open: true,
@@ -121,7 +132,7 @@ export const MediaSelect: Component<MediaSelectProps> = (props) => {
 												type:
 													props.meta?.type || "image",
 											}}
-											alt={helpers.getTranslation(
+											alt={helpers.getRecordTranslation(
 												props.meta?.alt,
 												contentLocale(),
 											)}

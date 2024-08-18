@@ -205,6 +205,14 @@ const getTranslation = (
 	);
 	return translation?.value ?? null;
 };
+const getRecordTranslation = (
+	translations?: Record<string, string>,
+	contentLocale?: string,
+) => {
+	if (!contentLocale) return null;
+	if (!translations) return null;
+	return translations[contentLocale] ?? null;
+};
 
 // ---------------------------------------------
 // Content Locale Value
@@ -230,6 +238,7 @@ const helpers = {
 	formatUserInitials,
 	updateTranslation,
 	getTranslation,
+	getRecordTranslation,
 	getLocaleValue,
 };
 

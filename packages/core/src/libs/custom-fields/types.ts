@@ -545,14 +545,8 @@ export type MediaResMeta = {
 	averageColour: string | null;
 	isDark: BooleanInt | null;
 	isLight: BooleanInt | null;
-	title?: Array<{
-		value: string | null;
-		localeCode: string | null;
-	}>;
-	alt?: Array<{
-		value: string | null;
-		localeCode: string | null;
-	}>;
+	title: Record<string, string>;
+	alt: Record<string, string>;
 	type: MediaType | null;
 } | null;
 export type DocumentResMeta = {

@@ -492,38 +492,12 @@ export default class CollectionDocumentFieldsFormatter {
 						nullable: true,
 					},
 					title: {
-						type: "array",
-						items: {
-							type: "object",
-							additionalProperties: true,
-							properties: {
-								value: {
-									type: "string",
-									nullable: true,
-								},
-								localeCode: {
-									type: "string",
-									nullable: true,
-								},
-							},
-						},
+						type: "object",
+						additionalProperties: true,
 					},
 					alt: {
-						type: "array",
-						items: {
-							type: "object",
-							additionalProperties: true,
-							properties: {
-								value: {
-									type: "string",
-									nullable: true,
-								},
-								localeCode: {
-									type: "string",
-									nullable: true,
-								},
-							},
-						},
+						type: "object",
+						additionalProperties: true,
 					},
 					type: {
 						type: "string",
@@ -544,6 +518,11 @@ export default class CollectionDocumentFieldsFormatter {
 					},
 					lastName: {
 						type: "string",
+						nullable: true,
+					},
+					fields: {
+						type: "object",
+						additionalProperties: true,
 						nullable: true,
 					},
 				},
