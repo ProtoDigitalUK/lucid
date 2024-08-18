@@ -8,7 +8,7 @@ import Database from "better-sqlite3";
 import transporter from "./src/services/email-transporter.js";
 // Plugins
 import LucidNodemailer from "@lucidcms/plugin-nodemailer";
-// import LucidS3 from "@lucidcms/plugin-s3";
+import LucidS3 from "@lucidcms/plugin-s3";
 import LucidPages from "@lucidcms/plugin-pages";
 import LucidLocalStorage from "@lucidcms/plugin-local-storage";
 // Collections
@@ -93,8 +93,7 @@ export default lucid.config({
 		// 		region: "auto",
 		// 		credentials: {
 		// 			accessKeyId: process.env.LUCID_S3_ACCESS_KEY as string,
-		// 			secretAccessKey: process.env
-		// 				.LUCID_S3_SECRET_KEY as string,
+		// 			secretAccessKey: process.env.LUCID_S3_SECRET_KEY as string,
 		// 		},
 		// 	},
 		// 	bucket: "headless-cms",

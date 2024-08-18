@@ -1,5 +1,11 @@
 # @lucidcms/plugin-pages
 
+## 0.1.2
+
+### Patch Changes
+
+- Updated Lucid imports to match new export structure
+
 ## 0.1.1
 
 ### Patch Changes

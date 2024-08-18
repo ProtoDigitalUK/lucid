@@ -1,5 +1,11 @@
 # @lucidcms/plugin-s3
 
+## 1.0.5
+
+### Patch Changes
+
+- Removed `@smithy/types` dependency and fixed related type errors
+
 ## 1.0.4
 
 ### Patch Changes

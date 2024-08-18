@@ -1,12 +1,8 @@
 import { type S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
-import type { NodeJsClient } from "@smithy/types";
 import type { PluginOptions } from "../types/types.js";
 import type { MediaStrategyUploadSingle } from "@lucidcms/core/types";
 
-export default (
-	client: NodeJsClient<S3Client>,
-	pluginOptions: PluginOptions,
-) => {
+export default (client: S3Client, pluginOptions: PluginOptions) => {
 	const uploadSingle: MediaStrategyUploadSingle = async (props) => {
 		try {
 			const command = new PutObjectCommand({

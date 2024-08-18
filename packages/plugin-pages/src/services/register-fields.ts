@@ -1,6 +1,7 @@
 import T from "../translations/index.js";
 import constants from "../constants.js";
-import { type CollectionBuilder, z } from "@lucidcms/core";
+import { z } from "@lucidcms/core";
+import type { CollectionBuilder } from "@lucidcms/core/builders";
 import type { CollectionConfig } from "../types/index.js";
 
 const registerFields = (

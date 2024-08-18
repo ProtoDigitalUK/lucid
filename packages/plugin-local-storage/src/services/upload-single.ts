@@ -14,7 +14,10 @@ export default (pluginOptions: PluginOptions) => {
 			await fs.ensureDir(targetDir);
 
 			if (Buffer.isBuffer(props.data)) {
-				await fs.writeFile(targetPath, props.data);
+				await fs.writeFile(
+					targetPath,
+					props.data as unknown as Uint8Array,
+				);
 			} else {
 				const writeStream = fs.createWriteStream(targetPath);
 				props.data.pipe(writeStream);

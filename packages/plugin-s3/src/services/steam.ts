@@ -1,13 +1,10 @@
 import T from "../translations/index.js";
 import { type S3Client, GetObjectCommand } from "@aws-sdk/client-s3";
-import type { NodeJsClient } from "@smithy/types";
+import type { Readable } from "node:stream";
 import type { PluginOptions } from "../types/types.js";
 import type { MediaStrategyStream } from "@lucidcms/core/types";
 
-export default (
-	client: NodeJsClient<S3Client>,
-	pluginOptions: PluginOptions,
-) => {
+export default (client: S3Client, pluginOptions: PluginOptions) => {
 	const stream: MediaStrategyStream = async (key) => {
 		try {
 			const command = new GetObjectCommand({
@@ -31,7 +28,7 @@ export default (
 				data: {
 					contentLength: response.ContentLength,
 					contentType: response.ContentType,
-					body: response.Body,
+					body: response.Body as Readable,
 				},
 			};
 		} catch (e) {
