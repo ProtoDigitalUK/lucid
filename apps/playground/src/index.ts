@@ -1,8 +1,5 @@
-import lucid, {
-	toolkit,
-	LucidAPIError,
-	formatAPIResponse,
-} from "@lucidcms/core";
+import lucid, { toolkit } from "@lucidcms/core";
+import { LucidAPIError, formatAPIResponse } from "@lucidcms/core/api";
 
 lucid.fastify.post("/send-email", async (request, reply) => {
 	const res = await toolkit.email.sendEmail({

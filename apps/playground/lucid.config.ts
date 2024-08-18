@@ -1,8 +1,9 @@
-import lucid, {
+import lucid from "@lucidcms/core";
+import {
 	SQLiteAdapter,
 	PostgresAdapter,
 	LibSQLAdapter,
-} from "@lucidcms/core";
+} from "@lucidcms/core/adapters";
 import Database from "better-sqlite3";
 import transporter from "./src/services/email-transporter.js";
 // Plugins
