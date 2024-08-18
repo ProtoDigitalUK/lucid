@@ -4,7 +4,7 @@
 
 ### Patch Changes
 
-- Updated Lucid imports to match new export structure
+- Updated Lucid imports to match new export structure and bumped core peer dependency version
 
 ## 0.1.1
 

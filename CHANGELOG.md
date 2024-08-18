@@ -1,5 +1,31 @@
 # @lucidcms/core
 
+## v0.8.0-alpha.0
+
+### Features:
+
+- Implemented a new document custom field type so you can define relationships between documents. ([a9da47d](https://github.com/ProtoDigitalUK/lucid/commit/a9da47d05236a56a268fe4ea4fe80e1b790c201c))
+- New pages plugin added, that enables support for slugs and parent pages on given collections. Computes a fullSlug based on ancestor documents that makes fetching the document based on browser location possible. ([bd495f8](https://github.com/ProtoDigitalUK/lucid/commit/bd495f811b940e7b5e779263cc9ebc28ffa92dbc))
+- Document custom field queries updated to return target documents collection fields in its meta - works for internal and client document endpoints. ([622dfeb](https://github.com/ProtoDigitalUK/lucid/commit/622dfebbb1731ac618c940c9a50eb31bd0f60c87))
+- Title and alt translations format update for the media custom field meta so that it matches the format of the translations and meta. ([5d3127f](https://github.com/ProtoDigitalUK/lucid/commit/5d3127f2ce40796aa69382bc9b5b84b1cecbc7be))
+
+### Breaking changes:
+
+- Hook and email strategy response format updated to match that of services and media strategies. ([2db7995](https://github.com/ProtoDigitalUK/lucid/commit/2db799591d1bb32ed2c28ea4f13ca81c394bb45c))
+- Hook functions now use same type as services do internally to keep consistent and give the ability for hooks to use services, db and config from Lucid. ([5cebd3c](https://github.com/ProtoDigitalUK/lucid/commit/5cebd3c12111e7c2e49cadb92a966d14886e199d))
+- Migration file edit for the document custom field. ([88db286](https://github.com/ProtoDigitalUK/lucid/commit/88db2860f0725b0605709e0e8d2a6531df25ef0d))
+- Builders, adapters and some utilities have had their exports moved from the root of core to a more appropriate path. ([24f0c11](https://github.com/ProtoDigitalUK/lucid/commit/24f0c114e428f47b82018e5558983936f79ad445))
+
+### Bug Fixes:
+
+- Fixed user, media and doc validation by having null/undefined check happen before data exists check which is now also moved into the respective custom field. ([867015f](https://github.com/ProtoDigitalUK/lucid/commit/867015fdd70adbbf33efbd24b875007aea6d77b0))
+- Fixed delete document bug where field document_id wasn't being set null on cascade as expected because we don't actually delete documents - only soft delete them. ([8881ea3](https://github.com/ProtoDigitalUK/lucid/commit/8881ea3db04efa7fb20f2adec224935f37d55011))
+- Fixed create document bug causing state to reset when collection endpoint was called when opening the select document modal. ([2335583](https://github.com/ProtoDigitalUK/lucid/commit/2335583e903309b9dae9b976fe06767d7e6c7c91))
+- Successfully creating a single collection document now invalidates collection.getAll key so that the collection navigation knows not to take you back to the create page for that collection. ([34240c7](https://github.com/ProtoDigitalUK/lucid/commit/34240c7824f9386ad6ad85252283c49fb4fec890))
+- Fetch single collection now uses collection key param in query - before it was possible to fetch documents from other collections despite being seemingly scoped to a collection via the endpoint. ([ee2b336](https://github.com/ProtoDigitalUK/lucid/commit/ee2b336b29065cfbf75bb5a844e72ab3cb18d826))
+- Fixed issue causing brick store to get reset when the document select modal fetched collection config, as well as a document fetch issues when changing documents. ([c93937c](https://github.com/ProtoDigitalUK/lucid/commit/c93937ca4e7a0fc486177798dcaefabd914db286))
+- Moved away from local version of Kysely’s ParseJSONResultsPlugin now that the LibSQL adapter is no longer using @‌libsql/hrana-client which was returning an immutable response. ([7b97c53](https://github.com/ProtoDigitalUK/lucid/commit/7b97c535d967aa88a6a285da8b96d6a98fbef45b))
+
 ## v0.7.0-alpha.0
 
 ### Features:
