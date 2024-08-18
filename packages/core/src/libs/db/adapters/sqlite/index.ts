@@ -1,6 +1,9 @@
 import DatabaseAdapter from "../../adapter.js";
-import { SqliteDialect, type SqliteDialectConfig } from "kysely";
-import { ParseJSONResultsPlugin } from "../../kysely/parse-json-results-plugin.js";
+import {
+	SqliteDialect,
+	type SqliteDialectConfig,
+	ParseJSONResultsPlugin,
+} from "kysely";
 import { AdapterType } from "../../types.js";
 import { jsonArrayFrom } from "kysely/helpers/sqlite";
 
