@@ -11,7 +11,7 @@
 > Lucid is still in Alpha and under heavy development, so please for the time being avoid using in any production setting. There is currently no commitment to backwards compatibility and breaking changes will be released on a regular basis while APIs and interfaces are being finalised.
 
 > [!NOTE]  
-> The development of Lucid is temporarily paused as we shift focus to an exciting new related internal project. While daily commits will be on hold, rest assured that any critical issues will still be promptly addressed Stay tuned for more details on the new project, as well as updates on Lucid’s continued development in the coming months.
+> The development of Lucid over the next few months will reduced while we focus on building out a new related internal project. Critical issues will still be addressed promptly. Stay tuned for more details on the new project.
 
 <hr/>
 
