@@ -5,7 +5,7 @@ import type {
 	CollectionDocumentResponse,
 	CollectionResponse,
 	CFConfig,
-	UserMeta,
+	UserResMeta,
 	FieldTypes,
 } from "@lucidcms/core/types";
 import type { ActionDropdownProps } from "@/components/Partials/ActionDropdown";
@@ -141,7 +141,7 @@ const DocumentDynamicColumns: Component<{
 			</Match>
 			<Match when={fieldData()?.type === "user"}>
 				<AuthorCol
-					user={fieldMeta() as UserMeta}
+					user={fieldMeta() as UserResMeta}
 					options={{ include: props?.include[props.index] }}
 				/>
 			</Match>

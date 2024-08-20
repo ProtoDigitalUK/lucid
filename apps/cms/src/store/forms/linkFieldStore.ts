@@ -1,12 +1,12 @@
 import { createStore } from "solid-js/store";
-import type { LinkValue } from "@lucidcms/core/types";
+import type { LinkResValue } from "@lucidcms/core/types";
 
-type SelectCallbackT = (_link: LinkValue | null) => void;
+type SelectCallbackT = (_link: LinkResValue) => void;
 
 type LinkFieldStoreT = {
 	open: boolean;
 	onSelectCallback: SelectCallbackT;
-	selectedLink: LinkValue | null;
+	selectedLink: LinkResValue;
 };
 
 const [get, set] = createStore<LinkFieldStoreT>({

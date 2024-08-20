@@ -1,10 +1,10 @@
 import { type Component, Switch, Match } from "solid-js";
-import type { UserMeta } from "@lucidcms/core/types";
+import type { UserResMeta } from "@lucidcms/core/types";
 import Table from "@/components/Groups/Table";
 import UserDisplay from "@/components/Partials/UserDisplay";
 
 interface AuthorColProps {
-	user: UserMeta;
+	user: UserResMeta;
 	options?: {
 		include?: boolean;
 	};

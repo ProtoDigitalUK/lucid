@@ -213,39 +213,6 @@ export interface FieldGroupAltResponse {
 	fields: Record<string, FieldAltResponse>;
 }
 
-export interface LinkValue {
-	url: string | null;
-	target: string | null;
-	label: string | null;
-}
-
-export type MediaValue = number;
-
-export interface MediaMeta {
-	id: number | null;
-	url: string | null;
-	key: string | null;
-	mimeType: string | null;
-	extension: string | null;
-	fileSize: number | null;
-	width: number | null;
-	height: number | null;
-	blurHash: string | null;
-	averageColour: string | null;
-	isDark: BooleanInt | null;
-	isLight: BooleanInt | null;
-	title: Record<string, string>;
-	alt: Record<string, string>;
-	type: MediaType | null;
-}
-
-export interface UserMeta {
-	username: string | null;
-	email: string | null;
-	firstName: string | null;
-	lastName: string | null;
-}
-
 export interface CollectionDocumentResponse {
 	id: number;
 	collectionKey: string | null;

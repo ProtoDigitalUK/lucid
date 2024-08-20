@@ -5,7 +5,7 @@ import type {
 	ErrorResult,
 	FieldErrors,
 	MediaResponse,
-	MediaMeta,
+	MediaResMeta,
 } from "@lucidcms/core/types";
 import contentLocaleStore from "@/store/contentLocaleStore";
 import mediaSelectStore from "@/store/forms/mediaSelectStore";
@@ -18,8 +18,11 @@ import MediaPreview from "@/components/Partials/MediaPreview";
 interface MediaSelectProps {
 	id: string;
 	value: number | undefined;
-	meta: MediaMeta | undefined;
-	onChange: (_value: number | null, _meta: MediaMeta | null) => void;
+	meta: NonNullable<MediaResMeta> | undefined;
+	onChange: (
+		_value: number | null,
+		_meta: NonNullable<MediaResMeta> | null,
+	) => void;
 	extensions?: string[];
 	type?: string;
 	copy?: {

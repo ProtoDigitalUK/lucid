@@ -4,7 +4,7 @@ import CustomField from "../custom-field.js";
 import zodSafeParse from "../utils/zod-safe-parse.js";
 import Formatter from "../../formatters/index.js";
 import constants from "../../../constants/constants.js";
-import type { LinkValue } from "../../../exports/types.js";
+import type { LinkResValue } from "../../../exports/types.js";
 import type { CFConfig, CFProps, CFResponse, CFInsertItem } from "../types.js";
 import keyToTitle from "../utils/key-to-title.js";
 import type {
@@ -43,7 +43,9 @@ class LinkCustomField extends CustomField<"link"> {
 		data: FieldProp;
 		formatMeta: FieldFormatMeta;
 	}) {
-		const linkVal = Formatter.parseJSON<LinkValue>(props.data.json_value);
+		const linkVal = Formatter.parseJSON<LinkResValue>(
+			props.data.json_value,
+		);
 		return {
 			value: {
 				url: linkVal?.url ?? this.config.default ?? null,
@@ -58,7 +60,7 @@ class LinkCustomField extends CustomField<"link"> {
 		brickId: number;
 		groupId: number | null;
 	}) {
-		const value = props.item.value as LinkValue | undefined;
+		const value = props.item.value as LinkResValue | undefined;
 
 		return {
 			key: this.config.key,
@@ -89,7 +91,7 @@ class LinkCustomField extends CustomField<"link"> {
 		const valueValidate = zodSafeParse(value, valueSchema);
 		if (!valueValidate.valid) return valueValidate;
 
-		const val = value as LinkValue;
+		const val = value as NonNullable<LinkResValue>;
 
 		if (
 			val.target &&

@@ -7,7 +7,7 @@ import {
 } from "solid-js";
 import type {
 	CFConfig,
-	MediaMeta,
+	MediaResMeta,
 	FieldResponse,
 	FieldErrors,
 } from "@lucidcms/core/types";
@@ -33,7 +33,9 @@ export const MediaField: Component<MediaFieldProps> = (props) => {
 	// -------------------------------
 	// State
 	const [getValue, setValue] = createSignal<number | undefined>();
-	const [getMeta, setMeta] = createSignal<MediaMeta | undefined>();
+	const [getMeta, setMeta] = createSignal<
+		NonNullable<MediaResMeta> | undefined
+	>();
 
 	// -------------------------------
 	// Memos
@@ -48,7 +50,7 @@ export const MediaField: Component<MediaFieldProps> = (props) => {
 		});
 	});
 	const fieldMeta = createMemo(() => {
-		return brickHelpers.getFieldMeta<MediaMeta>({
+		return brickHelpers.getFieldMeta<NonNullable<MediaResMeta>>({
 			fieldData: fieldData(),
 			fieldConfig: props.state.fieldConfig,
 			contentLocale: props.state.contentLocale,

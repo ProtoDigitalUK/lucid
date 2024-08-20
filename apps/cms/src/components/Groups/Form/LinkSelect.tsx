@@ -2,15 +2,19 @@ import T from "@/translations";
 import { type Component, Match, Switch } from "solid-js";
 import classNames from "classnames";
 import { FaSolidPen, FaSolidXmark } from "solid-icons/fa";
-import type { ErrorResult, FieldErrors, LinkValue } from "@lucidcms/core/types";
+import type {
+	ErrorResult,
+	FieldErrors,
+	LinkResValue,
+} from "@lucidcms/core/types";
 import linkFieldStore from "@/store/forms/linkFieldStore";
 import Button from "@/components/Partials/Button";
 import Form from "@/components/Groups/Form";
 
 interface LinkSelectProps {
 	id: string;
-	value: LinkValue | undefined | null;
-	onChange: (_value: LinkValue | null) => void;
+	value: LinkResValue | undefined;
+	onChange: (_value: LinkResValue) => void;
 	copy?: {
 		label?: string;
 		describedBy?: string;
@@ -31,14 +35,14 @@ export const LinkSelect: Component<LinkSelectProps> = (props) => {
 				props.onChange(link);
 			},
 			open: true,
-			selectedLink: props.value as LinkValue,
+			selectedLink: props.value as LinkResValue,
 		});
 	};
 
 	// -------------------------------
 	// Memos
 	const linkLabel = () => {
-		const value = props.value as LinkValue;
+		const value = props.value as LinkResValue;
 		return value?.label || value?.url;
 	};
 

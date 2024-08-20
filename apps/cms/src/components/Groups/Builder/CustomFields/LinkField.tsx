@@ -7,7 +7,7 @@ import {
 } from "solid-js";
 import type {
 	CFConfig,
-	LinkValue,
+	LinkResValue,
 	FieldResponse,
 	FieldErrors,
 } from "@lucidcms/core/types";
@@ -32,7 +32,9 @@ interface LinkFieldProps {
 export const LinkField: Component<LinkFieldProps> = (props) => {
 	// -------------------------------
 	// State
-	const [getValue, setValue] = createSignal<LinkValue | undefined | null>();
+	const [getValue, setValue] = createSignal<
+		NonNullable<LinkResValue> | undefined | null
+	>();
 
 	// -------------------------------
 	// Memos
@@ -40,7 +42,7 @@ export const LinkField: Component<LinkFieldProps> = (props) => {
 		return props.state.fieldData;
 	});
 	const fieldValue = createMemo(() => {
-		return brickHelpers.getFieldValue<LinkValue | null>({
+		return brickHelpers.getFieldValue<NonNullable<LinkResValue> | null>({
 			fieldData: fieldData(),
 			fieldConfig: props.state.fieldConfig,
 			contentLocale: props.state.contentLocale,
