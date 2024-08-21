@@ -6,7 +6,7 @@
 	"type": "module",
 	"scripts": {
 		"start": "dotenvx run -- tsx ./src/index.ts",
-		"dev": "nodemon",
+		"dev": "dotenvx run -- tsx watch ./src/index.ts",
 		"dotenvx:encrypt": "dotenvx encrypt"
 	},
 	"dependencies": {
@@ -24,7 +24,6 @@
 	"devDependencies": {
 		"@dotenvx/dotenvx": "^1.8.0",
 		"@types/better-sqlite3": "^7.6.11",
-		"nodemon": "^3.1.4",
 		"tsx": "^4.16.2"
 	},
 	"volta": {
