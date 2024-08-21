@@ -8,11 +8,17 @@ const fastify = Fastify();
 
 fastify.register(lucidPlugin);
 
-const start = async () => {
+const start = async (config?: {
+	port?: number;
+	host?: string;
+}) => {
+	const port = config?.port || 8080;
+	const host = config?.host || "localhost";
+
 	fastify.listen(
 		{
-			port: Number(process.env.PORT) || 8393,
-			host: process.env.HOST || "localhost",
+			port: port,
+			host: host,
 		},
 		(err, address) => {
 			if (err) {

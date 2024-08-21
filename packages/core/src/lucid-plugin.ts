@@ -1,4 +1,3 @@
-import "dotenv/config.js";
 import fs from "fs-extra";
 import path from "node:path";
 import packageJson from "../package.json" assert { type: "json" };

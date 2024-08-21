@@ -311,7 +311,7 @@ test("document field formatter success with translation support", async () => {
 		},
 		{
 			builder: BannerBrick,
-			host: "http://localhost:8393",
+			host: "http://localhost:8080",
 			collectionTranslations: true,
 			localisation: {
 				locales: ["en", "fr"],
@@ -389,7 +389,7 @@ test("document field formatter success with translation disabled", async () => {
 		},
 		{
 			builder: BannerBrick,
-			host: "http://localhost:8393",
+			host: "http://localhost:8080",
 			collectionTranslations: false,
 			localisation: {
 				locales: ["en", "fr"],
@@ -406,7 +406,7 @@ test("document field formatter success with translation disabled", async () => {
 		},
 		{
 			builder: BannerBrick,
-			host: "http://localhost:8393",
+			host: "http://localhost:8080",
 			collectionTranslations: false,
 			localisation: {
 				locales: ["en", "fr"],
@@ -441,7 +441,7 @@ test("document field flat formatter success with translation support", async () 
 		},
 		{
 			builder: BannerBrick,
-			host: "http://localhost:8393",
+			host: "http://localhost:8080",
 			collectionTranslations: true,
 			localisation: {
 				locales: ["en", "fr"],

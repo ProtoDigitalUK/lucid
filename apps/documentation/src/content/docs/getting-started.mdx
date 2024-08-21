@@ -50,7 +50,7 @@ import { SQLiteAdapter } from "@lucidcms/core/adapters";
 import Database from "better-sqlite3";
 
 export default lucid.config({
-  host: "http://localhost:8393",
+  host: "http://localhost:8080",
   db: new SQLiteAdapter({
     database: async () => new Database("db.sqlite"),
   }),
@@ -72,9 +72,14 @@ Now that you have Lucid installed, before you can run your project, there is one
 ```ts title="index.ts"
 import lucid from "@lucidcms/core";
 
+// lucid.start({
+//     port: 8080,
+//     host: "localhost",
+// });
+
 lucid.start();
 ```
 
 Calling the `lucid.start()` function will start the Lucid [Fastify](https://fastify.dev/) server.
 
-Once this is done, you can run your start script and navigate to `http://localhost:8393/login` to see Lucid in action. The default username is `admin` and the password is `password`. You will be prompted to change this password on first login.
+Once this is done, you can run your start script and navigate to `http://localhost:8080/login` to see Lucid in action. The default username is `admin` and the password is `password`. You will be prompted to change this password on first login.

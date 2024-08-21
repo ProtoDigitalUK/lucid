@@ -4,7 +4,7 @@ import Database from "better-sqlite3";
 import testingConstants from "../../../constants/testing-constants.js";
 
 export default lucid.config({
-	host: "http://localhost:8393",
+	host: "http://localhost:8080",
 	db: new SQLiteAdapter({
 		database: async () => new Database("db.sqlite"),
 	}),

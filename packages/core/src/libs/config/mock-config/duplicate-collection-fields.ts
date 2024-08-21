@@ -13,7 +13,7 @@ const collection = new CollectionBuilder("page", {
 	.addText("title");
 
 export default lucid.config({
-	host: "http://localhost:8393",
+	host: "http://localhost:8080",
 	db: new SQLiteAdapter({
 		database: async () => new Database("db.sqlite"),
 	}),

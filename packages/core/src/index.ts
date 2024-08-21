@@ -1,4 +1,3 @@
-import("dotenv/config.js");
 import { start, fastify } from "./server.js";
 import config from "./libs/config/lucid-config.js";
 import toolkit from "./libs/toolkit/toolkit.js";

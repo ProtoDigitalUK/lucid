@@ -18,7 +18,7 @@ import MainMenuCollection from "./src/lucid/collections/main-menu.js";
 import SettingsCollection from "./src/lucid/collections/settings.js";
 
 export default lucid.config({
-	host: "http://localhost:8393",
+	host: "http://localhost:8080",
 	db: new SQLiteAdapter({
 		database: async () => new Database("db.sqlite"),
 	}),

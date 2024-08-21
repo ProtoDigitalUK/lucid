@@ -5,15 +5,16 @@
 	"main": "src/index.ts",
 	"type": "module",
 	"scripts": {
-		"start": "tsx ./src/index.ts",
-		"dev": "nodemon"
+		"start": "dotenvx run -- tsx ./src/index.ts",
+		"dev": "nodemon",
+		"dotenvx:encrypt": "dotenvx encrypt"
 	},
 	"dependencies": {
 		"@lucidcms/core": "*",
 		"@lucidcms/plugin-local-storage": "*",
 		"@lucidcms/plugin-nodemailer": "*",
-		"@lucidcms/plugin-s3": "*",
 		"@lucidcms/plugin-pages": "*",
+		"@lucidcms/plugin-s3": "*",
 		"better-sqlite3": "^11.1.2",
 		"nodemailer": "^6.9.14",
 		"typescript": "^5.5.4"
@@ -21,6 +22,7 @@
 	"author": "",
 	"license": "ISC",
 	"devDependencies": {
+		"@dotenvx/dotenvx": "^1.8.0",
 		"@types/better-sqlite3": "^7.6.11",
 		"nodemon": "^3.1.4",
 		"tsx": "^4.16.2"
