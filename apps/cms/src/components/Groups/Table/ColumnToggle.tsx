@@ -32,7 +32,7 @@ export const ColumnToggle: Component<ColumnToggleProps> = (props) => {
 				options={{
 					as: "ul",
 					rounded: true,
-					class: "w-[160px]",
+					class: "w-[160px] z-50",
 				}}
 			>
 				<For each={props.columns}>
