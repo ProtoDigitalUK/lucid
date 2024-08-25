@@ -43,7 +43,6 @@ const SEOBrick = new BrickBuilder("seo", {
 		},
 		validation: {
 			type: "image",
-			required: true,
 		},
 	})
 	.addTab("advanced_tab", {
