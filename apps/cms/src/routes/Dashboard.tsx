@@ -31,6 +31,7 @@ const DashboardRoute: Component = () => {
 					label: T()("documentation"),
 					permission: true,
 					icon: <FaSolidCode />,
+					newTab: true,
 				},
 			}}
 		>
