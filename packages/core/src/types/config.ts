@@ -6,7 +6,7 @@ import type { Readable } from "node:stream";
 import type { MediaKitMeta } from "../libs/media-kit/index.js";
 import type { AllHooks } from "./hooks.js";
 import type { ServiceResponse } from "../utils/services/types.js";
-import type { LucidFastifyInstance } from "./types.js";
+import type { FastifyInstance } from "fastify";
 
 export type LucidPlugin = (config: Config) => Promise<{
 	key: string;
@@ -135,7 +135,7 @@ export interface LucidConfig {
 		fallbackImage?: string | boolean | undefined;
 		strategy?: MediaStrategy;
 	};
-	routes?: Array<(fastify: LucidFastifyInstance) => Promise<void> | void>;
+	routes?: Array<(fastify: FastifyInstance) => Promise<void> | void>;
 	hooks?: Array<AllHooks>;
 	collections?: CollectionBuilder[];
 	plugins?: LucidPlugin[];
@@ -168,7 +168,7 @@ export interface Config extends z.infer<typeof ConfigSchema> {
 		fallbackImage: string | boolean | undefined;
 		strategy?: MediaStrategy;
 	};
-	routes: Array<(fastify: LucidFastifyInstance) => Promise<void> | void>;
+	routes: Array<(fastify: FastifyInstance) => Promise<void> | void>;
 	hooks: Array<AllHooks>;
 	collections: CollectionBuilder[];
 	plugins: Array<LucidPlugin>;
