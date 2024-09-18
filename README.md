@@ -47,3 +47,7 @@ Effortlessly configure Lucid to meet your content needs with our flexible config
 ## 🏁 Getting Started
 
 To get started you can follow the [Getting Started](https://lucidcms.io/getting-started/) guide from our documentation. Lucid is super easy to get up and running and with the SQLite DB adapter along with the [Local Storage](https://lucidcms.io/plugins/local-storage/) plugin, you can get set up without needing any third party services.
+
+## 🖥️ Lucid UI
+
+Still under development, Lucid UI is an Astro and TailwindCSS based UI library that is built to be used with Lucid. It's not quite ready for prime time yet, but you can expect to see it launch along side the Lucid beta in the coming months.
