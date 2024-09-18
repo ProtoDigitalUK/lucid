@@ -52,6 +52,7 @@ const ConfigSchema = z.object({
 			handler: z.unknown(),
 		}),
 	),
+	routes: z.array(z.unknown()).optional(),
 	collections: z.array(z.unknown()),
 	plugins: z.array(z.unknown()),
 });

@@ -25,6 +25,7 @@ export const defaultConfig: Partial<LucidConfig> = {
 		fallbackImage: undefined,
 		strategy: undefined,
 	},
+	routes: [],
 	hooks: [],
 	collections: [],
 	plugins: [],

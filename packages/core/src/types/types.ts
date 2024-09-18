@@ -1,10 +1,33 @@
 import type z from "zod";
-import type { FastifyRequest, FastifyReply } from "fastify";
+import type { FastifyRequest, FastifyReply, FastifyInstance } from "fastify";
 import type { Config } from "./config.js";
 import type lucidServices from "../services/index.js";
 import type { UserPermissionsResponse, LocalesResponse } from "./response.js";
 import type { BooleanInt } from "../libs/db/types.js";
 import type logger from "../utils/logging/index.js";
+
+export interface LucidFastifyInstance extends FastifyInstance {
+	config: Config;
+	logger: typeof logger;
+	services: typeof lucidServices;
+}
+export interface LucidFastifyRequest extends FastifyRequest {
+	auth: {
+		id: number;
+		username: string;
+		email: string;
+		superAdmin: BooleanInt;
+		permissions: UserPermissionsResponse["permissions"] | undefined;
+	};
+	locale: {
+		code: LocalesResponse["code"];
+	};
+	server: LucidFastifyInstance;
+	clientIntegrationAuth: {
+		id: number;
+		key: string;
+	};
+}
 
 declare module "fastify" {
 	interface FastifyInstance {
