@@ -88,4 +88,5 @@ export default {
 	passwordResetTokenExpirationMinutes: 15, // 15 minutes
 	userInviteTokenExpirationMinutes: 1440, // 24 hours in minutes
 	documentation: "https://lucidcms.io/getting-started",
+	lucidUi: "https://lucidui.io/",
 };
