@@ -49,6 +49,13 @@ export type EmailStrategy = (
 	message: string;
 }>;
 
+export type MediaStrategySignUrl = (
+	key: string,
+	meta: {
+		host: string;
+	},
+) => ServiceResponse<string>;
+
 export type MediaStrategyStream = (key: string) => ServiceResponse<{
 	contentLength: number | undefined;
 	contentType: string | undefined;
@@ -90,6 +97,7 @@ export type MediaStrategyDeleteMultiple = (
 ) => ServiceResponse<undefined>;
 
 export type MediaStrategy = {
+	signUrl: MediaStrategySignUrl;
 	stream: MediaStrategyStream;
 	uploadSingle: MediaStrategyUploadSingle;
 	updateSingle: MediaStrategyUpdateSingle;
@@ -135,9 +143,7 @@ export interface LucidConfig {
 		fallbackImage?: string | boolean | undefined;
 		strategy?: MediaStrategy;
 	};
-	fastifyExtensions?: Array<
-		(fastify: FastifyInstance) => Promise<void> | void
-	>;
+	fastifyExtensions?: Array<(fastify: FastifyInstance) => Promise<void>>;
 	hooks?: Array<AllHooks>;
 	collections?: CollectionBuilder[];
 	plugins?: LucidPlugin[];
@@ -170,7 +176,7 @@ export interface Config extends z.infer<typeof ConfigSchema> {
 		fallbackImage: string | boolean | undefined;
 		strategy?: MediaStrategy;
 	};
-	fastifyExtensions: z.infer<typeof ConfigSchema>["fastifyExtensions"];
+	fastifyExtensions: Array<(fastify: FastifyInstance) => Promise<void>>;
 	hooks: Array<AllHooks>;
 	collections: CollectionBuilder[];
 	plugins: Array<LucidPlugin>;

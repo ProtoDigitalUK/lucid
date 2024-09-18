@@ -1,4 +1,9 @@
+import type { FastifyInstance } from "fastify";
 import z from "zod";
+
+const FastifyInstanceSchema = z.custom<FastifyInstance>((data) => true, {
+	message: "Invalid FastifyInstance",
+});
 
 const ConfigSchema = z.object({
 	db: z.unknown(),
@@ -53,7 +58,12 @@ const ConfigSchema = z.object({
 		}),
 	),
 	fastifyExtensions: z
-		.array(z.function().args(z.unknown()).returns(z.promise(z.void())))
+		.array(
+			z
+				.function()
+				.args(FastifyInstanceSchema)
+				.returns(z.promise(z.void())),
+		)
 		.optional(),
 	collections: z.array(z.unknown()),
 	plugins: z.array(z.unknown()),

@@ -65,7 +65,7 @@ export default lucid.config({
 	// 	},
 	// ],
 	fastifyExtensions: [
-		(fastify) => {
+		async (fastify) => {
 			fastify.get("/config-test", (req, reply) => {
 				reply.send("Hello World");
 			});
@@ -107,6 +107,7 @@ export default lucid.config({
 		// }),
 		LucidLocalStorage({
 			uploadDir: "uploads",
+			secretKey: process.env.LUCID_LOCAL_STORAGE_SECRET_KEY as string,
 		}),
 	],
 });
