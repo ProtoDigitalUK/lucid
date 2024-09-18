@@ -100,8 +100,8 @@ const lucidPlugin = async (fastify: FastifyInstance) => {
 		// Register routes
 		fastify.register(routes);
 
-		for (const route of config.routes || []) {
-			route(fastify);
+		for (const fastifyExt of config.fastifyExtensions || []) {
+			fastify.register(fastifyExt);
 		}
 
 		fastify.register(fastifyStatic, {

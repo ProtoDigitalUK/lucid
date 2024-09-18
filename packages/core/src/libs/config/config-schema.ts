@@ -52,7 +52,9 @@ const ConfigSchema = z.object({
 			handler: z.unknown(),
 		}),
 	),
-	routes: z.array(z.unknown()).optional(),
+	fastifyExtensions: z
+		.array(z.function().args(z.unknown()).returns(z.promise(z.void())))
+		.optional(),
 	collections: z.array(z.unknown()),
 	plugins: z.array(z.unknown()),
 });

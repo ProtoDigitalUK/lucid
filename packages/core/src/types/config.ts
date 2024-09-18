@@ -135,7 +135,9 @@ export interface LucidConfig {
 		fallbackImage?: string | boolean | undefined;
 		strategy?: MediaStrategy;
 	};
-	routes?: Array<(fastify: FastifyInstance) => Promise<void> | void>;
+	fastifyExtensions?: Array<
+		(fastify: FastifyInstance) => Promise<void> | void
+	>;
 	hooks?: Array<AllHooks>;
 	collections?: CollectionBuilder[];
 	plugins?: LucidPlugin[];
@@ -168,7 +170,7 @@ export interface Config extends z.infer<typeof ConfigSchema> {
 		fallbackImage: string | boolean | undefined;
 		strategy?: MediaStrategy;
 	};
-	routes: Array<(fastify: FastifyInstance) => Promise<void> | void>;
+	fastifyExtensions: z.infer<typeof ConfigSchema>["fastifyExtensions"];
 	hooks: Array<AllHooks>;
 	collections: CollectionBuilder[];
 	plugins: Array<LucidPlugin>;

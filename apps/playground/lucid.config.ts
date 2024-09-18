@@ -64,7 +64,7 @@ export default lucid.config({
 	// 		},
 	// 	},
 	// ],
-	routes: [
+	fastifyExtensions: [
 		(fastify) => {
 			fastify.get("/config-test", (req, reply) => {
 				reply.send("Hello World");
