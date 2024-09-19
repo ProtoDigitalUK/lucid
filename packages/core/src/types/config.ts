@@ -54,9 +54,9 @@ export type MediaStrategyGetPresignedUrl = (
 	meta: {
 		host: string;
 		mimeType: string;
-		width: number | null;
-		height: number | null;
-		extension: string;
+		width?: number | null;
+		height?: number | null;
+		extension?: string;
 	},
 ) => ServiceResponse<{
 	url: string;

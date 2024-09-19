@@ -142,4 +142,13 @@ export default class MediaFormatter {
 			updatedAt: { type: "string", example: "2022-01-01T00:00:00Z" },
 		},
 	};
+	static presignedUrlSwagger = {
+		type: "object",
+		properties: {
+			url: {
+				type: "string",
+				example: "https://example.com/cdn/v1/key",
+			},
+		},
+	};
 }

@@ -110,4 +110,14 @@ export default {
 		query: undefined,
 		params: undefined,
 	},
+	getPresignedUrl: {
+		body: z.object({
+			fileName: z.string(),
+			mimeType: z.string(),
+			width: z.number().optional(),
+			height: z.number().optional(),
+		}),
+		query: undefined,
+		params: undefined,
+	},
 };

@@ -6,6 +6,7 @@ import getSingle from "./get-single.js";
 import deleteSingle from "./delete-single.js";
 import getMultiple from "./get-multiple.js";
 import updateSingle from "./update-single.js";
+import getPresignedUrl from "./get-presigned-url.js";
 
 export default {
 	checks,
@@ -16,4 +17,5 @@ export default {
 	deleteSingle,
 	getMultiple,
 	updateSingle,
+	getPresignedUrl,
 };
