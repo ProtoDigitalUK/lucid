@@ -31,8 +31,6 @@ const getPresignedUrlController: RouteController<
 		{
 			fileName: request.body.fileName,
 			mimeType: request.body.mimeType,
-			width: request.body.width,
-			height: request.body.height,
 		},
 	);
 	if (presignedUrl.error) throw new LucidAPIError(presignedUrl.error);

@@ -5,8 +5,6 @@ const getPresignedUrl: ServiceFn<
 		{
 			key: string;
 			mimeType: string;
-			width?: number;
-			height?: number;
 			extension?: string;
 		},
 	],
@@ -23,8 +21,6 @@ const getPresignedUrl: ServiceFn<
 		{
 			host: context.config.host,
 			mimeType: data.mimeType,
-			width: data.width,
-			height: data.height,
 			extension: data.extension,
 		},
 	);
@@ -38,7 +34,7 @@ const getPresignedUrl: ServiceFn<
 				errorResponse: {
 					body: {
 						file: {
-							code: "s3_error",
+							code: "media_error",
 							message: presignedUrlRes.error.message,
 						},
 					},

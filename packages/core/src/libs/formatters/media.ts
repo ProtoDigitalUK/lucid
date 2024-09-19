@@ -149,6 +149,10 @@ export default class MediaFormatter {
 				type: "string",
 				example: "https://example.com/cdn/v1/key",
 			},
+			key: {
+				type: "string",
+				example: "2024/09/5ttogd-placeholder-image.png",
+			},
 		},
 	};
 }

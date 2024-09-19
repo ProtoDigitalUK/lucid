@@ -75,7 +75,7 @@ const upload: ServiceFn<
 				errorResponse: {
 					body: {
 						file: {
-							code: "s3_error",
+							code: "media_error",
 							message: saveObjectRes.error.message,
 						},
 					},

@@ -1228,6 +1228,87 @@
 			"name": "Media",
 			"item": [
 				{
+					"name": "Upload Media",
+					"item": [
+						{
+							"name": "S3 Presigned URL",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "file",
+									"file": {
+										"src": "/Users/williamyallop/Documents/projects/protodigital/products/lucid/banner.png"
+									}
+								},
+								"url": {
+									"raw": "https://headless-cms.b321862a451976d9f183559235d9cec1.r2.cloudflarestorage.com/2024/09/juy29c-test-image.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=ba2ab73b293ea91e6db7b2fe508e8c2a%2F20240919%2Fauto%2Fs3%2Faws4_request&X-Amz-Date=20240919T212150Z&X-Amz-Expires=3600&X-Amz-Signature=e172f32f9ff149deac5a927d4e0a5d4e6ebec4c07730f96bf8b5c32df77d0d1f&X-Amz-SignedHeaders=host&x-amz-meta-extension=png&x-id=PutObject",
+									"protocol": "https",
+									"host": [
+										"headless-cms",
+										"b321862a451976d9f183559235d9cec1",
+										"r2",
+										"cloudflarestorage",
+										"com"
+									],
+									"path": [
+										"2024",
+										"09",
+										"juy29c-test-image.png"
+									],
+									"query": [
+										{
+											"key": "X-Amz-Algorithm",
+											"value": "AWS4-HMAC-SHA256"
+										},
+										{
+											"key": "X-Amz-Content-Sha256",
+											"value": "UNSIGNED-PAYLOAD"
+										},
+										{
+											"key": "X-Amz-Credential",
+											"value": "ba2ab73b293ea91e6db7b2fe508e8c2a%2F20240919%2Fauto%2Fs3%2Faws4_request"
+										},
+										{
+											"key": "X-Amz-Date",
+											"value": "20240919T212150Z"
+										},
+										{
+											"key": "X-Amz-Expires",
+											"value": "3600"
+										},
+										{
+											"key": "X-Amz-Signature",
+											"value": "e172f32f9ff149deac5a927d4e0a5d4e6ebec4c07730f96bf8b5c32df77d0d1f"
+										},
+										{
+											"key": "X-Amz-SignedHeaders",
+											"value": "host"
+										},
+										{
+											"key": "x-amz-meta-extension",
+											"value": "png"
+										},
+										{
+											"key": "x-id",
+											"value": "PutObject"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "LS Presigned URL",
+							"request": {
+								"method": "GET",
+								"header": []
+							},
+							"response": []
+						}
+					]
+				},
+				{
 					"name": "Upload Single",
 					"request": {
 						"method": "POST",
@@ -1262,40 +1343,6 @@
 									"key": "body",
 									"value": "{\"title\":[{\"localeCode\":\"en\",\"value\":\"title value\"}],\"alt\":[{\"localeCode\":\"en\",\"value\":\"alt value\"}]}"
 								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Get Presigned URL",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "_csrf",
-								"value": "{{CSRF}}"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n\t\"fileName\": \"test-image\",\n\t\"mimeType\": \"image/png\",\n\t\"width\": 100,\n\t\"height\": 100\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{BASE_URL}}/api/EXPERIMENTAL/media/presigned-url",
-							"host": [
-								"{{BASE_URL}}"
-							],
-							"path": [
-								"api",
-								"EXPERIMENTAL",
-								"media",
-								"presigned-url"
 							]
 						}
 					},
@@ -1559,6 +1606,40 @@
 								"v1",
 								"media",
 								"processed"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Presigned URL",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "_csrf",
+								"value": "{{CSRF}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"fileName\": \"test-image.png\",\n\t\"mimeType\": \"image/png\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/EXPERIMENTAL/media/presigned-url",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"EXPERIMENTAL",
+								"media",
+								"presigned-url"
 							]
 						}
 					},

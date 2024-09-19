@@ -12,8 +12,6 @@ export default (client: S3Client, pluginOptions: PluginOptions) => {
 				Key: key,
 				ContentType: meta.mimeType,
 				Metadata: {
-					width: meta.width?.toString() || "",
-					height: meta.height?.toString() || "",
 					extension: meta.extension || "",
 				},
 			});

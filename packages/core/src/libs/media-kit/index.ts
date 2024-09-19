@@ -65,7 +65,7 @@ class MediaKit {
 			file.filename.split(".").pop() ||
 			"";
 
-		const mediaKey = this.generateKey({
+		const mediaKey = MediaKit.generateKey({
 			name: this.name,
 			extension: this.extension,
 		});
@@ -130,7 +130,7 @@ class MediaKit {
 		if (mt.includes("zip") || mt.includes("tar")) return "archive";
 		return "unknown";
 	}
-	public generateKey(props: {
+	public static generateKey(props: {
 		name: string;
 		extension: string | null;
 	}): Awaited<ServiceResponse<string>> {

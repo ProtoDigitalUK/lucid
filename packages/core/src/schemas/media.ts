@@ -114,8 +114,6 @@ export default {
 		body: z.object({
 			fileName: z.string(),
 			mimeType: z.string(),
-			width: z.number().optional(),
-			height: z.number().optional(),
 		}),
 		query: undefined,
 		params: undefined,
