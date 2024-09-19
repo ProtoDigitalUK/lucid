@@ -1,9 +1,9 @@
 import crypto from "node:crypto";
 import type { PluginOptions } from "../types/types.js";
-import type { MediaStrategySignUrl } from "@lucidcms/core/types";
+import type { MediaStrategyGetPresignedUrl } from "@lucidcms/core/types";
 
 export default (pluginOptions: PluginOptions) => {
-	const signUrl: MediaStrategySignUrl = async (key, meta) => {
+	const getPresignedUrl: MediaStrategyGetPresignedUrl = async (key, meta) => {
 		try {
 			const timestamp = Date.now();
 			const token = crypto
@@ -13,7 +13,9 @@ export default (pluginOptions: PluginOptions) => {
 
 			return {
 				error: undefined,
-				data: `${meta.host}/api/v1/localstorage/upload/${key}?token=${token}&timestamp=${timestamp}`,
+				data: {
+					url: `${meta.host}/api/v1/localstorage/upload/${key}?token=${token}&timestamp=${timestamp}`,
+				},
 			};
 		} catch (e) {
 			const error = e as Error;
@@ -27,5 +29,5 @@ export default (pluginOptions: PluginOptions) => {
 		}
 	};
 
-	return signUrl;
+	return getPresignedUrl;
 };

@@ -5,7 +5,7 @@ import deletSingle from "./services/delete-single.js";
 import deleteMultiple from "./services/delete-multiple.js";
 import updateSingle from "./services/update-single.js";
 import uploadSingle from "./services/upload-single.js";
-import signUrl from "./services/sign-url.js";
+import getPresignedUrl from "./services/get-presigned-url.js";
 import routes from "./routes/index.js";
 import { PLUGIN_KEY, LUCID_VERSION } from "./constants.js";
 
@@ -18,7 +18,7 @@ const plugin: LucidPluginOptions<PluginOptions> = async (
 	config.media = {
 		...config.media,
 		strategy: {
-			signUrl: signUrl(pluginOptions),
+			getPresignedUrl: getPresignedUrl(pluginOptions),
 			stream: stream(pluginOptions),
 			uploadSingle: uploadSingle(pluginOptions),
 			updateSingle: updateSingle(pluginOptions),

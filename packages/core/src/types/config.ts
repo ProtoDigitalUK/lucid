@@ -49,12 +49,18 @@ export type EmailStrategy = (
 	message: string;
 }>;
 
-export type MediaStrategySignUrl = (
+export type MediaStrategyGetPresignedUrl = (
 	key: string,
 	meta: {
 		host: string;
+		mimeType: string;
+		width: number | null;
+		height: number | null;
+		extension: string;
 	},
-) => ServiceResponse<string>;
+) => ServiceResponse<{
+	url: string;
+}>;
 
 export type MediaStrategyStream = (key: string) => ServiceResponse<{
 	contentLength: number | undefined;
@@ -97,7 +103,7 @@ export type MediaStrategyDeleteMultiple = (
 ) => ServiceResponse<undefined>;
 
 export type MediaStrategy = {
-	signUrl: MediaStrategySignUrl;
+	getPresignedUrl: MediaStrategyGetPresignedUrl;
 	stream: MediaStrategyStream;
 	uploadSingle: MediaStrategyUploadSingle;
 	updateSingle: MediaStrategyUpdateSingle;
