@@ -8,9 +8,10 @@
 		"dev": "vite",
 		"build": "vite build --emptyOutDir",
 		"serve": "vite preview",
-		"format": "npx @biomejs/biome format --write ./src",
-		"lint": "npx @biomejs/biome lint ./src",
-		"lint:fix": "npx @biomejs/biome lint --apply ./src"
+		"format": "biome format ./src",
+		"format:fix": "biome format --write ./src",
+		"lint": "biome lint ./src",
+		"lint:fix": "biome lint --apply ./src"
 	},
 	"license": "MIT",
 	"devDependencies": {
