@@ -10,9 +10,9 @@ const mediaRoutes = async (fastify: FastifyInstance) => {
 		middleware: {
 			authenticate: true,
 		},
-		swaggerSchema: media.clearAllProcessed.swaggerSchema,
-		zodSchema: media.clearAllProcessed.zodSchema,
-		controller: media.clearAllProcessed.controller,
+		swaggerSchema: media.getPresignedUrl.swaggerSchema,
+		zodSchema: media.getPresignedUrl.zodSchema,
+		controller: media.getPresignedUrl.controller,
 	});
 };
 

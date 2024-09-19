@@ -1268,6 +1268,40 @@
 					"response": []
 				},
 				{
+					"name": "Get Presigned URL",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "_csrf",
+								"value": "{{CSRF}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"fileName\": \"test-image\",\n\t\"mimeType\": \"image/png\",\n\t\"width\": 100,\n\t\"height\": 100\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/EXPERIMENTAL/media/presigned-url",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"EXPERIMENTAL",
+								"media",
+								"presigned-url"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Update Single",
 					"request": {
 						"method": "PATCH",
@@ -2170,6 +2204,30 @@
 							],
 							"path": [
 								"get-locales"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Config Registered",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/config-test",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"config-test"
 							]
 						}
 					},

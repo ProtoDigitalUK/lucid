@@ -12,7 +12,7 @@ const getPresignedUrlController: RouteController<
 	typeof mediaSchema.getPresignedUrl.body,
 	typeof mediaSchema.getPresignedUrl.query
 > = async (request, reply) => {
-	const media = await serviceWrapper(
+	const presignedUrl = await serviceWrapper(
 		request.server.services.media.getPresignedUrl,
 		{
 			transaction: false,
@@ -35,11 +35,11 @@ const getPresignedUrlController: RouteController<
 			height: request.body.height,
 		},
 	);
-	if (media.error) throw new LucidAPIError(media.error);
+	if (presignedUrl.error) throw new LucidAPIError(presignedUrl.error);
 
 	reply.status(200).send(
 		formatAPIResponse(request, {
-			data: media.data,
+			data: presignedUrl.data,
 		}),
 	);
 };
