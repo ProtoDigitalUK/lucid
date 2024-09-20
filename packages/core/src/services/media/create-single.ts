@@ -1,8 +1,11 @@
+import T from "../../translations/index.js";
 import {
 	mergeTranslationGroups,
 	getUniqueLocaleCodes,
 } from "../../utils/translations/index.js";
 import Repository from "../../libs/repositories/index.js";
+import constants from "../../constants/constants.js";
+import { addMilliseconds } from "date-fns";
 import type { BooleanInt } from "../../libs/db/types.js";
 import type { ServiceFn } from "../../utils/services/types.js";
 
@@ -24,14 +27,56 @@ const createSingle: ServiceFn<
 	],
 	number
 > = async (context, data) => {
-	const localeExistsRes =
-		await context.services.locale.checks.checkLocalesExist(context, {
+	const MediaRepo = Repository.get("media", context.db);
+	const MediaAwaitingSyncRepo = Repository.get(
+		"media-awaiting-sync",
+		context.db,
+	);
+
+	const [localeExistsRes, awaitingSyncRes] = await Promise.all([
+		context.services.locale.checks.checkLocalesExist(context, {
 			localeCodes: getUniqueLocaleCodes([
 				data.title || [],
 				data.alt || [],
 			]),
-		});
+		}),
+		MediaAwaitingSyncRepo.selectSingle({
+			select: ["key"],
+			where: [
+				{
+					key: "key",
+					operator: "=",
+					value: data.key,
+				},
+				{
+					key: "timestamp",
+					operator: ">",
+					value: addMilliseconds(
+						new Date(),
+						constants.mediaAwaitingSyncInterval * -1,
+					),
+				},
+			],
+		}),
+	]);
 	if (localeExistsRes.error) return localeExistsRes;
+	if (!awaitingSyncRes) {
+		return {
+			error: {
+				type: "basic",
+				status: 400,
+				errorResponse: {
+					body: {
+						file: {
+							code: "media_error",
+							message: T("media_error_not_awaiting_sync"),
+						},
+					},
+				},
+			},
+			data: undefined,
+		};
+	}
 
 	const translationKeyIdsRes =
 		await context.services.translation.createMultiple(context, {
@@ -58,25 +103,34 @@ const createSingle: ServiceFn<
 	);
 	if (syncMediaRes.error) return syncMediaRes;
 
-	const MediaRepo = Repository.get("media", context.db);
-
-	const mediaRes = await MediaRepo.createSingle({
-		key: syncMediaRes.data.key,
-		eTag: syncMediaRes.data.etag ?? undefined,
-		visible: data.visible ?? 1,
-		type: syncMediaRes.data.type,
-		mimeType: syncMediaRes.data.mimeType,
-		extension: syncMediaRes.data.extension,
-		fileSize: syncMediaRes.data.size,
-		width: syncMediaRes.data.width,
-		height: syncMediaRes.data.height,
-		titleTranslationKeyId: translationKeyIdsRes.data.title,
-		altTranslationKeyId: translationKeyIdsRes.data.alt,
-		blurHash: syncMediaRes.data.blurHash,
-		averageColour: syncMediaRes.data.averageColour,
-		isDark: syncMediaRes.data.isDark,
-		isLight: syncMediaRes.data.isLight,
-	});
+	const [mediaRes] = await Promise.all([
+		MediaRepo.createSingle({
+			key: syncMediaRes.data.key,
+			eTag: syncMediaRes.data.etag ?? undefined,
+			visible: data.visible ?? 1,
+			type: syncMediaRes.data.type,
+			mimeType: syncMediaRes.data.mimeType,
+			extension: syncMediaRes.data.extension,
+			fileSize: syncMediaRes.data.size,
+			width: syncMediaRes.data.width,
+			height: syncMediaRes.data.height,
+			titleTranslationKeyId: translationKeyIdsRes.data.title,
+			altTranslationKeyId: translationKeyIdsRes.data.alt,
+			blurHash: syncMediaRes.data.blurHash,
+			averageColour: syncMediaRes.data.averageColour,
+			isDark: syncMediaRes.data.isDark,
+			isLight: syncMediaRes.data.isLight,
+		}),
+		MediaAwaitingSyncRepo.deleteSingle({
+			where: [
+				{
+					key: "key",
+					operator: "=",
+					value: data.key,
+				},
+			],
+		}),
+	]);
 	if (mediaRes === undefined) {
 		await context.config.media?.strategy?.deleteSingle(
 			syncMediaRes.data.key,

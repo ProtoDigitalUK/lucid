@@ -89,4 +89,5 @@ export default {
 	userInviteTokenExpirationMinutes: 1440, // 24 hours in minutes
 	documentation: "https://lucidcms.io/getting-started",
 	lucidUi: "https://lucidui.io/",
+	mediaAwaitingSyncInterval: 3600000, // 1 hour in ms
 };

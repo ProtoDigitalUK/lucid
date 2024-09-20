@@ -154,10 +154,16 @@ export interface HeadlessMedia {
 	average_colour: string | null;
 	is_dark: BooleanInt | null;
 	is_light: BooleanInt | null;
+	custom_meta: string | null;
 	title_translation_key_id: number | null;
 	alt_translation_key_id: number | null;
 	created_at: TimestampImmutable;
 	updated_at: TimestampMutateable;
+}
+
+export interface HeadlessMediaAwaitingSync {
+	key: string;
+	timestamp: TimestampImmutable;
 }
 
 export interface HeadlessProcessedImages {
@@ -242,6 +248,7 @@ export interface LucidDB {
 	lucid_user_tokens: HeadlessUserTokens;
 	lucid_emails: HeadlessEmails;
 	lucid_media: HeadlessMedia;
+	lucid_media_awaiting_sync: HeadlessMediaAwaitingSync;
 	lucid_processed_images: HeadlessProcessedImages;
 	lucid_collection_documents: HeadlessCollectionDocuments;
 	lucid_collection_document_bricks: HeadlessCollectionDocumentBricks;

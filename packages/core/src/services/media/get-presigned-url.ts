@@ -17,6 +17,10 @@ const getPresignedUrl: ServiceFn<
 	}
 > = async (context, data) => {
 	const MediaRepo = Repository.get("media", context.db);
+	const MediaAwaitingSyncRepo = Repository.get(
+		"media-awaiting-sync",
+		context.db,
+	);
 
 	const extension = mime.extension(data.mimeType);
 
@@ -48,12 +52,17 @@ const getPresignedUrl: ServiceFn<
 		};
 	}
 
-	const getPresignedUrlRes =
-		await context.services.media.strategies.getPresignedUrl(context, {
+	const [_, getPresignedUrlRes] = await Promise.all([
+		MediaAwaitingSyncRepo.createSingle({
+			key: keyRes.data,
+			timestamp: new Date().toISOString(),
+		}),
+		context.services.media.strategies.getPresignedUrl(context, {
 			key: keyRes.data,
 			mimeType: data.mimeType,
 			extension: extension || undefined,
-		});
+		}),
+	]);
 	if (getPresignedUrlRes.error) return getPresignedUrlRes;
 
 	return {

@@ -41,12 +41,25 @@ const Migration00000006: MigrationFn = (adapter) => {
 						.onDelete("set null")
 						.onUpdate("cascade"),
 				)
+				.addColumn("custom_meta", "text")
 				.addColumn("created_at", "timestamp", (col) =>
 					defaultTimestamp(col, adapter),
 				)
 				.addColumn("updated_at", "timestamp", (col) =>
 					defaultTimestamp(col, adapter),
 				)
+				.execute();
+
+			await db.schema
+				.createIndex("idx_lucid_media_key")
+				.on("lucid_media")
+				.column("key")
+				.execute();
+
+			await db.schema
+				.createTable("lucid_media_awaiting_sync")
+				.addColumn("key", "text", (col) => col.primaryKey())
+				.addColumn("timestamp", "timestamp", (col) => col.notNull())
 				.execute();
 
 			await db.schema
@@ -62,7 +75,7 @@ const Migration00000006: MigrationFn = (adapter) => {
 				.execute();
 
 			await db.schema
-				.createIndex("idx_media_key")
+				.createIndex("idx_processed_images_media_key")
 				.on("lucid_processed_images")
 				.column("media_key")
 				.execute();

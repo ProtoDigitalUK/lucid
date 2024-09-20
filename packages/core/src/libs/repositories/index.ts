@@ -10,6 +10,7 @@ import CollectionDocumentsRepo from "./collection-documents.js";
 import EmailsRepo from "./emails.js";
 import LocalesRepo from "./locales.js";
 import MediaRepo from "./media.js";
+import MediaAwaitingSyncRepo from "./media-awaiting-sync.js";
 import OptionsRepo from "./options.js";
 import ProcessedImagesRepo from "./processed-images.js";
 import RolePermissionsRepo from "./role-permissions.js";
@@ -51,6 +52,8 @@ class Repository {
 				return new LocalesRepo(db) as RepositoryReturnType<T>;
 			case "media":
 				return new MediaRepo(db) as RepositoryReturnType<T>;
+			case "media-awaiting-sync":
+				return new MediaAwaitingSyncRepo(db) as RepositoryReturnType<T>;
 			case "options":
 				return new OptionsRepo(db) as RepositoryReturnType<T>;
 			case "processed-images":
@@ -90,6 +93,7 @@ type RepositoryClassMap = {
 	emails: EmailsRepo;
 	locales: LocalesRepo;
 	media: MediaRepo;
+	"media-awaiting-sync": MediaAwaitingSyncRepo;
 	options: OptionsRepo;
 	"processed-images": ProcessedImagesRepo;
 	"role-permissions": RolePermissionsRepo;
