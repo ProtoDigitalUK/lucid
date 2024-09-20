@@ -118,4 +118,28 @@ export default {
 		query: undefined,
 		params: undefined,
 	},
+	createSingle: {
+		body: z.object({
+			key: z.string(),
+			mimeType: z.string(),
+			title: z
+				.array(
+					z.object({
+						localeCode: z.string(),
+						value: z.string().nullable(),
+					}),
+				)
+				.optional(),
+			alt: z
+				.array(
+					z.object({
+						localeCode: z.string(),
+						value: z.string().nullable(),
+					}),
+				)
+				.optional(),
+		}),
+		query: undefined,
+		params: undefined,
+	},
 };

@@ -60,6 +60,12 @@ export type MediaStrategyGetPresignedUrl = (
 	url: string;
 }>;
 
+export type MediaStrategyGetMeta = (key: string) => ServiceResponse<{
+	size: number;
+	mimeType: string | null;
+	etag: string | null;
+}>;
+
 export type MediaStrategyStream = (key: string) => ServiceResponse<{
 	contentLength: number | undefined;
 	contentType: string | undefined;
@@ -102,6 +108,7 @@ export type MediaStrategyDeleteMultiple = (
 
 export type MediaStrategy = {
 	getPresignedUrl: MediaStrategyGetPresignedUrl;
+	getMeta: MediaStrategyGetMeta;
 	stream: MediaStrategyStream;
 	uploadSingle: MediaStrategyUploadSingle;
 	updateSingle: MediaStrategyUpdateSingle;

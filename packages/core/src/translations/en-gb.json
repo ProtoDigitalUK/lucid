@@ -230,5 +230,7 @@
 	"field_document_collection_key_mismatch": "The collection of this document does not match the collection set against the field. Received: '{{received}}' Expected: '{{expected}}'",
 	"invalid_encrypted_secret": "The encrypted secret is invalid.",
 	"media_duplicate_key_error_name": "Media Duplicate Key Error",
-	"media_duplicate_key_error_message": "The media key you have provided already exists."
+	"media_duplicate_key_error_message": "The media key you have provided already exists.",
+	"route_media_create_error_name": "Media Create Error",
+	"route_media_create_error_message": "There was an error creating the media item."
 }

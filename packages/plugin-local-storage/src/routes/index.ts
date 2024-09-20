@@ -12,6 +12,7 @@ const routes =
 		route(fastify, {
 			method: "put",
 			url: "/api/v1/localstorage/upload",
+			permissions: ["create_media", "update_media"],
 			middleware: {
 				authenticate: true,
 			},
