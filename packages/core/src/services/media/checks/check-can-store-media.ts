@@ -5,6 +5,7 @@ const checkCanStoreMedia: ServiceFn<
 	[
 		{
 			size: number;
+			onError?: () => Promise<void>;
 		},
 	],
 	{
@@ -44,6 +45,9 @@ const checkCanStoreMedia: ServiceFn<
 
 	const proposedSize = (storageUsedRes.data.valueInt || 0) + data.size;
 	if (proposedSize > storageLimit) {
+		if (data.onError) {
+			await data.onError();
+		}
 		return {
 			error: {
 				type: "basic",

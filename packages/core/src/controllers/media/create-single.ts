@@ -28,7 +28,7 @@ const createSingleController: RouteController<
 		},
 		{
 			key: request.body.key,
-			mimeType: request.body.mimeType,
+			fileName: request.body.fileName,
 			title: request.body.title,
 			alt: request.body.alt,
 			visible: 1,

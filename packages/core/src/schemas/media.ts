@@ -121,7 +121,7 @@ export default {
 	createSingle: {
 		body: z.object({
 			key: z.string(),
-			mimeType: z.string(),
+			fileName: z.string(),
 			title: z
 				.array(
 					z.object({
