@@ -1,10 +1,9 @@
 import Repository from "../../libs/repositories/index.js";
 import type { ServiceFn } from "../../utils/services/types.js";
 
-/*
-    Periodically re-count the media storage usage.
-*/
-
+/**
+ * Periodically re-count the media storage usage.
+ */
 const updateMediaStorage: ServiceFn<[], undefined> = async (context) => {
 	const MediaRepo = Repository.get("media", context.db);
 	const ProcessedImagesRepo = Repository.get("processed-images", context.db);

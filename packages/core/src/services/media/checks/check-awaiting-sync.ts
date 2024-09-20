@@ -4,6 +4,11 @@ import constants from "../../../constants/constants.js";
 import { addMilliseconds } from "date-fns";
 import type { ServiceFn } from "../../../utils/services/types.js";
 
+/**
+ * Checks if the given media key exists within the lucid_media_awaiting_sync table and if it has not expired.
+ *
+ * If it has expired or does not exist, this means the item has either already been created or deleted.
+ */
 const checkAwaitingSync: ServiceFn<
 	[
 		{

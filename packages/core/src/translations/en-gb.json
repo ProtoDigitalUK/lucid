@@ -76,6 +76,7 @@
 	"repeater_depth_message": "Repeater depth is too high in {{type}}: {{typeKey}} with key: {{repeaterKey}}. Please reduce the depth from {{depth}} to {{maxRepeaterDepth}}.",
 	"plugin_version_not_supported": "This plugin does not support version {{version}} of Lucid, only versions {{supportedVersions}}.",
 	"an_error_occurred_updating_media_storage": "An error occurred while updating the media storage option.",
+	"an_error_occurred_deleting_expired_media": "An error occurred while deleting expired media.",
 	"no_records_provided": "No records provided.",
 	"media_name_invalid": "Invalid media name.",
 	"media_name_invalid_message": "The media name is invalid. Please ensure the media name is a valid string.",

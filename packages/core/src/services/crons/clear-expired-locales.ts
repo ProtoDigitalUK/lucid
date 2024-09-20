@@ -2,10 +2,9 @@ import { subDays } from "date-fns";
 import Repository from "../../libs/repositories/index.js";
 import type { ServiceFn } from "../../utils/services/types.js";
 
-/*
-    After 30 days of inactivity, non-active locales will be deleted from the database.
-*/
-
+/**
+ * After 30 days of inactivity, non-active locales will be deleted from the database.
+ */
 const clearExpiredLocales: ServiceFn<[], undefined> = async (context) => {
 	const LocalesRepo = Repository.get("locales", context.db);
 

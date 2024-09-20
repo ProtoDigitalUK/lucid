@@ -12,33 +12,46 @@ const registerCronJobs = async (service: ServiceContext) => {
 				message: T("running_cron_jobs"),
 			});
 
-			serviceWrapper(service.services.crons.clearExpiredLocales, {
-				transaction: true,
-				logError: true,
-				defaultError: {
-					type: "cron",
-					name: T("cron_job_error_name"),
-					message: T("an_error_occurred_clearing_expired_locales"),
-				},
-			})(service);
-			serviceWrapper(service.services.crons.clearExpiredTokens, {
-				transaction: true,
-				logError: true,
-				defaultError: {
-					type: "cron",
-					name: T("cron_job_error_name"),
-					message: T("an_error_occurred_clearing_expired_tokens"),
-				},
-			})(service);
-			serviceWrapper(service.services.crons.updateMediaStorage, {
-				transaction: true,
-				logError: true,
-				defaultError: {
-					type: "cron",
-					name: T("cron_job_error_name"),
-					message: T("an_error_occurred_updating_media_storage"),
-				},
-			})(service);
+			await Promise.allSettled([
+				serviceWrapper(service.services.crons.clearExpiredLocales, {
+					transaction: true,
+					logError: true,
+					defaultError: {
+						type: "cron",
+						name: T("cron_job_error_name"),
+						message: T(
+							"an_error_occurred_clearing_expired_locales",
+						),
+					},
+				})(service),
+				serviceWrapper(service.services.crons.clearExpiredTokens, {
+					transaction: true,
+					logError: true,
+					defaultError: {
+						type: "cron",
+						name: T("cron_job_error_name"),
+						message: T("an_error_occurred_clearing_expired_tokens"),
+					},
+				})(service),
+				serviceWrapper(service.services.crons.updateMediaStorage, {
+					transaction: true,
+					logError: true,
+					defaultError: {
+						type: "cron",
+						name: T("cron_job_error_name"),
+						message: T("an_error_occurred_updating_media_storage"),
+					},
+				})(service),
+				serviceWrapper(service.services.crons.deleteExpiredMedia, {
+					transaction: true,
+					logError: true,
+					defaultError: {
+						type: "cron",
+						name: T("cron_job_error_name"),
+						message: T("an_error_occurred_deleting_expired_media"),
+					},
+				})(service),
+			]);
 		});
 	} catch (error) {
 		logger("error", {

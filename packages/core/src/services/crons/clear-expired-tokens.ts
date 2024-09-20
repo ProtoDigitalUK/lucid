@@ -1,10 +1,9 @@
 import Repository from "../../libs/repositories/index.js";
 import type { ServiceFn } from "../../utils/services/types.js";
 
-/*
-    All expired tokens will be deleted from the database.
-*/
-
+/**
+ * All expired tokens will be deleted from the database.
+ */
 const clearExpiredTokens: ServiceFn<[], undefined> = async (context) => {
 	const UserTokensRepo = Repository.get("user-tokens", context.db);
 

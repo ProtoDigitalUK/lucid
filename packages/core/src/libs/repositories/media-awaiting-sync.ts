@@ -72,4 +72,13 @@ export default class MediaAwaitingSyncRepo {
 
 		return query.executeTakeFirst();
 	};
+	deleteMultiple = async (props: {
+		where: QueryBuilderWhere<"lucid_media_awaiting_sync">;
+	}) => {
+		let query = this.db.deleteFrom("lucid_media_awaiting_sync");
+
+		query = queryBuilder.delete(query, props.where);
+
+		return query.execute();
+	};
 }
