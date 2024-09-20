@@ -233,5 +233,5 @@
 	"media_duplicate_key_error_message": "The media key you have provided already exists.",
 	"route_media_create_error_name": "Media Create Error",
 	"route_media_create_error_message": "There was an error creating the media item.",
-	"media_error_not_awaiting_sync": "The media item is not awaiting sync."
+	"media_error_not_awaiting_sync": "The media key has either expired, been created already or has been deleted."
 }

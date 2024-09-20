@@ -1,11 +1,9 @@
-import T from "../../translations/index.js";
 import {
 	mergeTranslationGroups,
 	getUniqueLocaleCodes,
 } from "../../utils/translations/index.js";
 import Repository from "../../libs/repositories/index.js";
-import constants from "../../constants/constants.js";
-import { addMilliseconds } from "date-fns";
+
 import type { BooleanInt } from "../../libs/db/types.js";
 import type { ServiceFn } from "../../utils/services/types.js";
 
@@ -40,43 +38,12 @@ const createSingle: ServiceFn<
 				data.alt || [],
 			]),
 		}),
-		MediaAwaitingSyncRepo.selectSingle({
-			select: ["key"],
-			where: [
-				{
-					key: "key",
-					operator: "=",
-					value: data.key,
-				},
-				{
-					key: "timestamp",
-					operator: ">",
-					value: addMilliseconds(
-						new Date(),
-						constants.mediaAwaitingSyncInterval * -1,
-					),
-				},
-			],
+		context.services.media.checks.checkAwaitingSync(context, {
+			key: data.key,
 		}),
 	]);
 	if (localeExistsRes.error) return localeExistsRes;
-	if (!awaitingSyncRes) {
-		return {
-			error: {
-				type: "basic",
-				status: 400,
-				errorResponse: {
-					body: {
-						file: {
-							code: "media_error",
-							message: T("media_error_not_awaiting_sync"),
-						},
-					},
-				},
-			},
-			data: undefined,
-		};
-	}
+	if (awaitingSyncRes.error) return awaitingSyncRes;
 
 	const translationKeyIdsRes =
 		await context.services.translation.createMultiple(context, {
