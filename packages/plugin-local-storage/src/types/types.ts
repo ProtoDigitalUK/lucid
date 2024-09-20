@@ -3,4 +3,6 @@ export interface PluginOptions {
 	uploadDir: string;
 	/** The secret key used to sign the URLs */
 	secretKey: string;
+	/** Provide a list of mime types that the upload service supports */
+	supportedMimeTypes?: string[];
 }

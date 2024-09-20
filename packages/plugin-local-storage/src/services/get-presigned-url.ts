@@ -14,7 +14,7 @@ export default (pluginOptions: PluginOptions) => {
 			return {
 				error: undefined,
 				data: {
-					url: `${meta.host}/api/v1/localstorage/upload/${key}?token=${token}&timestamp=${timestamp}`,
+					url: `${meta.host}/api/v1/localstorage/upload?key=${key}&token=${token}&timestamp=${timestamp}`,
 				},
 			};
 		} catch (e) {
