@@ -25,7 +25,7 @@ const AccountRoute: Component = () => {
 			description={T()("account_route_description")}
 			topBar={
 				<Alert
-					style="page-heading"
+					style="layout"
 					alerts={[
 						{
 							type: "error",

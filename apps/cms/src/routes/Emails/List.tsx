@@ -144,7 +144,7 @@ const EmailListRoute: Component = () => {
 			topBar={
 				<Show when={settings.data?.data.media.enabled === false}>
 					<Alert
-						style="page-heading"
+						style="layout"
 						alerts={[
 							{
 								type: "warning",

@@ -8,7 +8,7 @@ import {
 } from "solid-icons/fa";
 
 interface AlertProps {
-	style: "page-heading" | "block";
+	style: "layout" | "block";
 	alerts: Array<{
 		type: "warning" | "success" | "info" | "error";
 		message: string;
@@ -42,17 +42,17 @@ const Alert: Component<AlertProps> = (props) => {
 										"mb-2 last:mb-0 bg-container-3 border rounded-md p-15":
 											props.style === "block",
 										"border-b md:px-30 px-15 py-15":
-											props.style === "page-heading",
+											props.style === "layout",
 										"bg-warning-base text-warning-contrast":
 											type === "warning" &&
-											props.style === "page-heading",
+											props.style === "layout",
 										"bg-error-base text-error-contrast":
 											type === "error" &&
-											props.style === "page-heading",
+											props.style === "layout",
 										"bg-primary-base text-primary-contrast":
 											(type === "success" ||
 												type === "info") &&
-											props.style === "page-heading",
+											props.style === "layout",
 									},
 								)}
 							>
@@ -74,13 +74,13 @@ const Alert: Component<AlertProps> = (props) => {
 											"bg-primary-contrast text-primary-base":
 												(type === "success" ||
 													type === "info") &&
-												props.style === "page-heading",
+												props.style === "layout",
 											"bg-error-contrast text-error-base":
 												type === "error" &&
-												props.style === "page-heading",
+												props.style === "layout",
 											"bg-warning-contrast text-warning-base":
 												type === "warning" &&
-												props.style === "page-heading",
+												props.style === "layout",
 										},
 									)}
 								>

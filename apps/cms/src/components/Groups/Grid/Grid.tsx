@@ -118,7 +118,11 @@ export const GridRoot: Component<GridRootProps> = (props) => {
 					</Show>
 				</Match>
 				<Match when={props.state.isSuccess || props.state.isLoading}>
-					<Layout.PageContent>
+					<Layout.PageContent
+						options={{
+							border: true,
+						}}
+					>
 						<ul class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-15">
 							<Switch>
 								<Match when={props.state.isLoading}>

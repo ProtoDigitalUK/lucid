@@ -69,6 +69,9 @@ const MediaListRoute: Component = () => {
 		<Layout.PageLayout
 			title={T()("media_route_title")}
 			description={T()("media_route_description")}
+			options={{
+				noBorder: true,
+			}}
 			headingChildren={
 				<Query.Row
 					searchParams={searchParams}
@@ -174,7 +177,7 @@ const MediaListRoute: Component = () => {
 			topBar={
 				<Show when={settings.data?.data.media.enabled === false}>
 					<Alert
-						style="page-heading"
+						style="layout"
 						alerts={[
 							{
 								type: "warning",

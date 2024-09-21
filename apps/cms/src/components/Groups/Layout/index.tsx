@@ -6,6 +6,7 @@ import { PageContent } from "./PageContent";
 import { NavigationTabs } from "./NavigationTabs";
 import { PageBreadcrumbs } from "./PageBreadcrumbs";
 import { PageTable } from "./PageTable";
+import { Standard } from "./Standard";
 
 const Layout = {
 	NavigationSidebar,
@@ -16,6 +17,7 @@ const Layout = {
 	NavigationTabs,
 	PageBreadcrumbs,
 	PageTable,
+	Standard,
 };
 
 export default Layout;

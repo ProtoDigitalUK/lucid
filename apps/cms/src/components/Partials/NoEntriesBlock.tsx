@@ -19,7 +19,7 @@ const NoEntriesBlock: Component<NoEntriesBlockProps> = (props) => {
 	return (
 		<div
 			class={classNames(
-				"flex items-center justify-center bg-container-3 border-t border-border ",
+				"flex items-center justify-center bg-container-3 border-t border-border",
 				{
 					"page-layout-full-body": props.type === "page-layout",
 					"flex-grow": props.type === "block-grow",
