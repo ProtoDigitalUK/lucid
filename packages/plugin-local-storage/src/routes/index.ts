@@ -16,6 +16,7 @@ const routes =
 			middleware: {
 				authenticate: true,
 			},
+			bodyLimit: fastify.config.media.maxSize,
 			controller: uploadController.controller(pluginOptions),
 			swaggerSchema: uploadController.swaggerSchema,
 			zodSchema: uploadController.zodSchema,

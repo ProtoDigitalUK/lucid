@@ -6,7 +6,6 @@ import fastifyStatic from "@fastify/static";
 import cors from "@fastify/cors";
 import fastifyCookie from "@fastify/cookie";
 import fastifyRateLimit from "@fastify/rate-limit";
-// import fastifyMultipart from "@fastify/multipart";
 import fastifySwagger from "@fastify/swagger";
 import fastifySwaggerUi from "@fastify/swagger-ui";
 import fastifyHelmet from "@fastify/helmet";
@@ -82,10 +81,6 @@ const lucidPlugin = async (fastify: FastifyInstance) => {
 		});
 
 		fastify.register(fastifyCookie, { secret: config.keys.cookieSecret });
-
-		// fastify.register(fastifyMultipart, {
-		// 	limits: { fileSize: config.media.maxSize },
-		// });
 
 		fastify.register(fastifyHelmet, {
 			contentSecurityPolicy: false,

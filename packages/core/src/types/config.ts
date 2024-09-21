@@ -89,16 +89,7 @@ export type MediaStrategyUploadSingle = (props: {
 }) => ServiceResponse<{
 	etag?: string;
 }>;
-export type MediaStrategyUpdateSingle = (
-	oldKey: string,
-	props: {
-		key: string;
-		data: Readable | Buffer;
-		meta: MediaKitMeta;
-	},
-) => ServiceResponse<{
-	etag?: string;
-}>;
+
 export type MediaStrategyDeleteSingle = (
 	key: string,
 ) => ServiceResponse<undefined>;
@@ -111,7 +102,6 @@ export type MediaStrategy = {
 	getMeta: MediaStrategyGetMeta;
 	stream: MediaStrategyStream;
 	uploadSingle: MediaStrategyUploadSingle;
-	updateSingle: MediaStrategyUpdateSingle;
 	deleteSingle: MediaStrategyDeleteSingle;
 	deleteMultiple: MediaStrategyDeleteMultiple;
 };

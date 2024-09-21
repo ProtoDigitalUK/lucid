@@ -28,7 +28,6 @@ type Route = <
 			contentLocale?: boolean;
 			clientAuthentication?: boolean;
 		};
-		isMultipart?: boolean;
 		zodSchema?: {
 			params?: ParamsT;
 			body?: BodyT;
@@ -57,6 +56,7 @@ type Route = <
 				required: string[];
 			};
 		};
+		bodyLimit?: number;
 		controller: RouteController<ParamsT, BodyT, QueryT>;
 	},
 ) => void;
@@ -78,7 +78,7 @@ const route: Route = (fastify, opts) => {
 	if (middleware?.contentLocale) preHandler.push(contentLocale);
 
 	if (zodSchema?.body !== undefined)
-		preValidation.push(validateBody(zodSchema.body, opts.isMultipart));
+		preValidation.push(validateBody(zodSchema.body));
 	if (zodSchema?.params !== undefined)
 		preValidation.push(validateParams(zodSchema.params));
 	if (zodSchema?.query !== undefined)
@@ -93,6 +93,7 @@ const route: Route = (fastify, opts) => {
 		preHandler: preHandler,
 		schema: swaggerSchema,
 		onResponse: [logRoute("onResponse")],
+		bodyLimit: opts.bodyLimit,
 	});
 };
 

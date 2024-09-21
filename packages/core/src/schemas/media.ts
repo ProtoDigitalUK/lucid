@@ -76,6 +76,8 @@ export default {
 	},
 	updateSingle: {
 		body: z.object({
+			key: z.string().optional(),
+			fileName: z.string().optional(),
 			title: z
 				.array(
 					z.object({

@@ -50,6 +50,7 @@ export default lucid.config({
 	},
 	// disableSwagger: true,
 	media: {
+		// maxSize: 200 * 1024 * 1024,
 		processed: {
 			store: true,
 		},

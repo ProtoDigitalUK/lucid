@@ -1,13 +1,13 @@
 import T from "../../translations/index.js";
 import Repository from "../../libs/repositories/index.js";
-import type { MultipartFile } from "@fastify/multipart";
 import type { ServiceFn } from "../../utils/services/types.js";
 
 const updateSingle: ServiceFn<
 	[
 		{
 			id: number;
-			fileData: MultipartFile | undefined;
+			key?: string;
+			fileName?: string;
 			title?: {
 				localeCode: string;
 				value: string | null;
@@ -20,10 +20,11 @@ const updateSingle: ServiceFn<
 	],
 	number | undefined
 > = async (context, data) => {
-	// if translations are present, insert on conflict update
-	// do translations first so if they throw an error, the file is not uploaded
-	// if the file upload throws an error, the translations are not inserted due to the transaction
 	const MediaRepo = Repository.get("media", context.db);
+	const MediaAwaitingSyncRepo = Repository.get(
+		"media-awaiting-sync",
+		context.db,
+	);
 
 	const media = await MediaRepo.selectSingle({
 		select: [
@@ -71,49 +72,88 @@ const updateSingle: ServiceFn<
 		});
 	if (upsertTranslationsRes.error) return upsertTranslationsRes;
 
-	// early return if no file data
-	if (data.fileData === undefined) {
+	// early return if no key
+	if (data.key !== undefined && data.fileName === undefined) {
+		return {
+			error: {
+				type: "basic",
+				status: 400,
+				errorResponse: {
+					body: {
+						file: {
+							code: "media_error",
+							message: T("media_error_missing_file_name"),
+						},
+					},
+				},
+			},
+			data: undefined,
+		};
+	}
+
+	if (data.key === undefined || data.fileName === undefined) {
 		return {
 			error: undefined,
 			data: undefined,
 		};
 	}
 
+	// check if media is awaiting sync
+	const awaitingSync = await context.services.media.checks.checkAwaitingSync(
+		context,
+		{
+			key: data.key,
+		},
+	);
+	if (awaitingSync.error) return awaitingSync;
+
 	const updateObjectRes = await context.services.media.strategies.update(
 		context,
 		{
 			id: media.id,
-			fileData: data.fileData,
 			previousSize: media.file_size,
-			key: media.key,
+			previousKey: media.key,
+			updatedKey: data.key,
+			fileName: data.fileName,
 		},
 	);
 	if (updateObjectRes.error) return updateObjectRes;
 
-	const mediaUpdateRes = await MediaRepo.updateSingle({
-		where: [
-			{
-				key: "id",
-				operator: "=",
-				value: data.id,
+	const [mediaUpdateRes] = await Promise.all([
+		MediaRepo.updateSingle({
+			where: [
+				{
+					key: "id",
+					operator: "=",
+					value: data.id,
+				},
+			],
+			data: {
+				key: updateObjectRes.data.key,
+				eTag: updateObjectRes.data.etag,
+				type: updateObjectRes.data.type,
+				mimeType: updateObjectRes.data.mimeType,
+				extension: updateObjectRes.data.extension,
+				fileSize: updateObjectRes.data.size,
+				width: updateObjectRes.data.width,
+				height: updateObjectRes.data.height,
+				updatedAt: new Date().toISOString(),
+				blurHash: updateObjectRes.data.blurHash,
+				averageColour: updateObjectRes.data.averageColour,
+				isDark: updateObjectRes.data.isDark,
+				isLight: updateObjectRes.data.isLight,
 			},
-		],
-		data: {
-			key: updateObjectRes.data.key,
-			eTag: updateObjectRes.data.etag,
-			type: updateObjectRes.data.type,
-			mimeType: updateObjectRes.data.mimeType,
-			extension: updateObjectRes.data.extension,
-			fileSize: updateObjectRes.data.size,
-			width: updateObjectRes.data.width,
-			height: updateObjectRes.data.height,
-			updatedAt: new Date().toISOString(),
-			blurHash: updateObjectRes.data.blurHash,
-			averageColour: updateObjectRes.data.averageColour,
-			isDark: updateObjectRes.data.isDark,
-			isLight: updateObjectRes.data.isLight,
-		},
-	});
+		}),
+		MediaAwaitingSyncRepo.deleteSingle({
+			where: [
+				{
+					key: "key",
+					operator: "=",
+					value: data.key,
+				},
+			],
+		}),
+	]);
 	if (mediaUpdateRes === undefined) {
 		return {
 			error: {

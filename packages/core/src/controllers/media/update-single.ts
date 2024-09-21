@@ -28,7 +28,8 @@ const updateSingleController: RouteController<
 		},
 		{
 			id: Number.parseInt(request.params.id),
-			fileData: await request.file(),
+			fileName: request.body.fileName,
+			key: request.body.key,
 			title: request.body.title,
 			alt: request.body.alt,
 		},
@@ -52,24 +53,50 @@ export default {
 				noPropertise: true,
 			}),
 		},
-		consumes: ["multipart/form-data"],
 		body: {
 			type: "object",
 			properties: {
-				file: {
+				key: {
 					type: "string",
-					format: "binary",
+					nullable: true,
 				},
-			},
-		},
-		querystring: {
-			type: "object",
-			required: ["body"],
-			properties: {
-				body: {
+				fileName: {
 					type: "string",
-					description:
-						'Stringified JSON data containing tileTranslations and alt for the media.<br><br>Example: <code>{"title":[{"localeCode":"en","value":"title value"}],"alt":[{"localeCode":"en","value":"alt value"}]}</code>.<br><br>Translations dont have to be passed.',
+					nullable: true,
+				},
+				title: {
+					type: "array",
+					items: {
+						type: "object",
+						properties: {
+							localeCode: {
+								type: "string",
+								nullable: true,
+							},
+							value: {
+								type: "string",
+								nullable: true,
+							},
+						},
+					},
+					nullable: true,
+				},
+				alt: {
+					type: "array",
+					items: {
+						type: "object",
+						properties: {
+							localeCode: {
+								type: "string",
+								nullable: true,
+							},
+							value: {
+								type: "string",
+								nullable: true,
+							},
+						},
+					},
+					nullable: true,
 				},
 			},
 		},

@@ -2,20 +2,16 @@ import T from "../../translations/index.js";
 import mime from "mime-types";
 import sharp from "sharp";
 import slug from "slug";
-import fs from "fs-extra";
-import { join } from "node:path";
-import { pipeline } from "node:stream/promises";
+import type fs from "fs-extra";
 import { encode } from "blurhash";
-import constants from "../../constants/constants.js";
 import { getAverageColor } from "fast-average-color-node";
 import { getMonth, getYear } from "date-fns";
+import type { Readable } from "node:stream";
 import type { Config, MediaType } from "../../exports/types.js";
 import type { ServiceResponse } from "../../utils/services/types.js";
-import type { MultipartFile } from "@fastify/multipart";
 import type { BooleanInt } from "../db/types.js";
 
 export interface MediaKitMeta {
-	tempPath: string | null;
 	mimeType: string;
 	name: string;
 	type: MediaType;
@@ -35,13 +31,13 @@ export interface MediaKitMeta {
 class MediaKit {
 	config: Config["media"];
 
-	tempPath: string | null = null;
 	name: string | null = null;
 	type: MediaType = "unknown";
 	mimeType: string | null = null;
 	extension: string | null = null;
 	size: number | null = null;
 	key: string | null = null;
+	etag: string | null = null;
 	// image meta
 	blurHash: string | null = null;
 	width: number | null = null;
@@ -54,43 +50,57 @@ class MediaKit {
 		this.config = config;
 	}
 
-	public async injectFile(
-		file: MultipartFile,
-	): ServiceResponse<MediaKitMeta> {
-		this.mimeType = file.mimetype;
-		this.name = file.filename;
+	public async injectFile(props: {
+		streamFile: () => ServiceResponse<{
+			contentLength: number | undefined;
+			contentType: string | undefined;
+			body: Readable;
+		}>;
+		key: string;
+		mimeType: string | null;
+		fileName: string;
+		size: number;
+		etag: string | null;
+	}): ServiceResponse<MediaKitMeta> {
+		this.mimeType = props.mimeType;
+		this.name = props.fileName;
 		this.type = this.getMediaType(this.mimeType);
 		this.extension =
-			mime.extension(this.mimeType) ||
-			file.filename.split(".").pop() ||
+			mime.extension(this.mimeType ?? "") ||
+			props.fileName.split(".").pop() ||
 			"";
+		this.key = props.key;
+		this.size = props.size;
+		this.etag = props.etag;
 
-		const mediaKey = MediaKit.generateKey({
-			name: this.name,
-			extension: this.extension,
-		});
-		if (mediaKey.error) return mediaKey;
-		this.key = mediaKey.data;
+		if (this.mimeType === undefined || this.mimeType === null) {
+			this.mimeType = mime.lookup(this.extension) || null;
+		}
+		if (this.mimeType === undefined || this.mimeType === null) {
+			return {
+				error: {
+					type: "basic",
+					name: T("media_error_getting_metadata"),
+					message: T("media_error_getting_metadata"),
+					status: 500,
+				},
+				data: undefined,
+			};
+		}
 
-		const saveTempRes = await this.saveStreamToTempFile(file);
-		if (saveTempRes.error) return saveTempRes;
-		this.tempPath = saveTempRes.data.path;
-		this.size = saveTempRes.data.size;
-
-		const metaRes = await this.typeSpecificMeta(this.tempPath);
+		const metaRes = await this.typeSpecificMeta(props.streamFile);
 		if (metaRes.error) return metaRes;
 
 		return {
 			error: undefined,
 			data: {
-				tempPath: this.tempPath,
 				mimeType: this.mimeType,
 				name: this.name,
 				type: this.type,
 				extension: this.extension,
 				size: this.size,
 				key: this.key,
-				etag: null,
+				etag: this.etag,
 				width: this.width,
 				height: this.height,
 				blurHash: this.blurHash,
@@ -98,22 +108,6 @@ class MediaKit {
 				isDark: this.isDark === null ? null : this.isDark ? 1 : 0,
 				isLight: this.isLight === null ? null : this.isLight ? 1 : 0,
 			},
-		};
-	}
-	public async done(): ServiceResponse<undefined> {
-		if (!this.tempPath) {
-			return {
-				error: undefined,
-				data: undefined,
-			};
-		}
-
-		await fs.remove(this.tempPath);
-		this.tempPath = null;
-
-		return {
-			error: undefined,
-			data: undefined,
 		};
 	}
 
@@ -163,52 +157,24 @@ class MediaKit {
 			data: `${getYear(date)}/${monthF}/${uuid}-${filename}.${ext}`,
 		};
 	}
-	public streamTempFile() {
-		if (!this.tempPath) return undefined;
-		return fs.createReadStream(this.tempPath);
-	}
 
 	// ----------------------------------------
 	// Private
-	private async saveStreamToTempFile(file: MultipartFile): ServiceResponse<{
-		path: string;
-		size: number;
-	}> {
-		try {
-			const tempFilePath = join(constants.tempDir, file.filename);
-			await fs.ensureDir(constants.tempDir);
-			await pipeline(file.file, fs.createWriteStream(tempFilePath));
-			return {
-				error: undefined,
-				data: {
-					path: tempFilePath,
-					size: fs.statSync(tempFilePath).size,
-				},
-			};
-		} catch (error) {
-			return {
-				error: {
-					type: "basic",
-					name: T("media_error_getting_metadata"),
-					message:
-						// @ts-expect-error
-						error?.message || T("media_error_getting_metadata"),
-					status: 500,
-				},
-				data: undefined,
-			};
-		}
-	}
 	private async typeSpecificMeta(
-		tempPath: string,
+		streamFile: () => ServiceResponse<{
+			contentLength: number | undefined;
+			contentType: string | undefined;
+			body: Readable;
+		}>,
 	): ServiceResponse<undefined> {
 		try {
-			const file = this.streamTempFile();
-
 			switch (this.type) {
 				case "image": {
+					const fileStreamRes = await streamFile();
+					if (fileStreamRes.error) return fileStreamRes;
+
 					const transform = sharp();
-					file?.pipe(transform);
+					fileStreamRes.data.body?.pipe(transform);
 					const meta = await transform.metadata();
 
 					this.width = meta.width || null;

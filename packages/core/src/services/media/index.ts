@@ -1,7 +1,6 @@
 import checks from "./checks/index.js";
 import strategies from "./strategies/index.js";
 
-import uploadSingle from "./upload-single.js";
 import getSingle from "./get-single.js";
 import deleteSingle from "./delete-single.js";
 import getMultiple from "./get-multiple.js";
@@ -13,7 +12,6 @@ export default {
 	checks,
 	strategies,
 
-	uploadSingle,
 	getSingle,
 	deleteSingle,
 	getMultiple,

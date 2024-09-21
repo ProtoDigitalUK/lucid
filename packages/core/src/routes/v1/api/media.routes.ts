@@ -28,16 +28,28 @@ const mediaRoutes = async (fastify: FastifyInstance) => {
 
 	r(fastify, {
 		method: "post",
+		url: "/presigned-url",
+		permissions: ["create_media", "update_media"],
+		middleware: {
+			authenticate: true,
+			validateCSRF: true,
+		},
+		swaggerSchema: media.getPresignedUrl.swaggerSchema,
+		zodSchema: media.getPresignedUrl.zodSchema,
+		controller: media.getPresignedUrl.controller,
+	});
+
+	r(fastify, {
+		method: "post",
 		url: "",
 		permissions: ["create_media"],
 		middleware: {
 			authenticate: true,
 			validateCSRF: true,
 		},
-		isMultipart: true,
-		swaggerSchema: media.uploadSingle.swaggerSchema,
-		zodSchema: media.uploadSingle.zodSchema,
-		controller: media.uploadSingle.controller,
+		swaggerSchema: media.createSingle.swaggerSchema,
+		zodSchema: media.createSingle.zodSchema,
+		controller: media.createSingle.controller,
 	});
 
 	r(fastify, {
@@ -48,7 +60,6 @@ const mediaRoutes = async (fastify: FastifyInstance) => {
 			authenticate: true,
 			validateCSRF: true,
 		},
-		isMultipart: true,
 		swaggerSchema: media.updateSingle.swaggerSchema,
 		zodSchema: media.updateSingle.zodSchema,
 		controller: media.updateSingle.controller,

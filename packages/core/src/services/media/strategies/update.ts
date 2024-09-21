@@ -1,85 +1,61 @@
-import T from "../../../translations/index.js";
-import MediaKit from "../../../libs/media-kit/index.js";
-import type { MultipartFile } from "@fastify/multipart";
+import MediaKit, { type MediaKitMeta } from "../../../libs/media-kit/index.js";
 import type { ServiceFn } from "../../../utils/services/types.js";
-import type { MediaKitMeta } from "../../../libs/media-kit/index.js";
 
 const update: ServiceFn<
 	[
 		{
 			id: number;
-			fileData: MultipartFile | undefined;
+			fileName: string;
 			previousSize: number;
-			key: string;
+			previousKey: string;
+			updatedKey: string;
 		},
 	],
 	MediaKitMeta
 > = async (context, data) => {
-	if (data.fileData === undefined) {
-		return {
-			error: {
-				type: "basic",
-				status: 400,
-				errorResponse: {
-					body: {
-						file: {
-							code: "required",
-							message: T("ensure_file_has_been_uploaded"),
-						},
-					},
-				},
-			},
-			data: undefined,
-		};
-	}
-
 	const mediaStrategyRes =
 		context.services.media.checks.checkHasMediaStrategy(context);
 	if (mediaStrategyRes.error) return mediaStrategyRes;
 
-	const media = new MediaKit(context.config.media);
-
-	// sotre and get meta data
-	const injectRes = await media.injectFile(data.fileData);
-	if (injectRes.error) return injectRes;
+	// Fetch meta data from new file
+	const mediaMetaRes = await mediaStrategyRes.data.getMeta(data.updatedKey);
+	if (mediaMetaRes.error) return mediaMetaRes;
 
 	// Ensure we available storage space
 	const proposedSizeRes =
 		await context.services.media.checks.checkCanUpdateMedia(context, {
-			size: injectRes.data.size,
+			size: mediaMetaRes.data.size,
 			previousSize: data.previousSize,
 		});
 	if (proposedSizeRes.error) return proposedSizeRes;
 
-	// Save file to storage
-	const mediaStream = media.streamTempFile();
-	if (!mediaStream) {
-		return {
-			error: {
-				type: "basic",
-				message: T("media_error_getting_metadata"),
-				status: 500,
-			},
-			data: undefined,
-		};
-	}
+	const mediaKit = new MediaKit(context.config.media);
 
-	const updateObjectRes = await mediaStrategyRes.data.updateSingle(data.key, {
-		key: injectRes.data.key,
-		data: mediaStream,
-		meta: injectRes.data,
+	const injectMediaRes = await mediaKit.injectFile({
+		streamFile: () => mediaStrategyRes.data.stream(data.updatedKey),
+		key: data.updatedKey,
+		mimeType: mediaMetaRes.data.mimeType,
+		fileName: data.fileName,
+		size: mediaMetaRes.data.size,
+		etag: mediaMetaRes.data.etag,
 	});
-	if (updateObjectRes.error) {
+	if (injectMediaRes.error) return injectMediaRes;
+
+	// Delete old file
+	const deleteOldRes = await mediaStrategyRes.data.deleteSingle(
+		data.previousKey,
+	);
+	if (deleteOldRes.error) {
 		return {
 			error: {
 				type: "basic",
-				message: updateObjectRes.error.message,
+				message: deleteOldRes.error.message,
 				status: 500,
 				errorResponse: {
 					body: {
 						file: {
 							code: "media_error",
-							message: updateObjectRes.error.message,
+							message: deleteOldRes.error.message,
 						},
 					},
 				},
@@ -87,8 +63,6 @@ const update: ServiceFn<
 			data: undefined,
 		};
 	}
-	if (updateObjectRes.data?.etag)
-		injectRes.data.etag = updateObjectRes.data.etag;
 
 	// update storage, processed images and delete temp
 	const [storageRes, clearProcessRes] = await Promise.all([
@@ -99,14 +73,13 @@ const update: ServiceFn<
 		context.services.processedImage.clearSingle(context, {
 			id: data.id,
 		}),
-		media.done(),
 	]);
 	if (storageRes.error) return storageRes;
 	if (clearProcessRes.error) return clearProcessRes;
 
 	return {
 		error: undefined,
-		data: injectRes.data,
+		data: injectMediaRes.data,
 	};
 };
 

@@ -1,6 +1,6 @@
-import MediaKit from "../../../libs/media-kit/new.js";
+import MediaKit from "../../../libs/media-kit/index.js";
 import type { ServiceFn } from "../../../utils/services/types.js";
-import type { MediaKitMeta } from "../../../libs/media-kit/new.js";
+import type { MediaKitMeta } from "../../../libs/media-kit/index.js";
 
 const syncMedia: ServiceFn<
 	[
@@ -33,7 +33,7 @@ const syncMedia: ServiceFn<
 		streamFile: () => mediaStrategyRes.data.stream(data.key),
 		key: data.key,
 		mimeType: mediaMetaRes.data.mimeType,
-		fileNmae: data.fileName,
+		fileName: data.fileName,
 		size: mediaMetaRes.data.size,
 		etag: mediaMetaRes.data.etag,
 	});

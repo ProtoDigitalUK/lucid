@@ -1,4 +1,3 @@
-import uploadSingle from "./upload-single.js";
 import getSingle from "./get-single.js";
 import updateSingle from "./update-single.js";
 import deleteSingle from "./delete-single.js";
@@ -9,7 +8,6 @@ import getPresignedUrl from "./get-presigned-url.js";
 import createSingle from "./create-single.js";
 
 export default {
-	uploadSingle,
 	updateSingle,
 	getSingle,
 	deleteSingle,
