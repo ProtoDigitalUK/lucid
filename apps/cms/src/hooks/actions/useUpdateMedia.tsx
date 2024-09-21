@@ -9,6 +9,7 @@ export const useUpdateMedia = (id: Accessor<number | undefined>) => {
 	const [getKey, setKey] = createSignal<string>();
 	const [getPresignedUrlValue, setPresignedUrlValue] = createSignal<string>();
 	const [getUploadErrors, setUploadErrors] = createSignal<ErrorResponse>();
+	const [getUploadLoading, setUploadLoading] = createSignal<boolean>(false);
 
 	// -------------------------
 	// Mutations
@@ -29,6 +30,7 @@ export const useUpdateMedia = (id: Accessor<number | undefined>) => {
 	};
 	const uploadFile = async (file: File) => {
 		try {
+			setUploadLoading(true);
 			const key = getKey();
 			const presignedUrl = getPresignedUrlValue();
 
@@ -40,11 +42,12 @@ export const useUpdateMedia = (id: Accessor<number | undefined>) => {
 				});
 				return null;
 			}
-
 			const response = await fetch(presignedUrl, {
 				method: "PUT",
 				body: file,
-				headers: { "Content-Type": file.type },
+				headers: {
+					"Content-Type": file.type,
+				},
 			});
 
 			let bodyMessage = "";
@@ -84,6 +87,8 @@ export const useUpdateMedia = (id: Accessor<number | undefined>) => {
 						: T()("media_upload_error_description"),
 			});
 			return null;
+		} finally {
+			setUploadLoading(false);
 		}
 	};
 	const updateMedia = async (file: File | null): Promise<boolean> => {
@@ -114,7 +119,9 @@ export const useUpdateMedia = (id: Accessor<number | undefined>) => {
 	// Memos
 	const isLoading = createMemo(() => {
 		return (
-			updateSingle.action.isPending || getPresignedUrl.action.isPending
+			updateSingle.action.isPending ||
+			getPresignedUrl.action.isPending ||
+			getUploadLoading()
 		);
 	});
 	const errors = createMemo(() => {

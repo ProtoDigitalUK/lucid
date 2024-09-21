@@ -8,8 +8,8 @@ export const useCreateMedia = () => {
 	const [getAlt, setAlt] = createSignal<MediaResponse["alt"]>([]);
 	const [getKey, setKey] = createSignal<string>();
 	const [getPresignedUrlValue, setPresignedUrlValue] = createSignal<string>();
-
 	const [getUploadErrors, setUploadErrors] = createSignal<ErrorResponse>();
+	const [getUploadLoading, setUploadLoading] = createSignal<boolean>(false);
 
 	// -------------------------
 	// Mutations
@@ -30,6 +30,7 @@ export const useCreateMedia = () => {
 	};
 	const uploadFile = async (file: File) => {
 		try {
+			setUploadLoading(true);
 			const key = getKey();
 			const presignedUrl = getPresignedUrlValue();
 
@@ -86,6 +87,8 @@ export const useCreateMedia = () => {
 						: T()("media_upload_error_description"),
 			});
 			return null;
+		} finally {
+			setUploadLoading(false);
 		}
 	};
 	const createMedia = async (file: File | null): Promise<boolean> => {
@@ -112,7 +115,9 @@ export const useCreateMedia = () => {
 	// Memos
 	const isLoading = createMemo(() => {
 		return (
-			createSingle.action.isPending || getPresignedUrl.action.isPending
+			createSingle.action.isPending ||
+			getPresignedUrl.action.isPending ||
+			getUploadLoading()
 		);
 	});
 	const errors = createMemo(() => {
