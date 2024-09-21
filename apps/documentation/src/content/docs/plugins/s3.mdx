@@ -54,3 +54,27 @@ export default lucid.config({
   ],
 });
 ```
+
+## Bucket Configuration
+
+As Lucid uses presigned URLs to upload media from the client, you will need to configure your S3 bucket's CORS policy. This will need to allow `PUT` requests, along with the `Content-Type` and `Origin` headers.
+
+### Example Cloudflare R2 CORS Policy
+
+```json
+[
+  {
+    "AllowedOrigins": [
+      "http://localhost:3000"
+    ],
+    "AllowedMethods": [
+      "GET",
+      "PUT"
+    ],
+    "AllowedHeaders": [
+      "Origin",
+      "Content-Type"
+    ]
+  }
+]
+```

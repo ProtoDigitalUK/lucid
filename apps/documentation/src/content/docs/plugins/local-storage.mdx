@@ -42,6 +42,8 @@ export default lucid.config({
   plugins: [
     LucidLocalStorage({
       uploadDir: "./uploads",
+      secretKey: 'MY_SECRET_KEY',
+      supportedMimeTypes: ['image/jpeg', 'image/png'], // optional, default array supports a wide range of common mime types.
     }),
   ],
 });
