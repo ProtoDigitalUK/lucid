@@ -45,7 +45,6 @@ export const useUpdateMedia = (id: Accessor<number | undefined>) => {
 				method: "PUT",
 				body: file,
 				headers: { "Content-Type": file.type },
-				credentials: "include",
 			});
 
 			let bodyMessage = "";
@@ -79,7 +78,10 @@ export const useUpdateMedia = (id: Accessor<number | undefined>) => {
 			setUploadErrors({
 				status: 500,
 				name: T()("media_upload_error"),
-				message: T()("media_upload_error_description"),
+				message:
+					error instanceof Error
+						? error.message
+						: T()("media_upload_error_description"),
 			});
 			return null;
 		}

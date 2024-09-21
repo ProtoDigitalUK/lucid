@@ -41,12 +41,12 @@ export const useCreateMedia = () => {
 				});
 				return null;
 			}
-
 			const response = await fetch(presignedUrl, {
 				method: "PUT",
 				body: file,
-				headers: { "Content-Type": file.type },
-				credentials: "include",
+				headers: {
+					"Content-Type": file.type,
+				},
 			});
 
 			let bodyMessage = "";
@@ -80,7 +80,10 @@ export const useCreateMedia = () => {
 			setUploadErrors({
 				status: 500,
 				name: T()("media_upload_error"),
-				message: T()("media_upload_error_description"),
+				message:
+					error instanceof Error
+						? error.message
+						: T()("media_upload_error_description"),
 			});
 			return null;
 		}
