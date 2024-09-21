@@ -1238,11 +1238,11 @@
 								"body": {
 									"mode": "file",
 									"file": {
-										"src": "/Users/williamyallop/Documents/projects/protodigital/products/lucid/banner.png"
+										"src": "/Users/williamyallop/Downloads/2024_09_1vgv3l-27-05-24-final-bb-video.qt"
 									}
 								},
 								"url": {
-									"raw": "https://headless-cms.b321862a451976d9f183559235d9cec1.r2.cloudflarestorage.com/2024/09/juy29c-test-image.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=ba2ab73b293ea91e6db7b2fe508e8c2a%2F20240919%2Fauto%2Fs3%2Faws4_request&X-Amz-Date=20240919T212150Z&X-Amz-Expires=3600&X-Amz-Signature=e172f32f9ff149deac5a927d4e0a5d4e6ebec4c07730f96bf8b5c32df77d0d1f&X-Amz-SignedHeaders=host&x-amz-meta-extension=png&x-id=PutObject",
+									"raw": "https://headless-cms.b321862a451976d9f183559235d9cec1.r2.cloudflarestorage.com/2024/09/ypvyba-27-05-24-final-bb-video.qt?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=ba2ab73b293ea91e6db7b2fe508e8c2a%2F20240921%2Fauto%2Fs3%2Faws4_request&X-Amz-Date=20240921T130814Z&X-Amz-Expires=3600&X-Amz-Signature=608bb26d27388f2d0db42196d742b259577b9c87aecc4b699d55a7bb99f6699a&X-Amz-SignedHeaders=host&x-amz-meta-extension=qt&x-id=PutObject",
 									"protocol": "https",
 									"host": [
 										"headless-cms",
@@ -1254,7 +1254,7 @@
 									"path": [
 										"2024",
 										"09",
-										"juy29c-test-image.png"
+										"ypvyba-27-05-24-final-bb-video.qt"
 									],
 									"query": [
 										{
@@ -1267,11 +1267,11 @@
 										},
 										{
 											"key": "X-Amz-Credential",
-											"value": "ba2ab73b293ea91e6db7b2fe508e8c2a%2F20240919%2Fauto%2Fs3%2Faws4_request"
+											"value": "ba2ab73b293ea91e6db7b2fe508e8c2a%2F20240921%2Fauto%2Fs3%2Faws4_request"
 										},
 										{
 											"key": "X-Amz-Date",
-											"value": "20240919T212150Z"
+											"value": "20240921T130814Z"
 										},
 										{
 											"key": "X-Amz-Expires",
@@ -1279,7 +1279,7 @@
 										},
 										{
 											"key": "X-Amz-Signature",
-											"value": "e172f32f9ff149deac5a927d4e0a5d4e6ebec4c07730f96bf8b5c32df77d0d1f"
+											"value": "608bb26d27388f2d0db42196d742b259577b9c87aecc4b699d55a7bb99f6699a"
 										},
 										{
 											"key": "X-Amz-SignedHeaders",
@@ -1287,7 +1287,7 @@
 										},
 										{
 											"key": "x-amz-meta-extension",
-											"value": "png"
+											"value": "qt"
 										},
 										{
 											"key": "x-id",
@@ -1301,15 +1301,49 @@
 						{
 							"name": "LS Presigned URL",
 							"request": {
-								"method": "GET",
-								"header": []
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "file",
+									"file": {
+										"src": "/Users/williamyallop/Documents/protodigital/lucid/videos/27-05-24-final-bb-video.mov"
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/api/v1/localstorage/upload?key=2024/09/rxmhsg-27-05-24-final-bb-video.qt&token=a64825f15c2acd40f8865933a26b7334d2c3dec3aba483cfab17396da0be8abe&timestamp=1726922680267",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"api",
+										"v1",
+										"localstorage",
+										"upload"
+									],
+									"query": [
+										{
+											"key": "key",
+											"value": "2024/09/rxmhsg-27-05-24-final-bb-video.qt"
+										},
+										{
+											"key": "token",
+											"value": "a64825f15c2acd40f8865933a26b7334d2c3dec3aba483cfab17396da0be8abe"
+										},
+										{
+											"key": "timestamp",
+											"value": "1726922680267"
+										}
+									]
+								}
 							},
 							"response": []
 						}
 					]
 				},
 				{
-					"name": "Upload Single",
+					"name": "Get Presigned URL",
 					"request": {
 						"method": "POST",
 						"header": [
@@ -1319,17 +1353,50 @@
 							}
 						],
 						"body": {
-							"mode": "formdata",
-							"formdata": [
-								{
-									"key": "file",
-									"type": "file",
-									"src": "/Users/williamyallop/Documents/projects/protodigital/products/lucid/banner.jpg"
+							"mode": "raw",
+							"raw": "{\n\t\"fileName\": \"27-05-24-final-bb-video.mov\",\n\t\"mimeType\": \"video/quicktime\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
 								}
-							]
+							}
 						},
 						"url": {
-							"raw": "{{BASE_URL}}/api/v1/media?body={\"title\":[{\"localeCode\":\"en\",\"value\":\"title value\"}],\"alt\":[{\"localeCode\":\"en\",\"value\":\"alt value\"}]}",
+							"raw": "{{BASE_URL}}/api/v1/media/presigned-url",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"media",
+								"presigned-url"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Single",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "_csrf",
+								"value": "{{CSRF}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"key\": \"2024/09/ypvyba-27-05-24-final-bb-video.qt\",\n\t\"fileName\": \"27-05-24-final-bb-video.mov\",\n\t\"title\": [\n\t\t{ \n\t\t\t\"localeCode\": \"en\",\n\t\t\t\"value\": \"title value\"\n\t\t}\n\t],\n\t\"alt\": [\n\t\t{\n\t\t\t\"localeCode\": \"en\",\n\t\t\t\"value\": \"alt value\"\n\t\t}\n\t]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/media",
 							"host": [
 								"{{BASE_URL}}"
 							],
@@ -1337,12 +1404,6 @@
 								"api",
 								"v1",
 								"media"
-							],
-							"query": [
-								{
-									"key": "body",
-									"value": "{\"title\":[{\"localeCode\":\"en\",\"value\":\"title value\"}],\"alt\":[{\"localeCode\":\"en\",\"value\":\"alt value\"}]}"
-								}
 							]
 						}
 					},
@@ -1359,23 +1420,16 @@
 							}
 						],
 						"body": {
-							"mode": "formdata",
-							"formdata": [
-								{
-									"key": "file",
-									"type": "file",
-									"src": "/Users/williamyallop/Pictures/HLH.png"
-								},
-								{
-									"key": "empty",
-									"value": "",
-									"type": "text",
-									"disabled": true
+							"mode": "raw",
+							"raw": "{\n\t\"key\": \"2024/09/xa13qp-test-png.png\",\n\t\"fileName\": \"banner.png\",\n\t\"title\": [\n\t\t{ \n\t\t\t\"localeCode\": \"en\",\n\t\t\t\"value\": \"updated title value\"\n\t\t}\n\t],\n\t\"alt\": [\n\t\t{\n\t\t\t\"localeCode\": \"en\",\n\t\t\t\"value\": \"updated alt value\"\n\t\t}\n\t]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
 								}
-							]
+							}
 						},
 						"url": {
-							"raw": "{{BASE_URL}}/api/v1/media/2?body={}",
+							"raw": "{{BASE_URL}}/api/v1/media/2",
 							"host": [
 								"{{BASE_URL}}"
 							],
@@ -1384,17 +1438,6 @@
 								"v1",
 								"media",
 								"2"
-							],
-							"query": [
-								{
-									"key": "body",
-									"value": "{\"title\":[{\"localeCode\":1,\"value\":\"title\"}],\"alt\":[{\"localeCode\":1,\"value\":\"alt\"}]}",
-									"disabled": true
-								},
-								{
-									"key": "body",
-									"value": "{}"
-								}
 							]
 						}
 					},
@@ -1453,7 +1496,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{BASE_URL}}/api/v1/media/1",
+							"raw": "{{BASE_URL}}/api/v1/media/4",
 							"host": [
 								"{{BASE_URL}}"
 							],
@@ -1461,7 +1504,7 @@
 								"api",
 								"v1",
 								"media",
-								"1"
+								"4"
 							]
 						}
 					},
@@ -1606,40 +1649,6 @@
 								"v1",
 								"media",
 								"processed"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Get Presigned URL",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "_csrf",
-								"value": "{{CSRF}}"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n\t\"fileName\": \"test-image.png\",\n\t\"mimeType\": \"image/png\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{BASE_URL}}/api/EXPERIMENTAL/media/presigned-url",
-							"host": [
-								"{{BASE_URL}}"
-							],
-							"path": [
-								"api",
-								"EXPERIMENTAL",
-								"media",
-								"presigned-url"
 							]
 						}
 					},
