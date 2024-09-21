@@ -28,6 +28,15 @@ const useSingleFileUpload = (data: UseSingleFileUploadProps) => {
 	>(data.currentFile);
 
 	// ----------------------------------------
+	// Functions
+	const getMimeType = (): string | undefined => {
+		return getFile()?.type;
+	};
+	const getFileName = (): string | undefined => {
+		return getFile()?.name;
+	};
+
+	// ----------------------------------------
 	// Render
 	return {
 		getFile,
@@ -36,6 +45,8 @@ const useSingleFileUpload = (data: UseSingleFileUploadProps) => {
 		setGetRemovedCurrent,
 		getCurrentFile,
 		setCurrentFile,
+		getMimeType,
+		getFileName,
 		reset: () => {
 			setGetFile(null);
 			setGetRemovedCurrent(false);

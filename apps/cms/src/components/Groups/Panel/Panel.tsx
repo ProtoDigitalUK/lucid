@@ -149,9 +149,9 @@ export const Panel: Component<PanelProps> = (props) => {
 							class="bg-container-2 border-b border-border p-15 md:p-30"
 						>
 							<div class="w-full mb-2.5">
-								<Dialog.CloseButton class="flex items-center text-sm text-title">
+								<Dialog.CloseButton class="flex items-center text-sm text-title focus:ring-1 ring-inset ring-primary-base focus:outline-none">
 									<FaSolidArrowLeft class="text-title mr-2" />
-									back
+									{T()("back")}
 								</Dialog.CloseButton>
 							</div>
 							<Switch>

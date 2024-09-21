@@ -1,16 +1,15 @@
 import T from "@/translations";
 import {
 	type Component,
+	type Accessor,
 	createMemo,
-	createSignal,
 	Show,
 	For,
 	createEffect,
-	type Accessor,
 } from "solid-js";
 import api from "@/services/api";
 import useSingleFileUpload from "@/hooks/useSingleFileUpload";
-import type { MediaResponse } from "@lucidcms/core/types";
+import { useCreateMedia, useUpdateMedia } from "@/hooks/actions";
 import helpers from "@/utils/helpers";
 import dateHelpers from "@/utils/date-helpers";
 import { getBodyError, getErrorObject } from "@/utils/error-helpers";
@@ -31,8 +30,22 @@ interface CreateUpdateMediaPanelProps {
 const CreateUpdateMediaPanel: Component<CreateUpdateMediaPanelProps> = (
 	props,
 ) => {
+	// ------------------------------
+	// State
 	const panelMode = createMemo(() => {
 		return props.id === undefined ? "create" : "update";
+	});
+	const createMedia = useCreateMedia();
+	const updateMedia = props.id ? useUpdateMedia(props.id) : null;
+
+	const MediaFile = useSingleFileUpload({
+		id: "file",
+		disableRemoveCurrent: true,
+		name: "file",
+		required: true,
+		errors:
+			panelMode() === "create" ? createMedia.errors : updateMedia?.errors,
+		noMargin: false,
 	});
 
 	// ---------------------------------
@@ -46,95 +59,67 @@ const CreateUpdateMediaPanel: Component<CreateUpdateMediaPanelProps> = (
 		enabled: () => panelMode() === "update" && props.state.open,
 	});
 
-	// ------------------------------
-	// State
-	const [getTitle, setTitle] = createSignal<MediaResponse["title"]>([]);
-	const [getAlt, setAlt] = createSignal<MediaResponse["alt"]>([]);
-
-	// ---------------------------------
-	// Mutations
-	const createSingle = api.media.useCreateSingle({
-		onSuccess: () => {
-			props.state.setOpen(false);
-		},
-	});
-	const updateSingle = api.media.useUpdateSingle({
-		onSuccess: () => {
-			props.state.setOpen(false);
-		},
-	});
-
-	const MediaFile = useSingleFileUpload({
-		id: "file",
-		disableRemoveCurrent: true,
-		name: "file",
-		required: true,
-		errors:
-			panelMode() === "create"
-				? createSingle.errors
-				: updateSingle.errors,
-		noMargin: false,
-	});
-
 	// ---------------------------------
 	// Memos
+	const locales = createMemo(() => contentLocaleStore.get.locales);
+
 	const showAltInput = createMemo(() => {
 		if (MediaFile.getFile() !== null) {
-			const type = helpers.getMediaType(MediaFile.getFile()?.type);
+			const type = helpers.getMediaType(MediaFile.getMimeType());
 			return type === "image";
 		}
 		return panelMode() === "create"
 			? false
 			: media.data?.data.type === "image";
 	});
-	const locales = createMemo(() => contentLocaleStore.get.locales);
+
 	const mutateIsLoading = createMemo(() => {
-		return updateSingle.action.isPending || createSingle.action.isPending;
+		return panelMode() === "create"
+			? createMedia.isLoading()
+			: updateMedia?.isLoading() || false;
 	});
 	const mutateErrors = createMemo(() => {
-		return updateSingle.errors() || createSingle.errors();
+		return panelMode() === "create"
+			? createMedia.errors()
+			: updateMedia?.errors();
 	});
+
 	const hasTranslationErrors = createMemo(() => {
-		const titleErrors = getBodyError(
-			"title",
-			updateSingle.errors,
-		)?.children;
-		const altErrors = getBodyError("alt", updateSingle.errors)?.children;
-		if (titleErrors) return titleErrors.length > 0;
-		if (altErrors) return altErrors.length > 0;
-		return false;
+		const titleErrors = getBodyError("title", mutateErrors)?.children;
+		const altErrors = getBodyError("alt", mutateErrors)?.children;
+		return (
+			(titleErrors && titleErrors.length > 0) ||
+			(altErrors && altErrors.length > 0)
+		);
+	});
+
+	const targetAction = createMemo(() => {
+		return panelMode() === "create" ? createMedia : updateMedia;
+	});
+	const targetState = createMemo(() => {
+		return targetAction()?.state;
 	});
 	const updateData = createMemo(() => {
+		const state = targetState();
 		const { changed, data } = helpers.updateData(
 			{
+				key: undefined,
 				title: media.data?.data.title || [],
 				alt: media.data?.data.alt || [],
 			},
 			{
-				title: getTitle(),
-				alt: getAlt(),
+				key: state?.key(),
+				title: state?.title(),
+				alt: state?.alt(),
 			},
 		);
 
-		let resData: {
-			title?: MediaResponse["title"];
-			alt?: MediaResponse["alt"];
-			file?: File;
-		} = data;
 		let resChanged = changed;
-
-		if (MediaFile.getFile()) {
-			resChanged = true;
-
-			resData = {
-				...data,
-				file: MediaFile.getFile() || undefined,
-			};
-		}
+		if (MediaFile.getFile()) resChanged = true;
 
 		return {
 			changed: resChanged,
-			data: resData,
+			data: data,
 		};
 	});
 	const mutateIsDisabled = createMemo(() => {
@@ -143,6 +128,7 @@ const CreateUpdateMediaPanel: Component<CreateUpdateMediaPanelProps> = (
 		}
 		return !updateData().changed;
 	});
+
 	const panelContent = createMemo(() => {
 		if (panelMode() === "create") {
 			return {
@@ -174,13 +160,26 @@ const CreateUpdateMediaPanel: Component<CreateUpdateMediaPanelProps> = (
 		if (errors) return errors[index];
 		return undefined;
 	};
+	const onSubmit = async () => {
+		const mutation =
+			panelMode() === "create"
+				? createMedia.createMedia
+				: updateMedia?.updateMedia;
+		if (!mutation) return;
+
+		const success = await mutation(MediaFile.getFile());
+
+		if (!success) return;
+
+		props.state.setOpen(false);
+	};
 
 	// ---------------------------------
 	// Effects
 	createEffect(() => {
 		if (media.isSuccess && panelMode() === "update") {
-			setTitle(media.data?.data.title || []);
-			setAlt(media.data?.data.alt || []);
+			updateMedia?.setTitle(media.data?.data.title || []);
+			updateMedia?.setAlt(media.data?.data.alt || []);
 			MediaFile.reset();
 			MediaFile.setCurrentFile({
 				name: media.data.data.key,
@@ -198,31 +197,12 @@ const CreateUpdateMediaPanel: Component<CreateUpdateMediaPanelProps> = (
 		<Panel.Root
 			open={props.state.open}
 			setOpen={props.state.setOpen}
-			onSubmit={() => {
-				if (!props.id) {
-					createSingle.action.mutate({
-						file: MediaFile.getFile() as File,
-						title: getTitle(),
-						alt: getAlt(),
-					});
-				} else {
-					updateSingle.action.mutate({
-						id: props.id() as number,
-						body: {
-							file: MediaFile.getFile() as File,
-							title: getTitle(),
-							alt: getAlt(),
-						},
-					});
-				}
-			}}
+			onSubmit={onSubmit}
 			fetchState={panelFetchState()}
 			reset={() => {
-				createSingle.reset();
-				updateSingle.reset();
+				createMedia.reset();
+				updateMedia?.reset();
 				MediaFile.reset();
-				setTitle([]);
-				setAlt([]);
 			}}
 			mutateState={{
 				isLoading: mutateIsLoading(),
@@ -251,15 +231,18 @@ const CreateUpdateMediaPanel: Component<CreateUpdateMediaPanelProps> = (
 									id={`name-${locale.code}`}
 									value={
 										helpers.getTranslation(
-											getTitle(),
+											targetState()?.title(),
 											locale.code,
 										) || ""
 									}
 									onChange={(val) => {
-										helpers.updateTranslation(setTitle, {
-											localeCode: locale.code,
-											value: val,
-										});
+										helpers.updateTranslation(
+											targetAction()?.setTitle,
+											{
+												localeCode: locale.code,
+												value: val,
+											},
+										);
 									}}
 									name={`name-${locale.code}`}
 									type="text"
@@ -276,15 +259,18 @@ const CreateUpdateMediaPanel: Component<CreateUpdateMediaPanelProps> = (
 										id={`alt-${locale.code}`}
 										value={
 											helpers.getTranslation(
-												getAlt(),
+												targetState()?.alt(),
 												locale.code,
 											) || ""
 										}
 										onChange={(val) => {
-											helpers.updateTranslation(setAlt, {
-												localeCode: locale.code,
-												value: val,
-											});
+											helpers.updateTranslation(
+												targetAction()?.setAlt,
+												{
+													localeCode: locale.code,
+													value: val,
+												},
+											);
 										}}
 										name={`alt-${locale.code}`}
 										type="text"

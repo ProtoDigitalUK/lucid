@@ -170,17 +170,19 @@ const formatUserInitials = (user: {
 // ---------------------------------------------
 // Translation setter helper
 const updateTranslation = (
-	setter: Setter<
+	setter?: Setter<
 		{
 			localeCode: string | null;
 			value: string | null;
 		}[]
 	>,
-	translation: {
+	translation?: {
 		localeCode: string | null;
 		value: string | null;
 	},
 ) => {
+	if (!setter) return;
+	if (!translation) return;
 	setter((prev) => {
 		const index = prev.findIndex(
 			(t) => t.localeCode === translation.localeCode,

@@ -1,10 +1,10 @@
 import request from "@/utils/request";
-import objectToFormData from "@/utils/object-to-formdata";
 import serviceHelpers from "@/utils/service-helpers";
 import type { ResponseBody, MediaResponse } from "@lucidcms/core/types";
 
 interface Params {
-	file: File;
+	key?: string;
+	fileName?: string;
 	title: Array<{
 		localeCode: string | null;
 		value: string | null;
@@ -19,19 +19,12 @@ interface Response {
 }
 
 export const createSingleReq = (params: Params) => {
-	const bodyQueryParam = JSON.stringify({
-		title: params.title,
-		alt: params.alt,
-	});
-
 	return request<ResponseBody<Response>>({
-		url: `/api/v1/media?body=${bodyQueryParam}`,
+		url: "/api/v1/media",
 		csrf: true,
 		config: {
 			method: "POST",
-			body: objectToFormData({
-				file: params.file,
-			}),
+			body: params,
 		},
 	});
 };

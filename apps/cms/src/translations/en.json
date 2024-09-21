@@ -451,5 +451,8 @@
 	"no_client_integrations_found_title": "No Client Integrations Found",
 	"no_client_integrations_found_descriptions": "You currently have no client integrations. Creating an integration will allow you to request and use data from Lucid in your own applications.",
 	"multiple_documents": "Multiple Documents",
-	"single_documents": "Single Documents"
+	"single_documents": "Single Documents",
+	"media_upload_error": "Media Upload Error",
+	"media_upload_error_description": "An error occurred while uploading the file. Please try again.",
+	"media_no_key_or_presigned_url": "No key or presigned url found"
 }

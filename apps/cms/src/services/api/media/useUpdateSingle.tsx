@@ -1,18 +1,18 @@
 import T from "@/translations";
 import request from "@/utils/request";
 import serviceHelpers from "@/utils/service-helpers";
-import objectToFormData from "@/utils/object-to-formdata";
 import type { ResponseBody } from "@lucidcms/core/types";
 
 interface Params {
 	id: number;
 	body: {
-		file: File;
-		title: Array<{
+		key?: string;
+		fileName?: string;
+		title?: Array<{
 			localeCode: string | null;
 			value: string | null;
 		}>;
-		alt: Array<{
+		alt?: Array<{
 			localeCode: string | null;
 			value: string | null;
 		}>;
@@ -20,17 +20,12 @@ interface Params {
 }
 
 export const updateSingleReq = (params: Params) => {
-	const bodyQueryParam = JSON.stringify({
-		title: params.body.title,
-		alt: params.body.alt,
-	});
-
 	return request<ResponseBody<null>>({
-		url: `/api/v1/media/${params.id}?body=${bodyQueryParam}`,
+		url: `/api/v1/media/${params.id}`,
 		csrf: true,
 		config: {
 			method: "PATCH",
-			body: objectToFormData(params.body),
+			body: params.body,
 		},
 	});
 };
