@@ -1,3 +1,4 @@
 {
-	"object_body_undefined": "The object get request Body is undefined."
+	"object_body_undefined": "The object get request Body is undefined.",
+	"object_missing_metadata": "An error occurred while fetching the object metadata."
 }
