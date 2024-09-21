@@ -108,45 +108,81 @@ export type MediaStrategy = {
 
 // the version of config that is used in the lucid.config.ts file
 export interface LucidConfig {
+	/** A Postgres, SQLite or LibSQL database adapter instance. These can be imported from `@lucidcms/core/adapters`. */
 	db: DatabaseAdapter;
+	/** The host of the Lucid instance. */
 	host: string;
+	/** `64 character` length keys to encrypt and sign data. */
 	keys: {
+		/** Used to encrypt user secrets and API keys. Must be `64 characters` long. */
 		encryptionKey: string;
+		/** Used to sign cookies. Must be `64 characters` long. */
 		cookieSecret: string;
+		/** Used to sign the access token JWT. Must be `64 characters` long. */
 		accessTokenSecret: string;
+		/** Used to sign the refresh token JWT. Must be `64 characters` long. */
 		refreshTokenSecret: string;
 	};
+	/** Disables the swagger documentation site. */
 	disableSwagger?: boolean;
+	/** Localisation settings. */
 	localisation?: {
+		/** A list of locales you want to write content in. */
 		locales: {
+			/** The label of the locale. Eg. `English`, `French`, `German` etc. */
 			label: string;
+			/** The code of the locale. Eg. `en`, `fr`, `de` etc. */
 			code: string;
 		}[];
+		/** The default locale code. Eg. `en`. */
 		defaultLocale: string;
 	};
+	/** Paths to static assets. */
 	paths?: {
+		/** The path to the email templates directory. This can be used to override or extend the default templates. */
 		emailTemplates?: string;
 	};
+	/** Email settings. */
 	email?: {
+		/** The email from settings. */
 		from: {
+			/** The email address to send emails from. */
 			email: string;
+			/** The name to send emails from. */
 			name: string;
 		};
+		/** The email strategy services to use. These determine how emails are sent. */
 		strategy: EmailStrategy;
 	};
+	/** Media settings. */
 	media?: {
+		/** The storage limit in bytes. */
 		storage?: number;
+		/** The maximum file size in bytes. */
 		maxSize?: number;
+		/** The processed image settings. */
 		processed?: {
+			/** The total amount of processed images allow for a single image media item. */
 			limit?: number;
+			/** If the processed images should be stored using the uploadSingle media strategy. If false, processed images are generated on request. */
 			store?: boolean;
 		};
+		/** The fallback image to use if an image cannot be found.
+		 *  - If false or underfined, images will return a 404 status code.
+		 *  - If a string is passed, it will attempt to stream the url as the response.
+		 *  - If true, the default fallback image will be used.
+		 **/
 		fallbackImage?: string | boolean | undefined;
+		/** The media strategy services to use. These determine how media is stored, retrieved and deleted. */
 		strategy?: MediaStrategy;
 	};
+	/** Fastify extensions to register. Allows you to register custom routes, middleware, and more. */
 	fastifyExtensions?: Array<(fastify: FastifyInstance) => Promise<void>>;
+	/** Hooks to register. Allows you to register custom hooks to run before or after certain events. */
 	hooks?: Array<AllHooks>;
+	/** A list of collections instances to register. These can be imported from `@lucidcms/core/builders`. */
 	collections?: CollectionBuilder[];
+	/** A list of Lucid plugins to register. Plugins simply merge their own config with the Lucid config. */
 	plugins?: LucidPlugin[];
 }
 
