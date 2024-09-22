@@ -65,7 +65,6 @@ const UpdateAccountForm: Component<UpdateAccountFormProps> = (props) => {
 	// Render
 	return (
 		<Form.Root
-			type="standard"
 			state={{
 				isLoading: updateMe.action.isPending,
 				errors: updateMe.errors(),

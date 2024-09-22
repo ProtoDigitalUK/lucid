@@ -10,7 +10,6 @@ import ProgressBar from "@/components/Partials/ProgressBar";
 import ClearAllProcessedImages from "@/components/Modals/Media/ClearAllProcessedImages";
 import DetailsList from "@/components/Partials/DetailsList";
 import Layout from "@/components/Groups/Layout";
-import Page from "@/components/Groups/Page";
 import Headers from "@/components/Groups/Headers";
 
 const GeneralSettingsRoute: Component = (props) => {
@@ -45,7 +44,7 @@ const GeneralSettingsRoute: Component = (props) => {
 	// Render
 
 	return (
-		<Page.Layout
+		<Layout.Wrapper
 			slots={{
 				header: (
 					<Headers.Standard
@@ -84,7 +83,7 @@ const GeneralSettingsRoute: Component = (props) => {
 				),
 			}}
 		>
-			<Page.DynamicContent
+			<Layout.DynamicContent
 				state={{
 					isError: settingsData.isError,
 					isSuccess: settingsData.isSuccess,
@@ -211,7 +210,7 @@ const GeneralSettingsRoute: Component = (props) => {
 						/>
 					</InfoRow.Content>
 				</InfoRow.Root>
-			</Page.DynamicContent>
+			</Layout.DynamicContent>
 
 			{/* Modals */}
 			<ClearAllProcessedImages
@@ -220,7 +219,7 @@ const GeneralSettingsRoute: Component = (props) => {
 					setOpen: setOpenClearAllProcessedImages,
 				}}
 			/>
-		</Page.Layout>
+		</Layout.Wrapper>
 	);
 };
 

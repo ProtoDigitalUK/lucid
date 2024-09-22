@@ -2,9 +2,9 @@ import T from "@/translations";
 import { createMemo, type Component } from "solid-js";
 import userStore from "@/store/userStore";
 import Alert from "@/components/Blocks/Alert";
-import Page from "@/components/Groups/Page";
 import Headers from "@/components/Groups/Headers";
-import PageContent from "@/components/Groups/PageContent";
+import Layout from "@/components/Groups/Layout";
+import Content from "@/components/Groups/Content";
 
 const AccountRoute: Component = () => {
 	// ----------------------------------------
@@ -14,7 +14,7 @@ const AccountRoute: Component = () => {
 	// ----------------------------------------
 	// Render
 	return (
-		<Page.Layout
+		<Layout.Wrapper
 			slots={{
 				topBar: (
 					<Alert
@@ -38,8 +38,8 @@ const AccountRoute: Component = () => {
 				),
 			}}
 		>
-			<PageContent.Account />
-		</Page.Layout>
+			<Content.Account />
+		</Layout.Wrapper>
 	);
 };
 

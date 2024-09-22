@@ -4,9 +4,9 @@ import useSearchParamsLocation from "@/hooks/useSearchParamsLocation";
 import api from "@/services/api";
 import Query from "@/components/Groups/Query";
 import Alert from "@/components/Blocks/Alert";
-import Page from "@/components/Groups/Page";
+import Layout from "@/components/Groups/Layout";
 import Headers from "@/components/Groups/Headers";
-import PageContent from "@/components/Groups/PageContent";
+import Content from "@/components/Groups/Content";
 
 const EmailListRoute: Component = () => {
 	// ----------------------------------
@@ -58,7 +58,7 @@ const EmailListRoute: Component = () => {
 	// Render
 
 	return (
-		<Page.Layout
+		<Layout.Wrapper
 			slots={{
 				topBar: (
 					<Alert
@@ -166,12 +166,12 @@ const EmailListRoute: Component = () => {
 				),
 			}}
 		>
-			<PageContent.EmailsList
+			<Content.EmailsList
 				state={{
 					searchParams: searchParams,
 				}}
 			/>
-		</Page.Layout>
+		</Layout.Wrapper>
 	);
 };
 

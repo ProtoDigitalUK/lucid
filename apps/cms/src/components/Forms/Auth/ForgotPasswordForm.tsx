@@ -26,7 +26,6 @@ const ForgotPasswordForm: Component<ForgotPasswordFormProps> = (props) => {
 	// Render
 	return (
 		<Form.Root
-			type="standard"
 			state={{
 				isLoading: forgotPassword.action.isPending,
 				errors: forgotPassword.errors(),

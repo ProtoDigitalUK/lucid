@@ -6,7 +6,7 @@ import T, {
 } from "@/translations";
 import { type Component, createMemo } from "solid-js";
 import userStore from "@/store/userStore";
-import Page from "@/components/Groups/Page";
+import Layout from "@/components/Groups/Layout";
 import InfoRow from "@/components/Blocks/InfoRow";
 import UpdateAccountForm from "@/components/Forms/Account/UpdateAccountForm";
 import Form from "@/components/Groups/Form";
@@ -19,7 +19,7 @@ export const Account: Component = () => {
 	// ----------------------------------------
 	// Render
 	return (
-		<Page.DynamicContent
+		<Layout.DynamicContent
 			options={{
 				padding: "30",
 			}}
@@ -64,6 +64,6 @@ export const Account: Component = () => {
 					/>
 				</InfoRow.Content>
 			</InfoRow.Root>
-		</Page.DynamicContent>
+		</Layout.DynamicContent>
 	);
 };

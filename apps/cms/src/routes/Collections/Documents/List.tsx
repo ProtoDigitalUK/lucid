@@ -13,9 +13,9 @@ import {
 	collectionFieldFilters,
 	collectionFieldIncludes,
 } from "@/utils/document-table-helpers";
-import Page from "@/components/Groups/Page";
+import Layout from "@/components/Groups/Layout";
 import Headers from "@/components/Groups/Headers";
-import PageContent from "@/components/Groups/PageContent";
+import Content from "@/components/Groups/Content";
 
 const CollectionsDocumentsListRoute: Component = () => {
 	// ----------------------------------
@@ -80,7 +80,7 @@ const CollectionsDocumentsListRoute: Component = () => {
 	// ----------------------------------
 	// Render
 	return (
-		<Page.Layout
+		<Layout.Wrapper
 			slots={{
 				header: (
 					<Headers.Standard
@@ -186,7 +186,7 @@ const CollectionsDocumentsListRoute: Component = () => {
 				),
 			}}
 		>
-			<PageContent.DocumentsList
+			<Content.DocumentsList
 				state={{
 					collection: collection.data?.data,
 					fieldIncludes: getCollectionFieldIncludes,
@@ -194,7 +194,7 @@ const CollectionsDocumentsListRoute: Component = () => {
 					isLoading: collection.isLoading,
 				}}
 			/>
-		</Page.Layout>
+		</Layout.Wrapper>
 	);
 };
 

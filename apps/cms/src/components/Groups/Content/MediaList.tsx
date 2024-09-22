@@ -5,7 +5,8 @@ import api from "@/services/api";
 import useRowTarget from "@/hooks/useRowTarget";
 import contentLocaleStore from "@/store/contentLocaleStore";
 import Footers from "@/components/Groups/Footers";
-import Page from "@/components/Groups/Page";
+import Layout from "@/components/Groups/Layout";
+import Grid from "@/components/Groups/Grid";
 import MediaCard, { MediaCardLoading } from "@/components/Cards/MediaCard";
 import CreateUpdateMediaPanel from "@/components/Panels/Media/CreateUpdateMediaPanel";
 import DeleteMedia from "@/components/Modals/Media/DeleteMedia";
@@ -48,7 +49,7 @@ export const MediaList: Component<{
 	// ----------------------------------------
 	// Render
 	return (
-		<Page.DynamicContent
+		<Layout.DynamicContent
 			state={{
 				isError: media.isError,
 				isSuccess: media.isSuccess,
@@ -82,7 +83,7 @@ export const MediaList: Component<{
 				padding: "30",
 			}}
 		>
-			<Page.Grid
+			<Grid.Root
 				state={{
 					isLoading: media.isLoading,
 					totalItems: media.data?.data.length || 0,
@@ -101,7 +102,7 @@ export const MediaList: Component<{
 						/>
 					)}
 				</For>
-			</Page.Grid>
+			</Grid.Root>
 
 			<CreateUpdateMediaPanel
 				id={rowTarget.getTargetId}
@@ -130,6 +131,6 @@ export const MediaList: Component<{
 					},
 				}}
 			/>
-		</Page.DynamicContent>
+		</Layout.DynamicContent>
 	);
 };

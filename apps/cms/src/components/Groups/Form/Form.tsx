@@ -1,15 +1,13 @@
 import T from "@/translations";
 import { type Component, type JSXElement, Switch, Match, Show } from "solid-js";
-import Layout from "@/components/Groups/Layout";
+import classNames from "classnames";
 import Button from "@/components/Partials/Button";
 import ErrorMessage from "@/components/Partials/ErrorMessage";
 import ErrorBlock from "@/components/Partials/ErrorBlock";
 import notifySvg from "@/assets/illustrations/notify.svg";
 import type { ErrorResponse } from "@lucidcms/core/types";
-import classNames from "classnames";
 
-interface FormProps {
-	type: "standard" | "page-layout";
+export const Form: Component<{
 	queryState?: {
 		isError?: boolean;
 	};
@@ -27,9 +25,7 @@ interface FormProps {
 	permission?: boolean;
 	onSubmit?: () => void;
 	children: JSXElement;
-}
-
-export const Form: Component<FormProps> = (props) => {
+}> = (props) => {
 	// ----------------------------------------
 	// Render
 	return (
@@ -51,60 +47,30 @@ export const Form: Component<FormProps> = (props) => {
 						if (props.onSubmit) props.onSubmit();
 					}}
 				>
-					<Switch>
-						{/* Standard Submit */}
-						<Match when={props.type === "standard"}>
-							{props.children}
-							<div class="mt-15 w-full">
-								<Show when={props.state.errors?.message}>
-									<ErrorMessage
-										theme="basic"
-										message={props.state.errors?.message}
-										classes="mb-15"
-									/>
-								</Show>
+					{props.children}
+					<div class="mt-15 w-full">
+						<Show when={props.state.errors?.message}>
+							<ErrorMessage
+								theme="basic"
+								message={props.state.errors?.message}
+								classes="mb-15"
+							/>
+						</Show>
 
-								<Button
-									size="medium"
-									classes={classNames({
-										"w-full":
-											props.options?.buttonFullWidth,
-									})}
-									type="submit"
-									theme="primary"
-									loading={props.state.isLoading}
-									disabled={props.state.isDisabled}
-									permission={props.permission}
-								>
-									{props.content.submit}
-								</Button>
-							</div>
-						</Match>
-						{/* Page Layout Submit */}
-						<Match when={props.type === "page-layout"}>
-							<Layout.PageContent>
-								{props.children}
-							</Layout.PageContent>
-							<Layout.PageFooter>
-								<Show when={props.state.errors?.message}>
-									<ErrorMessage
-										theme="background"
-										message={props.state.errors?.message}
-									/>
-								</Show>
-								<Button
-									type="submit"
-									theme="primary"
-									size="medium"
-									loading={props.state.isLoading}
-									disabled={props.state.isDisabled}
-									permission={props.permission}
-								>
-									{props.content.submit}
-								</Button>
-							</Layout.PageFooter>
-						</Match>
-					</Switch>
+						<Button
+							size="medium"
+							classes={classNames({
+								"w-full": props.options?.buttonFullWidth,
+							})}
+							type="submit"
+							theme="primary"
+							loading={props.state.isLoading}
+							disabled={props.state.isDisabled}
+							permission={props.permission}
+						>
+							{props.content.submit}
+						</Button>
+					</div>
 				</form>
 			</Match>
 		</Switch>

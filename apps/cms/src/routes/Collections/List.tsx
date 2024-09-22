@@ -1,9 +1,9 @@
 import T from "@/translations";
 import type { Component } from "solid-js";
 import useSearchParamsLocation from "@/hooks/useSearchParamsLocation";
-import Page from "@/components/Groups/Page";
+import Layout from "@/components/Groups/Layout";
 import Headers from "@/components/Groups/Headers";
-import PageContent from "@/components/Groups/PageContent";
+import Content from "@/components/Groups/Content";
 
 const CollectionsListRoute: Component = () => {
 	// ----------------------------------
@@ -13,7 +13,7 @@ const CollectionsListRoute: Component = () => {
 	// ----------------------------------
 	// Render
 	return (
-		<Page.Layout
+		<Layout.Wrapper
 			slots={{
 				header: (
 					<Headers.Standard
@@ -25,12 +25,12 @@ const CollectionsListRoute: Component = () => {
 				),
 			}}
 		>
-			<PageContent.CollectionsList
+			<Content.CollectionsList
 				state={{
 					searchParams: searchParams,
 				}}
 			/>
-		</Page.Layout>
+		</Layout.Wrapper>
 	);
 };
 

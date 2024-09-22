@@ -4,9 +4,9 @@ import userStore from "@/store/userStore";
 import useSearchParamsLocation from "@/hooks/useSearchParamsLocation";
 import Query from "@/components/Groups/Query";
 import CreateUserPanel from "@/components/Panels/User/CreateUserPanel";
-import Page from "@/components/Groups/Page";
+import Layout from "@/components/Groups/Layout";
 import Headers from "@/components/Groups/Headers";
-import PageContent from "@/components/Groups/PageContent";
+import Content from "@/components/Groups/Content";
 
 const UsersListRoute: Component = () => {
 	// ----------------------------------
@@ -44,7 +44,7 @@ const UsersListRoute: Component = () => {
 	// ----------------------------------
 	// Render
 	return (
-		<Page.Layout
+		<Layout.Wrapper
 			slots={{
 				header: (
 					<Headers.Standard
@@ -101,7 +101,7 @@ const UsersListRoute: Component = () => {
 				),
 			}}
 		>
-			<PageContent.UserList
+			<Content.UserList
 				state={{
 					searchParams: searchParams,
 					setOpenCreateUserPanel: setOpenCreateUserPanel,
@@ -113,7 +113,7 @@ const UsersListRoute: Component = () => {
 					setOpen: setOpenCreateUserPanel,
 				}}
 			/>
-		</Page.Layout>
+		</Layout.Wrapper>
 	);
 };
 

@@ -1,6 +1,6 @@
 import type { Component, JSXElement } from "solid-js";
 
-export const Layout: Component<{
+export const Wrapper: Component<{
 	slots?: {
 		topBar?: JSXElement;
 		header?: JSXElement;

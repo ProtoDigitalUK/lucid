@@ -1,171 +1,51 @@
-import T from "@/translations";
-import {
-	type Component,
-	Show,
-	Switch,
-	Match,
-	type JSXElement,
-	createMemo,
-} from "solid-js";
-import type { ResponseBody } from "@lucidcms/core/types";
+import { type Component, type JSXElement, Switch, Match } from "solid-js";
 import type useSearchParamsLocation from "@/hooks/useSearchParamsLocation";
-import notifySvg from "@/assets/illustrations/notify.svg";
-import noPermission from "@/assets/illustrations/no-permission.svg";
-import Query from "@/components/Groups/Query";
-import ErrorBlock from "@/components/Partials/ErrorBlock";
-import Button from "@/components/Partials/Button";
 import SkeletonCard from "@/components/Cards/SkeletonCard";
-import Layout from "@/components/Groups/Layout";
-import NoEntriesBlock from "@/components/Partials/NoEntriesBlock";
 
-interface GridRootProps {
-	items: number;
-	state: {
-		isLoading: boolean;
-		isError: boolean;
-		isSuccess: boolean;
+export const GridRoot: Component<{
+	state?: {
+		isLoading?: boolean;
+		totalItems: number;
+		searchParams?: ReturnType<typeof useSearchParamsLocation>;
 	};
-	options?: {
-		showNoEntries?: boolean;
+	slots?: {
+		loadingCard?: JSXElement;
 	};
-	callbacks?: {
-		createEntry?: () => void;
-	};
-	copy?: {
-		noEntryTitle?: string;
-		noEntryDescription?: string;
-		noEntryButton?: string;
-	};
-	searchParams?: ReturnType<typeof useSearchParamsLocation>;
-	permission?: boolean;
-	meta?: ResponseBody<unknown>["meta"];
-	loadingCard?: JSXElement;
 	children: JSXElement;
-}
-
-export const GridRoot: Component<GridRootProps> = (props) => {
-	// ----------------------------------
-	// Memos
-	const showNoEntries = createMemo(() => {
-		return (
-			props.options?.showNoEntries === true &&
-			!props.searchParams?.hasFiltersApplied()
-		);
-	});
-
+}> = (props) => {
 	// ----------------------------------
 	// Render
 	return (
-		<>
-			<Switch>
-				<Match when={props.permission === false}>
-					<ErrorBlock
-						content={{
-							image: noPermission,
-							title: T()("no_permission"),
-							description: T()("no_permission_description"),
-						}}
-					/>
+		<ul class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-15">
+			<Switch fallback={props.children}>
+				<Match when={props.state?.isLoading}>
+					<Switch>
+						<Match when={props.slots?.loadingCard}>
+							{props.slots?.loadingCard}
+							{props.slots?.loadingCard}
+							{props.slots?.loadingCard}
+							{props.slots?.loadingCard}
+							{props.slots?.loadingCard}
+							{props.slots?.loadingCard}
+							{props.slots?.loadingCard}
+							{props.slots?.loadingCard}
+						</Match>
+						<Match when={!props.slots?.loadingCard}>
+							<SkeletonCard size="medium" />
+							<SkeletonCard size="medium" />
+							<SkeletonCard size="medium" />
+							<SkeletonCard size="medium" />
+							<SkeletonCard size="medium" />
+							<SkeletonCard size="medium" />
+							<SkeletonCard size="medium" />
+							<SkeletonCard size="medium" />
+						</Match>
+					</Switch>
 				</Match>
-				<Match when={props.state.isError}>
-					<ErrorBlock
-						content={{
-							image: notifySvg,
-							title: T()("error_title"),
-							description: T()("error_message"),
-						}}
-					/>
-				</Match>
-				<Match
-					when={props.items === 0 && props.state.isLoading === false}
-				>
-					<Show when={showNoEntries()}>
-						<NoEntriesBlock
-							copy={{
-								title: props.copy?.noEntryTitle,
-								description: props.copy?.noEntryDescription,
-								button: props.copy?.noEntryButton,
-							}}
-							callbacks={{
-								action: props.callbacks?.createEntry,
-							}}
-						/>
-					</Show>
-					<Show when={!showNoEntries()}>
-						<ErrorBlock
-							content={{
-								title: T()("no_results"),
-								description: T()("no_results_message"),
-							}}
-						>
-							<Show
-								when={props.searchParams?.hasFiltersApplied()}
-							>
-								<Button
-									type="submit"
-									theme="primary"
-									size="medium"
-									onClick={() => {
-										props.searchParams?.resetFilters();
-									}}
-								>
-									{T()("reset_filters")}
-								</Button>
-							</Show>
-						</ErrorBlock>
-					</Show>
-				</Match>
-				<Match when={props.state.isSuccess || props.state.isLoading}>
-					<Layout.PageContent
-						options={{
-							border: true,
-						}}
-					>
-						<ul class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-15">
-							<Switch>
-								<Match when={props.state.isLoading}>
-									<Switch>
-										<Match when={props.loadingCard}>
-											{props.loadingCard}
-											{props.loadingCard}
-											{props.loadingCard}
-											{props.loadingCard}
-											{props.loadingCard}
-											{props.loadingCard}
-											{props.loadingCard}
-											{props.loadingCard}
-										</Match>
-										<Match when={!props.loadingCard}>
-											<SkeletonCard size="medium" />
-											<SkeletonCard size="medium" />
-											<SkeletonCard size="medium" />
-											<SkeletonCard size="medium" />
-											<SkeletonCard size="medium" />
-											<SkeletonCard size="medium" />
-											<SkeletonCard size="medium" />
-											<SkeletonCard size="medium" />
-										</Match>
-									</Switch>
-								</Match>
-								<Match when={props.state.isSuccess}>
-									{props.children}
-								</Match>
-							</Switch>
-						</ul>
-					</Layout.PageContent>
+				<Match when={props.state?.isLoading === false}>
+					{props.children}
 				</Match>
 			</Switch>
-			{/* Pagination */}
-			<Show when={props.meta && props.searchParams}>
-				<Query.Pagination
-					state={{
-						meta: props.meta,
-						searchParams: props.searchParams as ReturnType<
-							typeof useSearchParamsLocation
-						>,
-					}}
-				/>
-			</Show>
-		</>
+		</ul>
 	);
 };

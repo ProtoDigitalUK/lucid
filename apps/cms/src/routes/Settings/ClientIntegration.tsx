@@ -19,7 +19,6 @@ import RegenerateAPIKey from "@/components/Modals/ClientIntegrations/RegenerateA
 import Button from "@/components/Partials/Button";
 import ErrorBlock from "@/components/Partials/ErrorBlock";
 import ClientIntegrationRow from "@/components/Rows/ClientIntegrationRow";
-import Page from "@/components/Groups/Page";
 import Headers from "@/components/Groups/Headers";
 
 const GeneralSettingsRoute: Component = (props) => {
@@ -54,7 +53,7 @@ const GeneralSettingsRoute: Component = (props) => {
 	// ----------------------------------------
 	// Render
 	return (
-		<Page.Layout
+		<Layout.Wrapper
 			slots={{
 				header: (
 					<Headers.Standard
@@ -92,7 +91,7 @@ const GeneralSettingsRoute: Component = (props) => {
 				),
 			}}
 		>
-			<Page.DynamicContent
+			<Layout.DynamicContent
 				state={{
 					isError: clientIntegrations.isError,
 					isSuccess: clientIntegrations.isSuccess,
@@ -158,7 +157,7 @@ const GeneralSettingsRoute: Component = (props) => {
 						</Match>
 					</Switch>
 				</InfoRow.Root>
-			</Page.DynamicContent>
+			</Layout.DynamicContent>
 
 			{/* Panels & Modals */}
 			<DeleteClientIntegration
@@ -214,7 +213,7 @@ const GeneralSettingsRoute: Component = (props) => {
 					},
 				}}
 			/>
-		</Page.Layout>
+		</Layout.Wrapper>
 	);
 };
 

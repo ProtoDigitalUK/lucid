@@ -234,7 +234,7 @@ const CollectionsDocumentsEditRoute: Component<
 							},
 						)}
 					>
-						<Layout.PageBreadcrumbs
+						<Layout.Breadcrumbs
 							breadcrumbs={[
 								{
 									link: `/admin/collections/${collectionKey()}`,

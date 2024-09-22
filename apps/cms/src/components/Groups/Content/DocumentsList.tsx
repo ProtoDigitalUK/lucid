@@ -13,7 +13,7 @@ import useRowTarget from "@/hooks/useRowTarget";
 import api from "@/services/api";
 import contentLocaleStore from "@/store/contentLocaleStore";
 import Footers from "@/components/Groups/Footers";
-import Page from "@/components/Groups/Page";
+import Layout from "@/components/Groups/Layout";
 import DocumentRow from "@/components/Tables/Rows/DocumentRow";
 import DeleteDocument from "@/components/Modals/Documents/DeleteDocument";
 import Table from "@/components/Groups/Table";
@@ -69,7 +69,7 @@ export const DocumentsList: Component<{
 	// ----------------------------------------
 	// Render
 	return (
-		<Page.DynamicContent
+		<Layout.DynamicContent
 			state={{
 				isError: documents.isError,
 				isSuccess: documents.isSuccess,
@@ -205,6 +205,6 @@ export const DocumentsList: Component<{
 				}}
 				collection={props.state.collection as CollectionResponse}
 			/>
-		</Page.DynamicContent>
+		</Layout.DynamicContent>
 	);
 };

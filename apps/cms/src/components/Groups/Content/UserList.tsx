@@ -1,20 +1,27 @@
 import T from "@/translations";
 import { type Component, Index } from "solid-js";
-import { FaSolidT, FaSolidCalendar } from "solid-icons/fa";
 import type useSearchParamsLocation from "@/hooks/useSearchParamsLocation";
+import {
+	FaSolidT,
+	FaSolidCalendar,
+	FaSolidEnvelope,
+	FaSolidUserTie,
+	FaSolidIdCard,
+} from "solid-icons/fa";
 import api from "@/services/api";
 import useRowTarget from "@/hooks/useRowTarget";
 import Footers from "@/components/Groups/Footers";
-import Page from "@/components/Groups/Page";
+import Layout from "@/components/Groups/Layout";
+import UpdateUserPanel from "@/components/Panels/User/UpdateUserPanel";
+import DeleteUser from "@/components/Modals/User/DeleteUser";
+import TriggerPasswordReset from "@/components/Modals/User/TriggerPasswordReset";
 import Table from "@/components/Groups/Table";
-import RoleRow from "@/components/Tables/Rows/RoleRow";
-import UpsertRolePanel from "@/components/Panels/Role/UpsertRolePanel";
-import DeleteRole from "@/components/Modals/Role/DeleteRole";
+import UserRow from "@/components/Tables/Rows/UserRow";
 
-export const RolesList: Component<{
+export const UserList: Component<{
 	state: {
 		searchParams: ReturnType<typeof useSearchParamsLocation>;
-		setOpenCreateRolePanel: (state: boolean) => void;
+		setOpenCreateUserPanel: (state: boolean) => void;
 	};
 }> = (props) => {
 	// ----------------------------------
@@ -23,29 +30,27 @@ export const RolesList: Component<{
 		triggers: {
 			update: false,
 			delete: false,
+			passwordReset: false,
 		},
 	});
 
 	// ----------------------------------
 	// Queries
-	const roles = api.roles.useGetMultiple({
+	const users = api.users.useGetMultiple({
 		queryParams: {
-			queryString: props.state.searchParams.getQueryString,
-			include: {
-				permissions: false,
-			},
+			queryString: props.state?.searchParams.getQueryString,
 		},
-		enabled: () => props.state.searchParams.getSettled(),
+		enabled: () => props.state?.searchParams.getSettled(),
 	});
 
 	// ----------------------------------------
 	// Render
 	return (
-		<Page.DynamicContent
+		<Layout.DynamicContent
 			state={{
-				isError: roles.isError,
-				isSuccess: roles.isSuccess,
-				isEmpty: roles.data?.data.length === 0,
+				isError: users.isError,
+				isSuccess: users.isSuccess,
+				isEmpty: users.data?.data.length === 0,
 				searchParams: props.state.searchParams,
 			}}
 			slot={{
@@ -53,7 +58,7 @@ export const RolesList: Component<{
 					<Footers.Paginated
 						state={{
 							searchParams: props.state.searchParams,
-							meta: roles.data?.meta,
+							meta: users.data?.meta,
 						}}
 						options={{
 							padding: "30",
@@ -63,27 +68,46 @@ export const RolesList: Component<{
 			}}
 			copy={{
 				noEntries: {
-					title: T()("no_roles"),
-					description: T()("no_roles_description"),
-					button: T()("create_role"),
+					title: T()("no_users"),
+					description: T()("no_users_description"),
+					button: T()("create_user"),
 				},
 			}}
 			callback={{
 				createEntry: () => {
-					props.state.setOpenCreateRolePanel(true);
+					props.state.setOpenCreateUserPanel(true);
 				},
 			}}
 		>
 			<Table.Root
-				key={"roles.list"}
-				rows={roles.data?.data.length || 0}
+				key={"users.list"}
+				rows={users.data?.data.length || 0}
 				searchParams={props.state.searchParams}
 				head={[
 					{
-						label: T()("name"),
-						key: "name",
+						label: T()("username"),
+						key: "username",
+						icon: <FaSolidIdCard />,
+					},
+					{
+						label: T()("first_name"),
+						key: "firstName",
 						icon: <FaSolidT />,
-						sortable: true,
+					},
+					{
+						label: T()("last_name"),
+						key: "lastName",
+						icon: <FaSolidT />,
+					},
+					{
+						label: T()("super_admin"),
+						key: "superAdmin",
+						icon: <FaSolidUserTie />,
+					},
+					{
+						label: T()("email"),
+						key: "email",
+						icon: <FaSolidEnvelope />,
 					},
 					{
 						label: T()("created_at"),
@@ -91,26 +115,21 @@ export const RolesList: Component<{
 						icon: <FaSolidCalendar />,
 						sortable: true,
 					},
-					{
-						label: T()("updated_at"),
-						key: "updatedAt",
-						icon: <FaSolidCalendar />,
-					},
 				]}
 				state={{
-					isLoading: roles.isLoading,
-					isSuccess: roles.isSuccess,
+					isLoading: users.isLoading,
+					isSuccess: users.isSuccess,
 				}}
 				options={{
 					isSelectable: false,
 				}}
 			>
 				{({ include, isSelectable, selected, setSelected }) => (
-					<Index each={roles.data?.data || []}>
-						{(role, i) => (
-							<RoleRow
+					<Index each={users.data?.data || []}>
+						{(user, i) => (
+							<UserRow
 								index={i}
-								role={role()}
+								user={user()}
 								include={include}
 								selected={selected[i]}
 								rowTarget={rowTarget}
@@ -125,7 +144,7 @@ export const RolesList: Component<{
 					</Index>
 				)}
 			</Table.Root>
-			<UpsertRolePanel
+			<UpdateUserPanel
 				id={rowTarget.getTargetId}
 				state={{
 					open: rowTarget.getTriggers().update,
@@ -134,7 +153,7 @@ export const RolesList: Component<{
 					},
 				}}
 			/>
-			<DeleteRole
+			<DeleteUser
 				id={rowTarget.getTargetId}
 				state={{
 					open: rowTarget.getTriggers().delete,
@@ -143,6 +162,15 @@ export const RolesList: Component<{
 					},
 				}}
 			/>
-		</Page.DynamicContent>
+			<TriggerPasswordReset
+				id={rowTarget.getTargetId}
+				state={{
+					open: rowTarget.getTriggers().passwordReset,
+					setOpen: (state: boolean) => {
+						rowTarget.setTrigger("passwordReset", state);
+					},
+				}}
+			/>
+		</Layout.DynamicContent>
 	);
 };

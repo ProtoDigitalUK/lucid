@@ -3,15 +3,15 @@ import type { Component } from "solid-js";
 import userStore from "@/store/userStore";
 import { FaSolidCode } from "solid-icons/fa";
 import constants from "@/constants";
-import PageContent from "@/components/Groups/PageContent";
-import Page from "@/components/Groups/Page";
+import Content from "@/components/Groups/Content";
+import Layout from "@/components/Groups/Layout";
 import Headers from "@/components/Groups/Headers";
 
 const DashboardRoute: Component = () => {
 	// ----------------------------------------
 	// Render
 	return (
-		<Page.Layout
+		<Layout.Wrapper
 			slots={{
 				header: (
 					<Headers.Standard
@@ -36,8 +36,8 @@ const DashboardRoute: Component = () => {
 				),
 			}}
 		>
-			<PageContent.Dashboard />
-		</Page.Layout>
+			<Content.Dashboard />
+		</Layout.Wrapper>
 	);
 };
 

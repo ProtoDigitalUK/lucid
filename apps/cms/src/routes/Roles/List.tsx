@@ -4,9 +4,9 @@ import useSearchParamsLocation from "@/hooks/useSearchParamsLocation";
 import userStore from "@/store/userStore";
 import Query from "@/components/Groups/Query";
 import UpsertRolePanel from "@/components/Panels/Role/UpsertRolePanel";
-import Page from "@/components/Groups/Page";
+import Layout from "@/components/Groups/Layout";
 import Headers from "@/components/Groups/Headers";
-import PageContent from "@/components/Groups/PageContent";
+import Content from "@/components/Groups/Content";
 
 const RolesListRoute: Component = () => {
 	// ----------------------------------
@@ -33,7 +33,7 @@ const RolesListRoute: Component = () => {
 	// ----------------------------------
 	// Render
 	return (
-		<Page.Layout
+		<Layout.Wrapper
 			slots={{
 				header: (
 					<Headers.Standard
@@ -79,7 +79,7 @@ const RolesListRoute: Component = () => {
 				),
 			}}
 		>
-			<PageContent.RolesList
+			<Content.RolesList
 				state={{
 					searchParams: searchParams,
 					setOpenCreateRolePanel: setOpenCreateRolePanel,
@@ -92,7 +92,7 @@ const RolesListRoute: Component = () => {
 					setOpen: setOpenCreateRolePanel,
 				}}
 			/>
-		</Page.Layout>
+		</Layout.Wrapper>
 	);
 };
 

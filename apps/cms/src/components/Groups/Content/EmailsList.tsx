@@ -10,7 +10,7 @@ import {
 import api from "@/services/api";
 import useRowTarget from "@/hooks/useRowTarget";
 import Footers from "@/components/Groups/Footers";
-import Page from "@/components/Groups/Page";
+import Layout from "@/components/Groups/Layout";
 import Table from "@/components/Groups/Table";
 import EmailRow from "@/components/Tables/Rows/EmailRow";
 import PreviewEmailPanel from "@/components/Panels/Email/PreviewEmailPanel";
@@ -44,7 +44,7 @@ export const EmailsList: Component<{
 	// ----------------------------------------
 	// Render
 	return (
-		<Page.DynamicContent
+		<Layout.DynamicContent
 			state={{
 				isError: emails.isError,
 				isSuccess: emails.isSuccess,
@@ -192,6 +192,6 @@ export const EmailsList: Component<{
 					},
 				}}
 			/>
-		</Page.DynamicContent>
+		</Layout.DynamicContent>
 	);
 };

@@ -1,9 +1,9 @@
-import { type Component, onMount, Show, For } from "solid-js";
+import { type Component, Show, For } from "solid-js";
 import { FaSolidCaretRight } from "solid-icons/fa";
 import { A } from "@solidjs/router";
 import classNames from "classnames";
 
-export interface PageBreadcrumbsProps {
+export const Breadcrumbs: Component<{
 	breadcrumbs?: {
 		link: string;
 		label: string;
@@ -13,9 +13,7 @@ export interface PageBreadcrumbsProps {
 		noBorder?: boolean;
 		noPadding?: boolean;
 	};
-}
-
-export const PageBreadcrumbs: Component<PageBreadcrumbsProps> = (props) => {
+}> = (props) => {
 	// ----------------------------------------
 	// Render
 	return (

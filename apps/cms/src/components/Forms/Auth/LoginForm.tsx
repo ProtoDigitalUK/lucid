@@ -23,7 +23,6 @@ const LoginForm: Component<LoginFormProps> = (props) => {
 	// Render
 	return (
 		<Form.Root
-			type="standard"
 			state={{
 				isLoading: login.action.isPending,
 				errors: login.errors(),

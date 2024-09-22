@@ -3,9 +3,9 @@ import { type Component, createSignal } from "solid-js";
 import useSearchParamsLocation from "@/hooks/useSearchParamsLocation";
 import userStore from "@/store/userStore";
 import api from "@/services/api";
-import Page from "@/components/Groups/Page";
+import Layout from "@/components/Groups/Layout";
 import Headers from "@/components/Groups/Headers";
-import PageContent from "@/components/Groups/PageContent";
+import Content from "@/components/Groups/Content";
 import Alert from "@/components/Blocks/Alert";
 import CreateUpdateMediaPanel from "@/components/Panels/Media/CreateUpdateMediaPanel";
 import Query from "@/components/Groups/Query";
@@ -67,7 +67,7 @@ const MediaListRoute: Component = () => {
 	// ----------------------------------------
 	// Render
 	return (
-		<Page.Layout
+		<Layout.Wrapper
 			slots={{
 				topBar: (
 					<Alert
@@ -199,7 +199,7 @@ const MediaListRoute: Component = () => {
 				),
 			}}
 		>
-			<PageContent.MediaList
+			<Content.MediaList
 				state={{
 					searchParams: searchParams,
 					setOpenCreateMediaPanel: setOpenCreateMediaPanel,
@@ -211,7 +211,7 @@ const MediaListRoute: Component = () => {
 					setOpen: setOpenCreateMediaPanel,
 				}}
 			/>
-		</Page.Layout>
+		</Layout.Wrapper>
 	);
 };
 

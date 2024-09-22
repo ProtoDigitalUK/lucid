@@ -7,7 +7,7 @@ import { EmailsList } from "./EmailsList";
 import { CollectionsList } from "./CollectionsList";
 import { DocumentsList } from "./DocumentsList";
 
-const PageContent = {
+const Content = {
 	MediaList,
 	Dashboard,
 	Account,
@@ -18,4 +18,4 @@ const PageContent = {
 	DocumentsList,
 };
 
-export default PageContent;
+export default Content;

@@ -22,7 +22,6 @@ const ResetPasswordForm: Component<ResetPasswordFormProps> = (props) => {
 	// Render
 	return (
 		<Form.Root
-			type="standard"
 			state={{
 				isLoading: resetPassword.action.isPending,
 				errors: resetPassword.errors(),
