@@ -67,7 +67,7 @@ export const NavigationSidebar: Component = () => {
 	return (
 		<nav class="bg-container-1 max-h-screen flex sticky top-0 z-10">
 			{/* Primary */}
-			<div class="w-[70px] h-full flex items-center justify-between flex-col overflow-y-auto">
+			<div class="w-[70px] h-full flex items-center justify-between flex-col overflow-y-auto scrollbar">
 				<div>
 					<div class="flex items-center justify-center mt-30">
 						<img src={LogoIcon} alt="logo" class="size-6" />

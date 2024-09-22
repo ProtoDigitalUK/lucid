@@ -82,7 +82,7 @@ export const SelectMultiple: Component<SelectMultipleProps> = (props) => {
 								inputFocus() && props.theme === "full",
 							"border-error-base":
 								props.errors?.message !== undefined,
-							"bg-container-4 rounded-md border border-border":
+							"bg-container-4 rounded-md border border-border-input":
 								props.theme === "full",
 						},
 					)}

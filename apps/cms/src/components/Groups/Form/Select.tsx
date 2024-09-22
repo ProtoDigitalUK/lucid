@@ -107,7 +107,7 @@ export const Select: Component<SelectProps> = (props) => {
 							"border-error-base":
 								props.errors?.message !== undefined ||
 								props.hasError,
-							"bg-container-4 rounded-md border border-border":
+							"bg-container-4 rounded-md border border-border-input":
 								props.theme === "full",
 						},
 					)}
