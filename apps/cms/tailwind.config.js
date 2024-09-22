@@ -31,7 +31,7 @@ export default {
 					base: "#FFC107",
 					contrast: "#000000",
 				},
-				border: "#414141",
+				border: "#252525",
 				// Typography
 				title: "#F1F1F1",
 				body: "#C7C7C7",
