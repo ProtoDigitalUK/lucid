@@ -104,15 +104,6 @@ const UpdateUserPanel: Component<UpdateUserPanelProps> = (props) => {
 		<Panel.Root
 			open={props.state.open}
 			setOpen={props.state.setOpen}
-			onSubmit={() => {
-				updateUser.action.mutate({
-					id: props.id() as number,
-					body: updateData().data,
-				});
-			}}
-			reset={() => {
-				updateUser.reset();
-			}}
 			fetchState={{
 				isLoading: isLoading(),
 				isError: isError(),
@@ -122,10 +113,24 @@ const UpdateUserPanel: Component<UpdateUserPanelProps> = (props) => {
 				isDisabled: !updateData().changed,
 				errors: updateUser.errors(),
 			}}
-			content={{
+			callbacks={{
+				onSubmit: () => {
+					updateUser.action.mutate({
+						id: props.id() as number,
+						body: updateData().data,
+					});
+				},
+				reset: () => {
+					updateUser.reset();
+				},
+			}}
+			copy={{
 				title: T()("update_user_panel_title"),
 				description: T()("update_user_panel_description"),
 				submit: T()("update"),
+			}}
+			options={{
+				padding: "30",
 			}}
 		>
 			{() => (

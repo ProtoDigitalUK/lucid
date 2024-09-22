@@ -134,27 +134,6 @@ const UpsertClientIntegrationPanel: Component<
 		<Panel.Root
 			open={props.state.open}
 			setOpen={props.state.setOpen}
-			onSubmit={() => {
-				if (mode() === "create") {
-					createClientIntegration.action.mutate({
-						name: getName(),
-						description: getDescription(),
-						enabled: getEnabled(),
-					});
-				} else {
-					updateClientIntegration.action.mutate({
-						id: props.id?.() as number,
-						body: updateData().data,
-					});
-				}
-			}}
-			reset={() => {
-				setName("");
-				setDescription("");
-				setEnabled(1);
-				createClientIntegration.reset();
-				updateClientIntegration.reset();
-			}}
 			fetchState={{
 				isLoading: isLoading(),
 				isError: isError(),
@@ -164,10 +143,36 @@ const UpsertClientIntegrationPanel: Component<
 				isDisabled: submitIsDisabled(),
 				errors: errors(),
 			}}
-			content={{
+			callbacks={{
+				onSubmit: () => {
+					if (mode() === "create") {
+						createClientIntegration.action.mutate({
+							name: getName(),
+							description: getDescription(),
+							enabled: getEnabled(),
+						});
+					} else {
+						updateClientIntegration.action.mutate({
+							id: props.id?.() as number,
+							body: updateData().data,
+						});
+					}
+				},
+				reset: () => {
+					setName("");
+					setDescription("");
+					setEnabled(1);
+					createClientIntegration.reset();
+					updateClientIntegration.reset();
+				},
+			}}
+			copy={{
 				title: panelTitle(),
 				description: panelDescription(),
 				submit: panelSubmit(),
+			}}
+			options={{
+				padding: "30",
 			}}
 		>
 			{() => (

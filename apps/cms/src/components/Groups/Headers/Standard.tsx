@@ -47,14 +47,14 @@ export const Standard: Component<{
 		<div class="bg-container-2 border-b border-border rounded-t-xl">
 			<div
 				class={classNames(
-					"flex justify-between flex-wrap-reverse items-end gap-x-10 gap-y-15 px-15 md:px-30 pt-15 md:pt-30 pb-15",
+					"flex justify-between flex-col-reverse md:flex-row items-start gap-x-10 gap-y-15 px-15 md:px-30 pt-15 md:pt-30 pb-15",
 					{
 						"md:pb-30": !props.slots?.bottom,
 					},
 				)}
 			>
 				{/* Title and description */}
-				<div>
+				<div class="w-full">
 					<Show when={props.copy?.title}>
 						<h1>{props.copy?.title}</h1>
 					</Show>
@@ -64,7 +64,7 @@ export const Standard: Component<{
 				</div>
 				{/* Actions */}
 				<Show when={props.actions}>
-					<div class="flex items-center justify-end space-x-2.5">
+					<div class="flex items-center justify-end space-x-2.5 w-full">
 						<Show
 							when={
 								props.actions?.contentLocale !== undefined &&

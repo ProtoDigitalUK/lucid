@@ -32,13 +32,15 @@ const PreviewEmailPanel: Component<PreviewEmailPanelProps> = (props) => {
 		<Panel.Root
 			open={props.state.open}
 			setOpen={props.state.setOpen}
-			reset={() => {}}
-			hideFooter={true}
 			fetchState={{
 				isLoading: email.isLoading,
 				isError: email.isError,
 			}}
-			content={{
+			options={{
+				padding: "30",
+				hideFooter: true,
+			}}
+			copy={{
 				title: T()("preview_email_panel_title"),
 			}}
 		>

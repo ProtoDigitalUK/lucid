@@ -148,25 +148,6 @@ const UpsertRolePanel: Component<UpsertRolePanelProps> = (props) => {
 		<Panel.Root
 			open={props.state.open}
 			setOpen={props.state.setOpen}
-			onSubmit={() => {
-				if (!props.id) {
-					createRole.action.mutate({
-						name: getName(),
-						permissions: selectedPermissions(),
-					});
-				} else {
-					updateRole.action.mutate({
-						id: props.id() as number,
-						body: updateData().data,
-					});
-				}
-			}}
-			reset={() => {
-				setSelectedPermissions([]);
-				setName("");
-				createRole.reset();
-				updateRole.reset();
-			}}
 			fetchState={{
 				isLoading: isLoading(),
 				isError: isError(),
@@ -176,10 +157,34 @@ const UpsertRolePanel: Component<UpsertRolePanelProps> = (props) => {
 				isDisabled: submitIsDisabled(),
 				errors: errors(),
 			}}
-			content={{
+			callbacks={{
+				onSubmit: () => {
+					if (!props.id) {
+						createRole.action.mutate({
+							name: getName(),
+							permissions: selectedPermissions(),
+						});
+					} else {
+						updateRole.action.mutate({
+							id: props.id() as number,
+							body: updateData().data,
+						});
+					}
+				},
+				reset: () => {
+					setSelectedPermissions([]);
+					setName("");
+					createRole.reset();
+					updateRole.reset();
+				},
+			}}
+			copy={{
 				title: panelTitle(),
 				description: panelDescription(),
 				submit: panelSubmit(),
+			}}
+			options={{
+				padding: "30",
 			}}
 		>
 			{() => (

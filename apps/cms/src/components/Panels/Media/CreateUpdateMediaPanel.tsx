@@ -197,23 +197,28 @@ const CreateUpdateMediaPanel: Component<CreateUpdateMediaPanelProps> = (
 		<Panel.Root
 			open={props.state.open}
 			setOpen={props.state.setOpen}
-			onSubmit={onSubmit}
 			fetchState={panelFetchState()}
-			reset={() => {
-				createMedia.reset();
-				updateMedia?.reset();
-				MediaFile.reset();
-			}}
 			mutateState={{
 				isLoading: mutateIsLoading(),
 				errors: mutateErrors(),
 				isDisabled: mutateIsDisabled(),
 			}}
-			content={panelContent()}
+			callbacks={{
+				onSubmit: onSubmit,
+				reset: () => {
+					createMedia.reset();
+					updateMedia?.reset();
+					MediaFile.reset();
+				},
+			}}
+			copy={panelContent()}
 			langauge={{
 				contentLocale: true,
 				hascontentLocaleError: hasTranslationErrors(),
 				useDefaultcontentLocale: panelMode() === "create",
+			}}
+			options={{
+				padding: "30",
 			}}
 		>
 			{(lang) => (

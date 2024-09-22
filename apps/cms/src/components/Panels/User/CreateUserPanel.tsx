@@ -65,31 +65,6 @@ const CreateUserPanel: Component<CreateUserPanelProps> = (props) => {
 		<Panel.Root
 			open={props.state.open}
 			setOpen={props.state.setOpen}
-			onSubmit={() => {
-				createUser.action.mutate({
-					body: {
-						email: getEmail(),
-						username: getUsername(),
-						firstName: getFirstName() || undefined,
-						lastName: getLastName() || undefined,
-						superAdmin: userStore.get.user?.superAdmin
-							? getIsSuperAdmin()
-							: undefined,
-						roleIds: getSelectedRoles().map(
-							(role) => role.value,
-						) as number[],
-					},
-				});
-			}}
-			reset={() => {
-				createUser.reset();
-				setUsername("");
-				setFirstName("");
-				setLastName("");
-				setEmail("");
-				setIsSuperAdmin(0);
-				setSelectedRoles([]);
-			}}
 			fetchState={{
 				isLoading: isLoading(),
 				isError: isError(),
@@ -98,10 +73,40 @@ const CreateUserPanel: Component<CreateUserPanelProps> = (props) => {
 				isLoading: createUser.action.isPending,
 				errors: createUser.errors(),
 			}}
-			content={{
+			callbacks={{
+				onSubmit: () => {
+					createUser.action.mutate({
+						body: {
+							email: getEmail(),
+							username: getUsername(),
+							firstName: getFirstName() || undefined,
+							lastName: getLastName() || undefined,
+							superAdmin: userStore.get.user?.superAdmin
+								? getIsSuperAdmin()
+								: undefined,
+							roleIds: getSelectedRoles().map(
+								(role) => role.value,
+							) as number[],
+						},
+					});
+				},
+				reset: () => {
+					createUser.reset();
+					setUsername("");
+					setFirstName("");
+					setLastName("");
+					setEmail("");
+					setIsSuperAdmin(0);
+					setSelectedRoles([]);
+				},
+			}}
+			copy={{
 				title: T()("create_user_panel_title"),
 				description: T()("create_user_panel_description"),
 				submit: T()("create"),
+			}}
+			options={{
+				padding: "30",
 			}}
 		>
 			{() => (
