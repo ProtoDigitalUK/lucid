@@ -205,12 +205,11 @@ export const Panel: Component<PanelProps> = (props) => {
 									})}
 								>
 									<Match when={isLoading()}>
-										<Loading type="fill" />
+										<Loading />
 									</Match>
 									<Match when={props.fetchState?.isError}>
 										<div class="min-h-[300px]">
 											<ErrorBlock
-												type={"fill"}
 												content={{
 													image: notifyIllustration,
 													title:

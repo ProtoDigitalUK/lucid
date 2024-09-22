@@ -1,6 +1,5 @@
 import T from "@/translations";
 import { type Component, createMemo, createSignal } from "solid-js";
-import { useLocation } from "@solidjs/router";
 import helpers from "@/utils/helpers";
 import api from "@/services/api";
 import userStore from "@/store/userStore";
@@ -11,12 +10,12 @@ import ProgressBar from "@/components/Partials/ProgressBar";
 import ClearAllProcessedImages from "@/components/Modals/Media/ClearAllProcessedImages";
 import DetailsList from "@/components/Partials/DetailsList";
 import Layout from "@/components/Groups/Layout";
+import Page from "@/components/Groups/Page";
+import Headers from "@/components/Groups/Headers";
 
 const GeneralSettingsRoute: Component = (props) => {
 	// ----------------------------------------
 	// State / Hooks
-	const location = useLocation();
-
 	const [getOpenClearAllProcessedImages, setOpenClearAllProcessedImages] =
 		createSignal(false);
 
@@ -44,31 +43,57 @@ const GeneralSettingsRoute: Component = (props) => {
 
 	// ----------------------------------------
 	// Render
+
 	return (
-		<Layout.PageLayout
-			title={T()("settings_route_title")}
-			description={T()("settings_route_description")}
-			state={{
-				isLoading: isLoading(),
-				isError: isError(),
-				isSuccess: isSuccess(),
+		<Page.Layout
+			slots={{
+				header: (
+					<Headers.Standard
+						copy={{
+							title: T()("settings_route_title"),
+							description: T()("settings_route_description"),
+						}}
+						actions={{
+							create: {
+								open: false,
+								setOpen: (state) => {
+									setOpenClearAllProcessedImages(state);
+								},
+								permission: userStore.get.hasPermission([
+									"update_media",
+								]).all,
+							},
+						}}
+						slots={{
+							bottom: (
+								<Layout.NavigationTabs
+									tabs={[
+										{
+											label: T()("general"),
+											href: "/admin/settings",
+										},
+										{
+											label: T()("client_integrations"),
+											href: "/admin/settings/client-integrations",
+										},
+									]}
+								/>
+							),
+						}}
+					/>
+				),
 			}}
-			headingChildren={
-				<Layout.NavigationTabs
-					tabs={[
-						{
-							label: T()("general"),
-							href: "/admin/settings",
-						},
-						{
-							label: T()("client_integrations"),
-							href: "/admin/settings/client-integrations",
-						},
-					]}
-				/>
-			}
 		>
-			<Layout.PageContent>
+			<Page.DynamicContent
+				state={{
+					isError: settingsData.isError,
+					isSuccess: settingsData.isSuccess,
+					isLoading: settingsData.isLoading,
+				}}
+				options={{
+					padding: "30",
+				}}
+			>
 				{/* Storage */}
 				<InfoRow.Root
 					title={T()("storage_breakdown")}
@@ -186,16 +211,16 @@ const GeneralSettingsRoute: Component = (props) => {
 						/>
 					</InfoRow.Content>
 				</InfoRow.Root>
+			</Page.DynamicContent>
 
-				{/* Modals */}
-				<ClearAllProcessedImages
-					state={{
-						open: getOpenClearAllProcessedImages(),
-						setOpen: setOpenClearAllProcessedImages,
-					}}
-				/>
-			</Layout.PageContent>
-		</Layout.PageLayout>
+			{/* Modals */}
+			<ClearAllProcessedImages
+				state={{
+					open: getOpenClearAllProcessedImages(),
+					setOpen: setOpenClearAllProcessedImages,
+				}}
+			/>
+		</Page.Layout>
 	);
 };
 

@@ -37,6 +37,7 @@ import LinkSelectModal from "@/components/Modals/CustomField/LinkSelect";
 import UserDisplay from "@/components/Partials/UserDisplay";
 import BrickImagePreview from "@/components/Modals/Bricks/ImagePreview";
 import Pill from "@/components/Partials/Pill";
+import Page from "@/components/Groups/Page";
 
 interface CollectionsDocumentsEditRouteProps {
 	mode: "create" | "edit";
@@ -214,11 +215,12 @@ const CollectionsDocumentsEditRoute: Component<
 				<header
 					ref={setHeaderEle}
 					class={classNames(
-						"before:absolute before:inset-0 overflow-hidden before:bg-container-1 border-b before:z-0 border-border px-15 md:px-30 fixed top-0 left-[310px] right-0 z-10 duration-200 transition-all",
+						"before:absolute before:inset-0 overflow-hidden border-x border-b border-border rounded-b-xl before:z-0 px-15 md:px-30 fixed top-0 left-[310px] right-15 z-10 duration-200 transition-all",
 						{
-							"py-15 md:py-15 before:bg-opacity-95":
+							"py-15 md:py-15 before:bg-opacity-95 before:bg-container-1":
 								getHasScrolled(),
-							"py-15 md:py-30": !getHasScrolled(),
+							"py-15 md:py-30 before:bg-container-3":
+								!getHasScrolled(),
 						},
 					)}
 				>
@@ -345,7 +347,7 @@ const CollectionsDocumentsEditRoute: Component<
 						</div>
 					</div>
 				</header>
-				<div class="w-full mt-[191px] lg:mt-[141px] flex flex-grow overflow-hidden">
+				<div class="w-full mt-[191px] lg:mt-[141px] flex flex-grow overflow-hidden bg-container-3 rounded-t-xl border-x border-t border-border">
 					{/* Fields & Bricks */}
 					<div class="w-full flex flex-col">
 						<Document.CollectionPseudoBrick
@@ -366,7 +368,7 @@ const CollectionsDocumentsEditRoute: Component<
 					<Show when={props.mode === "edit"}>
 						<aside
 							class={classNames(
-								"w-full lg:max-w-[300px] lg:overflow-y-auto bg-container-1 border-b lg:border-b-0 lg:border-l border-border animate-animate-slide-from-right-in",
+								"w-full lg:max-w-[300px] lg:overflow-y-auto bg-container-3 border-b lg:border-b-0 lg:border-l border-border animate-animate-slide-from-right-in",
 								{
 									hidden: getPanelOpen() === false,
 								},

@@ -19,6 +19,8 @@ import RegenerateAPIKey from "@/components/Modals/ClientIntegrations/RegenerateA
 import Button from "@/components/Partials/Button";
 import ErrorBlock from "@/components/Partials/ErrorBlock";
 import ClientIntegrationRow from "@/components/Rows/ClientIntegrationRow";
+import Page from "@/components/Groups/Page";
+import Headers from "@/components/Groups/Headers";
 
 const GeneralSettingsRoute: Component = (props) => {
 	// ----------------------------------------
@@ -52,40 +54,54 @@ const GeneralSettingsRoute: Component = (props) => {
 	// ----------------------------------------
 	// Render
 	return (
-		<Layout.PageLayout
-			title={T()("settings_route_title")}
-			description={T()("settings_route_description")}
-			state={{
-				isLoading: isLoading(),
-				isError: isError(),
-				isSuccess: isSuccess(),
+		<Page.Layout
+			slots={{
+				header: (
+					<Headers.Standard
+						copy={{
+							title: T()("settings_route_title"),
+							description: T()("settings_route_description"),
+						}}
+						actions={{
+							create: {
+								open: rowTarget.getTriggers().update,
+								setOpen: (state) => {
+									rowTarget.setTargetId(undefined);
+									rowTarget.setTrigger("update", state);
+								},
+								permission: hasCreatePermission(),
+							},
+						}}
+						slots={{
+							bottom: (
+								<Layout.NavigationTabs
+									tabs={[
+										{
+											label: T()("general"),
+											href: "/admin/settings",
+										},
+										{
+											label: T()("client_integrations"),
+											href: "/admin/settings/client-integrations",
+										},
+									]}
+								/>
+							),
+						}}
+					/>
+				),
 			}}
-			actions={{
-				create: {
-					open: rowTarget.getTriggers().update,
-					setOpen: (state) => {
-						rowTarget.setTargetId(undefined);
-						rowTarget.setTrigger("update", state);
-					},
-					permission: hasCreatePermission(),
-				},
-			}}
-			headingChildren={
-				<Layout.NavigationTabs
-					tabs={[
-						{
-							label: T()("general"),
-							href: "/admin/settings",
-						},
-						{
-							label: T()("client_integrations"),
-							href: "/admin/settings/client-integrations",
-						},
-					]}
-				/>
-			}
 		>
-			<Layout.PageContent>
+			<Page.DynamicContent
+				state={{
+					isError: clientIntegrations.isError,
+					isSuccess: clientIntegrations.isSuccess,
+					isLoading: clientIntegrations.isLoading,
+				}}
+				options={{
+					padding: "30",
+				}}
+			>
 				<InfoRow.Root
 					title={T()("client_integrations")}
 					description={T()("client_integration_description")}
@@ -111,7 +127,6 @@ const GeneralSettingsRoute: Component = (props) => {
 						>
 							<InfoRow.Content>
 								<ErrorBlock
-									type="block"
 									content={{
 										title: T()(
 											"no_client_integrations_found_title",
@@ -143,63 +158,63 @@ const GeneralSettingsRoute: Component = (props) => {
 						</Match>
 					</Switch>
 				</InfoRow.Root>
+			</Page.DynamicContent>
 
-				{/* Panels & Modals */}
-				<DeleteClientIntegration
-					id={rowTarget.getTargetId}
-					state={{
-						open: rowTarget.getTriggers().delete,
-						setOpen: (state: boolean) => {
-							rowTarget.setTrigger("delete", state);
-						},
-					}}
-				/>
-				<UpsertClientIntegrationPanel
-					id={rowTarget.getTargetId}
-					state={{
-						open: rowTarget.getTriggers().update,
-						setOpen: (state: boolean) => {
-							rowTarget.setTrigger("update", state);
-						},
-					}}
-					callbacks={{
-						onCreateSuccess: (key) => {
-							setAPIKey(key);
-							rowTarget.setTrigger("apiKey", true);
-						},
-					}}
-				/>
-				<CopyAPIKey
-					apiKey={getAPIKey()}
-					state={{
-						open: rowTarget.getTriggers().apiKey,
-						setOpen: (state: boolean) => {
-							rowTarget.setTrigger("apiKey", state);
-						},
-					}}
-					callbacks={{
-						onClose: () => {
-							setAPIKey(undefined);
-						},
-					}}
-				/>
-				<RegenerateAPIKey
-					id={rowTarget.getTargetId}
-					state={{
-						open: rowTarget.getTriggers().regenerateAPIKey,
-						setOpen: (state: boolean) => {
-							rowTarget.setTrigger("regenerateAPIKey", state);
-						},
-					}}
-					callbacks={{
-						onSuccess: (key) => {
-							setAPIKey(key);
-							rowTarget.setTrigger("apiKey", true);
-						},
-					}}
-				/>
-			</Layout.PageContent>
-		</Layout.PageLayout>
+			{/* Panels & Modals */}
+			<DeleteClientIntegration
+				id={rowTarget.getTargetId}
+				state={{
+					open: rowTarget.getTriggers().delete,
+					setOpen: (state: boolean) => {
+						rowTarget.setTrigger("delete", state);
+					},
+				}}
+			/>
+			<UpsertClientIntegrationPanel
+				id={rowTarget.getTargetId}
+				state={{
+					open: rowTarget.getTriggers().update,
+					setOpen: (state: boolean) => {
+						rowTarget.setTrigger("update", state);
+					},
+				}}
+				callbacks={{
+					onCreateSuccess: (key) => {
+						setAPIKey(key);
+						rowTarget.setTrigger("apiKey", true);
+					},
+				}}
+			/>
+			<CopyAPIKey
+				apiKey={getAPIKey()}
+				state={{
+					open: rowTarget.getTriggers().apiKey,
+					setOpen: (state: boolean) => {
+						rowTarget.setTrigger("apiKey", state);
+					},
+				}}
+				callbacks={{
+					onClose: () => {
+						setAPIKey(undefined);
+					},
+				}}
+			/>
+			<RegenerateAPIKey
+				id={rowTarget.getTargetId}
+				state={{
+					open: rowTarget.getTriggers().regenerateAPIKey,
+					setOpen: (state: boolean) => {
+						rowTarget.setTrigger("regenerateAPIKey", state);
+					},
+				}}
+				callbacks={{
+					onSuccess: (key) => {
+						setAPIKey(key);
+						rowTarget.setTrigger("apiKey", true);
+					},
+				}}
+			/>
+		</Page.Layout>
 	);
 };
 

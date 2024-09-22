@@ -37,11 +37,10 @@ const ResetPasswordRoute: Component = () => {
 	return (
 		<Switch>
 			<Match when={checkToken.isLoading}>
-				<Loading type="fill" />
+				<Loading />
 			</Match>
 			<Match when={checkToken.isError}>
 				<ErrorBlock
-					type={"fill"}
 					content={{
 						image: notifyIllustration,
 						title: T()("token_provided_invalid"),

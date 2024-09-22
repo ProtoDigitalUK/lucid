@@ -11,40 +11,38 @@ import {
 import { FaSolidChevronLeft, FaSolidChevronRight } from "solid-icons/fa";
 import type { ResponseBody } from "@lucidcms/core/types";
 import type useSearchParamsLocation from "@/hooks/useSearchParamsLocation";
-import Layout from "@/components/Groups/Layout";
 import { Pagination as KobPagination } from "@kobalte/core";
 
-interface PaginationProps {
-	meta?: ResponseBody<unknown>["meta"];
-	searchParams: ReturnType<typeof useSearchParamsLocation>;
-	mode: "page" | "modal";
-}
-
-export const Pagination: Component<PaginationProps> = (props) => {
+export const Pagination: Component<{
+	state: {
+		meta?: ResponseBody<unknown>["meta"];
+		searchParams: ReturnType<typeof useSearchParamsLocation>;
+	};
+}> = (props) => {
 	const [page, setPage] = createSignal(1);
 
 	// -------------------------------------
 	// Memos
 	const textData = createMemo(() => {
 		return {
-			page: props.meta?.currentPage ?? 1,
-			lastPage: props.meta?.lastPage ?? 1,
-			total: props.meta?.total ?? 0,
+			page: props.state.meta?.currentPage ?? 1,
+			lastPage: props.state.meta?.lastPage ?? 1,
+			total: props.state.meta?.total ?? 0,
 		};
 	});
 	const lastPage = createMemo(() => {
-		return props.meta?.lastPage ?? 1;
+		return props.state.meta?.lastPage ?? 1;
 	});
 
 	// -------------------------------------
 	// Effects
 	createEffect(() => {
-		setPage(props.meta?.currentPage ?? 1);
+		setPage(props.state.meta?.currentPage ?? 1);
 	});
 
 	// -------------------------------------
 	// Render
-	const InnerComponent = (
+	return (
 		<div class="flex md:flex-row flex-col justify-between md:items-center">
 			<span class="text-sm text-body md:mb-0 mb-2">
 				<Switch>
@@ -65,10 +63,10 @@ export const Pagination: Component<PaginationProps> = (props) => {
 					class="flex [&>ul]:flex [&>ul]:border [&>ul]:border-border [&>ul]:rounded-md [&>ul]:overflow-hidden"
 					page={page()}
 					onPageChange={(page) => {
-						props.searchParams.setParams({
+						props.state.searchParams.setParams({
 							pagination: {
 								page: page,
-								perPage: props.meta?.perPage || undefined,
+								perPage: props.state.meta?.perPage || undefined,
 							},
 						});
 						setPage(page);
@@ -98,18 +96,5 @@ export const Pagination: Component<PaginationProps> = (props) => {
 				</KobPagination.Root>
 			</Show>
 		</div>
-	);
-
-	return (
-		<Switch>
-			<Match when={props.mode === "modal"}>
-				<div class="mt-15 pt-15 border-t border-border">
-					{InnerComponent}
-				</div>
-			</Match>
-			<Match when={props.mode === "page"}>
-				<Layout.PageFooter>{InnerComponent}</Layout.PageFooter>
-			</Match>
-		</Switch>
 	);
 };

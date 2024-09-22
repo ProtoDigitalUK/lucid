@@ -32,7 +32,6 @@ export const ModalGrid: Component<ModalGridProps> = (props) => {
 			<Switch>
 				<Match when={props.permission === false}>
 					<ErrorBlock
-						type="block-grow"
 						content={{
 							image: noPermission,
 							title: T()("no_permission"),
@@ -42,7 +41,6 @@ export const ModalGrid: Component<ModalGridProps> = (props) => {
 				</Match>
 				<Match when={props.state.isError}>
 					<ErrorBlock
-						type="block-grow"
 						content={{
 							image: notifySvg,
 							title: T()("error_title"),
@@ -54,7 +52,6 @@ export const ModalGrid: Component<ModalGridProps> = (props) => {
 					when={props.items === 0 && props.state.isLoading === false}
 				>
 					<ErrorBlock
-						type="block-grow"
 						content={{
 							image: emptySvg,
 							title: T()("no_results"),
@@ -112,9 +109,11 @@ export const ModalGrid: Component<ModalGridProps> = (props) => {
 			{/* Pagination */}
 			<Show when={props.meta && props.searchParams}>
 				<Query.Pagination
-					meta={props.meta}
-					searchParams={props.searchParams as SearchParamsResponse}
-					mode="modal"
+					state={{
+						meta: props.meta,
+						searchParams:
+							props.searchParams as SearchParamsResponse,
+					}}
 				/>
 			</Show>
 		</>

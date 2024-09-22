@@ -2,10 +2,11 @@ import T from "@/translations";
 import { type Component, createSignal } from "solid-js";
 import userStore from "@/store/userStore";
 import useSearchParamsLocation from "@/hooks/useSearchParamsLocation";
-import Layout from "@/components/Groups/Layout";
 import Query from "@/components/Groups/Query";
-import UsersTable from "@/components/Tables/UsersTable";
 import CreateUserPanel from "@/components/Panels/User/CreateUserPanel";
+import Page from "@/components/Groups/Page";
+import Headers from "@/components/Groups/Headers";
+import PageContent from "@/components/Groups/PageContent";
 
 const UsersListRoute: Component = () => {
 	// ----------------------------------
@@ -43,58 +44,66 @@ const UsersListRoute: Component = () => {
 	// ----------------------------------
 	// Render
 	return (
-		<Layout.PageLayout
-			title={T()("users_route_title")}
-			description={T()("users_route_description")}
-			options={{
-				noBorder: true,
+		<Page.Layout
+			slots={{
+				header: (
+					<Headers.Standard
+						copy={{
+							title: T()("users_route_title"),
+							description: T()("users_route_description"),
+						}}
+						actions={{
+							create: {
+								open: openCreateUserPanel(),
+								setOpen: setOpenCreateUserPanel,
+								permission: userStore.get.hasPermission([
+									"create_user",
+								]).all,
+							},
+						}}
+						slots={{
+							bottom: (
+								<Query.Row
+									searchParams={searchParams}
+									filters={[
+										{
+											label: T()("first_name"),
+											key: "firstName",
+											type: "text",
+										},
+										{
+											label: T()("last_name"),
+											key: "lastName",
+											type: "text",
+										},
+										{
+											label: T()("email"),
+											key: "email",
+											type: "text",
+										},
+										{
+											label: T()("username"),
+											key: "username",
+											type: "text",
+										},
+									]}
+									sorts={[
+										{
+											label: T()("created_at"),
+											key: "createdAt",
+										},
+									]}
+									perPage={[]}
+								/>
+							),
+						}}
+					/>
+				),
 			}}
-			actions={{
-				create: {
-					open: openCreateUserPanel(),
-					setOpen: setOpenCreateUserPanel,
-					permission: userStore.get.hasPermission(["create_user"])
-						.all,
-				},
-			}}
-			headingChildren={
-				<Query.Row
-					searchParams={searchParams}
-					filters={[
-						{
-							label: T()("first_name"),
-							key: "firstName",
-							type: "text",
-						},
-						{
-							label: T()("last_name"),
-							key: "lastName",
-							type: "text",
-						},
-						{
-							label: T()("email"),
-							key: "email",
-							type: "text",
-						},
-						{
-							label: T()("username"),
-							key: "username",
-							type: "text",
-						},
-					]}
-					sorts={[
-						{
-							label: T()("created_at"),
-							key: "createdAt",
-						},
-					]}
-					perPage={[]}
-				/>
-			}
 		>
-			<UsersTable
-				searchParams={searchParams}
+			<PageContent.UserList
 				state={{
+					searchParams: searchParams,
 					setOpenCreateUserPanel: setOpenCreateUserPanel,
 				}}
 			/>
@@ -104,7 +113,7 @@ const UsersListRoute: Component = () => {
 					setOpen: setOpenCreateUserPanel,
 				}}
 			/>
-		</Layout.PageLayout>
+		</Page.Layout>
 	);
 };
 

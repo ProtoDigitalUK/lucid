@@ -115,11 +115,11 @@ export const SelectMultiple: Component<SelectMultipleProps> = (props) => {
 						<div class="flex flex-wrap gap-1">
 							<For each={props.values}>
 								{(value) => (
-									<span class="bg-primary-base hover:bg-primary-hover duration-200 transition-colors rounded-md text-primary-contrast hover:text-error-base px-2 py-0.5 flex items-center text-sm focus:outline-none">
+									<span class="bg-primary-base hover:bg-primary-hover duration-200 transition-colors rounded-md text-primary-contrast px-2 py-0.5 flex items-center text-sm focus:outline-none">
 										{value.label}
 										<button
 											type="button"
-											class="ml-1 pointer-events-auto duration-200 transition-colors rounded-full focus:outline-none focus:ring-1 ring-error-base focus:fill-error-base"
+											class="ml-1 pointer-events-auto duration-200 transition-colors rounded-full focus:outline-none focus:ring-1 ring-error-base focus:fill-error-base hover:text-error-base"
 											onClick={(e) => {
 												e.stopPropagation();
 												e.preventDefault();

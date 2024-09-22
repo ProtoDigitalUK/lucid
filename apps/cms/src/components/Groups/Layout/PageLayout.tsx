@@ -72,11 +72,10 @@ export const PageLayout: Component<PageWrapperProps> = (props) => {
 			>
 				<Switch>
 					<Match when={props.state?.isLoading}>
-						<Loading type="page-layout" />
+						<Loading />
 					</Match>
 					<Match when={props.state?.isError}>
 						<ErrorBlock
-							type="page-layout"
 							content={{
 								image: notifySvg,
 								title: T()("error_title"),

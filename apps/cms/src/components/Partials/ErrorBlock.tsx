@@ -1,13 +1,13 @@
 import { type Component, type JSXElement, Show } from "solid-js";
 import classNames from "classnames";
 import Link from "@/components/Partials/Link";
+import T from "@/translations";
 
-interface ErrorBlockProps {
-	type: "fill" | "page-layout" | "table" | "block" | "block-grow";
+const ErrorBlock: Component<{
 	content: {
 		image?: string;
-		title: string;
-		description: string;
+		title?: string;
+		description?: string;
 	};
 	link?: {
 		text: string;
@@ -17,20 +17,9 @@ interface ErrorBlockProps {
 		contentMaxWidth?: "md";
 	};
 	children?: JSXElement;
-}
-
-const ErrorBlock: Component<ErrorBlockProps> = (props) => {
+}> = (props) => {
 	return (
-		<div
-			class={classNames("flex items-center justify-center", {
-				"inset-0 absolute z-50 bg-container-3": props.type === "fill",
-				"page-layout-full-body bg-container-3":
-					props.type === "page-layout",
-				"border-t border-border page-layout-full-body bg-container-3":
-					props.type === "table",
-				"flex-grow": props.type === "block-grow",
-			})}
-		>
+		<div class={"flex items-center justify-center"}>
 			<div class="text-center max-w-xl w-full flex flex-col items-center p-30">
 				<Show when={props.content.image}>
 					<img
@@ -39,7 +28,10 @@ const ErrorBlock: Component<ErrorBlockProps> = (props) => {
 						alt=""
 					/>
 				</Show>
-				<h2 class="mb-15">{props.content.title}</h2>
+
+				<h2 class="mb-15">
+					{props.content.title ?? T()("error_title")}
+				</h2>
 				<p
 					class={classNames({
 						"max-w-96":
@@ -47,7 +39,7 @@ const ErrorBlock: Component<ErrorBlockProps> = (props) => {
 						"max-w-md": props.options?.contentMaxWidth === "md",
 					})}
 				>
-					{props.content.description}
+					{props.content.description ?? T()("error_message")}
 				</p>
 				<Show when={props.link !== undefined}>
 					<Link

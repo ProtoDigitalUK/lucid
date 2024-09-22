@@ -59,7 +59,6 @@ export const ModalTable: Component<ModalTableProps> = (props) => {
 			<Switch>
 				<Match when={props.permission === false}>
 					<ErrorBlock
-						type="block-grow"
 						content={{
 							image: noPermission,
 							title: T()("no_permission"),
@@ -69,7 +68,6 @@ export const ModalTable: Component<ModalTableProps> = (props) => {
 				</Match>
 				<Match when={props.state.isError}>
 					<ErrorBlock
-						type="block-grow"
 						content={{
 							image: notifySvg,
 							title: T()("error_title"),
@@ -82,18 +80,18 @@ export const ModalTable: Component<ModalTableProps> = (props) => {
 				>
 					<Show when={showNoEntries()}>
 						<NoEntriesBlock
-							type="block-grow"
 							copy={{
 								title: props.copy?.noEntryTitle,
 								description: props.copy?.noEntryDescription,
 								button: props.copy?.noEntryButton,
 							}}
-							action={props.callbacks?.createEntry}
+							callbacks={{
+								action: props.callbacks?.createEntry,
+							}}
 						/>
 					</Show>
 					<Show when={!showNoEntries()}>
 						<ErrorBlock
-							type="block-grow"
 							content={{
 								title:
 									props.copy?.noResultTitle ??
@@ -125,9 +123,10 @@ export const ModalTable: Component<ModalTableProps> = (props) => {
 			<Show when={props.meta}>
 				<div class="px-15 md:px-30 pt-15 md:pt-30">
 					<Query.Pagination
-						meta={props.meta}
-						searchParams={props.searchParams}
-						mode="modal"
+						state={{
+							meta: props.meta,
+							searchParams: props.searchParams,
+						}}
 					/>
 				</div>
 			</Show>

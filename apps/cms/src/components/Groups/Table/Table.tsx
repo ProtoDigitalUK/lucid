@@ -166,7 +166,7 @@ export const TableRoot: Component<TableRootProps> = (props) => {
 							{props?.caption}
 						</caption>
 					</Show>
-					<thead class="border-t border-border">
+					<thead>
 						<tr class="h-10">
 							<Show when={isSelectable()}>
 								<SelectCol

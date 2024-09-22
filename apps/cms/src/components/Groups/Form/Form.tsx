@@ -36,7 +36,6 @@ export const Form: Component<FormProps> = (props) => {
 		<Switch>
 			<Match when={props.queryState?.isError}>
 				<ErrorBlock
-					type={"page-layout"}
 					content={{
 						image: notifySvg,
 						title: T()("error_title"),

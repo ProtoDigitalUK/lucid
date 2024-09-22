@@ -21,7 +21,7 @@ export const PageBreadcrumbs: Component<PageBreadcrumbsProps> = (props) => {
 	return (
 		<Show when={props.breadcrumbs}>
 			<nav
-				class={classNames("bg-container-1", {
+				class={classNames({
 					"border-b border-border": props.options?.noBorder !== true,
 					"px-15 md:px-30 py-15": props.options?.noPadding !== true,
 				})}

@@ -60,7 +60,6 @@ export const GridRoot: Component<GridRootProps> = (props) => {
 			<Switch>
 				<Match when={props.permission === false}>
 					<ErrorBlock
-						type="page-layout"
 						content={{
 							image: noPermission,
 							title: T()("no_permission"),
@@ -70,7 +69,6 @@ export const GridRoot: Component<GridRootProps> = (props) => {
 				</Match>
 				<Match when={props.state.isError}>
 					<ErrorBlock
-						type="page-layout"
 						content={{
 							image: notifySvg,
 							title: T()("error_title"),
@@ -83,18 +81,18 @@ export const GridRoot: Component<GridRootProps> = (props) => {
 				>
 					<Show when={showNoEntries()}>
 						<NoEntriesBlock
-							type="page-layout"
 							copy={{
 								title: props.copy?.noEntryTitle,
 								description: props.copy?.noEntryDescription,
 								button: props.copy?.noEntryButton,
 							}}
-							action={props.callbacks?.createEntry}
+							callbacks={{
+								action: props.callbacks?.createEntry,
+							}}
 						/>
 					</Show>
 					<Show when={!showNoEntries()}>
 						<ErrorBlock
-							type="page-layout"
 							content={{
 								title: T()("no_results"),
 								description: T()("no_results_message"),
@@ -160,13 +158,12 @@ export const GridRoot: Component<GridRootProps> = (props) => {
 			{/* Pagination */}
 			<Show when={props.meta && props.searchParams}>
 				<Query.Pagination
-					meta={props.meta}
-					searchParams={
-						props.searchParams as ReturnType<
+					state={{
+						meta: props.meta,
+						searchParams: props.searchParams as ReturnType<
 							typeof useSearchParamsLocation
-						>
-					}
-					mode="page"
+						>,
+					}}
 				/>
 			</Show>
 		</>
