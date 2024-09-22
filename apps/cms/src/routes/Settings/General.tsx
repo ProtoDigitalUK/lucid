@@ -26,10 +26,6 @@ const GeneralSettingsRoute: Component = (props) => {
 
 	// ----------------------------------------
 	// Memos
-	const isLoading = createMemo(() => settingsData.isLoading);
-	const isError = createMemo(() => settingsData.isError);
-	const isSuccess = createMemo(() => settingsData.isSuccess);
-
 	const percentUsed = createMemo(() => {
 		if (settingsData.data?.data?.media.storage.remaining === null) return 0;
 		if (settingsData.data?.data?.media.storage.used === 0) return 0;
@@ -51,17 +47,6 @@ const GeneralSettingsRoute: Component = (props) => {
 						copy={{
 							title: T()("settings_route_title"),
 							description: T()("settings_route_description"),
-						}}
-						actions={{
-							create: {
-								open: false,
-								setOpen: (state) => {
-									setOpenClearAllProcessedImages(state);
-								},
-								permission: userStore.get.hasPermission([
-									"update_media",
-								]).all,
-							},
 						}}
 						slots={{
 							bottom: (
