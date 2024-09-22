@@ -63,7 +63,7 @@ export const Textarea: Component<TextareaProps> = (props) => {
 						"focus:outline-none text-sm text-title font-medium resize-none w-full block disabled:cursor-not-allowed disabled:opacity-80",
 						{
 							"pt-2": props.copy?.label === undefined,
-							"bg-container-4 border border-border rounded-md mt-1 p-2.5 focus:border-primary-base duration-200 transition-colors":
+							"bg-container-4 border border-border-input rounded-md mt-1 p-2.5 focus:border-primary-base duration-200 transition-colors":
 								props.theme === "basic",
 							"bg-transparent pb-2 px-2.5 pt-1 rounded-b-md":
 								props.theme === "full",

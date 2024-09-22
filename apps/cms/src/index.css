@@ -112,13 +112,13 @@
 
   /* Wysiwyg */
   .ql-toolbar {
-    @apply !border-border !rounded-t-md;
+    @apply !border-border-input !rounded-t-md;
   }
   .ql-container.ql-snow {
-    @apply !border-border !rounded-b-md;
+    @apply !border-border-input !rounded-b-md;
   }
   .ql-container-1 {
-    @apply !border-border !rounded-b-md;
+    @apply !border-border-input !rounded-b-md;
   }
   .ql-toolbar .ql-stroke {
       @apply !stroke-body duration-200 transition-colors;
@@ -130,7 +130,7 @@
         @apply text-body hover:!text-primary-hover duration-200 transition-colors ;
     }
     .ql-toolbar.ql-snow .ql-picker.ql-expanded .ql-picker-label {
-        @apply !border-border;
+        @apply !border-border-input;
     }
     .ql-picker-label.ql-active {
         @apply !text-primary-base;
@@ -148,10 +148,10 @@
         @apply !fill-primary-base;
     }
     .ql-tooltip {
-        @apply !left-1/2 !-translate-x-1/2 !shadow-none !bg-container-1 rounded-md !border-border !border !text-body;
+        @apply !left-1/2 !-translate-x-1/2 !shadow-none !bg-container-1 rounded-md !border-border-input !border !text-body;
     }
     .ql-tooltip input {
-        @apply !bg-container-1 rounded-md !border-border !border !text-body focus:outline-none focus:ring-1 ring-primary-base;
+        @apply !bg-container-1 rounded-md !border-border-input !border !text-body focus:outline-none focus:ring-1 ring-primary-base;
     }
     .ql-tooltip .ql-action, .ql-tooltip .ql-remove {
         @apply !text-primary-contrast bg-primary-base hover:bg-primary-hover ml-2.5 px-2.5 rounded-md;
@@ -170,7 +170,7 @@
     }
 
     .ql-picker-options {
-        @apply !bg-container-1 rounded-md !border-border !border !text-body;
+        @apply !bg-container-1 rounded-md !border-border-input !border !text-body;
     }
     .ql-picker-item:hover {
         @apply !text-primary-hover;

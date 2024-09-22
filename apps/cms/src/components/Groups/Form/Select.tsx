@@ -126,7 +126,7 @@ export const Select: Component<SelectProps> = (props) => {
 						class={classNames(
 							"focus:outline-none px-2.5 text-sm text-title font-medium w-full flex justify-between disabled:cursor-not-allowed disabled:opacity-80",
 							{
-								"bg-container-4 border border-border flex items-center rounded-md focus:border-primary-base duration-200 transition-colors":
+								"bg-container-4 border border-border-input flex items-center rounded-md focus:border-primary-base duration-200 transition-colors":
 									props.theme === "basic" ||
 									props.theme === "basic-small",
 								"h-10": props.theme === "basic",

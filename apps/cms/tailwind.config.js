@@ -14,9 +14,9 @@ export default {
 				},
 				container: {
 					1: "#070707", // navbar / header
-					2: "#1A1A1A", // banner / primary container
+					2: "#1D1D1D", // banner / primary container
 					3: "#131313", // background
-					4: "#313131", // inputs / secondary container
+					4: "#242424", // inputs / secondary container
 				},
 				icon: {
 					base: "#E3E3E3",
@@ -31,7 +31,10 @@ export default {
 					base: "#FFC107",
 					contrast: "#000000",
 				},
-				border: "#252525",
+				border: {
+					DEFAULT: "#252525",
+					input: "#343434",
+				},
 				// Typography
 				title: "#F1F1F1",
 				body: "#C7C7C7",

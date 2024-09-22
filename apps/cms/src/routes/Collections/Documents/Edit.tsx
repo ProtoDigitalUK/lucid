@@ -37,7 +37,6 @@ import LinkSelectModal from "@/components/Modals/CustomField/LinkSelect";
 import UserDisplay from "@/components/Partials/UserDisplay";
 import BrickImagePreview from "@/components/Modals/Bricks/ImagePreview";
 import Pill from "@/components/Partials/Pill";
-import Page from "@/components/Groups/Page";
 
 interface CollectionsDocumentsEditRouteProps {
 	mode: "create" | "edit";
