@@ -36,7 +36,7 @@ const InfoRowContent: Component<InfoRowProps> = (props) => {
 				<h3 class="text-base mb-1">{props.title}</h3>
 			</Show>
 			<Show when={props.description}>
-				<p class="text-sm">{props.description}</p>
+				<p class="text-sm max-w-4xl">{props.description}</p>
 			</Show>
 			<div
 				class={classNames({

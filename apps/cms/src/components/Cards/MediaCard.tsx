@@ -113,10 +113,10 @@ const MediaCard: Component<MediaCardProps> = (props) => {
 					alt={alt() || title() || ""}
 				/>
 				<span class="inset-0 top-auto absolute flex gap-1 p-15">
-					<Pill theme="primary">
+					<Pill theme="secondary">
 						{helpers.bytesToSize(props.media.meta.fileSize)}
 					</Pill>
-					<Pill theme="primary">{props.media.meta.extension}</Pill>
+					<Pill theme="secondary">{props.media.meta.extension}</Pill>
 				</span>
 			</AspectRatio>
 			{/* Content */}

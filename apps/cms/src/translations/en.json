@@ -369,6 +369,7 @@
 	"fixed_bricks": "Fixed Bricks",
 	"total_bricks": "Total Bricks",
 	"field_errors": "Field Errors",
+	"clear_filters": "Clear Filters",
 
 	"create_toast_title": "{{name}} created",
 	"create_toast_message": "The {{name}} has been created",

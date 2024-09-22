@@ -312,7 +312,7 @@ const CollectionsDocumentsEditRoute: Component<
 								}
 							>
 								<Button
-									theme="border-outline"
+									theme="input-style"
 									size="x-icon"
 									type="button"
 									onClick={() => setDeleteOpen(true)}
@@ -323,7 +323,7 @@ const CollectionsDocumentsEditRoute: Component<
 							</Show>
 							<Show when={props.mode === "edit"}>
 								<Button
-									theme="border-outline"
+									theme="input-style"
 									size="x-icon"
 									type="button"
 									onClick={() =>
@@ -367,7 +367,7 @@ const CollectionsDocumentsEditRoute: Component<
 					<Show when={props.mode === "edit"}>
 						<aside
 							class={classNames(
-								"w-full lg:max-w-[300px] lg:overflow-y-auto bg-container-3 border-b lg:border-b-0 lg:border-l border-border animate-animate-slide-from-right-in",
+								"w-full lg:max-w-[300px] lg:overflow-y-auto bg-container-5 border-b lg:border-b-0 lg:border-l border-border animate-animate-slide-from-right-in",
 								{
 									hidden: getPanelOpen() === false,
 								},

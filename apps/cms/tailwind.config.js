@@ -12,11 +12,17 @@ export default {
 					hover: "#D0FF96",
 					contrast: "#131313",
 				},
+				secondary: {
+					base: "#FFFFFF",
+					hover: "#F1F1F1",
+					contrast: "#131313",
+				},
 				container: {
 					1: "#070707", // navbar / header
 					2: "#1D1D1D", // banner / primary container
 					3: "#131313", // background
 					4: "#242424", // inputs / secondary container
+					5: "#111111", // table hover
 				},
 				icon: {
 					base: "#E3E3E3",

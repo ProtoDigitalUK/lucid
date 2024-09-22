@@ -1,4 +1,7 @@
+import T from "@/translations";
 import { type Component, Show } from "solid-js";
+import { FaSolidXmark } from "solid-icons/fa";
+import classNames from "classnames";
 import type useSearchParamsLocation from "@/hooks/useSearchParamsLocation";
 import type { FilterProps } from "@/components/Groups/Query/Filter";
 import type { SortProps } from "@/components/Groups/Query/Sort";
@@ -14,7 +17,7 @@ interface QueryRowProps {
 export const QueryRow: Component<QueryRowProps> = (props) => {
 	return (
 		<div class="w-full px-15 md:px-30 pb-30 flex justify-between">
-			<div class="flex gap-2.5">
+			<div class="flex gap-2.5 items-center">
 				<Show when={props.filters !== undefined}>
 					<Query.Filter
 						filters={props.filters as FilterProps["filters"]}
@@ -27,6 +30,31 @@ export const QueryRow: Component<QueryRowProps> = (props) => {
 						sorts={props.sorts as SortProps["sorts"]}
 						searchParams={props.searchParams}
 					/>
+				</Show>
+				<Show
+					when={
+						props.filters !== undefined &&
+						props.searchParams.hasFiltersApplied()
+					}
+				>
+					<button
+						type="button"
+						class={classNames(
+							"z-20 relative text-sm flex items-center gap-2 ml-2.5 hover:text-error-hover duration-200 transition-colors group",
+							{
+								"opacity-50":
+									!props.searchParams.hasFiltersApplied(),
+							},
+						)}
+						onClick={(e) => {
+							e.stopPropagation();
+							e.preventDefault();
+							props.searchParams.resetFilters();
+						}}
+					>
+						<FaSolidXmark class="text-error-base group-hover:text-error-hover" />
+						<span>{T()("clear_filters")}</span>
+					</button>
 				</Show>
 			</div>
 			<div>

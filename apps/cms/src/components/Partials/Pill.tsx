@@ -2,7 +2,7 @@ import classNames from "classnames";
 import type { Component, JSXElement } from "solid-js";
 
 export interface PillProps {
-	theme: "primary" | "grey" | "red" | "warning";
+	theme: "primary" | "grey" | "red" | "warning" | "secondary";
 	children: JSXElement;
 }
 
@@ -19,6 +19,8 @@ const Pill: Component<PillProps> = (props) => {
 					"bg-container-4 text-title": props.theme === "grey",
 					"bg-error-base text-white": props.theme === "red",
 					"bg-warning-base text-title": props.theme === "warning",
+					"bg-secondary-base text-secondary-contrast":
+						props.theme === "secondary",
 				},
 			)}
 		>

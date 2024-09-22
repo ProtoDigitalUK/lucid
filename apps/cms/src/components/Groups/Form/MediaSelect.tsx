@@ -113,7 +113,7 @@ export const MediaSelect: Component<MediaSelectProps> = (props) => {
 					<Match when={typeof props.value !== "number"}>
 						<Button
 							type="button"
-							theme="border-outline"
+							theme="secondary"
 							size="x-small"
 							onClick={openMediaSelectModal}
 							disabled={props.disabled}
@@ -147,7 +147,7 @@ export const MediaSelect: Component<MediaSelectProps> = (props) => {
 							<div class="grid grid-cols-2 gap-2.5 bg-container-2 p-15">
 								<Button
 									type="button"
-									theme="border-outline"
+									theme="secondary"
 									size="x-small"
 									onClick={openMediaSelectModal}
 									disabled={props.disabled}
@@ -159,7 +159,7 @@ export const MediaSelect: Component<MediaSelectProps> = (props) => {
 								</Button>
 								<Button
 									type="button"
-									theme="border-outline"
+									theme="secondary"
 									size="x-small"
 									onClick={() => {
 										props.onChange(null, null);

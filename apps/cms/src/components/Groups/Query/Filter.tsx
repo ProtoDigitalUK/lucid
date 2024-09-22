@@ -259,32 +259,13 @@ export const Filter: Component<FilterProps> = (props) => {
 	return (
 		<DropdownMenu.Root>
 			<DropdownMenu.Trigger
-				class="dropdown-trigger px-15 py-2 border border-border hover:border-primary-base rounded-md text-title flex items-center text-base font-display disabled:cursor-not-allowed disabled:text-unfocused disabled:fill-unfocused"
+				class="dropdown-trigger bg-secondary-base hover:bg-secondary-hover text-secondary-contrast px-15 py-2 border border-transparent hover:border-primary-base rounded-md flex items-center text-base font-display disabled:cursor-not-allowed disabled:text-unfocused disabled:fill-unfocused"
 				disabled={props.disabled}
 			>
 				<DropdownMenu.Icon>
 					<FaSolidFilter />
 				</DropdownMenu.Icon>
 				<span class="ml-2">{T()("filter")}</span>
-
-				<button
-					type="button"
-					class={classNames(
-						"ml-2 z-20 relative !pointer-events-auto text-error-base",
-						{
-							"opacity-50":
-								!props.searchParams.hasFiltersApplied(),
-						},
-					)}
-					onClick={(e) => {
-						e.stopPropagation();
-						e.preventDefault();
-						props.searchParams.resetFilters();
-					}}
-				>
-					<FaSolidXmark />
-					<span class="sr-only">{T()("clear")}</span>
-				</button>
 			</DropdownMenu.Trigger>
 			<DropdownContent
 				options={{

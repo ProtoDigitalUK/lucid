@@ -49,8 +49,9 @@ export const Th: Component<ThProps> = (props) => {
 	return (
 		<th
 			class={classNames(
-				"text-left first:pl-15 md:first:pl-30 relative last:pr-15 md:last:pr-30 px-15 hover:bg-container-4 rounded-md bg-container-3 bg-clip-padding border-b border-border duration-200 transition-colors whitespace-nowrap",
+				"text-left first:pl-15 md:first:pl-30 relative last:pr-15 md:last:pr-30 px-15 bg-container-3 bg-clip-padding border-b border-border duration-200 transition-colors whitespace-nowrap",
 				{
+					"hover:bg-container-5": props.options?.sortable,
 					hidden: props.options?.include === false,
 				},
 				props?.classes,
@@ -66,7 +67,7 @@ export const Th: Component<ThProps> = (props) => {
 				<Match when={props?.label !== undefined}>
 					<Switch>
 						<Match when={props.options?.sortable !== true}>
-							<div class="flex items-center">
+							<div class="flex items-center min-h-[50px]">
 								<span class="text-base mr-2.5 fill-body">
 									{props?.icon}
 								</span>
@@ -77,7 +78,7 @@ export const Th: Component<ThProps> = (props) => {
 						</Match>
 						<Match when={props.options?.sortable === true}>
 							<button
-								class="justify-between flex items-center w-full"
+								class="justify-between flex items-center w-full min-h-[50px]"
 								onClick={() => {
 									if (props.searchParams === undefined)
 										return;

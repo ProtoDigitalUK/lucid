@@ -62,7 +62,7 @@ export const DocumentSelect: Component<DocumentSelectProps> = (props) => {
 					<Match when={typeof props.value !== "number"}>
 						<Button
 							type="button"
-							theme="border-outline"
+							theme="secondary"
 							size="x-small"
 							onClick={openDocuSelectModal}
 							disabled={props.disabled}

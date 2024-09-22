@@ -6,11 +6,13 @@ import spawnToast from "@/utils/spawn-toast";
 interface ButtonProps extends JSX.HTMLAttributes<HTMLButtonElement> {
 	theme:
 		| "primary"
+		| "secondary"
 		| "container-outline"
 		| "border-outline"
 		| "danger"
 		| "basic"
-		| "secondary-toggle";
+		| "secondary-toggle"
+		| "input-style";
 	size: "x-small" | "small" | "medium" | "large" | "x-icon" | "icon" | "auto";
 	children: JSX.Element;
 
@@ -32,12 +34,16 @@ const Button: Component<ButtonProps> = (props) => {
 			{
 				"bg-primary-base hover:bg-primary-hover text-primary-contrast fill-primary-contrast ring-primary-base":
 					props.theme === "primary",
+				"bg-secondary-base hover:bg-secondary-hover text-secondary-contrast fill-secondary-contrast ring-primary-base":
+					props.theme === "secondary",
 				"bg-transparent border border-primary-base hover:bg-primary-hover fill-primary-contrast text-title hover:text-primary-contrast ring-primary-base":
 					props.theme === "container-outline",
 				"bg-transparent border border-border hover:border-transparent hover:bg-primary-hover fill-primary-contrast text-title hover:text-primary-contrast ring-primary-base":
 					props.theme === "border-outline",
 				"bg-error-base hover:bg-error-hover text-error-contrast ring-primary-base fill-error-contrast":
 					props.theme === "danger",
+				"bg-container-4 hover:bg-container-5 text-title ring-primary-base fill-title border border-border-input":
+					props.theme === "input-style",
 
 				// Toggles
 				"ring-primary-base": props.theme === "secondary-toggle",
