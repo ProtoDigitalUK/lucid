@@ -36,22 +36,24 @@ const RegenerateAPIKey: Component<RegenerateAPIKeyProps> = (props) => {
 				isLoading: regenerateAPIKey.action.isPending,
 				isError: regenerateAPIKey.action.isError,
 			}}
-			content={{
+			copy={{
 				title: T()("regenerate_api_key_modal_title"),
 				description: T()("regenerate_api_key_modal_description"),
 				error: regenerateAPIKey.errors()?.message,
 			}}
-			onConfirm={() => {
-				const id =
-					typeof props.id === "function" ? props.id() : props.id;
-				if (!id) return console.error("No id provided");
-				regenerateAPIKey.action.mutate({
-					id: id,
-				});
-			}}
-			onCancel={() => {
-				props.state.setOpen(false);
-				regenerateAPIKey.reset();
+			callbacks={{
+				onConfirm: () => {
+					const id =
+						typeof props.id === "function" ? props.id() : props.id;
+					if (!id) return console.error("No id provided");
+					regenerateAPIKey.action.mutate({
+						id: id,
+					});
+				},
+				onCancel: () => {
+					props.state.setOpen(false);
+					regenerateAPIKey.reset();
+				},
 			}}
 		/>
 	);

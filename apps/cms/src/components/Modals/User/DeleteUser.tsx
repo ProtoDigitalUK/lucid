@@ -30,21 +30,23 @@ const DeleteUser: Component<DeleteUserProps> = (props) => {
 				isLoading: deleteUser.action.isPending,
 				isError: deleteUser.action.isError,
 			}}
-			content={{
+			copy={{
 				title: T()("delete_user_modal_title"),
 				description: T()("delete_user_modal_description"),
 				error: deleteUser.errors()?.message,
 			}}
-			onConfirm={() => {
-				const id = props.id();
-				if (!id) return console.error("No id provided");
-				deleteUser.action.mutate({
-					id: id,
-				});
-			}}
-			onCancel={() => {
-				props.state.setOpen(false);
-				deleteUser.reset();
+			callbacks={{
+				onConfirm: () => {
+					const id = props.id();
+					if (!id) return console.error("No id provided");
+					deleteUser.action.mutate({
+						id: id,
+					});
+				},
+				onCancel: () => {
+					props.state.setOpen(false);
+					deleteUser.reset();
+				},
 			}}
 		/>
 	);

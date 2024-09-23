@@ -18,17 +18,13 @@ const CopyAPIKey: Component<CopyAPIKeyProps> = (props) => {
 	// ------------------------------
 	// Render
 	return (
-		<Modal.Basic
+		<Modal.Alert
 			state={{
 				open: props.state.open,
 				setOpen: props.state.setOpen,
 			}}
-			content={{
+			copy={{
 				title: T()("copy_api_key_modal_title"),
-			}}
-			onConfirm={() => {}}
-			onCancel={() => {
-				props.state.setOpen(false);
 			}}
 		>
 			<input
@@ -41,7 +37,7 @@ const CopyAPIKey: Component<CopyAPIKeyProps> = (props) => {
 				aria-label={T()("copy_api_key_modal_description")}
 			/>
 			<p class="mt-15">{T()("copy_api_key_modal_description")}</p>
-		</Modal.Basic>
+		</Modal.Alert>
 	);
 };
 

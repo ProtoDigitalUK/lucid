@@ -69,6 +69,11 @@ export default {
 					"animate-slide-from-right-in 200ms ease",
 				"animate-slide-from-right-out":
 					"animate-slide-from-right-out 200ms ease 100ms forwards",
+
+				"animate-overlay-show": "animate-overlay-show 0.2s ease",
+				"animate-overlay-hide": "animate-overlay-hide 0.2s ease",
+				"animate-modal-show": "animate-modal-show 0.2s ease",
+				"animate-modal-hide": "animate-modal-hide 0.2s ease",
 			},
 			spacing: {
 				30: "30px",

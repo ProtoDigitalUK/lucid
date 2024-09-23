@@ -30,8 +30,10 @@ const PreviewEmailPanel: Component<PreviewEmailPanelProps> = (props) => {
 	// Render
 	return (
 		<Panel.Root
-			open={props.state.open}
-			setOpen={props.state.setOpen}
+			state={{
+				open: props.state.open,
+				setOpen: props.state.setOpen,
+			}}
 			fetchState={{
 				isLoading: email.isLoading,
 				isError: email.isError,

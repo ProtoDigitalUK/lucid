@@ -26,22 +26,25 @@ const NavigationGuard: Component<NavigationGuardProps> = (props) => {
 				open: props.state.open,
 				setOpen: props.state.setOpen,
 			}}
-			content={{
+			copy={{
 				title: T()("navigation_guard_modal_title"),
 				description: T()("navigation_guard_modal_description"),
 			}}
-			onConfirm={() => {
-				if (props.state.targetElement) {
-					const href = props.state.targetElement.getAttribute("href");
-					if (href) navigate(href);
-				}
-				if (props.state.targetCallback) {
-					props.state.targetCallback();
+			callbacks={{
+				onConfirm: () => {
+					if (props.state.targetElement) {
+						const href =
+							props.state.targetElement.getAttribute("href");
+						if (href) navigate(href);
+					}
+					if (props.state.targetCallback) {
+						props.state.targetCallback();
+						props.state.setOpen(false);
+					}
+				},
+				onCancel: () => {
 					props.state.setOpen(false);
-				}
-			}}
-			onCancel={() => {
-				props.state.setOpen(false);
+				},
 			}}
 		/>
 	);

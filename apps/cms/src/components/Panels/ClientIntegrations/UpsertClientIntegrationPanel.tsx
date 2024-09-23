@@ -132,8 +132,10 @@ const UpsertClientIntegrationPanel: Component<
 	// Return
 	return (
 		<Panel.Root
-			open={props.state.open}
-			setOpen={props.state.setOpen}
+			state={{
+				open: props.state.open,
+				setOpen: props.state.setOpen,
+			}}
 			fetchState={{
 				isLoading: isLoading(),
 				isError: isError(),

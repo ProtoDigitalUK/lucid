@@ -37,7 +37,7 @@ const DeleteDocument: Component<DeleteDocumentProps> = (props) => {
 				isLoading: deleteDocument.action.isPending,
 				isError: deleteDocument.action.isError,
 			}}
-			content={{
+			copy={{
 				title: T()("delete_document_modal_title", {
 					name: props.collection.singular,
 				}),
@@ -46,18 +46,20 @@ const DeleteDocument: Component<DeleteDocumentProps> = (props) => {
 				}),
 				error: deleteDocument.errors()?.message,
 			}}
-			onConfirm={() => {
-				const id =
-					typeof props.id === "function" ? props.id() : props.id;
-				if (!id) return console.error("No id provided");
-				deleteDocument.action.mutate({
-					id: id,
-					collectionKey: props.collection.key,
-				});
-			}}
-			onCancel={() => {
-				props.state.setOpen(false);
-				deleteDocument.reset();
+			callbacks={{
+				onConfirm: () => {
+					const id =
+						typeof props.id === "function" ? props.id() : props.id;
+					if (!id) return console.error("No id provided");
+					deleteDocument.action.mutate({
+						id: id,
+						collectionKey: props.collection.key,
+					});
+				},
+				onCancel: () => {
+					props.state.setOpen(false);
+					deleteDocument.reset();
+				},
 			}}
 		/>
 	);

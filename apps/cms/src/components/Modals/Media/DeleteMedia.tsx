@@ -30,21 +30,23 @@ const DeleteMedia: Component<DeleteMediaProps> = (props) => {
 				isLoading: deleteMedia.action.isPending,
 				isError: deleteMedia.action.isError,
 			}}
-			content={{
+			copy={{
 				title: T()("delete_media_modal_title"),
 				description: T()("delete_media_modal_description"),
 				error: deleteMedia.errors()?.message,
 			}}
-			onConfirm={() => {
-				const id = props.id();
-				if (!id) return console.error("No id provided");
-				deleteMedia.action.mutate({
-					id: id,
-				});
-			}}
-			onCancel={() => {
-				props.state.setOpen(false);
-				deleteMedia.reset();
+			callbacks={{
+				onConfirm: () => {
+					const id = props.id();
+					if (!id) return console.error("No id provided");
+					deleteMedia.action.mutate({
+						id: id,
+					});
+				},
+				onCancel: () => {
+					props.state.setOpen(false);
+					deleteMedia.reset();
+				},
 			}}
 		/>
 	);

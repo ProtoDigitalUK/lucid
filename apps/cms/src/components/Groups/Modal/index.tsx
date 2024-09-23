@@ -1,11 +1,11 @@
 import { Confirmation } from "./Confirmation";
-import { Basic } from "./Basic";
+import { Alert } from "./Alert";
 import { Modal as Root } from "./Modal";
 import { ModalTable as Table } from "./ModalTable";
 
 const Modal = {
 	Confirmation,
-	Basic,
+	Alert,
 	Root,
 	Table,
 };

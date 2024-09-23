@@ -30,21 +30,23 @@ const ClearProcessedImages: Component<ClearProcessedImagesProps> = (props) => {
 				isLoading: clearProcessed.action.isPending,
 				isError: clearProcessed.action.isError,
 			}}
-			content={{
+			copy={{
 				title: T()("clear_processed_images_modal_title"),
 				description: T()("clear_processed_images_modal_description"),
 				error: clearProcessed.errors()?.message,
 			}}
-			onConfirm={() => {
-				const id = props.id();
-				if (!id) return console.error("No id provided");
-				clearProcessed.action.mutate({
-					id: id,
-				});
-			}}
-			onCancel={() => {
-				props.state.setOpen(false);
-				clearProcessed.reset();
+			callbacks={{
+				onConfirm: () => {
+					const id = props.id();
+					if (!id) return console.error("No id provided");
+					clearProcessed.action.mutate({
+						id: id,
+					});
+				},
+				onCancel: () => {
+					props.state.setOpen(false);
+					clearProcessed.reset();
+				},
 			}}
 		/>
 	);

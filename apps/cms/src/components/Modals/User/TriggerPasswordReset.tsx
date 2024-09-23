@@ -31,24 +31,26 @@ const TriggerPasswordReset: Component<TriggerPasswordResetProps> = (props) => {
 				isLoading: updateUser.action.isPending,
 				isError: updateUser.action.isError,
 			}}
-			content={{
+			copy={{
 				title: T()("user_password_reset_modal_title"),
 				description: T()("user_password_reset_modal_description"),
 				error: updateUser.errors()?.message,
 			}}
-			onConfirm={() => {
-				const id = props.id();
-				if (!id) return console.error("No id provided");
-				updateUser.action.mutate({
-					id: id,
-					body: {
-						triggerPasswordReset: 1,
-					},
-				});
-			}}
-			onCancel={() => {
-				props.state.setOpen(false);
-				updateUser.reset();
+			callbacks={{
+				onConfirm: () => {
+					const id = props.id();
+					if (!id) return console.error("No id provided");
+					updateUser.action.mutate({
+						id: id,
+						body: {
+							triggerPasswordReset: 1,
+						},
+					});
+				},
+				onCancel: () => {
+					props.state.setOpen(false);
+					updateUser.reset();
+				},
 			}}
 		/>
 	);

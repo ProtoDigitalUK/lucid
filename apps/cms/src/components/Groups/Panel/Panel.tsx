@@ -21,8 +21,10 @@ import ContentLocaleSelect from "@/components/Partials/ContentLocaleSelect";
 import classNames from "classnames";
 
 export const Panel: Component<{
-	open: boolean;
-	setOpen: (_open: boolean) => void;
+	state: {
+		open: boolean;
+		setOpen: (_open: boolean) => void;
+	};
 	langauge?: {
 		contentLocale?: boolean;
 		hascontentLocaleError?: boolean;
@@ -79,10 +81,10 @@ export const Panel: Component<{
 	// ------------------------------
 	// Effects
 	createEffect(() => {
-		if (props.open) {
+		if (props.state.open) {
 			setContentLocale(getDefaultContentLocale());
 		}
-		if (props.open === false) {
+		if (props.state.open === false) {
 			props.callbacks?.reset?.();
 		}
 	});
@@ -97,11 +99,11 @@ export const Panel: Component<{
 	// Render
 	return (
 		<Dialog.Root
-			open={props.open}
-			onOpenChange={() => props.setOpen(!props.open)}
+			open={props.state.open}
+			onOpenChange={() => props.state.setOpen(!props.state.open)}
 		>
 			<Dialog.Portal>
-				<Dialog.Overlay class="fixed inset-0 z-40 bg-black bg-opacity-80 animate-animate-fade-out data-[expanded]:animate-animate-fade-in cursor-pointer hover:bg-opacity-60 duration-200 transition-colors" />
+				<Dialog.Overlay class="fixed inset-0 z-40 bg-black bg-opacity-80 animate-animate-overlay-hide cursor-pointer duration-200 transition-colors data-[expanded]:animate-animate-overlay-show" />
 				<div class="fixed inset-15 z-40 flex justify-end">
 					<Dialog.Content
 						class="w-full relative flex flex-col rounded-xl scrollbar border border-border  max-w-[800px] bg-container-3 animate-animate-slide-from-right-out data-[expanded]:animate-animate-slide-from-right-in outline-none overflow-y-auto"
@@ -117,7 +119,8 @@ export const Panel: Component<{
 							{/* Loading / Not Open */}
 							<Match
 								when={
-									!props.open || props.fetchState?.isLoading
+									!props.state.open ||
+									props.fetchState?.isLoading
 								}
 							>
 								<div class="skeleton absolute inset-15 rounded-xl overflow-hidden" />
@@ -134,7 +137,7 @@ export const Panel: Component<{
 								</div>
 							</Match>
 							{/* Open */}
-							<Match when={props.open}>
+							<Match when={props.state.open}>
 								{/* Header */}
 								<div class="border-b border-border mx-15 md:mx-30 py-15 md:py-30">
 									<div class="flex justify-between items-start gap-x-10">
@@ -219,7 +222,7 @@ export const Panel: Component<{
 												theme="border-outline"
 												type="button"
 												onClick={() =>
-													props.setOpen(false)
+													props.state.setOpen(false)
 												}
 											>
 												{T()("close")}

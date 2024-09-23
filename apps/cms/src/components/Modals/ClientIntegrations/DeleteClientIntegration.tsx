@@ -36,22 +36,24 @@ const DeleteClientIntegration: Component<DeleteClientIntegrationProps> = (
 				isLoading: deleteIntegration.action.isPending,
 				isError: deleteIntegration.action.isError,
 			}}
-			content={{
+			copy={{
 				title: T()("delete_client_integration_modal_title"),
 				description: T()("delete_client_integration_modal_description"),
 				error: deleteIntegration.errors()?.message,
 			}}
-			onConfirm={() => {
-				const id =
-					typeof props.id === "function" ? props.id() : props.id;
-				if (!id) return console.error("No id provided");
-				deleteIntegration.action.mutate({
-					id: id,
-				});
-			}}
-			onCancel={() => {
-				props.state.setOpen(false);
-				deleteIntegration.reset();
+			callbacks={{
+				onConfirm: () => {
+					const id =
+						typeof props.id === "function" ? props.id() : props.id;
+					if (!id) return console.error("No id provided");
+					deleteIntegration.action.mutate({
+						id: id,
+					});
+				},
+				onCancel: () => {
+					props.state.setOpen(false);
+					deleteIntegration.reset();
+				},
 			}}
 		/>
 	);

@@ -94,9 +94,18 @@ const Button: Component<ButtonProps> = (props) => {
 		>
 			<Show when={props.loading !== undefined && props.loading}>
 				<div
-					class={
-						"flex items-center justify-center absolute inset-0 z-10 rounded-md bg-primary-base bg-opacity-40"
-					}
+					class={classnames(
+						"flex items-center justify-center absolute inset-0 z-10 rounded-md bg-opacity-40",
+						{
+							"bg-primary-base":
+								props.theme === "primary" ||
+								props.theme === "container-outline" ||
+								props.theme === "border-outline",
+							"bg-secondary-base": props.theme === "secondary",
+							"bg-error-base": props.theme === "danger",
+							"bg-container-4": props.theme === "input-style",
+						},
+					)}
 				>
 					<div class="w-4 h-4 border-2 border-white rounded-full animate-spin" />
 				</div>

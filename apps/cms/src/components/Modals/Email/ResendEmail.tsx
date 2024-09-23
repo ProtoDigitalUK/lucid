@@ -31,21 +31,23 @@ const ResendEmail: Component<ResendEmailProps> = (props) => {
 				isLoading: resendEmail.action.isPending,
 				isError: resendEmail.action.isError,
 			}}
-			content={{
+			copy={{
 				title: T()("resend_email_modal_title"),
 				description: T()("resend_email_modal_description"),
 				error: resendEmail.errors()?.message,
 			}}
-			onConfirm={() => {
-				const id = props.id();
-				if (!id) return console.error("No id provided");
-				resendEmail.action.mutate({
-					id: id,
-				});
-			}}
-			onCancel={() => {
-				props.state.setOpen(false);
-				resendEmail.reset();
+			callbacks={{
+				onConfirm: () => {
+					const id = props.id();
+					if (!id) return console.error("No id provided");
+					resendEmail.action.mutate({
+						id: id,
+					});
+				},
+				onCancel: () => {
+					props.state.setOpen(false);
+					resendEmail.reset();
+				},
 			}}
 		/>
 	);
