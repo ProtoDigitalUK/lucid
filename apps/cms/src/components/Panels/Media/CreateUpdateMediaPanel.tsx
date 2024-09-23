@@ -259,6 +259,7 @@ const CreateUpdateMediaPanel: Component<CreateUpdateMediaPanelProps> = (
 									errors={getErrorObject(
 										inputError(index())?.name,
 									)}
+									autoComplete="off"
 									theme="full"
 								/>
 								<Show when={showAltInput()}>
