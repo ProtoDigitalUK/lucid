@@ -86,7 +86,7 @@ export const GroupBody: Component<GroupBodyProps> = (props) => {
 			{/* Group Header */}
 			<div
 				class={classNames(
-					"w-full bg-transparent focus:outline-none focus:ring-1 ring-inset ring-primary-base cursor-pointer p-2.5 rounded-md border border-border flex justify-between items-center",
+					"w-full bg-container-4 focus:outline-none focus:ring-1 ring-inset ring-primary-base cursor-pointer p-2.5 rounded-md border border-border-input flex justify-between items-center",
 					{
 						"border-b-0 rounded-b-none": getGroupOpen(),
 						"ring-1 ring-inset":
@@ -165,7 +165,7 @@ export const GroupBody: Component<GroupBodyProps> = (props) => {
 			{/* Group Body */}
 			<div
 				class={classNames(
-					"border-border transform-gpu origin-top border-x border-b mb-2.5 last:mb-0 rounded-b-md overflow-hidden w-full duration-200 transition-all",
+					"border-border-input bg-[#181818] transform-gpu origin-top border-x border-b mb-2.5 last:mb-0 rounded-b-md overflow-hidden w-full duration-200 transition-all",
 					{
 						"bg-container-3": props.state.repeaterDepth % 2 !== 0,
 						"scale-y-100 h-auto opacity-100 visible":

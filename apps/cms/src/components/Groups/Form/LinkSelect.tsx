@@ -67,7 +67,7 @@ export const LinkSelect: Component<LinkSelectProps> = (props) => {
 					<Match when={!linkLabel()}>
 						<Button
 							type="button"
-							theme="border-outline"
+							theme="secondary"
 							size="x-small"
 							onClick={openLinkModal}
 						>
@@ -78,7 +78,7 @@ export const LinkSelect: Component<LinkSelectProps> = (props) => {
 						<div class="w-full flex items-center gap-2.5">
 							<Button
 								type="button"
-								theme="border-outline"
+								theme="secondary"
 								size="x-small"
 								onClick={openLinkModal}
 								disabled={props.disabled}
@@ -94,7 +94,7 @@ export const LinkSelect: Component<LinkSelectProps> = (props) => {
 							</Button>
 							<Button
 								type="button"
-								theme="border-outline"
+								theme="input-style"
 								size="x-icon"
 								onClick={() => {
 									props.onChange(null);

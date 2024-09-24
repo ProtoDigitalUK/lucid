@@ -114,7 +114,7 @@ export const RepeaterField: Component<RepeaterFieldProps> = (props) => {
 					</DragDrop>
 				</Match>
 				<Match when={groups().length === 0}>
-					<div class="w-full border-border bg-container-4 border p-15 md:p-30 rounded-md flex items-center flex-col justify-center text-center">
+					<div class="w-full border-border-input bg-container-4 border p-15 md:p-30 rounded-md flex items-center flex-col justify-center text-center">
 						<span class="text-sm text-unfocused capitalize">
 							{T()("no_entries")}
 						</span>
@@ -125,7 +125,7 @@ export const RepeaterField: Component<RepeaterFieldProps> = (props) => {
 			<div class="w-full flex justify-between items-center mt-15">
 				<Button
 					type="button"
-					theme="border-outline"
+					theme="secondary"
 					size="x-small"
 					onClick={addGroup}
 					disabled={!canAddGroup() || fieldConfig().disabled}

@@ -75,7 +75,7 @@ export const DocumentSelect: Component<DocumentSelectProps> = (props) => {
 						<div class="w-full flex items-center gap-2.5">
 							<Button
 								type="button"
-								theme="border-outline"
+								theme="secondary"
 								size="x-small"
 								onClick={openDocuSelectModal}
 								disabled={props.disabled}
@@ -95,7 +95,7 @@ export const DocumentSelect: Component<DocumentSelectProps> = (props) => {
 							</Button>
 							<Button
 								type="button"
-								theme="border-outline"
+								theme="input-style"
 								size="x-icon"
 								onClick={() => {
 									props.onChange(null);
