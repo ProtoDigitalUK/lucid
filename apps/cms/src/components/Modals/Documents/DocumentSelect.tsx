@@ -92,9 +92,6 @@ const DocumentSelectContent: Component = () => {
 		tableHeadColumns(getCollectionFieldIncludes()),
 	);
 
-	const isLoading = createMemo(
-		() => documents.isLoading || collection.isLoading,
-	);
 	const isSuccess = createMemo(
 		() => documents.isSuccess || collection.isSuccess,
 	);
@@ -194,6 +191,7 @@ const DocumentSelectContent: Component = () => {
 					</div>
 				</div>
 			</div>
+			{/* Body */}
 			<div class="flex-1 flex w-full flex-col">
 				<Layout.DynamicContent
 					state={{
@@ -201,6 +199,7 @@ const DocumentSelectContent: Component = () => {
 						isSuccess: isSuccess(),
 						searchParams: searchParams,
 						isEmpty: documents.data?.data.length === 0,
+						isLoading: collection.isLoading,
 					}}
 					options={{}}
 					copy={{

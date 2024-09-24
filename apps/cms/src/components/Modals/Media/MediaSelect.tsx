@@ -10,6 +10,8 @@ import MediaBasicCard, {
 	MediaBasicCardLoading,
 } from "@/components/Cards/MediaBasicCard";
 import Modal from "@/components/Groups/Modal";
+import Layout from "@/components/Groups/Layout";
+import Footers from "@/components/Groups/Footers";
 
 const MediaSelectModal: Component = () => {
 	const open = createMemo(() => mediaSelectStore.get.open);
@@ -38,7 +40,7 @@ const SelectMediaContent: Component = () => {
 	const searchParams = useSearchParamsState(
 		{
 			filters: {
-				name: {
+				title: {
 					value: "",
 					type: "text",
 				},
@@ -50,12 +52,22 @@ const SelectMediaContent: Component = () => {
 					value: mediaSelectStore.get.type || "",
 					type: "array",
 				},
+				mimeType: {
+					value: "",
+					type: "text",
+				},
+				key: {
+					value: "",
+					type: "text",
+				},
 			},
 			sorts: {
 				fileSize: undefined,
-				name: undefined,
+				title: undefined,
 				width: undefined,
 				height: undefined,
+				mimeType: undefined,
+				extension: undefined,
 				createdAt: undefined,
 				updatedAt: "desc",
 			},
@@ -90,16 +102,26 @@ const SelectMediaContent: Component = () => {
 	return (
 		<div class="min-h-[70vh] flex flex-col">
 			{/* Header */}
-			<div class="px-15 md:px-30 pt-15 md:pt-30">
+			<div class="p-15 md:p-30 border-b border-border">
 				<h2>{T()("select_media_title")}</h2>
 				<p class="mt-1">{T()("select_media_description")}</p>
-				<div class="w-full mt-15 flex justify-between pb-15 border-b border-border">
+				<div class="w-full mt-15 flex justify-between">
 					<div class="flex gap-5">
 						<Query.Filter
 							filters={[
 								{
-									label: T()("name"),
-									key: "name",
+									label: T()("title"),
+									key: "title",
+									type: "text",
+								},
+								{
+									label: T()("mime_type"),
+									key: "mimeType",
+									type: "text",
+								},
+								{
+									label: T()("key"),
+									key: "key",
 									type: "text",
 								},
 								{
@@ -144,12 +166,20 @@ const SelectMediaContent: Component = () => {
 						<Query.Sort
 							sorts={[
 								{
-									label: T()("name"),
-									key: "name",
+									label: T()("title"),
+									key: "title",
 								},
 								{
 									label: T()("file_size"),
 									key: "fileSize",
+								},
+								{
+									label: T()("mime_type"),
+									key: "mimeType",
+								},
+								{
+									label: T()("file_extension"),
+									key: "extension",
 								},
 								{
 									label: T()("width"),
@@ -180,34 +210,68 @@ const SelectMediaContent: Component = () => {
 				</div>
 			</div>
 			{/* Body */}
-			<div class="relative w-full flex h-full flex-col justify-between px-15 md:px-30 pb-15 md:pb-30 mt-15 flex-grow">
-				<Grid.Modal
-					items={media.data?.data.length || 0}
+			<div class="flex-1 flex w-full flex-col">
+				<Layout.DynamicContent
 					state={{
-						isLoading: media.isLoading,
 						isError: media.isError,
 						isSuccess: media.isSuccess,
+						isEmpty: media.data?.data.length === 0,
+						searchParams: searchParams,
 					}}
-					searchParams={searchParams}
-					meta={media.data?.meta}
-					loadingCard={<MediaBasicCardLoading />}
-				>
-					<For each={media.data?.data}>
-						{(item) => (
-							<MediaBasicCard
-								media={item}
-								contentLocale={contentLocale()}
-								current={
-									item.id === mediaSelectStore.get.selected
-								}
-								onClick={() => {
-									mediaSelectStore.get.onSelectCallback(item);
-									mediaSelectStore.set("open", false);
+					options={{
+						padding: "30",
+					}}
+					copy={{
+						noEntries: {
+							title: T()("no_media"),
+							description: T()("no_media_description"),
+							button: T()("upload_media"),
+						},
+					}}
+					slot={{
+						footer: (
+							<Footers.Paginated
+								state={{
+									searchParams: searchParams,
+									meta: media.data?.meta,
+								}}
+								options={{
+									padding: "30",
 								}}
 							/>
-						)}
-					</For>
-				</Grid.Modal>
+						),
+					}}
+				>
+					<Grid.Root
+						state={{
+							isLoading: media.isLoading,
+							totalItems: media.data?.data.length || 0,
+							searchParams: searchParams,
+						}}
+						slots={{
+							loadingCard: <MediaBasicCardLoading />,
+						}}
+					>
+						<For each={media.data?.data}>
+							{(item) => (
+								<MediaBasicCard
+									media={item}
+									contentLocale={contentLocale()}
+									current={
+										item.id ===
+										mediaSelectStore.get.selected
+									}
+									onClick={() => {
+										mediaSelectStore.get.onSelectCallback(
+											item,
+										);
+										mediaSelectStore.set("open", false);
+									}}
+								/>
+							)}
+						</For>
+					</Grid.Root>
+				</Layout.DynamicContent>
 			</div>
 		</div>
 	);
