@@ -57,11 +57,11 @@ const LinkSelect: Component = () => {
 				noPadding: true,
 			}}
 		>
-			<div class="p-15">
-				<div class="mb-15 pb-15 border-b border-border">
+			<div class="p-5">
+				<div class="mb-5 pb-5 border-b border-border">
 					<h2>{T()("set_link")}</h2>
 				</div>
-				<div class="mb-15 pb-15 border-b border-border">
+				<div class="mb-5 pb-5 border-b border-border">
 					<Form.Input
 						id="label"
 						value={getLabel()}
@@ -99,25 +99,25 @@ const LinkSelect: Component = () => {
 					/>
 				</div>
 
-				<div class="w-full flex justify-between mt-15">
+				<div class="w-full flex gap-15 mt-5">
+					<Button
+						type="button"
+						theme="primary"
+						size="small"
+						onClick={updateLink}
+					>
+						{T()("update")}
+					</Button>
 					<Button
 						type="button"
 						theme="border-outline"
-						size="x-small"
+						size="small"
 						onClick={() => {
 							linkFieldStore.set("open", false);
 							linkFieldStore.set("selectedLink", null);
 						}}
 					>
 						{T()("cancel")}
-					</Button>
-					<Button
-						type="button"
-						theme="primary"
-						size="x-small"
-						onClick={updateLink}
-					>
-						{T()("update")}
 					</Button>
 				</div>
 			</div>
