@@ -106,6 +106,7 @@ const checkDuplicateSlugParents: ServiceFn<
 				"=",
 				data.collectionKey,
 			)
+			.where("lucid_collection_documents.is_deleted", "=", 0)
 			.execute();
 
 		if (duplicates.length > 0) {

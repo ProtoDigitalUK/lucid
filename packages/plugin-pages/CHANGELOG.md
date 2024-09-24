@@ -1,5 +1,11 @@
 # @lucidcms/plugin-pages
 
+## 0.1.3
+
+### Patch Changes
+
+- Added is_deleted check to the duplicate parent slug check to ensure we don't check against deleted documents.
+
 ## 0.1.2
 
 ### Patch Changes
