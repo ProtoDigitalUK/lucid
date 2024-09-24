@@ -1,8 +1,9 @@
 import {
 	type Component,
 	type JSXElement,
-	createSignal,
 	type Accessor,
+	createSignal,
+	onMount,
 } from "solid-js";
 
 interface DragItemProps {
@@ -40,6 +41,8 @@ const DragDrop: Component<DragDropProps> = (props) => {
 	const [getDraggingTarget, setDraggingTarget] = createSignal<
 		DragItemProps | undefined
 	>(undefined);
+	const [getHasViewTransition, setHasViewTransition] =
+		createSignal<boolean>(false);
 
 	// ------------------------------
 	// Functions
@@ -52,9 +55,17 @@ const DragDrop: Component<DragDropProps> = (props) => {
 		if (dragging === undefined || dragTarget === undefined) return;
 		if (dragging.index === dragTarget.index) return;
 
-		props.sortOrder(dragging.index, dragTarget.index);
-		if (isDragging) {
-			setDragging(dragTarget);
+		const updateFn = () => {
+			props.sortOrder(dragging.index, dragTarget.index);
+			if (isDragging) {
+				setDragging(dragTarget);
+			}
+		};
+
+		if (getHasViewTransition()) {
+			document.startViewTransition(updateFn);
+		} else {
+			updateFn();
 		}
 	};
 
@@ -110,6 +121,12 @@ const DragDrop: Component<DragDropProps> = (props) => {
 	const onDragOver = (e: DragEvent) => {
 		e.preventDefault();
 	};
+
+	// ----------------------------------
+	// Effects
+	onMount(() => {
+		setHasViewTransition("startViewTransition" in document);
+	});
 
 	// ----------------------------------
 	// Render

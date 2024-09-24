@@ -183,7 +183,13 @@
     .ql-picker-item.ql-selected {
         @apply !text-primary-base;
     }
-
+    
+    ::view-transition-group(document-builder-header) {
+        z-index: 100;
+    }
+    ::view-transition-group(*) {
+        animation-duration: 200ms;
+    }
 
   /* Animations */
   @keyframes animation-enter {

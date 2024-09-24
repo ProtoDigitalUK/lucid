@@ -126,8 +126,11 @@ const BuilderBrickRow: Component<BuilderBrickRowProps> = (props) => {
 	return (
 		<li
 			data-dragkey={DRAG_DROP_KEY}
+			style={{
+				"view-transition-name": `brick-item-${props.brick.id}`,
+			}}
 			class={classNames(
-				"w-full bg-container-2 border border-border rounded-md mb-15 last:mb-0 focus-within:outline-none focus-within:ring-1 ring-inset ring-primary-base",
+				"drag-item w-full bg-container-2 border border-border rounded-md mb-15 last:mb-0 focus-within:outline-none focus-within:ring-1 ring-inset ring-primary-base",
 				{
 					"opacity-60":
 						props.dragDrop.getDragging()?.index === brickIndex(),
@@ -162,7 +165,6 @@ const BuilderBrickRow: Component<BuilderBrickRowProps> = (props) => {
 						toggleDropdown();
 					}
 				}}
-				id={DRAG_DROP_KEY}
 				aria-expanded={getBrickOpen()}
 				aria-controls={`bulder-brick-content-${props.brick.key}`}
 				role="button"

@@ -212,9 +212,12 @@ const CollectionsDocumentsEditRoute: Component<
 			</Match>
 			<Match when={isSuccess()}>
 				<header
+					style={{
+						"view-transition-name": "document-builder-header",
+					}}
 					ref={setHeaderEle}
 					class={classNames(
-						"before:absolute before:inset-0 overflow-hidden border-x border-b border-border rounded-b-xl before:z-0 px-15 md:px-30 fixed top-0 left-[310px] right-15 z-10 duration-200 transition-all",
+						"before:absolute before:inset-0 overflow-hidden border-x border-b border-border rounded-b-xl before:z-0 px-15 md:px-30 fixed top-0 left-[310px] right-15 z-40 duration-200 transition-all",
 						{
 							"py-15 md:py-15 before:bg-opacity-95 before:bg-container-1":
 								getHasScrolled(),
@@ -346,7 +349,7 @@ const CollectionsDocumentsEditRoute: Component<
 						</div>
 					</div>
 				</header>
-				<div class="w-full mt-[191px] lg:mt-[141px] flex flex-grow overflow-hidden bg-container-3 rounded-t-xl border-x border-t border-border">
+				<div class="w-full mt-[191px] lg:mt-[141px] flex flex-grow overflow-hidden bg-container-3 rounded-t-xl border-x border-t border-border z-10 relative">
 					{/* Fields & Bricks */}
 					<div class="w-full flex flex-col">
 						<Document.CollectionPseudoBrick

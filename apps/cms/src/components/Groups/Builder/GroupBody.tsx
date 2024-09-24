@@ -63,6 +63,9 @@ export const GroupBody: Component<GroupBodyProps> = (props) => {
 	// Render
 	return (
 		<div
+			style={{
+				"view-transition-name": `group-item-${props.state.groupId}`,
+			}}
 			data-dragkey={props.state.dragDropKey}
 			class={classNames("w-full mb-2.5 last:mb-0", {
 				"opacity-60":
