@@ -47,14 +47,14 @@ export const DynamicContent: Component<{
 	return (
 		<>
 			<div
-				class={classNames("h-full", {
+				class={classNames("h-full flex-1 flex flex-col", {
 					"p-15 md:p-30": props.options?.padding === "30",
 					"p-15": props.options?.padding === "15",
 				})}
 			>
 				<Switch fallback={props.children}>
 					<Match when={props.state?.isError}>
-						<div class="h-full flex items-center justify-center">
+						<div class="flex-1 flex items-center justify-center">
 							<ErrorBlock
 								content={{
 									image: notifySvg,
@@ -70,7 +70,7 @@ export const DynamicContent: Component<{
 							props.options?.hideNoEntries !== true
 						}
 					>
-						<div class="h-full flex items-center justify-center">
+						<div class="flex-1 flex items-center justify-center">
 							<Show
 								when={
 									!props.state?.searchParams?.hasFiltersApplied()
@@ -112,7 +112,7 @@ export const DynamicContent: Component<{
 						</div>
 					</Match>
 					<Match when={props.state?.isLoading}>
-						<div class="h-full flex items-center justify-center">
+						<div class="flex-1 flex items-center justify-center">
 							<Loading />
 						</div>
 					</Match>

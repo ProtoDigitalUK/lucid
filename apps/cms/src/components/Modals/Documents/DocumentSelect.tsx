@@ -12,6 +12,7 @@ import helpers from "@/utils/helpers";
 import Modal from "@/components/Groups/Modal";
 import Table from "@/components/Groups/Table";
 import DocumentRow from "@/components/Tables/Rows/DocumentRow";
+import Layout from "@/components/Groups/Layout";
 import {
 	tableHeadColumns,
 	collectionFieldFilters,
@@ -193,36 +194,34 @@ const DocumentSelectContent: Component = () => {
 					</div>
 				</div>
 			</div>
-			{/* Body */}
-			<div class="relative w-full flex h-full flex-col justify-between pb-15 md:pb-30 flex-grow -mt-px">
-				<Modal.Table
-					rows={documents.data?.data.length || 0}
-					meta={documents.data?.meta}
-					searchParams={searchParams}
+			<div class="flex-1 flex w-full flex-col">
+				<Layout.DynamicContent
 					state={{
-						isLoading: isLoading(),
 						isError: isError(),
 						isSuccess: isSuccess(),
+						searchParams: searchParams,
+						isEmpty: documents.data?.data.length === 0,
 					}}
-					options={{
-						showNoEntries: true,
-					}}
+					options={{}}
 					copy={{
-						noEntryTitle: T()("no_documents", {
-							collectionMultiple: collection.data?.data.title,
-						}),
-						noEntryDescription: T()(
-							"no_documents_description_doc_select",
-							{
-								collectionMultiple:
-									collection.data?.data?.title.toLowerCase(),
+						noEntries: {
+							title: T()("no_documents", {
+								collectionMultiple: collection.data?.data.title,
+							}),
+							description: T()(
+								"no_documents_description_doc_select",
+								{
+									collectionMultiple:
+										collection.data?.data?.title.toLowerCase(),
+									collectionSingle:
+										collection.data?.data?.singular.toLowerCase(),
+								},
+							),
+							button: T()("create_document", {
 								collectionSingle:
-									collection.data?.data?.singular.toLowerCase(),
-							},
-						),
-						noEntryButton: T()("create_document", {
-							collectionSingle: collection.data?.data?.singular,
-						}),
+									collection.data?.data?.singular,
+							}),
+						},
 					}}
 				>
 					<Table.Root
@@ -280,7 +279,7 @@ const DocumentSelectContent: Component = () => {
 							</Index>
 						)}
 					</Table.Root>
-				</Modal.Table>
+				</Layout.DynamicContent>
 			</div>
 		</div>
 	);
