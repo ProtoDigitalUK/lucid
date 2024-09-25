@@ -16,7 +16,7 @@
 	},
 	"devDependencies": {
 		"husky": "^9.0.11",
-		"turbo": "^2.0.14",
+		"turbo": "^2.1.2",
 		"vitest": "^2.0.1"
 	},
 	"optionalDependencies": {
