@@ -33,9 +33,9 @@ class LinkCustomField extends CustomField<"link"> {
 			},
 			translations: this.props?.translations ?? false,
 			default: this.props?.default ?? {
-				url: "",
-				label: "",
-				target: "",
+				url: null,
+				label: null,
+				target: null,
 			},
 			hidden: this.props?.hidden,
 			disabled: this.props?.disabled,
