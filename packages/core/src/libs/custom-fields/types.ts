@@ -419,7 +419,7 @@ export interface LinkFieldConfig extends SharedFieldConfig {
 	translations: boolean;
 	hidden?: boolean;
 	disabled?: boolean;
-	default?: string;
+	default?: LinkResValue;
 
 	validation?: {
 		required?: boolean;

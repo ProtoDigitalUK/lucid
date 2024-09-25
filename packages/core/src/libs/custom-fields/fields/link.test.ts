@@ -199,7 +199,11 @@ test("custom field config passes schema validation", async () => {
 			},
 		},
 		translations: true,
-		default: "10",
+		default: {
+			url: "https://example.com",
+			label: "Link 1",
+			target: "_blank",
+		},
 		hidden: false,
 		disabled: false,
 		validation: {

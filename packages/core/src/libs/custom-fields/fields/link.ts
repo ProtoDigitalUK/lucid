@@ -32,7 +32,11 @@ class LinkCustomField extends CustomField<"link"> {
 				placeholder: this.props?.labels?.placeholder,
 			},
 			translations: this.props?.translations ?? false,
-			default: this.props?.default ?? "",
+			default: this.props?.default ?? {
+				url: "",
+				label: "",
+				target: "",
+			},
 			hidden: this.props?.hidden,
 			disabled: this.props?.disabled,
 			validation: this.props?.validation,
@@ -48,9 +52,9 @@ class LinkCustomField extends CustomField<"link"> {
 		);
 		return {
 			value: {
-				url: linkVal?.url ?? this.config.default ?? null,
-				label: linkVal?.label ?? null,
-				target: linkVal?.target ?? null,
+				url: linkVal?.url ?? this.config.default.url ?? null,
+				label: linkVal?.label ?? this.config.default.label ?? null,
+				target: linkVal?.target ?? this.config.default.target ?? null,
 			},
 			meta: null,
 		} satisfies CFResponse<"link">;
