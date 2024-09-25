@@ -146,6 +146,7 @@ export const useCreateMedia = () => {
 			setAlt([]);
 			setKey(undefined);
 			setPresignedUrlValue(undefined);
+			setUploadErrors();
 			createSingle.reset();
 		},
 	};

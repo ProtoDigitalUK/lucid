@@ -150,6 +150,7 @@ export const useUpdateMedia = (id: Accessor<number | undefined>) => {
 			setAlt([]);
 			setKey(undefined);
 			setPresignedUrlValue(undefined);
+			setUploadErrors();
 			updateSingle.reset();
 		},
 	};
