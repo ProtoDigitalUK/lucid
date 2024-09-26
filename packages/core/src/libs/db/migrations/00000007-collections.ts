@@ -35,6 +35,67 @@ const Migration00000007: MigrationFn = (adapter) => {
 				)
 				.execute();
 
+			// Document Revisions
+			await db.schema
+				.createTable("lucid_document_revisions")
+				.addColumn("id", primaryKeyColumnType(adapter), (col) =>
+					primaryKeyColumn(col, adapter),
+				)
+				.addColumn("document_id", "integer", (col) =>
+					col
+						.references("lucid_collection_documents.id")
+						.onDelete("cascade")
+						.notNull(),
+				)
+				.addColumn("revision_number", "integer", (col) => col.notNull())
+				.addColumn("name", "text")
+				.addColumn("description", "text")
+				.addColumn("created_by", "integer", (col) =>
+					col.references("lucid_users.id").onDelete("set null"),
+				)
+				.addColumn("created_at", "timestamp", (col) =>
+					defaultTimestamp(col, adapter),
+				)
+				.execute();
+
+			// Document Versions
+			await db.schema
+				.createTable("lucid_document_versions")
+				.addColumn("id", primaryKeyColumnType(adapter), (col) =>
+					primaryKeyColumn(col, adapter),
+				)
+				.addColumn("document_id", "integer", (col) =>
+					col
+						.references("lucid_collection_documents.id")
+						.onDelete("cascade")
+						.notNull(),
+				)
+				.addColumn("version_type", "text", (col) => col.notNull()) // draft, published, revision
+				.addColumn("revision_id", "integer", (col) =>
+					col
+						.references("lucid_document_revisions.id")
+						.onDelete("set null"),
+				)
+				.addColumn("created_at", "timestamp", (col) =>
+					defaultTimestamp(col, adapter),
+				)
+				.addColumn("created_by", "integer", (col) =>
+					col.references("lucid_users.id").onDelete("set null"),
+				)
+				.execute();
+
+			await db.schema
+				.createIndex("idx_document_revisions_document_id")
+				.on("lucid_document_revisions")
+				.column("document_id")
+				.execute();
+
+			await db.schema
+				.createIndex("idx_document_versions_document_id")
+				.on("lucid_document_versions")
+				.column("document_id")
+				.execute();
+
 			// Bricks
 			await db.schema
 				.createTable("lucid_collection_document_bricks")
@@ -43,7 +104,7 @@ const Migration00000007: MigrationFn = (adapter) => {
 				)
 				.addColumn("collection_document_id", "integer", (col) =>
 					col
-						.references("lucid_collection_documents.id")
+						.references("lucid_document_versions.id")
 						.onDelete("cascade")
 						.notNull(),
 				)
@@ -61,7 +122,7 @@ const Migration00000007: MigrationFn = (adapter) => {
 				)
 				.addColumn("collection_document_id", "integer", (col) =>
 					col
-						.references("lucid_collection_documents.id")
+						.references("lucid_document_versions.id")
 						.onDelete("cascade")
 						.notNull(),
 				)
@@ -102,7 +163,7 @@ const Migration00000007: MigrationFn = (adapter) => {
 				)
 				.addColumn("collection_document_id", "integer", (col) =>
 					col
-						.references("lucid_collection_documents.id")
+						.references("lucid_document_versions.id")
 						.onDelete("cascade")
 						.notNull(),
 				)
@@ -132,10 +193,15 @@ const Migration00000007: MigrationFn = (adapter) => {
 				.addColumn("media_id", "integer", (col) =>
 					col.references("lucid_media.id").onDelete("set null"),
 				)
-				.addColumn("document_id", "integer", (col) =>
-					col
-						.references("lucid_collection_documents.id")
-						.onDelete("set null"),
+				.addColumn(
+					"document_id",
+					"integer",
+					(
+						col, // the document custom field reference
+					) =>
+						col
+							.references("lucid_document_versions.id")
+							.onDelete("set null"),
 				)
 				.addColumn("user_id", "integer", (col) =>
 					col.references("lucid_users.id").onDelete("set null"),
