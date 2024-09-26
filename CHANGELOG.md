@@ -1,5 +1,23 @@
 # @lucidcms/core
 
+## v0.9.0-alpha.0
+
+### Features:
+- CMS UI rework. Looks better, no longer requires JS to work out content height in main layout and panels, better loading, error, no data state handling and colour changes.
+- Lucid start function now has optional config for the port and host. ([b1bf97e](https://github.com/ProtoDigitalUK/lucid/commit/b1bf97e86121d3e11070440bcc8edbde45ef0fce#diff-0b810c38f3c138a3d5e44854edefd5eb966617ca84e62f06511f60acc40546c7L94))
+- @‌lucidcms/core/api import now has export for serviceWrapper and route helper, giving more options to plugin developers and extending your instance. ([16c0c58](https://github.com/ProtoDigitalUK/lucid/commit/16c0c58e44b93abcb617a17915b659cd7de04683))
+- Fastify plugins can now be registered via the lucid.config.ts/js giving plugins the ability to register endpoints etc. ([0a1d542](https://github.com/ProtoDigitalUK/lucid/commit/0a1d5427fe588079289733ff8fe3d109af32da33))
+- Repeater groups and bricks in the document page builder now have a nice animation when being drag and dropped to change their order. ([d4764e0](https://github.com/ProtoDigitalUK/lucid/commit/d4764e03ca38c39d27280e0b7e842eed1e84ed2b))
+
+### Breaking changes:
+- dotenv package is no longer imported and called within core and so if you want to use environment variables within your project that is on you to configure. ([b1bf97e](https://github.com/ProtoDigitalUK/lucid/commit/b1bf97e86121d3e11070440bcc8edbde45ef0fce#diff-0b810c38f3c138a3d5e44854edefd5eb966617ca84e62f06511f60acc40546c7L94))
+- Media strategies now require a service to create a signed URL for the client to upload to. ([58c846c](https://github.com/ProtoDigitalUK/lucid/commit/58c846c59bfc6db5ed4cfc07696eae80583d0011))
+- Media strategies now require a service to fetch metadata on given key. ([2e869a8](https://github.com/ProtoDigitalUK/lucid/commit/2e869a887076f05bf2781a4acf17d7bc163f9b7b))
+- Media strategy no longer requires the updateSingle service. ([67cc279](https://github.com/ProtoDigitalUK/lucid/commit/67cc2795ea8db05583551f5432a94f5b4e1bd3ae))
+
+### Bug Fixes:
+- Fixed link custom field issue to do with the default value being a string instead of link object. This meant in the CMS when a new link field was added, the value was set wrong causing it to error on save. ([e775ab9](https://github.com/ProtoDigitalUK/lucid/commit/e775ab9978d4133bfc098fe5fb088b6c275cad1d))
+
 ## v0.8.0-alpha.0
 
 ### Features:
