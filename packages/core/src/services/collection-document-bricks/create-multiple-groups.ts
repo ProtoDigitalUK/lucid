@@ -19,7 +19,7 @@ export interface GroupSimpleResponse {
 const createMultipleGroups: ServiceFn<
 	[
 		{
-			documentId: number;
+			versionId: number;
 			brickGroups: Array<{
 				brickId: number;
 				groups: GroupInsertItem[];
@@ -49,7 +49,7 @@ const createMultipleGroups: ServiceFn<
 
 			return bg.groups.map((group) => {
 				return {
-					collectionDocumentId: data.documentId,
+					collectionDocumentVersionId: data.versionId,
 					collectionBrickId: bg.brickId,
 					groupOrder: group.order,
 					repeaterKey: group.repeater,
@@ -65,7 +65,7 @@ const createMultipleGroups: ServiceFn<
 	const updateGroupParentIds: {
 		parentGroupId: number | null;
 		groupId: number;
-		collectionDocumentId: number;
+		collectionDocumentVersionId: number;
 		collectionBrickId: number;
 		groupOrder: number;
 		repeaterKey: string;
@@ -96,7 +96,7 @@ const createMultipleGroups: ServiceFn<
 			updateGroupParentIds.push({
 				parentGroupId: parentGroupId,
 				groupId: targetGroupId,
-				collectionDocumentId: data.documentId,
+				collectionDocumentVersionId: data.versionId,
 				collectionBrickId: bg.brickId,
 				groupOrder: group.order,
 				repeaterKey: group.repeater,

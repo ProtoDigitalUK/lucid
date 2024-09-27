@@ -6,6 +6,7 @@ import UserTokensRepo from "./user-tokens.js";
 import CollectionDocumentBricksRepo from "./collection-document-bricks.js";
 import CollectionDocumentFieldsRepo from "./collection-document-fields.js";
 import CollectionDocumentGroupsRepo from "./collection-document-groups.js";
+import CollectionDocumentVersionsRepo from "./collection-document-versions.js";
 import CollectionDocumentsRepo from "./collection-documents.js";
 import EmailsRepo from "./emails.js";
 import LocalesRepo from "./locales.js";
@@ -40,6 +41,10 @@ class Repository {
 				) as RepositoryReturnType<T>;
 			case "collection-document-groups":
 				return new CollectionDocumentGroupsRepo(
+					db,
+				) as RepositoryReturnType<T>;
+			case "collection-document-versions":
+				return new CollectionDocumentVersionsRepo(
 					db,
 				) as RepositoryReturnType<T>;
 			case "collection-documents":
@@ -89,6 +94,7 @@ type RepositoryClassMap = {
 	"collection-document-bricks": CollectionDocumentBricksRepo;
 	"collection-document-fields": CollectionDocumentFieldsRepo;
 	"collection-document-groups": CollectionDocumentGroupsRepo;
+	"collection-document-versions": CollectionDocumentVersionsRepo;
 	"collection-documents": CollectionDocumentsRepo;
 	emails: EmailsRepo;
 	locales: LocalesRepo;

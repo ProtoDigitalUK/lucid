@@ -17,7 +17,6 @@ export interface BrickInsertItem extends BrickSchema {
 const formatInsertBricks = (props: {
 	bricks?: Array<BrickSchema>;
 	fields?: Array<FieldSchemaType>;
-	documentId: number;
 	localisation: Config["localisation"];
 	collection: CollectionBuilder;
 }): Array<BrickInsertItem> => {

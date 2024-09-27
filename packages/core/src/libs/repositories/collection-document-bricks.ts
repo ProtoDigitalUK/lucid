@@ -264,7 +264,7 @@ export default class CollectionDocumentBricksRepo {
 			brickKey?: string;
 			brickOrder?: number;
 			brickOpen?: BooleanInt;
-			collectionDocumentId: number;
+			collectionDocumentVersionId: number;
 		}>;
 	}) => {
 		return this.db
@@ -277,7 +277,8 @@ export default class CollectionDocumentBricksRepo {
 						brick_key: b.brickKey,
 						brick_order: b.brickOrder,
 						brick_open: b.brickOpen,
-						collection_document_id: b.collectionDocumentId,
+						collection_document_version_id:
+							b.collectionDocumentVersionId,
 					};
 				}),
 			)

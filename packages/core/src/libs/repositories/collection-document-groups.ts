@@ -10,7 +10,7 @@ export default class CollectionDocumentGroupsRepo {
 	// upsert
 	createMultiple = async (props: {
 		items: Array<{
-			collectionDocumentId: number;
+			collectionDocumentVersionId: number;
 			collectionBrickId: number;
 			groupOrder: number;
 			repeaterKey: string;
@@ -22,7 +22,8 @@ export default class CollectionDocumentGroupsRepo {
 			.insertInto("lucid_collection_document_groups")
 			.values(
 				props.items.flatMap((g) => ({
-					collection_document_id: g.collectionDocumentId,
+					collection_document_version_id:
+						g.collectionDocumentVersionId,
 					collection_brick_id: g.collectionBrickId,
 					group_order: g.groupOrder,
 					repeater_key: g.repeaterKey,
@@ -39,7 +40,7 @@ export default class CollectionDocumentGroupsRepo {
 		items: Array<{
 			parentGroupId: number | null;
 			groupId: number;
-			collectionDocumentId: number;
+			collectionDocumentVersionId: number;
 			collectionBrickId: number;
 			groupOrder: number;
 			repeaterKey: string;
@@ -54,7 +55,8 @@ export default class CollectionDocumentGroupsRepo {
 					return {
 						parent_group_id: g.parentGroupId,
 						group_id: g.groupId,
-						collection_document_id: g.collectionDocumentId,
+						collection_document_version_id:
+							g.collectionDocumentVersionId,
 						collection_brick_id: g.collectionBrickId,
 						group_order: g.groupOrder,
 						repeater_key: g.repeaterKey,

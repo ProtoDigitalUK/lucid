@@ -137,10 +137,19 @@ const upsertSingle: ServiceFn<
 
 	// ----------------------------------------------
 	// Create and manage document versions
-	// - delete old draft
-	// - create new draft
-	// - clone new draft as a revision
-	// - if save and publish, clone new draft as published
+	const createVersionRes =
+		await context.services.collection.document.versions.createSingle(
+			context,
+			{
+				documentId: document.id,
+				userId: data.userId,
+				publish: data.publish,
+				bricks: bodyData.bricks,
+				fields: bodyData.fields,
+				collection: collectionRes.data,
+			},
+		);
+	if (createVersionRes.error) return createVersionRes;
 
 	// ----------------------------------------------
 	// Fire afterUpsert hook

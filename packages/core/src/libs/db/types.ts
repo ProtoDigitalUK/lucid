@@ -18,6 +18,8 @@ export type Select<T> = {
 	[P in keyof T]: T[P] extends { __select__: infer S } ? S : T[P];
 };
 
+export type DocumentVersionType = "draft" | "published" | "revision";
+
 // ------------------------------------------------------------------------------
 // Column types
 
@@ -184,6 +186,7 @@ export interface LucidCollectionDocuments {
 	updated_at: TimestampMutateable;
 }
 
+// might not be needed
 export interface LucidCollectionDocumentRevisions {
 	id: Generated<number>;
 	document_id: number;
@@ -196,8 +199,8 @@ export interface LucidCollectionDocumentRevisions {
 export interface LucidCollectionDocumentVersions {
 	id: Generated<number>;
 	document_id: number;
-	version_type: "draft" | "published" | "revision";
-	revision_id: number | null;
+	version_type: DocumentVersionType;
+	revision_id: number | null; // might not be needed
 	created_at: TimestampImmutable;
 	created_by: number | null;
 }

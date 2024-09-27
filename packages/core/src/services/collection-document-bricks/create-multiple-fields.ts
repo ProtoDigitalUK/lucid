@@ -8,7 +8,7 @@ import type {
 const createMultipleFields: ServiceFn<
 	[
 		{
-			documentId: number;
+			versionId: number;
 			fields: CFInsertItem<FieldTypes>[];
 		},
 	],
@@ -29,7 +29,7 @@ const createMultipleFields: ServiceFn<
 	await CollectionDocumentFieldsRepo.createMultiple({
 		items: data.fields.map((field) => {
 			return {
-				collectionDocumentId: data.documentId,
+				collectionDocumentVersionId: data.versionId,
 				collectionBrickId: field.collectionBrickId,
 				key: field.key,
 				type: field.type,

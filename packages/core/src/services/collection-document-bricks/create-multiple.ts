@@ -10,7 +10,7 @@ import type { FieldSchemaType } from "../../schemas/collection-fields.js";
 const createMultiple: ServiceFn<
 	[
 		{
-			documentId: number;
+			versionId: number;
 			bricks?: Array<BrickSchema>;
 			fields?: Array<FieldSchemaType>;
 			collection: CollectionBuilder;
@@ -18,17 +18,13 @@ const createMultiple: ServiceFn<
 	],
 	undefined
 > = async (context, data) => {
-	const CollectionDocumentBricksRepo = Repository.get(
-		"collection-document-bricks",
-		context.db,
-	);
+	const BricksRepo = Repository.get("collection-document-bricks", context.db);
 
 	// -------------------------------------------------------------------------------
 	// set bricks
 	const bricks = formatInsertBricks({
 		bricks: data.bricks,
 		fields: data.fields,
-		documentId: data.documentId,
 		localisation: context.config.localisation,
 		collection: data.collection,
 	});
@@ -58,29 +54,14 @@ const createMultiple: ServiceFn<
 	if (checkValidateBricksFields.error) return checkValidateBricksFields;
 
 	// -------------------------------------------------------------------------------
-	// delete all bricks
-	const deleteAllBricks =
-		await context.services.collection.document.brick.deleteMultipleBricks(
-			context,
-			{
-				documentId: data.documentId,
-				apply: {
-					bricks: data.bricks !== undefined,
-					collectionFields: data.fields !== undefined,
-				},
-			},
-		);
-	if (deleteAllBricks.error) return deleteAllBricks;
-
-	// -------------------------------------------------------------------------------
 	// insert bricks
-	const bricksRes = await CollectionDocumentBricksRepo.createMultiple({
+	const bricksRes = await BricksRepo.createMultiple({
 		items: bricks.map((b) => ({
 			brickType: b.type,
 			brickKey: b.key,
 			brickOrder: b.order,
 			brickOpen: b.open,
-			collectionDocumentId: data.documentId,
+			collectionDocumentVersionId: data.versionId,
 		})),
 	});
 
@@ -92,7 +73,7 @@ const createMultiple: ServiceFn<
 		await context.services.collection.document.brick.createMultipleGroups(
 			context,
 			{
-				documentId: data.documentId,
+				versionId: data.versionId,
 				brickGroups: postInsertBricks.map((b) => ({
 					brickId: b.id,
 					groups: b.groups,
@@ -107,7 +88,7 @@ const createMultiple: ServiceFn<
 		await context.services.collection.document.brick.createMultipleFields(
 			context,
 			{
-				documentId: data.documentId,
+				versionId: data.versionId,
 				fields: postInsertBricks.flatMap((b) =>
 					formatInsertFields({
 						groups: groups.data,
