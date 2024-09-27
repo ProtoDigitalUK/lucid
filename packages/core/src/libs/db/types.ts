@@ -184,9 +184,27 @@ export interface HeadlessCollectionDocuments {
 	updated_at: TimestampMutateable;
 }
 
+export interface HeadlessCollectionDocumentRevisions {
+	id: Generated<number>;
+	document_id: number;
+	name: string | null;
+	description: string | null;
+	created_by: number | null;
+	created_at: TimestampImmutable;
+}
+
+export interface HeadlessCollectionDocumentVersions {
+	id: Generated<number>;
+	document_id: number;
+	version_type: "draft" | "published" | "revision";
+	revision_id: number | null;
+	created_at: TimestampImmutable;
+	created_by: number | null;
+}
+
 export interface HeadlessCollectionDocumentBricks {
 	id: Generated<number>;
-	collection_document_id: number;
+	collection_document_version_id: number;
 	brick_type: BrickTypes;
 	brick_key: string | null;
 	brick_order: number | null;
@@ -195,7 +213,7 @@ export interface HeadlessCollectionDocumentBricks {
 
 export interface HeadlessCollectionDocumentGroups {
 	group_id: Generated<number>;
-	collection_document_id: number;
+	collection_document_version_id: number;
 	collection_brick_id: number;
 	parent_group_id: number | null;
 	repeater_key: string;
@@ -206,7 +224,7 @@ export interface HeadlessCollectionDocumentGroups {
 
 export interface HeadlessCollectionDocumentFields {
 	fields_id: Generated<number>;
-	collection_document_id: number;
+	collection_document_version_id: number;
 	collection_brick_id: number;
 	group_id: number | null;
 	locale_code: string;
@@ -251,6 +269,8 @@ export interface LucidDB {
 	lucid_media_awaiting_sync: HeadlessMediaAwaitingSync;
 	lucid_processed_images: HeadlessProcessedImages;
 	lucid_collection_documents: HeadlessCollectionDocuments;
+	lucid_collection_document_revisions: HeadlessCollectionDocumentRevisions;
+	lucid_collection_document_versions: HeadlessCollectionDocumentVersions;
 	lucid_collection_document_bricks: HeadlessCollectionDocumentBricks;
 	lucid_collection_document_groups: HeadlessCollectionDocumentGroups;
 	lucid_collection_document_fields: HeadlessCollectionDocumentFields;
