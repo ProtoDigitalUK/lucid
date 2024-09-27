@@ -6,9 +6,12 @@ import getMultiple from "./get-multiple.js";
 import deleteSingle from "./delete-single.js";
 import deleteMultiple from "./delete-multiple.js";
 
+import newServices from "./new-services/index.js";
+
 export default {
 	checks,
 	client,
+	newServices,
 	upsertSingle,
 	getSingle,
 	getMultiple,
