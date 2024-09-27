@@ -5,12 +5,7 @@ import queryBuilder, {
 import type z from "zod";
 import type { Config } from "../../types/config.js";
 import type usersSchema from "../../schemas/users.js";
-import type {
-	BooleanInt,
-	HeadlessUsers,
-	Select,
-	KyselyDB,
-} from "../db/types.js";
+import type { BooleanInt, LucidUsers, Select, KyselyDB } from "../db/types.js";
 
 export default class UsersRepo {
 	constructor(private db: KyselyDB) {}
@@ -30,7 +25,7 @@ export default class UsersRepo {
 	};
 	// ----------------------------------------
 	// selects
-	selectSingle = async <K extends keyof Select<HeadlessUsers>>(props: {
+	selectSingle = async <K extends keyof Select<LucidUsers>>(props: {
 		select: K[];
 		where: QueryBuilderWhere<"lucid_users">;
 	}) => {
@@ -39,7 +34,7 @@ export default class UsersRepo {
 		query = queryBuilder.select(query, props.where);
 
 		return query.executeTakeFirst() as Promise<
-			Pick<Select<HeadlessUsers>, K> | undefined
+			Pick<Select<LucidUsers>, K> | undefined
 		>;
 	};
 	selectSingleById = async (props: {
@@ -95,7 +90,7 @@ export default class UsersRepo {
 			.executeTakeFirst();
 	};
 	selectSingleByEmailUsername = async <
-		K extends keyof Select<HeadlessUsers>,
+		K extends keyof Select<LucidUsers>,
 	>(props: {
 		select: K[];
 		data: {
@@ -113,10 +108,10 @@ export default class UsersRepo {
 				]),
 			)
 			.executeTakeFirst() as Promise<
-			Pick<Select<HeadlessUsers>, K> | undefined
+			Pick<Select<LucidUsers>, K> | undefined
 		>;
 	};
-	selectMultiple = async <K extends keyof Select<HeadlessUsers>>(props: {
+	selectMultiple = async <K extends keyof Select<LucidUsers>>(props: {
 		select: K[];
 		where: QueryBuilderWhere<"lucid_users">;
 	}) => {
@@ -124,9 +119,7 @@ export default class UsersRepo {
 
 		query = queryBuilder.select(query, props.where);
 
-		return query.execute() as Promise<
-			Array<Pick<Select<HeadlessUsers>, K>>
-		>;
+		return query.execute() as Promise<Array<Pick<Select<LucidUsers>, K>>>;
 	};
 	selectMultipleFiltered = async (props: {
 		query: z.infer<typeof usersSchema.getMultiple.query>;

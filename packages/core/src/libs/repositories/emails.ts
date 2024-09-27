@@ -3,7 +3,7 @@ import queryBuilder, {
 	type QueryBuilderWhere,
 } from "../query-builder/index.js";
 import type z from "zod";
-import type { HeadlessEmails, Select, KyselyDB } from "../db/types.js";
+import type { LucidEmails, Select, KyselyDB } from "../db/types.js";
 import type { Config } from "../../types/config.js";
 import type emailsSchema from "../../schemas/email.js";
 
@@ -12,7 +12,7 @@ export default class EmailsRepo {
 
 	// ----------------------------------------
 	// selects
-	selectSingle = async <K extends keyof Select<HeadlessEmails>>(props: {
+	selectSingle = async <K extends keyof Select<LucidEmails>>(props: {
 		select: K[];
 		where: QueryBuilderWhere<"lucid_emails">;
 	}) => {
@@ -21,7 +21,7 @@ export default class EmailsRepo {
 		query = queryBuilder.select(query, props.where);
 
 		return query.executeTakeFirst() as Promise<
-			Pick<Select<HeadlessEmails>, K> | undefined
+			Pick<Select<LucidEmails>, K> | undefined
 		>;
 	};
 	selectSingleById = async (props: {
@@ -138,10 +138,10 @@ export default class EmailsRepo {
 		cc?: string;
 		bcc?: string;
 		data: string | null;
-		type: HeadlessEmails["type"];
+		type: LucidEmails["type"];
 		sentCount: number;
 		errorCount: number;
-		deliveryStatus: HeadlessEmails["delivery_status"];
+		deliveryStatus: LucidEmails["delivery_status"];
 		lastErrorMessage?: string;
 		lastSuccessAt?: string;
 	}) => {
@@ -172,7 +172,7 @@ export default class EmailsRepo {
 	updateSingle = async (props: {
 		where: QueryBuilderWhere<"lucid_emails">;
 		data: {
-			deliveryStatus?: HeadlessEmails["delivery_status"];
+			deliveryStatus?: LucidEmails["delivery_status"];
 			lastErrorMessage?: string;
 			lastSuccessAt?: string;
 			sentCount?: number;

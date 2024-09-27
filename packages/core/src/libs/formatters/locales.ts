@@ -1,11 +1,11 @@
 import Formatter from "./index.js";
 import type { LocalesResponse } from "../../types/response.js";
-import type { HeadlessLocales, Select } from "../db/types.js";
+import type { LucidLocales, Select } from "../db/types.js";
 import type { Config } from "../../exports/types.js";
 
 export default class LocalesFormatter {
 	formatMultiple = (props: {
-		locales: Select<HeadlessLocales>[];
+		locales: Select<LucidLocales>[];
 		localisation: Config["localisation"];
 	}): LocalesResponse[] => {
 		return props.locales
@@ -25,7 +25,7 @@ export default class LocalesFormatter {
 			.filter((l) => l !== null);
 	};
 	formatSingle = (props: {
-		locale: Select<HeadlessLocales>;
+		locale: Select<LucidLocales>;
 		configLocale: Config["localisation"]["locales"][0];
 		defaultLocale: Config["localisation"]["defaultLocale"];
 	}): LocalesResponse => {

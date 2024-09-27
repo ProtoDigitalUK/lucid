@@ -3,7 +3,7 @@ import queryBuilder, {
 	type QueryBuilderWhere,
 } from "../query-builder/index.js";
 import type {
-	HeadlessLocales,
+	LucidLocales,
 	Select,
 	BooleanInt,
 	KyselyDB,
@@ -20,7 +20,7 @@ export default class LocalesRepo {
 	};
 	// ----------------------------------------
 	// select
-	selectSingle = async <K extends keyof Select<HeadlessLocales>>(props: {
+	selectSingle = async <K extends keyof Select<LucidLocales>>(props: {
 		select: K[];
 		where: QueryBuilderWhere<"lucid_locales">;
 	}) => {
@@ -29,10 +29,10 @@ export default class LocalesRepo {
 		query = queryBuilder.select(query, props.where);
 
 		return query.executeTakeFirst() as Promise<
-			Pick<Select<HeadlessLocales>, K> | undefined
+			Pick<Select<LucidLocales>, K> | undefined
 		>;
 	};
-	selectMultiple = async <K extends keyof Select<HeadlessLocales>>(props: {
+	selectMultiple = async <K extends keyof Select<LucidLocales>>(props: {
 		select: K[];
 		where: QueryBuilderWhere<"lucid_locales">;
 	}) => {
@@ -40,17 +40,15 @@ export default class LocalesRepo {
 
 		query = queryBuilder.select(query, props.where);
 
-		return query.execute() as Promise<
-			Array<Pick<Select<HeadlessLocales>, K>>
-		>;
+		return query.execute() as Promise<Array<Pick<Select<LucidLocales>, K>>>;
 	};
-	selectAll = async <K extends keyof Select<HeadlessLocales>>(props: {
+	selectAll = async <K extends keyof Select<LucidLocales>>(props: {
 		select: K[];
 	}) => {
 		return this.db
 			.selectFrom("lucid_locales")
 			.select<K>(props.select)
-			.execute() as Promise<Array<Pick<Select<HeadlessLocales>, K>>>;
+			.execute() as Promise<Array<Pick<Select<LucidLocales>, K>>>;
 	};
 	// ----------------------------------------
 	// create

@@ -3,12 +3,7 @@ import queryBuilder, {
 	type QueryBuilderWhere,
 } from "../query-builder/index.js";
 import type z from "zod";
-import type {
-	BooleanInt,
-	HeadlessMedia,
-	Select,
-	KyselyDB,
-} from "../db/types.js";
+import type { BooleanInt, LucidMedia, Select, KyselyDB } from "../db/types.js";
 import type mediaSchema from "../../schemas/media.js";
 import type { Config } from "../../types/config.js";
 
@@ -17,7 +12,7 @@ export default class MediaRepo {
 
 	// ----------------------------------------
 	// select
-	selectSingle = async <K extends keyof Select<HeadlessMedia>>(props: {
+	selectSingle = async <K extends keyof Select<LucidMedia>>(props: {
 		select: K[];
 		where: QueryBuilderWhere<"lucid_media">;
 	}) => {
@@ -26,7 +21,7 @@ export default class MediaRepo {
 		query = queryBuilder.select(query, props.where);
 
 		return query.executeTakeFirst() as Promise<
-			Pick<Select<HeadlessMedia>, K> | undefined
+			Pick<Select<LucidMedia>, K> | undefined
 		>;
 	};
 	selectSingleById = async (props: {
@@ -90,7 +85,7 @@ export default class MediaRepo {
 			.where("id", "=", props.id)
 			.executeTakeFirst();
 	};
-	selectMultiple = async <K extends keyof Select<HeadlessMedia>>(props: {
+	selectMultiple = async <K extends keyof Select<LucidMedia>>(props: {
 		select: K[];
 		where: QueryBuilderWhere<"lucid_media">;
 	}) => {
@@ -98,9 +93,7 @@ export default class MediaRepo {
 
 		query = queryBuilder.select(query, props.where);
 
-		return query.execute() as Promise<
-			Array<Pick<Select<HeadlessMedia>, K>>
-		>;
+		return query.execute() as Promise<Array<Pick<Select<LucidMedia>, K>>>;
 	};
 	selectMultipleFiltered = async (props: {
 		localeCode: string;
@@ -276,7 +269,7 @@ export default class MediaRepo {
 		key: string;
 		visible: BooleanInt;
 		eTag?: string;
-		type: HeadlessMedia["type"];
+		type: LucidMedia["type"];
 		mimeType: string;
 		extension: string;
 		fileSize: number;
@@ -319,7 +312,7 @@ export default class MediaRepo {
 		data: {
 			key?: string;
 			eTag?: string | null;
-			type?: HeadlessMedia["type"];
+			type?: LucidMedia["type"];
 			mimeType?: string;
 			extension?: string;
 			fileSize?: number;

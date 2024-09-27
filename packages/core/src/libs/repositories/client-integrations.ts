@@ -2,7 +2,7 @@ import queryBuilder, {
 	type QueryBuilderWhere,
 } from "../query-builder/index.js";
 import type {
-	HeadlessClientIntegrations,
+	LucidClientIntegrations,
 	Select,
 	KyselyDB,
 	BooleanInt,
@@ -14,7 +14,7 @@ export default class ClientIntegrationsRepo {
 	// ----------------------------------------
 	// select
 	selectSingle = async <
-		K extends keyof Select<HeadlessClientIntegrations>,
+		K extends keyof Select<LucidClientIntegrations>,
 	>(props: {
 		select: K[];
 		where: QueryBuilderWhere<"lucid_client_integrations">;
@@ -26,11 +26,11 @@ export default class ClientIntegrationsRepo {
 		query = queryBuilder.select(query, props.where);
 
 		return query.executeTakeFirst() as Promise<
-			Pick<Select<HeadlessClientIntegrations>, K> | undefined
+			Pick<Select<LucidClientIntegrations>, K> | undefined
 		>;
 	};
 	selectMultiple = async <
-		K extends keyof Select<HeadlessClientIntegrations>,
+		K extends keyof Select<LucidClientIntegrations>,
 	>(props: {
 		select: K[];
 		where: QueryBuilderWhere<"lucid_client_integrations">;
@@ -42,7 +42,7 @@ export default class ClientIntegrationsRepo {
 		query = queryBuilder.select(query, props.where);
 
 		return query.execute() as Promise<
-			Array<Pick<Select<HeadlessClientIntegrations>, K>>
+			Array<Pick<Select<LucidClientIntegrations>, K>>
 		>;
 	};
 	// ----------------------------------------

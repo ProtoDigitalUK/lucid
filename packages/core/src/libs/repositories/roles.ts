@@ -3,7 +3,7 @@ import queryBuilder, {
 	type QueryBuilderWhere,
 } from "../query-builder/index.js";
 import type z from "zod";
-import type { HeadlessRoles, Select, KyselyDB } from "../db/types.js";
+import type { LucidRoles, Select, KyselyDB } from "../db/types.js";
 import type { Config } from "../../types/config.js";
 import type rolesSchema from "../../schemas/roles.js";
 
@@ -18,7 +18,7 @@ export default class RolesRepo {
 	};
 	// ----------------------------------------
 	// selects
-	selectSingle = async <K extends keyof Select<HeadlessRoles>>(props: {
+	selectSingle = async <K extends keyof Select<LucidRoles>>(props: {
 		select: K[];
 		where: QueryBuilderWhere<"lucid_roles">;
 	}) => {
@@ -27,7 +27,7 @@ export default class RolesRepo {
 		query = queryBuilder.select(query, props.where);
 
 		return query.executeTakeFirst() as Promise<
-			Pick<Select<HeadlessRoles>, K> | undefined
+			Pick<Select<LucidRoles>, K> | undefined
 		>;
 	};
 	selectSingleById = async (props: {
@@ -62,7 +62,7 @@ export default class RolesRepo {
 			.where("id", "=", props.id)
 			.executeTakeFirst();
 	};
-	selectMultiple = async <K extends keyof Select<HeadlessRoles>>(props: {
+	selectMultiple = async <K extends keyof Select<LucidRoles>>(props: {
 		select: K[];
 		where: QueryBuilderWhere<"lucid_roles">;
 	}) => {
@@ -70,9 +70,7 @@ export default class RolesRepo {
 
 		query = queryBuilder.select(query, props.where);
 
-		return query.execute() as Promise<
-			Array<Pick<Select<HeadlessRoles>, K>>
-		>;
+		return query.execute() as Promise<Array<Pick<Select<LucidRoles>, K>>>;
 	};
 	selectMultipleFiltered = async (props: {
 		query: z.infer<typeof rolesSchema.getMultiple.query>;

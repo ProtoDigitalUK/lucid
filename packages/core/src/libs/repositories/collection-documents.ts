@@ -6,7 +6,7 @@ import queryBuilder, {
 import type z from "zod";
 import type {
 	BooleanInt,
-	HeadlessCollectionDocuments,
+	LucidCollectionDocuments,
 	Select,
 	KyselyDB,
 } from "../db/types.js";
@@ -22,7 +22,7 @@ export default class CollectionDocumentsRepo {
 	// ----------------------------------------
 	// select
 	selectSingle = async <
-		K extends keyof Select<HeadlessCollectionDocuments>,
+		K extends keyof Select<LucidCollectionDocuments>,
 	>(props: {
 		select: K[];
 		where: QueryBuilderWhere<"lucid_collection_documents">;
@@ -34,7 +34,7 @@ export default class CollectionDocumentsRepo {
 		query = queryBuilder.select(query, props.where);
 
 		return query.executeTakeFirst() as Promise<
-			Pick<Select<HeadlessCollectionDocuments>, K> | undefined
+			Pick<Select<LucidCollectionDocuments>, K> | undefined
 		>;
 	};
 	selectSingleById = async (props: {
@@ -399,7 +399,7 @@ export default class CollectionDocumentsRepo {
 		return main.executeTakeFirst();
 	};
 	selectMultiple = async <
-		K extends keyof Select<HeadlessCollectionDocuments>,
+		K extends keyof Select<LucidCollectionDocuments>,
 	>(props: {
 		select: K[];
 		where: QueryBuilderWhere<"lucid_collection_documents">;
@@ -411,7 +411,7 @@ export default class CollectionDocumentsRepo {
 		query = queryBuilder.select(query, props.where);
 
 		return query.execute() as Promise<
-			Array<Pick<Select<HeadlessCollectionDocuments>, K>>
+			Array<Pick<Select<LucidCollectionDocuments>, K>>
 		>;
 	};
 	selectMultipleFiltered = async (props: {

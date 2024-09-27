@@ -1,11 +1,7 @@
 import queryBuilder, {
 	type QueryBuilderWhere,
 } from "../query-builder/index.js";
-import type {
-	HeadlessMediaAwaitingSync,
-	Select,
-	KyselyDB,
-} from "../db/types.js";
+import type { LucidMediaAwaitingSync, Select, KyselyDB } from "../db/types.js";
 
 export default class MediaAwaitingSyncRepo {
 	constructor(private db: KyselyDB) {}
@@ -13,7 +9,7 @@ export default class MediaAwaitingSyncRepo {
 	// ----------------------------------------
 	// select
 	selectSingle = async <
-		K extends keyof Select<HeadlessMediaAwaitingSync>,
+		K extends keyof Select<LucidMediaAwaitingSync>,
 	>(props: {
 		select: K[];
 		where: QueryBuilderWhere<"lucid_media_awaiting_sync">;
@@ -25,11 +21,11 @@ export default class MediaAwaitingSyncRepo {
 		query = queryBuilder.select(query, props.where);
 
 		return query.executeTakeFirst() as Promise<
-			Pick<Select<HeadlessMediaAwaitingSync>, K> | undefined
+			Pick<Select<LucidMediaAwaitingSync>, K> | undefined
 		>;
 	};
 	selectMultiple = async <
-		K extends keyof Select<HeadlessMediaAwaitingSync>,
+		K extends keyof Select<LucidMediaAwaitingSync>,
 	>(props: {
 		select: K[];
 		where: QueryBuilderWhere<"lucid_media_awaiting_sync">;
@@ -41,7 +37,7 @@ export default class MediaAwaitingSyncRepo {
 		query = queryBuilder.select(query, props.where);
 
 		return query.execute() as Promise<
-			Array<Pick<Select<HeadlessMediaAwaitingSync>, K>>
+			Array<Pick<Select<LucidMediaAwaitingSync>, K>>
 		>;
 	};
 	// ----------------------------------------

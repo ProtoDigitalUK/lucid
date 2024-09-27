@@ -37,7 +37,7 @@ export type JSONString = string;
 // ------------------------------------------------------------------------------
 // Tables
 
-export interface HeadlessLocales {
+export interface LucidLocales {
 	code: string;
 	created_at: TimestampImmutable;
 	updated_at: TimestampMutateable;
@@ -45,26 +45,26 @@ export interface HeadlessLocales {
 	is_deleted_at: TimestampMutateable;
 }
 
-export interface HeadlessTranslationKeys {
+export interface LucidTranslationKeys {
 	id: Generated<number>;
 	created_at: TimestampImmutable;
 }
 
-export interface HeadlessTranslations {
+export interface LucidTranslations {
 	id: Generated<number>;
 	translation_key_id: number;
 	locale_code: string;
 	value: string | null;
 }
 
-export interface HeadlessOptions {
+export interface LucidOptions {
 	name: OptionName;
 	value_int: number | null;
 	value_text: string | null;
 	value_bool: BooleanInt | null;
 }
 
-export interface HeadlessUsers {
+export interface LucidUsers {
 	id: Generated<number>;
 	super_admin: ColumnType<BooleanInt, BooleanInt | undefined, BooleanInt>;
 	email: string;
@@ -85,7 +85,7 @@ export interface HeadlessUsers {
 	updated_at: TimestampMutateable;
 }
 
-export interface HeadlessRoles {
+export interface LucidRoles {
 	id: Generated<number>;
 	name: string;
 	description: string | null;
@@ -93,7 +93,7 @@ export interface HeadlessRoles {
 	updated_at: TimestampMutateable;
 }
 
-export interface HeadlessRolePermissions {
+export interface LucidRolePermissions {
 	id: Generated<number>;
 	role_id: number;
 	permission: string;
@@ -101,7 +101,7 @@ export interface HeadlessRolePermissions {
 	updated_at: TimestampMutateable;
 }
 
-export interface HeadlessUserRoles {
+export interface LucidUserRoles {
 	id: Generated<number>;
 	user_id: number | null;
 	role_id: number | null;
@@ -109,7 +109,7 @@ export interface HeadlessUserRoles {
 	updated_at: TimestampMutateable;
 }
 
-export interface HeadlessUserTokens {
+export interface LucidUserTokens {
 	id: Generated<number>;
 	user_id: number | null;
 	token_type: "password_reset" | "refresh";
@@ -118,7 +118,7 @@ export interface HeadlessUserTokens {
 	expiry_date: TimestampMutateable;
 }
 
-export interface HeadlessEmails {
+export interface LucidEmails {
 	id: Generated<number>;
 	email_hash: string;
 	from_address: string;
@@ -139,7 +139,7 @@ export interface HeadlessEmails {
 	created_at: TimestampImmutable;
 }
 
-export interface HeadlessMedia {
+export interface LucidMedia {
 	id: Generated<number>;
 	key: string;
 	e_tag: string | null;
@@ -161,7 +161,7 @@ export interface HeadlessMedia {
 	updated_at: TimestampMutateable;
 }
 
-export interface HeadlessMediaAwaitingSync {
+export interface LucidMediaAwaitingSync {
 	key: string;
 	timestamp: TimestampImmutable;
 }
@@ -172,7 +172,7 @@ export interface HeadlessProcessedImages {
 	file_size: number;
 }
 
-export interface HeadlessCollectionDocuments {
+export interface LucidCollectionDocuments {
 	id: Generated<number>;
 	collection_key: string;
 	is_deleted: ColumnType<BooleanInt, BooleanInt | undefined, BooleanInt>;
@@ -184,7 +184,7 @@ export interface HeadlessCollectionDocuments {
 	updated_at: TimestampMutateable;
 }
 
-export interface HeadlessCollectionDocumentRevisions {
+export interface LucidCollectionDocumentRevisions {
 	id: Generated<number>;
 	document_id: number;
 	name: string | null;
@@ -193,7 +193,7 @@ export interface HeadlessCollectionDocumentRevisions {
 	created_at: TimestampImmutable;
 }
 
-export interface HeadlessCollectionDocumentVersions {
+export interface LucidCollectionDocumentVersions {
 	id: Generated<number>;
 	document_id: number;
 	version_type: "draft" | "published" | "revision";
@@ -202,7 +202,7 @@ export interface HeadlessCollectionDocumentVersions {
 	created_by: number | null;
 }
 
-export interface HeadlessCollectionDocumentBricks {
+export interface LucidCollectionDocumentBricks {
 	id: Generated<number>;
 	collection_document_version_id: number;
 	brick_type: BrickTypes;
@@ -211,7 +211,7 @@ export interface HeadlessCollectionDocumentBricks {
 	brick_open: BooleanInt | null;
 }
 
-export interface HeadlessCollectionDocumentGroups {
+export interface LucidCollectionDocumentGroups {
 	group_id: Generated<number>;
 	collection_document_version_id: number;
 	collection_brick_id: number;
@@ -222,7 +222,7 @@ export interface HeadlessCollectionDocumentGroups {
 	ref: string | null;
 }
 
-export interface HeadlessCollectionDocumentFields {
+export interface LucidCollectionDocumentFields {
 	fields_id: Generated<number>;
 	collection_document_version_id: number;
 	collection_brick_id: number;
@@ -239,7 +239,7 @@ export interface HeadlessCollectionDocumentFields {
 	document_id: number | null;
 }
 
-export interface HeadlessClientIntegrations {
+export interface LucidClientIntegrations {
 	id: Generated<number>;
 	name: string;
 	description: string | null;
@@ -255,24 +255,24 @@ export interface HeadlessClientIntegrations {
 // Database
 
 export interface LucidDB {
-	lucid_locales: HeadlessLocales;
-	lucid_translation_keys: HeadlessTranslationKeys;
-	lucid_translations: HeadlessTranslations;
-	lucid_options: HeadlessOptions;
-	lucid_users: HeadlessUsers;
-	lucid_roles: HeadlessRoles;
-	lucid_role_permissions: HeadlessRolePermissions;
-	lucid_user_roles: HeadlessUserRoles;
-	lucid_user_tokens: HeadlessUserTokens;
-	lucid_emails: HeadlessEmails;
-	lucid_media: HeadlessMedia;
-	lucid_media_awaiting_sync: HeadlessMediaAwaitingSync;
+	lucid_locales: LucidLocales;
+	lucid_translation_keys: LucidTranslationKeys;
+	lucid_translations: LucidTranslations;
+	lucid_options: LucidOptions;
+	lucid_users: LucidUsers;
+	lucid_roles: LucidRoles;
+	lucid_role_permissions: LucidRolePermissions;
+	lucid_user_roles: LucidUserRoles;
+	lucid_user_tokens: LucidUserTokens;
+	lucid_emails: LucidEmails;
+	lucid_media: LucidMedia;
+	lucid_media_awaiting_sync: LucidMediaAwaitingSync;
 	lucid_processed_images: HeadlessProcessedImages;
-	lucid_collection_documents: HeadlessCollectionDocuments;
-	lucid_collection_document_revisions: HeadlessCollectionDocumentRevisions;
-	lucid_collection_document_versions: HeadlessCollectionDocumentVersions;
-	lucid_collection_document_bricks: HeadlessCollectionDocumentBricks;
-	lucid_collection_document_groups: HeadlessCollectionDocumentGroups;
-	lucid_collection_document_fields: HeadlessCollectionDocumentFields;
-	lucid_client_integrations: HeadlessClientIntegrations;
+	lucid_collection_documents: LucidCollectionDocuments;
+	lucid_collection_document_revisions: LucidCollectionDocumentRevisions;
+	lucid_collection_document_versions: LucidCollectionDocumentVersions;
+	lucid_collection_document_bricks: LucidCollectionDocumentBricks;
+	lucid_collection_document_groups: LucidCollectionDocumentGroups;
+	lucid_collection_document_fields: LucidCollectionDocumentFields;
+	lucid_client_integrations: LucidClientIntegrations;
 }

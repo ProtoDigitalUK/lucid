@@ -1,14 +1,14 @@
 import queryBuilder, {
 	type QueryBuilderWhere,
 } from "../query-builder/index.js";
-import type { HeadlessUserTokens, Select, KyselyDB } from "../db/types.js";
+import type { LucidUserTokens, Select, KyselyDB } from "../db/types.js";
 
 export default class UserTokensRepo {
 	constructor(private db: KyselyDB) {}
 
 	// ----------------------------------------
 	// selects
-	selectSingle = async <K extends keyof Select<HeadlessUserTokens>>(props: {
+	selectSingle = async <K extends keyof Select<LucidUserTokens>>(props: {
 		select: K[];
 		where: QueryBuilderWhere<"lucid_user_tokens">;
 	}) => {
@@ -19,7 +19,7 @@ export default class UserTokensRepo {
 		query = queryBuilder.select(query, props.where);
 
 		return query.executeTakeFirst() as Promise<
-			Pick<Select<HeadlessUserTokens>, K> | undefined
+			Pick<Select<LucidUserTokens>, K> | undefined
 		>;
 	};
 	// ----------------------------------------
@@ -37,7 +37,7 @@ export default class UserTokensRepo {
 	// create
 	createSingle = async (props: {
 		userId: number;
-		tokenType: HeadlessUserTokens["token_type"];
+		tokenType: LucidUserTokens["token_type"];
 		expiryDate: string;
 		token: string;
 	}) => {

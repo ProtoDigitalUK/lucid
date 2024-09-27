@@ -3,7 +3,7 @@ import queryBuilder, {
 	type QueryBuilderWhere,
 } from "../query-builder/index.js";
 import type {
-	HeadlessCollectionDocumentBricks,
+	LucidCollectionDocumentBricks,
 	Select,
 	KyselyDB,
 	BooleanInt,
@@ -17,7 +17,7 @@ export default class CollectionDocumentBricksRepo {
 	// ----------------------------------------
 	// select
 	selectSingle = async <
-		K extends keyof Select<HeadlessCollectionDocumentBricks>,
+		K extends keyof Select<LucidCollectionDocumentBricks>,
 	>(props: {
 		select: K[];
 		where: QueryBuilderWhere<"lucid_collection_document_bricks">;
@@ -29,7 +29,7 @@ export default class CollectionDocumentBricksRepo {
 		query = queryBuilder.select(query, props.where);
 
 		return query.executeTakeFirst() as Promise<
-			Pick<Select<HeadlessCollectionDocumentBricks>, K> | undefined
+			Pick<Select<LucidCollectionDocumentBricks>, K> | undefined
 		>;
 	};
 	selectMultipleByDocumentId = async (props: {

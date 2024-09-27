@@ -1,14 +1,14 @@
 import queryBuilder, {
 	type QueryBuilderWhere,
 } from "../query-builder/index.js";
-import type { HeadlessOptions, Select, KyselyDB } from "../db/types.js";
+import type { LucidOptions, Select, KyselyDB } from "../db/types.js";
 
 export default class OptionsRepo {
 	constructor(private db: KyselyDB) {}
 
 	// ----------------------------------------
 	// select
-	selectSingle = async <K extends keyof Select<HeadlessOptions>>(props: {
+	selectSingle = async <K extends keyof Select<LucidOptions>>(props: {
 		select: K[];
 		where: QueryBuilderWhere<"lucid_options">;
 	}) => {
@@ -17,16 +17,16 @@ export default class OptionsRepo {
 		query = queryBuilder.select(query, props.where);
 
 		return query.executeTakeFirst() as Promise<
-			Pick<Select<HeadlessOptions>, K> | undefined
+			Pick<Select<LucidOptions>, K> | undefined
 		>;
 	};
 	// ----------------------------------------
 	// create
 	createSingle = async (props: {
-		name: HeadlessOptions["name"];
-		valueInt?: HeadlessOptions["value_int"];
-		valueBool?: HeadlessOptions["value_bool"];
-		valueText?: HeadlessOptions["value_text"];
+		name: LucidOptions["name"];
+		valueInt?: LucidOptions["value_int"];
+		valueBool?: LucidOptions["value_bool"];
+		valueText?: LucidOptions["value_text"];
 	}) => {
 		return this.db
 			.insertInto("lucid_options")
@@ -43,9 +43,9 @@ export default class OptionsRepo {
 	updateSingle = async (props: {
 		where: QueryBuilderWhere<"lucid_options">;
 		data: {
-			valueInt?: HeadlessOptions["value_int"];
-			valueBool?: HeadlessOptions["value_bool"];
-			valueText?: HeadlessOptions["value_text"];
+			valueInt?: LucidOptions["value_int"];
+			valueBool?: LucidOptions["value_bool"];
+			valueText?: LucidOptions["value_text"];
 		};
 	}) => {
 		let query = this.db
