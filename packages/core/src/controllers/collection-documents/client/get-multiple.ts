@@ -34,6 +34,7 @@ const getMultipleController: RouteController<
 		},
 		{
 			collectionKey: request.params.collectionKey,
+			status: request.params.status,
 			query: request.query,
 		},
 	);

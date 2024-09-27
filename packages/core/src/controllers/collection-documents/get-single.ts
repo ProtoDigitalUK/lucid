@@ -33,6 +33,7 @@ const getSingleController: RouteController<
 		},
 		{
 			id: Number.parseInt(request.params.id),
+			versionId: Number.parseInt(request.params.versionId),
 			collectionKey: request.params.collectionKey,
 			query: request.query,
 		},

@@ -5,12 +5,14 @@ import merge from "lodash.merge";
 import type { BrickSchema } from "../../schemas/collection-bricks.js";
 import type { FieldSchemaType } from "../../schemas/collection-fields.js";
 import type { ServiceFn } from "../../utils/services/types.js";
+import type { BooleanInt } from "../../libs/db/types.js";
 
 const upsertSingle: ServiceFn<
 	[
 		{
 			collectionKey: string;
 			userId: number;
+			publish: BooleanInt;
 
 			documentId?: number;
 			bricks?: Array<BrickSchema>;
@@ -19,6 +21,14 @@ const upsertSingle: ServiceFn<
 	],
 	number
 > = async (context, data) => {
+	const CollectionDocumentsRepo = Repository.get(
+		"collection-documents",
+		context.db,
+	);
+
+	// ----------------------------------------------
+
+	// Check collection exists
 	const collectionRes =
 		await context.services.collection.document.checks.checkCollection(
 			context,
@@ -28,11 +38,20 @@ const upsertSingle: ServiceFn<
 		);
 	if (collectionRes.error) return collectionRes;
 
-	const CollectionDocumentsRepo = Repository.get(
-		"collection-documents",
-		context.db,
-	);
+	// Check collection is locked
+	if (collectionRes.data.config.locked === true) {
+		return {
+			error: {
+				type: "basic",
+				name: T("error_locked_collection_name"),
+				message: T("error_locked_collection_message"),
+				status: 400,
+			},
+			data: undefined,
+		};
+	}
 
+	// Check if document exists within the collection
 	if (data.documentId !== undefined) {
 		const existingDocument = await CollectionDocumentsRepo.selectSingle({
 			select: ["id"],
@@ -60,20 +79,9 @@ const upsertSingle: ServiceFn<
 				data: undefined,
 			};
 		}
-
-		if (collectionRes.data.config.locked === true) {
-			return {
-				error: {
-					type: "basic",
-					name: T("error_locked_collection_name"),
-					message: T("error_locked_collection_message"),
-					status: 400,
-				},
-				data: undefined,
-			};
-		}
 	}
 
+	// Check if a single document already exists for this collection
 	const checkDocumentCount =
 		await context.services.collection.document.checks.checkSingleCollectionDocumentCount(
 			context,
@@ -85,6 +93,8 @@ const upsertSingle: ServiceFn<
 		);
 	if (checkDocumentCount.error) return checkDocumentCount;
 
+	// ----------------------------------------------
+	// Fire beforeUpsert hook and merge result with data
 	const hookResponse = await executeHooks(
 		{
 			service: "collection-documents",
@@ -102,8 +112,11 @@ const upsertSingle: ServiceFn<
 		},
 	);
 	if (hookResponse.error) return hookResponse;
+
 	const bodyData = merge(data, hookResponse.data);
 
+	// ----------------------------------------------
+	// Upsert document
 	const document = await CollectionDocumentsRepo.upsertSingle({
 		id: data.documentId,
 		collectionKey: data.collectionKey,
@@ -112,7 +125,6 @@ const upsertSingle: ServiceFn<
 		isDeleted: 0,
 		updatedAt: new Date().toISOString(),
 	});
-
 	if (document === undefined) {
 		return {
 			error: {
@@ -123,18 +135,24 @@ const upsertSingle: ServiceFn<
 		};
 	}
 
-	const createMultipleBricks =
-		await context.services.collection.document.brick.createMultiple(
+	// ----------------------------------------------
+	// Create and manage document versions
+	const createVersionRes =
+		await context.services.collection.document.versions.createSingle(
 			context,
 			{
 				documentId: document.id,
+				userId: data.userId,
+				publish: data.publish,
 				bricks: bodyData.bricks,
 				fields: bodyData.fields,
 				collection: collectionRes.data,
 			},
 		);
-	if (createMultipleBricks.error) return createMultipleBricks;
+	if (createVersionRes.error) return createVersionRes;
 
+	// ----------------------------------------------
+	// Fire afterUpsert hook
 	const hookAfterRes = await executeHooks(
 		{
 			service: "collection-documents",

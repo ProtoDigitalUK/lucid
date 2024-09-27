@@ -20,7 +20,7 @@ import type { Config } from "../../exports/types.js";
 export interface FieldProp {
 	fields_id: number;
 	collection_brick_id: number | null;
-	collection_document_id: number;
+	collection_document_version_id: number;
 	group_id?: number | null;
 	locale_code: string;
 	key: string;

@@ -5,7 +5,7 @@ import type { ServiceFn } from "../../utils/services/types.js";
 const deleteMultipleBricks: ServiceFn<
 	[
 		{
-			documentId: number;
+			versionId: number;
 			apply: {
 				bricks: boolean;
 				collectionFields: boolean;
@@ -23,9 +23,9 @@ const deleteMultipleBricks: ServiceFn<
 		await CollectionDocumentBricksRepo.deleteMultiple({
 			where: [
 				{
-					key: "collection_document_id",
+					key: "collection_document_version_id",
 					operator: "=",
-					value: data.documentId,
+					value: data.versionId,
 				},
 				{
 					key: "brick_type",
@@ -39,9 +39,9 @@ const deleteMultipleBricks: ServiceFn<
 		await CollectionDocumentBricksRepo.deleteMultiple({
 			where: [
 				{
-					key: "collection_document_id",
+					key: "collection_document_version_id",
 					operator: "=",
-					value: data.documentId,
+					value: data.versionId,
 				},
 				{
 					key: "brick_type",

@@ -7,7 +7,7 @@ import type { BrickResponse, FieldResponse } from "../../types/response.js";
 const getMultiple: ServiceFn<
 	[
 		{
-			documentId: number;
+			versionId: number;
 			collectionKey: string;
 		},
 	],
@@ -26,8 +26,8 @@ const getMultiple: ServiceFn<
 	);
 
 	const [bricks, collectionRes] = await Promise.all([
-		CollectionDocumentBricksRepo.selectMultipleByDocumentId({
-			documentId: data.documentId,
+		CollectionDocumentBricksRepo.selectMultipleByVersionId({
+			versionId: data.versionId,
 			config: context.config,
 		}),
 		collectionsServices.getSingleInstance(context, {

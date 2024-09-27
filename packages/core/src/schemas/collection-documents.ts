@@ -9,6 +9,7 @@ export default {
 			documentId: z.number().optional(),
 			bricks: z.array(BrickSchema).optional(),
 			fields: z.array(FieldSchema).optional(),
+			publish: z.union([z.literal(1), z.literal(0)]).optional(),
 		}),
 		query: undefined,
 		params: z.object({
@@ -21,6 +22,7 @@ export default {
 		}),
 		params: z.object({
 			id: z.string(),
+			versionId: z.string(),
 			collectionKey: z.string(),
 		}),
 		body: undefined,
@@ -61,6 +63,7 @@ export default {
 		}),
 		params: z.object({
 			collectionKey: z.string(),
+			status: z.enum(["published", "draft", "revision"]),
 		}),
 		body: undefined,
 	},
@@ -106,6 +109,7 @@ export default {
 			}),
 			params: z.object({
 				collectionKey: z.string(),
+				status: z.enum(["published", "draft"]),
 			}),
 			body: undefined,
 		},
@@ -157,6 +161,7 @@ export default {
 			}),
 			params: z.object({
 				collectionKey: z.string(),
+				status: z.enum(["published", "draft", "revision"]),
 			}),
 			body: undefined,
 		},

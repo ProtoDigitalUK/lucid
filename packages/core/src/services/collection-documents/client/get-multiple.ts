@@ -5,11 +5,13 @@ import type z from "zod";
 import type collectionDocumentsSchema from "../../../schemas/collection-documents.js";
 import type { ServiceFn } from "../../../utils/services/types.js";
 import type { ClientDocumentResponse } from "../../../types/response.js";
+import type { DocumentVersionType } from "../../../libs/db/types.js";
 
 const getMultiple: ServiceFn<
 	[
 		{
 			collectionKey: string;
+			status: DocumentVersionType;
 			query: z.infer<
 				typeof collectionDocumentsSchema.client.getMultiple.query
 			>;
@@ -41,6 +43,7 @@ const getMultiple: ServiceFn<
 
 	const [documents, documentCount] =
 		await CollectionDocumentsRepo.selectMultipleFiltered({
+			status: data.status,
 			query: data.query,
 			documentFilters,
 			documentFieldFilters,

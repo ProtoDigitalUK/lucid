@@ -17,7 +17,7 @@ export interface GroupProp {
 	group_order: number;
 	group_open: BooleanInt | null;
 	ref: string | null;
-	collection_document_id: number;
+	collection_document_version_id: number;
 }
 
 export interface BrickProp {
@@ -26,7 +26,7 @@ export interface BrickProp {
 	brick_order: number | null;
 	brick_type: string;
 	brick_open: BooleanInt | null;
-	collection_document_id: number;
+	collection_document_version_id: number;
 	groups: Array<GroupProp>;
 	fields: Array<FieldProp>;
 }

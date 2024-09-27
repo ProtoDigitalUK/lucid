@@ -11,6 +11,7 @@ const getSingle: ServiceFn<
 	[
 		{
 			collectionKey: string;
+			status: "published" | "draft";
 			query: z.infer<
 				typeof collectionDocumentsSchema.client.getSingle.query
 			>;
@@ -37,15 +38,16 @@ const getSingle: ServiceFn<
 		data.query.filter,
 	);
 
-	const documentRes = await CollectionDocumentsRepo.selectSingleFitlered({
+	const documentRes = await CollectionDocumentsRepo.selectSingleFiltered({
 		documentFilters,
 		documentFieldFilters,
 		includeAllFields: true,
 		includeGroups: data.query.include?.includes("bricks") !== true, //* if bricks are included we then that query will include groups - this is just to prevent querying the data twice
 		collection: collectionRes.data,
 		config: context.config,
+		status: data.status,
 	});
-	if (documentRes === undefined) {
+	if (documentRes === undefined || documentRes.version_id === null) {
 		return {
 			error: {
 				type: "basic",
@@ -61,7 +63,7 @@ const getSingle: ServiceFn<
 			await context.services.collection.document.brick.getMultiple(
 				context,
 				{
-					documentId: documentRes.id,
+					versionId: documentRes.version_id,
 					collectionKey: collectionRes.data.key,
 				},
 			);

@@ -9,6 +9,7 @@ import type {
 	LucidCollectionDocuments,
 	Select,
 	KyselyDB,
+	DocumentVersionType,
 } from "../db/types.js";
 import type { Config } from "../../types/config.js";
 import type CollectionBuilder from "../builders/collection-builder/index.js";
@@ -83,13 +84,14 @@ export default class CollectionDocumentsRepo {
 			)
 			.executeTakeFirst();
 	};
-	selectSingleFitlered = async (props: {
+	selectSingleFiltered = async (props: {
 		documentFilters: QueryParamFilters;
 		documentFieldFilters: DocumentFieldFilters[];
 		collection: CollectionBuilder;
 		includeGroups: boolean;
 		includeAllFields?: boolean;
 		config: Config;
+		status: "published" | "draft";
 	}) => {
 		let pagesQuery = this.db
 			.selectFrom("lucid_collection_documents")
@@ -111,6 +113,11 @@ export default class CollectionDocumentsRepo {
 				"cb_user.id",
 				"lucid_collection_documents.updated_by",
 			)
+			.leftJoin(
+				"lucid_collection_document_versions",
+				"lucid_collection_document_versions.document_id",
+				"lucid_collection_documents.id",
+			)
 			.select([
 				"cb_user.id as cb_user_id",
 				"cb_user.email as cb_user_email",
@@ -122,6 +129,7 @@ export default class CollectionDocumentsRepo {
 				"ub_user.first_name as ub_user_first_name",
 				"ub_user.last_name as ub_user_last_name",
 				"ub_user.username as ub_user_username",
+				"lucid_collection_document_versions.id as version_id",
 			])
 			.where("lucid_collection_documents.is_deleted", "=", 0)
 			.where(
@@ -129,10 +137,16 @@ export default class CollectionDocumentsRepo {
 				"=",
 				props.collection.key,
 			)
+			.where(
+				"lucid_collection_document_versions.version_type",
+				"=",
+				props.status,
+			)
 			.groupBy([
 				"lucid_collection_documents.id",
 				"ub_user.id",
 				"cb_user.id",
+				"lucid_collection_document_versions.id",
 			]);
 
 		const includeFieldKeys = props.collection.queryIncludeFields(
@@ -148,7 +162,7 @@ export default class CollectionDocumentsRepo {
 								.selectFrom("lucid_collection_document_groups")
 								.select([
 									"lucid_collection_document_groups.group_id",
-									"lucid_collection_document_groups.collection_document_id",
+									"lucid_collection_document_groups.collection_document_version_id",
 									"lucid_collection_document_groups.collection_brick_id",
 									"lucid_collection_document_groups.parent_group_id",
 									"lucid_collection_document_groups.repeater_key",
@@ -157,9 +171,9 @@ export default class CollectionDocumentsRepo {
 									"lucid_collection_document_groups.ref",
 								])
 								.whereRef(
-									"lucid_collection_document_groups.collection_document_id",
+									"lucid_collection_document_groups.collection_document_version_id",
 									"=",
-									"lucid_collection_documents.id",
+									"lucid_collection_document_versions.id",
 								),
 						)
 						.as("groups"),
@@ -198,7 +212,7 @@ export default class CollectionDocumentsRepo {
 									"lucid_collection_document_fields.type",
 									"lucid_collection_document_fields.key",
 									"lucid_collection_document_fields.collection_brick_id",
-									"lucid_collection_document_fields.collection_document_id",
+									"lucid_collection_document_fields.collection_document_version_id",
 									"lucid_collection_document_fields.group_id",
 									// User fields
 									"lucid_users.id as user_id",
@@ -291,7 +305,7 @@ export default class CollectionDocumentsRepo {
 													"doc_fields.json_value",
 													"doc_fields.media_id",
 													"doc_fields.document_id",
-													"doc_fields.collection_document_id",
+													"doc_fields.collection_document_version_id",
 												])
 												.where(
 													"doc_bricks.brick_type",
@@ -300,9 +314,9 @@ export default class CollectionDocumentsRepo {
 														.collectionFields,
 												)
 												.whereRef(
-													"doc_fields.collection_document_id",
+													"doc_fields.collection_document_version_id",
 													"=",
-													"lucid_collection_document_fields.document_id",
+													"lucid_collection_document_fields.collection_document_version_id",
 												),
 										)
 										.as("document_fields"),
@@ -323,7 +337,7 @@ export default class CollectionDocumentsRepo {
 												)
 												.select([
 													"doc_groups.group_id",
-													"doc_groups.collection_document_id",
+													"doc_groups.collection_document_version_id",
 													"doc_groups.collection_brick_id",
 													"doc_groups.parent_group_id",
 													"doc_groups.repeater_key",
@@ -338,17 +352,17 @@ export default class CollectionDocumentsRepo {
 														.collectionFields,
 												)
 												.whereRef(
-													"doc_groups.collection_document_id",
+													"doc_groups.collection_document_version_id",
 													"=",
-													"lucid_collection_document_fields.document_id",
+													"lucid_collection_document_fields.collection_document_version_id",
 												),
 										)
 										.as("document_groups"),
 								])
 								.whereRef(
-									"lucid_collection_document_fields.collection_document_id",
+									"lucid_collection_document_fields.collection_document_version_id",
 									"=",
-									"lucid_collection_documents.id",
+									"lucid_collection_document_versions.id",
 								)
 								.where(
 									"lucid_collection_document_fields.key",
@@ -360,9 +374,9 @@ export default class CollectionDocumentsRepo {
 				])
 				.leftJoin("lucid_collection_document_fields", (join) =>
 					join.onRef(
-						"lucid_collection_document_fields.collection_document_id",
+						"lucid_collection_document_fields.collection_document_version_id",
 						"=",
-						"lucid_collection_documents.id",
+						"lucid_collection_document_versions.id",
 					),
 				);
 		}
@@ -415,6 +429,7 @@ export default class CollectionDocumentsRepo {
 		>;
 	};
 	selectMultipleFiltered = async (props: {
+		status: DocumentVersionType;
 		documentFilters: QueryParamFilters;
 		documentFieldFilters: DocumentFieldFilters[];
 		query: z.infer<typeof collectionDocumentsSchema.getMultiple.query>;
@@ -425,6 +440,11 @@ export default class CollectionDocumentsRepo {
 	}) => {
 		let pagesQuery = this.db
 			.selectFrom("lucid_collection_documents")
+			.leftJoin(
+				"lucid_collection_document_versions",
+				"lucid_collection_document_versions.document_id",
+				"lucid_collection_documents.id",
+			)
 			.select([
 				"lucid_collection_documents.id",
 				"lucid_collection_documents.collection_key",
@@ -432,6 +452,7 @@ export default class CollectionDocumentsRepo {
 				"lucid_collection_documents.created_at",
 				"lucid_collection_documents.updated_at",
 				"lucid_collection_documents.updated_by",
+				"lucid_collection_document_versions.id as version_id",
 			])
 			.leftJoin(
 				"lucid_users",
@@ -444,11 +465,27 @@ export default class CollectionDocumentsRepo {
 				"=",
 				props.collection.key,
 			)
-			.groupBy(["lucid_collection_documents.id", "lucid_users.id"]);
+			.where(
+				"lucid_collection_document_versions.version_type",
+				"=",
+				props.status,
+			)
+			.groupBy([
+				"lucid_collection_documents.id",
+				"lucid_users.id",
+				"lucid_collection_document_versions.id",
+			]);
 
 		let pagesCountQuery = this.db
 			.selectFrom("lucid_collection_documents")
-			.select(sql`count(*)`.as("count"))
+			.leftJoin(
+				"lucid_collection_document_versions",
+				"lucid_collection_document_versions.document_id",
+				"lucid_collection_documents.id",
+			)
+			.select(
+				sql`count(distinct lucid_collection_documents.id)`.as("count"),
+			)
 			.leftJoin(
 				"lucid_users",
 				"lucid_users.id",
@@ -459,7 +496,12 @@ export default class CollectionDocumentsRepo {
 				"=",
 				props.collection.key,
 			)
-			.where("lucid_collection_documents.is_deleted", "=", 0);
+			.where("lucid_collection_documents.is_deleted", "=", 0)
+			.where(
+				"lucid_collection_document_versions.version_type",
+				"=",
+				props.status,
+			);
 
 		const includeFieldKeys = props.collection.queryIncludeFields(
 			props.includeAllFields,
@@ -474,7 +516,7 @@ export default class CollectionDocumentsRepo {
 								.selectFrom("lucid_collection_document_groups")
 								.select([
 									"lucid_collection_document_groups.group_id",
-									"lucid_collection_document_groups.collection_document_id",
+									"lucid_collection_document_groups.collection_document_version_id",
 									"lucid_collection_document_groups.collection_brick_id",
 									"lucid_collection_document_groups.parent_group_id",
 									"lucid_collection_document_groups.repeater_key",
@@ -483,9 +525,9 @@ export default class CollectionDocumentsRepo {
 									"lucid_collection_document_groups.ref",
 								])
 								.whereRef(
-									"lucid_collection_document_groups.collection_document_id",
+									"lucid_collection_document_groups.collection_document_version_id",
 									"=",
-									"lucid_collection_documents.id",
+									"lucid_collection_document_versions.id",
 								),
 						)
 						.as("groups"),
@@ -524,7 +566,7 @@ export default class CollectionDocumentsRepo {
 									"lucid_collection_document_fields.type",
 									"lucid_collection_document_fields.key",
 									"lucid_collection_document_fields.collection_brick_id",
-									"lucid_collection_document_fields.collection_document_id",
+									"lucid_collection_document_fields.collection_document_version_id",
 									"lucid_collection_document_fields.group_id",
 									// User fields
 									"lucid_users.id as user_id",
@@ -617,7 +659,7 @@ export default class CollectionDocumentsRepo {
 													"doc_fields.json_value",
 													"doc_fields.media_id",
 													"doc_fields.document_id",
-													"doc_fields.collection_document_id",
+													"doc_fields.collection_document_version_id",
 												])
 												.where(
 													"doc_bricks.brick_type",
@@ -626,9 +668,9 @@ export default class CollectionDocumentsRepo {
 														.collectionFields,
 												)
 												.whereRef(
-													"doc_fields.collection_document_id",
+													"doc_fields.collection_document_version_id",
 													"=",
-													"lucid_collection_document_fields.document_id",
+													"lucid_collection_document_fields.collection_document_version_id",
 												),
 										)
 										.as("document_fields"),
@@ -649,7 +691,7 @@ export default class CollectionDocumentsRepo {
 												)
 												.select([
 													"doc_groups.group_id",
-													"doc_groups.collection_document_id",
+													"doc_groups.collection_document_version_id",
 													"doc_groups.collection_brick_id",
 													"doc_groups.parent_group_id",
 													"doc_groups.repeater_key",
@@ -664,17 +706,17 @@ export default class CollectionDocumentsRepo {
 														.collectionFields,
 												)
 												.whereRef(
-													"doc_groups.collection_document_id",
+													"doc_groups.collection_document_version_id",
 													"=",
-													"lucid_collection_document_fields.document_id",
+													"lucid_collection_document_fields.collection_document_version_id",
 												),
 										)
 										.as("document_groups"),
 								])
 								.whereRef(
-									"lucid_collection_document_fields.collection_document_id",
+									"lucid_collection_document_fields.collection_document_version_id",
 									"=",
-									"lucid_collection_documents.id",
+									"lucid_collection_document_versions.id",
 								)
 								.where(
 									"lucid_collection_document_fields.key",
@@ -686,9 +728,9 @@ export default class CollectionDocumentsRepo {
 				])
 				.leftJoin("lucid_collection_document_fields", (join) =>
 					join.onRef(
-						"lucid_collection_document_fields.collection_document_id",
+						"lucid_collection_document_fields.collection_document_version_id",
 						"=",
-						"lucid_collection_documents.id",
+						"lucid_collection_document_versions.id",
 					),
 				);
 
@@ -697,9 +739,9 @@ export default class CollectionDocumentsRepo {
 					"lucid_collection_document_fields",
 					(join) =>
 						join.onRef(
-							"lucid_collection_document_fields.collection_document_id",
+							"lucid_collection_document_fields.collection_document_version_id",
 							"=",
-							"lucid_collection_documents.id",
+							"lucid_collection_document_versions.id",
 						),
 				);
 			}

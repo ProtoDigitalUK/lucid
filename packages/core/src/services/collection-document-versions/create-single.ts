@@ -42,7 +42,6 @@ const createSingle: ServiceFn<
 		],
 		data: {
 			version_type: "revision",
-			revision_id: data.documentId,
 			created_by: data.userId,
 		},
 	});

@@ -35,28 +35,6 @@ const Migration00000007: MigrationFn = (adapter) => {
 				)
 				.execute();
 
-			// Document Revisions
-			await db.schema
-				.createTable("lucid_collection_document_revisions")
-				.addColumn("id", primaryKeyColumnType(adapter), (col) =>
-					primaryKeyColumn(col, adapter),
-				)
-				.addColumn("document_id", "integer", (col) =>
-					col
-						.references("lucid_collection_documents.id")
-						.onDelete("cascade")
-						.notNull(),
-				)
-				.addColumn("name", "text")
-				.addColumn("description", "text")
-				.addColumn("created_by", "integer", (col) =>
-					col.references("lucid_users.id").onDelete("set null"),
-				)
-				.addColumn("created_at", "timestamp", (col) =>
-					defaultTimestamp(col, adapter),
-				)
-				.execute();
-
 			// Document Versions
 			await db.schema
 				.createTable("lucid_collection_document_versions")
@@ -70,23 +48,13 @@ const Migration00000007: MigrationFn = (adapter) => {
 						.notNull(),
 				)
 				.addColumn("version_type", "text", (col) => col.notNull()) // draft, published, revision
-				.addColumn("revision_id", "integer", (col) =>
-					col
-						.references("lucid_collection_document_revisions.id")
-						.onDelete("cascade"),
-				)
+
 				.addColumn("created_at", "timestamp", (col) =>
 					defaultTimestamp(col, adapter),
 				)
 				.addColumn("created_by", "integer", (col) =>
 					col.references("lucid_users.id").onDelete("set null"),
 				)
-				.execute();
-
-			await db.schema
-				.createIndex("idx_document_revisions_document_id")
-				.on("lucid_collection_document_revisions")
-				.column("document_id")
 				.execute();
 
 			await db.schema

@@ -32,8 +32,8 @@ export default class CollectionDocumentBricksRepo {
 			Pick<Select<LucidCollectionDocumentBricks>, K> | undefined
 		>;
 	};
-	selectMultipleByDocumentId = async (props: {
-		documentId: number;
+	selectMultipleByVersionId = async (props: {
+		versionId: number;
 		config: Config;
 	}) => {
 		return this.db
@@ -42,7 +42,7 @@ export default class CollectionDocumentBricksRepo {
 				"lucid_collection_document_bricks.id",
 				"lucid_collection_document_bricks.brick_type",
 				"lucid_collection_document_bricks.brick_key",
-				"lucid_collection_document_bricks.collection_document_id",
+				"lucid_collection_document_bricks.collection_document_version_id",
 				"lucid_collection_document_bricks.brick_order",
 				"lucid_collection_document_bricks.brick_open",
 				props.config.db
@@ -51,7 +51,7 @@ export default class CollectionDocumentBricksRepo {
 							.selectFrom("lucid_collection_document_groups")
 							.select([
 								"lucid_collection_document_groups.group_id",
-								"lucid_collection_document_groups.collection_document_id",
+								"lucid_collection_document_groups.collection_document_version_id",
 								"lucid_collection_document_groups.collection_brick_id",
 								"lucid_collection_document_groups.parent_group_id",
 								"lucid_collection_document_groups.repeater_key",
@@ -97,7 +97,7 @@ export default class CollectionDocumentBricksRepo {
 								"lucid_collection_document_fields.json_value",
 								"lucid_collection_document_fields.media_id",
 								"lucid_collection_document_fields.document_id",
-								"lucid_collection_document_fields.collection_document_id",
+								"lucid_collection_document_fields.collection_document_version_id",
 								// User fields
 								"lucid_users.id as user_id",
 								"lucid_users.email as user_email",
@@ -185,7 +185,7 @@ export default class CollectionDocumentBricksRepo {
 												"doc_fields.json_value",
 												"doc_fields.media_id",
 												"doc_fields.document_id",
-												"doc_fields.collection_document_id",
+												"doc_fields.collection_document_version_id",
 											])
 											.where(
 												"doc_bricks.brick_type",
@@ -194,9 +194,9 @@ export default class CollectionDocumentBricksRepo {
 													.collectionFields,
 											)
 											.whereRef(
-												"doc_fields.collection_document_id",
+												"doc_fields.collection_document_version_id",
 												"=",
-												"lucid_collection_document_fields.document_id",
+												"lucid_collection_document_fields.document_id", // document_id actually refers to collection_document_version_id
 											),
 									)
 									.as("document_fields"),
@@ -217,7 +217,7 @@ export default class CollectionDocumentBricksRepo {
 											)
 											.select([
 												"doc_groups.group_id",
-												"doc_groups.collection_document_id",
+												"doc_groups.collection_document_version_id",
 												"doc_groups.collection_brick_id",
 												"doc_groups.parent_group_id",
 												"doc_groups.repeater_key",
@@ -232,7 +232,7 @@ export default class CollectionDocumentBricksRepo {
 													.collectionFields,
 											)
 											.whereRef(
-												"doc_groups.collection_document_id",
+												"doc_groups.collection_document_version_id",
 												"=",
 												"lucid_collection_document_fields.document_id",
 											),
@@ -249,9 +249,9 @@ export default class CollectionDocumentBricksRepo {
 			])
 			.orderBy("lucid_collection_document_bricks.brick_order", "asc")
 			.where(
-				"lucid_collection_document_bricks.collection_document_id",
+				"lucid_collection_document_bricks.collection_document_version_id",
 				"=",
-				props.documentId,
+				props.versionId,
 			)
 			.execute();
 	};

@@ -186,21 +186,10 @@ export interface LucidCollectionDocuments {
 	updated_at: TimestampMutateable;
 }
 
-// might not be needed
-export interface LucidCollectionDocumentRevisions {
-	id: Generated<number>;
-	document_id: number;
-	name: string | null;
-	description: string | null;
-	created_by: number | null;
-	created_at: TimestampImmutable;
-}
-
 export interface LucidCollectionDocumentVersions {
 	id: Generated<number>;
 	document_id: number;
 	version_type: DocumentVersionType;
-	revision_id: number | null; // might not be needed
 	created_at: TimestampImmutable;
 	created_by: number | null;
 }
@@ -272,7 +261,6 @@ export interface LucidDB {
 	lucid_media_awaiting_sync: LucidMediaAwaitingSync;
 	lucid_processed_images: HeadlessProcessedImages;
 	lucid_collection_documents: LucidCollectionDocuments;
-	lucid_collection_document_revisions: LucidCollectionDocumentRevisions;
 	lucid_collection_document_versions: LucidCollectionDocumentVersions;
 	lucid_collection_document_bricks: LucidCollectionDocumentBricks;
 	lucid_collection_document_groups: LucidCollectionDocumentGroups;

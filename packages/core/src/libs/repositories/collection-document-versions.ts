@@ -29,7 +29,6 @@ export default class CollectionDocumentVersionsRepo {
 		where: QueryBuilderWhere<"lucid_collection_document_versions">;
 		data: {
 			version_type?: DocumentVersionType;
-			revision_id?: number;
 			created_by?: number;
 		};
 	}) => {
@@ -37,7 +36,6 @@ export default class CollectionDocumentVersionsRepo {
 			.updateTable("lucid_collection_document_versions")
 			.set({
 				version_type: props.data.version_type,
-				revision_id: props.data.revision_id,
 				created_by: props.data.created_by,
 			})
 			.returning("id");

@@ -10,6 +10,7 @@ const getSingle: ServiceFn<
 	[
 		{
 			id: number;
+			versionId: number;
 			collectionKey: string;
 			query: z.infer<typeof collectionDocumentsSchema.getSingle.query>;
 		},
@@ -49,7 +50,7 @@ const getSingle: ServiceFn<
 			await context.services.collection.document.brick.getMultiple(
 				context,
 				{
-					documentId: data.id,
+					versionId: data.versionId,
 					collectionKey: document.collection_key,
 				},
 			);
