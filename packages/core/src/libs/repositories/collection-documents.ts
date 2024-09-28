@@ -42,7 +42,7 @@ export default class CollectionDocumentsRepo {
 		id: number;
 		collectionKey: string;
 		config: Config;
-		status: DocumentVersionType;
+		status?: DocumentVersionType;
 	}) => {
 		return this.db
 			.selectFrom("lucid_collection_documents")
@@ -54,10 +54,19 @@ export default class CollectionDocumentsRepo {
 				"lucid_collection_documents.updated_at",
 				"lucid_collection_documents.updated_by",
 			])
-			.leftJoin(
-				"lucid_collection_document_versions",
-				"lucid_collection_document_versions.document_id",
-				"lucid_collection_documents.id",
+			.$if(props.status !== undefined, (eb) =>
+				eb
+					.leftJoin(
+						"lucid_collection_document_versions",
+						"lucid_collection_document_versions.document_id",
+						"lucid_collection_documents.id",
+					)
+					.select(["lucid_collection_document_versions.id as version_id"])
+					.where(
+						"lucid_collection_document_versions.version_type",
+						"=",
+						props.status as DocumentVersionType,
+					),
 			)
 			.leftJoin(
 				"lucid_users as cb_user",
@@ -82,16 +91,9 @@ export default class CollectionDocumentsRepo {
 				"ub_user.first_name as ub_user_first_name",
 				"ub_user.last_name as ub_user_last_name",
 				"ub_user.username as ub_user_username",
-				// version
-				"lucid_collection_document_versions.id as version_id",
 			])
 			.where("lucid_collection_documents.id", "=", props.id)
 			.where("lucid_collection_documents.is_deleted", "=", 0)
-			.where(
-				"lucid_collection_document_versions.version_type",
-				"=",
-				props.status,
-			)
 			.where(
 				"lucid_collection_documents.collection_key",
 				"=",

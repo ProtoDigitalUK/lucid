@@ -11,7 +11,8 @@ const getSingle: ServiceFn<
 	[
 		{
 			id: number;
-			status: DocumentVersionType;
+			status?: DocumentVersionType;
+			versionId?: number;
 			collectionKey: string;
 			query: z.infer<typeof collectionDocumentsSchema.getSingle.query>;
 		},
@@ -19,10 +20,6 @@ const getSingle: ServiceFn<
 	CollectionDocumentResponse
 > = async (context, data) => {
 	const DocumentsRepo = Repository.get("collection-documents", context.db);
-	const VersionsRepo = Repository.get(
-		"collection-document-versions",
-		context.db,
-	);
 	const DocumentsFormatter = Formatter.get("collection-documents");
 
 	const [document, collectionRes] = await Promise.all([
@@ -40,14 +37,16 @@ const getSingle: ServiceFn<
 		return {
 			error: {
 				type: "basic",
-				message: T("document_not_found_message"),
+				message: T("document_version_not_found_message"),
 				status: 404,
 			},
 			data: undefined,
 		};
 	}
 	if (collectionRes.error) return collectionRes;
-	if (document.version_id === null) {
+
+	// If given a status, but no version id is found, return 404
+	if (data.status !== undefined && !document.version_id) {
 		return {
 			error: {
 				type: "basic",
@@ -58,10 +57,22 @@ const getSingle: ServiceFn<
 		};
 	}
 
+	const versionId =
+		data.status !== undefined ? document.version_id : data.versionId;
+	if (!versionId)
+		return {
+			error: {
+				type: "basic",
+				message: T("document_version_not_found_message"),
+				status: 404,
+			},
+			data: undefined,
+		};
+
 	if (data.query.include?.includes("bricks")) {
 		const bricksRes =
 			await context.services.collection.document.brick.getMultiple(context, {
-				versionId: document.version_id,
+				versionId: versionId,
 				collectionKey: document.collection_key,
 			});
 		if (bricksRes.error) return bricksRes;

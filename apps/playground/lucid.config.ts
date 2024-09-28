@@ -16,6 +16,7 @@ import PageCollection from "./src/lucid/collections/pages.js";
 import BlogCollection from "./src/lucid/collections/blogs.js";
 import MainMenuCollection from "./src/lucid/collections/main-menu.js";
 import SettingsCollection from "./src/lucid/collections/settings.js";
+import TestCollection from "./src/lucid/collections/test.js";
 
 export default lucid.config({
 	host: "http://localhost:8080",
@@ -77,6 +78,7 @@ export default lucid.config({
 		BlogCollection,
 		MainMenuCollection,
 		SettingsCollection,
+		TestCollection,
 	],
 	plugins: [
 		LucidPages({

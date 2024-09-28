@@ -9,12 +9,17 @@ import CollectionDocumentsFormatter from "../../libs/formatters/collection-docum
 import serviceWrapper from "../../utils/services/service-wrapper.js";
 import { LucidAPIError } from "../../utils/errors/index.js";
 import type { RouteController } from "../../types/types.js";
+import type { DocumentVersionType } from "../../libs/db/types.js";
 
 const getSingleController: RouteController<
 	typeof collectionDocumentsSchema.getSingle.params,
 	typeof collectionDocumentsSchema.getSingle.body,
 	typeof collectionDocumentsSchema.getSingle.query
 > = async (request, reply) => {
+	const hasStatus =
+		request.params.statusOrId === "draft" ||
+		request.params.statusOrId === "published";
+
 	const document = await serviceWrapper(
 		request.server.services.collection.document.getSingle,
 		{
@@ -33,7 +38,12 @@ const getSingleController: RouteController<
 		},
 		{
 			id: Number.parseInt(request.params.id),
-			status: request.params.status,
+			status: hasStatus
+				? (request.params.statusOrId as DocumentVersionType)
+				: undefined,
+			versionId: !hasStatus
+				? Number.parseInt(request.params.statusOrId)
+				: undefined,
 			collectionKey: request.params.collectionKey,
 			query: request.query,
 		},
