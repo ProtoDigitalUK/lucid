@@ -26,6 +26,7 @@ lucid.fastify.get("/get-documents", async (request, reply) => {
 
 	const res = await toolkit.document.getMultiple({
 		collectionKey: "page",
+		status: "draft",
 		query: {
 			filter: {
 				// documentId: {
@@ -56,10 +57,11 @@ lucid.fastify.get("/get-documents", async (request, reply) => {
 lucid.fastify.get("/get-document", async (request, reply) => {
 	const res = await toolkit.document.getSingle({
 		collectionKey: "page",
+		status: "draft",
 		query: {
 			filter: {
 				documentId: {
-					value: 2,
+					value: 1,
 				},
 			},
 			include: ["bricks"],

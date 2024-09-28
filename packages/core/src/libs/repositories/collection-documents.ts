@@ -173,7 +173,12 @@ export default class CollectionDocumentsRepo {
 				"ub_user.first_name as ub_user_first_name",
 				"ub_user.last_name as ub_user_last_name",
 				"ub_user.username as ub_user_username",
+				// Versions
 				"lucid_collection_document_versions.id as version_id",
+				"lucid_collection_document_versions.version_type as version_type",
+				"lucid_collection_document_versions.previous_version_type as previous_version_type",
+				"lucid_collection_document_versions.created_at as version_created_at",
+				"lucid_collection_document_versions.created_by as version_created_by",
 			])
 			.where("lucid_collection_documents.is_deleted", "=", 0)
 			.where(
@@ -478,7 +483,12 @@ export default class CollectionDocumentsRepo {
 				"lucid_collection_documents.created_at",
 				"lucid_collection_documents.updated_at",
 				"lucid_collection_documents.updated_by",
+				// Versions
 				"lucid_collection_document_versions.id as version_id",
+				"lucid_collection_document_versions.version_type as version_type",
+				"lucid_collection_document_versions.previous_version_type as previous_version_type",
+				"lucid_collection_document_versions.created_at as version_created_at",
+				"lucid_collection_document_versions.created_by as version_created_by",
 			])
 			.leftJoin(
 				"lucid_users",

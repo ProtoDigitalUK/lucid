@@ -49,7 +49,7 @@ const getSingle: ServiceFn<
 		return {
 			error: {
 				type: "basic",
-				message: T("route_document_fetch_error_message"),
+				message: T("document_version_not_found_message"),
 				status: 404,
 			},
 			data: undefined,

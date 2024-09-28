@@ -245,6 +245,11 @@ export interface CollectionDocumentResponse {
 export interface ClientDocumentResponse {
 	id: number;
 	collectionKey: string | null;
+	status: DocumentVersionType | null;
+	versionId: number | null;
+	previousStatus: DocumentVersionType | null;
+	versionCreatedAt: string | null;
+	versionCreatedBy: number | null;
 
 	createdBy: {
 		id: number;
