@@ -60,7 +60,10 @@ const getSingle: ServiceFn<
 
 	const versionId =
 		data.status !== undefined ? document.version_id : data.versionId;
-	if (!versionId)
+	const versionType =
+		data.status !== undefined ? data.status : document.version_type;
+
+	if (!versionId || !versionType)
 		return {
 			error: {
 				type: "basic",
@@ -75,6 +78,8 @@ const getSingle: ServiceFn<
 			await context.services.collection.document.brick.getMultiple(context, {
 				versionId: versionId,
 				collectionKey: document.collection_key,
+				documentFieldsRelationStatus:
+					versionType !== "revision" ? versionType : undefined, // if we're fetching a revision, let it default to the draft version
 			});
 		if (bricksRes.error) return bricksRes;
 

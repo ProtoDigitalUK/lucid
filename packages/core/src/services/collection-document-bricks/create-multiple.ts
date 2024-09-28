@@ -11,6 +11,7 @@ const createMultiple: ServiceFn<
 	[
 		{
 			versionId: number;
+			documentId: number;
 			bricks?: Array<BrickSchema>;
 			fields?: Array<FieldSchemaType>;
 			collection: CollectionBuilder;
@@ -74,6 +75,7 @@ const createMultiple: ServiceFn<
 			context,
 			{
 				versionId: data.versionId,
+				documentId: data.documentId,
 				brickGroups: postInsertBricks.map((b) => ({
 					brickId: b.id,
 					groups: b.groups,
@@ -89,6 +91,7 @@ const createMultiple: ServiceFn<
 			context,
 			{
 				versionId: data.versionId,
+				documentId: data.documentId,
 				fields: postInsertBricks.flatMap((b) =>
 					formatInsertFields({
 						groups: groups.data,

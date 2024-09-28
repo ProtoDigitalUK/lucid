@@ -128,6 +128,7 @@ export default class CollectionDocumentsRepo {
 			)
 			.executeTakeFirst();
 	};
+	// TODO: update to use status to join sub document fields
 	selectSingleFiltered = async (props: {
 		documentFilters: QueryParamFilters;
 		documentFieldFilters: DocumentFieldFilters[];
@@ -135,7 +136,9 @@ export default class CollectionDocumentsRepo {
 		includeGroups: boolean;
 		includeAllFields?: boolean;
 		config: Config;
-		status: "published" | "draft";
+		status: Exclude<DocumentVersionType, "revision">;
+		/** The status used to determine which version of the document custom field relations to fetch */
+		documentFieldsRelationStatus: Exclude<DocumentVersionType, "revision">;
 	}) => {
 		let pagesQuery = this.db
 			.selectFrom("lucid_collection_documents")
@@ -262,6 +265,7 @@ export default class CollectionDocumentsRepo {
 									"lucid_collection_document_fields.key",
 									"lucid_collection_document_fields.collection_brick_id",
 									"lucid_collection_document_fields.collection_document_version_id",
+									"lucid_collection_document_fields.collection_document_id",
 									"lucid_collection_document_fields.group_id",
 									// User fields
 									"lucid_users.id as user_id",
@@ -329,6 +333,15 @@ export default class CollectionDocumentsRepo {
 															"doc_fields.collection_brick_id",
 														),
 												)
+												.leftJoin(
+													"lucid_collection_document_versions as inner_versions",
+													(join) =>
+														join.onRef(
+															"inner_versions.document_id",
+															"=",
+															"doc_fields.collection_document_id",
+														),
+												)
 												.select([
 													"doc_fields.fields_id",
 													"doc_fields.collection_brick_id",
@@ -343,6 +356,7 @@ export default class CollectionDocumentsRepo {
 													"doc_fields.media_id",
 													"doc_fields.document_id",
 													"doc_fields.collection_document_version_id",
+													"doc_fields.collection_document_id",
 												])
 												.where(
 													"doc_bricks.brick_type",
@@ -350,9 +364,14 @@ export default class CollectionDocumentsRepo {
 													constants.brickTypes.collectionFields,
 												)
 												.whereRef(
-													"doc_fields.collection_document_version_id",
+													"doc_fields.collection_document_id",
 													"=",
-													"lucid_collection_document_fields.collection_document_version_id",
+													"lucid_collection_document_fields.collection_document_id",
+												)
+												.where(
+													"inner_versions.version_type",
+													"=",
+													props.documentFieldsRelationStatus,
 												),
 										)
 										.as("document_fields"),
@@ -371,9 +390,19 @@ export default class CollectionDocumentsRepo {
 															"doc_groups.collection_brick_id",
 														),
 												)
+												.leftJoin(
+													"lucid_collection_document_versions as inner_versions",
+													(join) =>
+														join.onRef(
+															"inner_versions.document_id",
+															"=",
+															"doc_groups.collection_document_id",
+														),
+												)
 												.select([
 													"doc_groups.group_id",
 													"doc_groups.collection_document_version_id",
+													"doc_groups.collection_document_id",
 													"doc_groups.collection_brick_id",
 													"doc_groups.parent_group_id",
 													"doc_groups.repeater_key",
@@ -387,9 +416,14 @@ export default class CollectionDocumentsRepo {
 													constants.brickTypes.collectionFields,
 												)
 												.whereRef(
-													"doc_groups.collection_document_version_id",
+													"doc_groups.collection_document_id",
 													"=",
-													"lucid_collection_document_fields.collection_document_version_id",
+													"lucid_collection_document_fields.collection_document_id",
+												)
+												.where(
+													"inner_versions.version_type",
+													"=",
+													props.documentFieldsRelationStatus,
 												),
 										)
 										.as("document_groups"),
@@ -459,8 +493,11 @@ export default class CollectionDocumentsRepo {
 			Array<Pick<Select<LucidCollectionDocuments>, K>>
 		>;
 	};
+	// TODO: update to use status to join sub document fields
 	selectMultipleFiltered = async (props: {
 		status: DocumentVersionType;
+		/** The status used to determine which version of the document custom field relations to fetch */
+		documentFieldsRelationStatus: Exclude<DocumentVersionType, "revision">;
 		documentFilters: QueryParamFilters;
 		documentFieldFilters: DocumentFieldFilters[];
 		query: z.infer<typeof collectionDocumentsSchema.getMultiple.query>;
@@ -601,6 +638,7 @@ export default class CollectionDocumentsRepo {
 									"lucid_collection_document_fields.key",
 									"lucid_collection_document_fields.collection_brick_id",
 									"lucid_collection_document_fields.collection_document_version_id",
+									"lucid_collection_document_fields.collection_document_id",
 									"lucid_collection_document_fields.group_id",
 									// User fields
 									"lucid_users.id as user_id",
@@ -668,6 +706,15 @@ export default class CollectionDocumentsRepo {
 															"doc_fields.collection_brick_id",
 														),
 												)
+												.leftJoin(
+													"lucid_collection_document_versions as inner_versions",
+													(join) =>
+														join.onRef(
+															"inner_versions.document_id",
+															"=",
+															"doc_fields.collection_document_id",
+														),
+												)
 												.select([
 													"doc_fields.fields_id",
 													"doc_fields.collection_brick_id",
@@ -682,6 +729,7 @@ export default class CollectionDocumentsRepo {
 													"doc_fields.media_id",
 													"doc_fields.document_id",
 													"doc_fields.collection_document_version_id",
+													"doc_fields.collection_document_id",
 												])
 												.where(
 													"doc_bricks.brick_type",
@@ -689,9 +737,14 @@ export default class CollectionDocumentsRepo {
 													constants.brickTypes.collectionFields,
 												)
 												.whereRef(
-													"doc_fields.collection_document_version_id",
+													"doc_fields.collection_document_id",
 													"=",
-													"lucid_collection_document_fields.collection_document_version_id",
+													"lucid_collection_document_fields.collection_document_id",
+												)
+												.where(
+													"inner_versions.version_type",
+													"=",
+													props.documentFieldsRelationStatus,
 												),
 										)
 										.as("document_fields"),
@@ -710,9 +763,19 @@ export default class CollectionDocumentsRepo {
 															"doc_groups.collection_brick_id",
 														),
 												)
+												.leftJoin(
+													"lucid_collection_document_versions as inner_versions",
+													(join) =>
+														join.onRef(
+															"inner_versions.document_id",
+															"=",
+															"doc_groups.collection_document_id",
+														),
+												)
 												.select([
 													"doc_groups.group_id",
 													"doc_groups.collection_document_version_id",
+													"doc_groups.collection_document_id",
 													"doc_groups.collection_brick_id",
 													"doc_groups.parent_group_id",
 													"doc_groups.repeater_key",
@@ -726,9 +789,14 @@ export default class CollectionDocumentsRepo {
 													constants.brickTypes.collectionFields,
 												)
 												.whereRef(
-													"doc_groups.collection_document_version_id",
+													"doc_groups.collection_document_id",
 													"=",
-													"lucid_collection_document_fields.collection_document_version_id",
+													"lucid_collection_document_fields.collection_document_id",
+												)
+												.where(
+													"inner_versions.version_type",
+													"=",
+													props.documentFieldsRelationStatus,
 												),
 										)
 										.as("document_groups"),

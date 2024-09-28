@@ -7,6 +7,7 @@ import type {
 	Select,
 	KyselyDB,
 	BooleanInt,
+	DocumentVersionType,
 } from "../db/types.js";
 import type { Config } from "../../types/config.js";
 import type { BrickSchema } from "../../schemas/collection-bricks.js";
@@ -34,6 +35,8 @@ export default class CollectionDocumentBricksRepo {
 	};
 	selectMultipleByVersionId = async (props: {
 		versionId: number;
+		/** The status used to determine which version of the document custom field relations to fetch */
+		documentFieldsRelationStatus: Exclude<DocumentVersionType, "revision">;
 		config: Config;
 	}) => {
 		return this.db
@@ -98,6 +101,7 @@ export default class CollectionDocumentBricksRepo {
 								"lucid_collection_document_fields.media_id",
 								"lucid_collection_document_fields.document_id",
 								"lucid_collection_document_fields.collection_document_version_id",
+								"lucid_collection_document_fields.collection_document_id",
 								// User fields
 								"lucid_users.id as user_id",
 								"lucid_users.email as user_email",
@@ -149,6 +153,7 @@ export default class CollectionDocumentBricksRepo {
 											),
 									)
 									.as("media_alt_translations"),
+
 								props.config.db
 									.jsonArrayFrom(
 										eb
@@ -162,6 +167,15 @@ export default class CollectionDocumentBricksRepo {
 														"doc_bricks.id",
 														"=",
 														"doc_fields.collection_brick_id",
+													),
+											)
+											.leftJoin(
+												"lucid_collection_document_versions as inner_versions",
+												(join) =>
+													join.onRef(
+														"inner_versions.document_id",
+														"=",
+														"doc_fields.collection_document_id",
 													),
 											)
 											.select([
@@ -178,6 +192,7 @@ export default class CollectionDocumentBricksRepo {
 												"doc_fields.media_id",
 												"doc_fields.document_id",
 												"doc_fields.collection_document_version_id",
+												"doc_fields.collection_document_id",
 											])
 											.where(
 												"doc_bricks.brick_type",
@@ -185,9 +200,14 @@ export default class CollectionDocumentBricksRepo {
 												constants.brickTypes.collectionFields,
 											)
 											.whereRef(
-												"doc_fields.collection_document_version_id",
+												"doc_fields.collection_document_id",
 												"=",
-												"lucid_collection_document_fields.document_id", // document_id actually refers to collection_document_version_id
+												"lucid_collection_document_fields.document_id",
+											)
+											.where(
+												"inner_versions.version_type",
+												"=",
+												props.documentFieldsRelationStatus,
 											),
 									)
 									.as("document_fields"),
@@ -206,9 +226,19 @@ export default class CollectionDocumentBricksRepo {
 														"doc_groups.collection_brick_id",
 													),
 											)
+											.leftJoin(
+												"lucid_collection_document_versions as inner_versions",
+												(join) =>
+													join.onRef(
+														"inner_versions.document_id",
+														"=",
+														"doc_groups.collection_document_id",
+													),
+											)
 											.select([
 												"doc_groups.group_id",
 												"doc_groups.collection_document_version_id",
+												"doc_groups.collection_document_id",
 												"doc_groups.collection_brick_id",
 												"doc_groups.parent_group_id",
 												"doc_groups.repeater_key",
@@ -222,9 +252,14 @@ export default class CollectionDocumentBricksRepo {
 												constants.brickTypes.collectionFields,
 											)
 											.whereRef(
-												"doc_groups.collection_document_version_id",
+												"doc_groups.collection_document_id",
 												"=",
 												"lucid_collection_document_fields.document_id",
+											)
+											.where(
+												"inner_versions.version_type",
+												"=",
+												props.documentFieldsRelationStatus,
 											),
 									)
 									.as("document_groups"),

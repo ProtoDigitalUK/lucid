@@ -206,6 +206,7 @@ export interface LucidCollectionDocumentBricks {
 
 export interface LucidCollectionDocumentGroups {
 	group_id: Generated<number>;
+	collection_document_id: number;
 	collection_document_version_id: number;
 	collection_brick_id: number;
 	parent_group_id: number | null;
@@ -217,6 +218,7 @@ export interface LucidCollectionDocumentGroups {
 
 export interface LucidCollectionDocumentFields {
 	fields_id: Generated<number>;
+	collection_document_id: number;
 	collection_document_version_id: number;
 	collection_brick_id: number;
 	group_id: number | null;

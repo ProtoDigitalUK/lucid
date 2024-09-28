@@ -6,12 +6,13 @@ import type z from "zod";
 import type { ServiceFn } from "../../../utils/services/types.js";
 import type collectionDocumentsSchema from "../../../schemas/collection-documents.js";
 import type { ClientDocumentResponse } from "../../../types/response.js";
+import type { DocumentVersionType } from "../../../libs/db/types.js";
 
 const getSingle: ServiceFn<
 	[
 		{
 			collectionKey: string;
-			status: "published" | "draft";
+			status: Exclude<DocumentVersionType, "revision">;
 			query: z.infer<typeof collectionDocumentsSchema.client.getSingle.query>;
 		},
 	],
@@ -44,6 +45,7 @@ const getSingle: ServiceFn<
 		collection: collectionRes.data,
 		config: context.config,
 		status: data.status,
+		documentFieldsRelationStatus: data.status,
 	});
 	if (documentRes === undefined || documentRes.version_id === null) {
 		return {
@@ -61,6 +63,7 @@ const getSingle: ServiceFn<
 			await context.services.collection.document.brick.getMultiple(context, {
 				versionId: documentRes.version_id,
 				collectionKey: collectionRes.data.key,
+				documentFieldsRelationStatus: data.status,
 			});
 		if (bricksRes.error) return bricksRes;
 

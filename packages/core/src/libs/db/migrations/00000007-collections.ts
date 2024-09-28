@@ -93,6 +93,12 @@ const Migration00000007: MigrationFn = (adapter) => {
 						.onDelete("cascade")
 						.notNull(),
 				)
+				.addColumn("collection_document_id", "integer", (col) =>
+					col
+						.references("lucid_collection_documents.id")
+						.onDelete("cascade")
+						.notNull(),
+				)
 				.addColumn("collection_brick_id", "integer", (col) =>
 					col
 						.references("lucid_collection_document_bricks.id")
@@ -134,6 +140,12 @@ const Migration00000007: MigrationFn = (adapter) => {
 						.onDelete("cascade")
 						.notNull(),
 				)
+				.addColumn("collection_document_id", "integer", (col) =>
+					col
+						.references("lucid_collection_documents.id")
+						.onDelete("cascade")
+						.notNull(),
+				)
 				.addColumn("collection_brick_id", "integer", (col) =>
 					col
 						.references("lucid_collection_document_bricks.id")
@@ -157,15 +169,8 @@ const Migration00000007: MigrationFn = (adapter) => {
 				.addColumn("media_id", "integer", (col) =>
 					col.references("lucid_media.id").onDelete("set null"),
 				)
-				.addColumn(
-					"document_id",
-					"integer",
-					(
-						col, // the document custom field reference
-					) =>
-						col
-							.references("lucid_collection_document_versions.id")
-							.onDelete("set null"),
+				.addColumn("document_id", "integer", (col) =>
+					col.references("lucid_collection_documents.id").onDelete("set null"),
 				)
 				.addColumn("user_id", "integer", (col) =>
 					col.references("lucid_users.id").onDelete("set null"),

@@ -11,6 +11,7 @@ export default class CollectionDocumentFieldsRepo {
 	// upsert
 	createMultiple = async (props: {
 		items: Array<{
+			collectionDocumentId: number;
 			collectionDocumentVersionId: number;
 			collectionBrickId: number;
 			key: string;
@@ -31,6 +32,7 @@ export default class CollectionDocumentFieldsRepo {
 			.values(
 				props.items.map((f) => {
 					return {
+						collection_document_id: f.collectionDocumentId,
 						collection_document_version_id: f.collectionDocumentVersionId,
 						collection_brick_id: f.collectionBrickId,
 						key: f.key,

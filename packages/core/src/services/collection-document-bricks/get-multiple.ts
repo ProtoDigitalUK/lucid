@@ -3,12 +3,14 @@ import Repository from "../../libs/repositories/index.js";
 import Formatter from "../../libs/formatters/index.js";
 import type { ServiceFn } from "../../utils/services/types.js";
 import type { BrickResponse, FieldResponse } from "../../types/response.js";
+import type { DocumentVersionType } from "../../libs/db/types.js";
 
 const getMultiple: ServiceFn<
 	[
 		{
 			versionId: number;
 			collectionKey: string;
+			documentFieldsRelationStatus?: Exclude<DocumentVersionType, "revision">;
 		},
 	],
 	{
@@ -27,6 +29,8 @@ const getMultiple: ServiceFn<
 
 	const [bricks, collectionRes] = await Promise.all([
 		CollectionDocumentBricksRepo.selectMultipleByVersionId({
+			documentFieldsRelationStatus:
+				data.documentFieldsRelationStatus ?? "draft",
 			versionId: data.versionId,
 			config: context.config,
 		}),

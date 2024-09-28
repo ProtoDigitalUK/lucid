@@ -48,6 +48,8 @@ const getMultiple: ServiceFn<
 			includeAllFields: false,
 			collection: collectionRes.data,
 			config: context.config,
+			documentFieldsRelationStatus:
+				data.status !== "revision" ? data.status : "draft",
 		});
 
 	return {

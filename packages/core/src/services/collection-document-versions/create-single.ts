@@ -66,6 +66,7 @@ const createSingle: ServiceFn<
 	const createMultipleBricks =
 		await context.services.collection.document.brick.createMultiple(context, {
 			versionId: newDraftVersion.id,
+			documentId: data.documentId,
 			bricks: data.bricks,
 			fields: data.fields,
 			collection: data.collection,

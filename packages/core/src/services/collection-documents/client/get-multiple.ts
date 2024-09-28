@@ -11,7 +11,7 @@ const getMultiple: ServiceFn<
 	[
 		{
 			collectionKey: string;
-			status: DocumentVersionType;
+			status: Exclude<DocumentVersionType, "revision">;
 			query: z.infer<typeof collectionDocumentsSchema.client.getMultiple.query>;
 		},
 	],
@@ -49,6 +49,7 @@ const getMultiple: ServiceFn<
 			includeGroups: true,
 			collection: collectionRes.data,
 			config: context.config,
+			documentFieldsRelationStatus: data.status,
 		});
 
 	return {
