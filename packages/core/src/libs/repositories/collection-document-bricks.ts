@@ -125,11 +125,7 @@ export default class CollectionDocumentBricksRepo {
 												"lucid_translations.value",
 												"lucid_translations.locale_code",
 											])
-											.where(
-												"lucid_translations.value",
-												"is not",
-												null,
-											)
+											.where("lucid_translations.value", "is not", null)
 											.whereRef(
 												"lucid_translations.translation_key_id",
 												"=",
@@ -145,11 +141,7 @@ export default class CollectionDocumentBricksRepo {
 												"lucid_translations.value",
 												"lucid_translations.locale_code",
 											])
-											.where(
-												"lucid_translations.value",
-												"is not",
-												null,
-											)
+											.where("lucid_translations.value", "is not", null)
 											.whereRef(
 												"lucid_translations.translation_key_id",
 												"=",
@@ -190,8 +182,7 @@ export default class CollectionDocumentBricksRepo {
 											.where(
 												"doc_bricks.brick_type",
 												"=",
-												constants.brickTypes
-													.collectionFields,
+												constants.brickTypes.collectionFields,
 											)
 											.whereRef(
 												"doc_fields.collection_document_version_id",
@@ -228,8 +219,7 @@ export default class CollectionDocumentBricksRepo {
 											.where(
 												"doc_bricks.brick_type",
 												"=",
-												constants.brickTypes
-													.collectionFields,
+												constants.brickTypes.collectionFields,
 											)
 											.whereRef(
 												"doc_groups.collection_document_version_id",
@@ -277,8 +267,7 @@ export default class CollectionDocumentBricksRepo {
 						brick_key: b.brickKey,
 						brick_order: b.brickOrder,
 						brick_open: b.brickOpen,
-						collection_document_version_id:
-							b.collectionDocumentVersionId,
+						collection_document_version_id: b.collectionDocumentVersionId,
 					};
 				}),
 			)

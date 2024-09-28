@@ -32,25 +32,17 @@ class Repository {
 			case "user-tokens":
 				return new UserTokensRepo(db) as RepositoryReturnType<T>;
 			case "collection-document-bricks":
-				return new CollectionDocumentBricksRepo(
-					db,
-				) as RepositoryReturnType<T>;
+				return new CollectionDocumentBricksRepo(db) as RepositoryReturnType<T>;
 			case "collection-document-fields":
-				return new CollectionDocumentFieldsRepo(
-					db,
-				) as RepositoryReturnType<T>;
+				return new CollectionDocumentFieldsRepo(db) as RepositoryReturnType<T>;
 			case "collection-document-groups":
-				return new CollectionDocumentGroupsRepo(
-					db,
-				) as RepositoryReturnType<T>;
+				return new CollectionDocumentGroupsRepo(db) as RepositoryReturnType<T>;
 			case "collection-document-versions":
 				return new CollectionDocumentVersionsRepo(
 					db,
 				) as RepositoryReturnType<T>;
 			case "collection-documents":
-				return new CollectionDocumentsRepo(
-					db,
-				) as RepositoryReturnType<T>;
+				return new CollectionDocumentsRepo(db) as RepositoryReturnType<T>;
 			case "emails":
 				return new EmailsRepo(db) as RepositoryReturnType<T>;
 			case "locales":
@@ -76,9 +68,7 @@ class Repository {
 			case "users":
 				return new UsersRepo(db) as RepositoryReturnType<T>;
 			case "client-integrations":
-				return new ClientIntegrationsRepo(
-					db,
-				) as RepositoryReturnType<T>;
+				return new ClientIntegrationsRepo(db) as RepositoryReturnType<T>;
 			default:
 				throw new LucidError({
 					message: T("cannot_find_repository", {

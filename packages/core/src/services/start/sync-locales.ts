@@ -34,8 +34,7 @@ const syncLocales: ServiceFn<[], undefined> = async (
 
 	// Get locals that are in the database as is_deleted but in the config
 	const unDeletedLocales = locales.filter(
-		(locale) =>
-			locale.is_deleted === 1 && localeCodes.includes(locale.code),
+		(locale) => locale.is_deleted === 1 && localeCodes.includes(locale.code),
 	);
 	const unDeletedLocalesCodes = unDeletedLocales.map((locale) => locale.code);
 

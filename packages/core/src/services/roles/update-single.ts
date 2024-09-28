@@ -85,10 +85,7 @@ const updateSingle: ServiceFn<
 	}
 
 	if (validatePermsRes?.data !== undefined) {
-		const RolePermissionsRepo = Repository.get(
-			"role-permissions",
-			context.db,
-		);
+		const RolePermissionsRepo = Repository.get("role-permissions", context.db);
 
 		await RolePermissionsRepo.deleteMultiple({
 			where: [

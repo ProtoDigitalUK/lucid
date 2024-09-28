@@ -16,18 +16,15 @@ const lucidConfig = async (config: LucidConfig) => {
 	try {
 		// merge plugin config
 		if (Array.isArray(configRes.plugins)) {
-			const postPluginConfig = configRes.plugins.reduce(
-				async (acc, plugin) => {
-					const configAfterPlugin = await acc;
-					const pluginRes = await plugin(configAfterPlugin);
-					checks.checkPluginVersion({
-						key: pluginRes.key,
-						requiredVersions: pluginRes.lucid,
-					});
-					return pluginRes.config;
-				},
-				Promise.resolve(configRes),
-			);
+			const postPluginConfig = configRes.plugins.reduce(async (acc, plugin) => {
+				const configAfterPlugin = await acc;
+				const pluginRes = await plugin(configAfterPlugin);
+				checks.checkPluginVersion({
+					key: pluginRes.key,
+					requiredVersions: pluginRes.lucid,
+				});
+				return pluginRes.config;
+			}, Promise.resolve(configRes));
 			const res = await postPluginConfig;
 			configRes = res;
 		}
@@ -81,11 +78,7 @@ const lucidConfig = async (config: LucidConfig) => {
 					brick.key,
 					brick.meta.fieldKeys,
 				);
-				checks.checkRepeaterDepth(
-					"brick",
-					brick.key,
-					brick.meta.repeaterDepth,
-				);
+				checks.checkRepeaterDepth("brick", brick.key, brick.meta.repeaterDepth);
 			}
 		}
 

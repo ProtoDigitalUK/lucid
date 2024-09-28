@@ -31,13 +31,7 @@ const getSingle: ServiceFn<
 	}
 
 	const locale = await LocalesRepo.selectSingle({
-		select: [
-			"code",
-			"created_at",
-			"updated_at",
-			"is_deleted",
-			"is_deleted_at",
-		],
+		select: ["code", "created_at", "updated_at", "is_deleted", "is_deleted_at"],
 		where: [
 			{
 				key: "code",

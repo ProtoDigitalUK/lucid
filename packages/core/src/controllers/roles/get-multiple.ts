@@ -15,17 +15,14 @@ const getMultipleController: RouteController<
 	typeof rolesSchema.getMultiple.body,
 	typeof rolesSchema.getMultiple.query
 > = async (request, reply) => {
-	const role = await serviceWrapper(
-		request.server.services.role.getMultiple,
-		{
-			transaction: false,
-			defaultError: {
-				type: "basic",
-				name: T("route_roles_fetch_error_name"),
-				message: T("route_roles_fetch_error_message"),
-			},
+	const role = await serviceWrapper(request.server.services.role.getMultiple, {
+		transaction: false,
+		defaultError: {
+			type: "basic",
+			name: T("route_roles_fetch_error_name"),
+			message: T("route_roles_fetch_error_message"),
 		},
-	)(
+	})(
 		{
 			db: request.server.config.db.client,
 			config: request.server.config,

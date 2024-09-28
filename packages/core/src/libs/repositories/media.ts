@@ -160,11 +160,7 @@ export default class MediaRepo {
 						"=",
 						"lucid_media.title_translation_key_id",
 					)
-					.on(
-						"title_translations.locale_code",
-						"=",
-						props.localeCode,
-					),
+					.on("title_translations.locale_code", "=", props.localeCode),
 			)
 			.leftJoin("lucid_translations as alt_translations", (join) =>
 				join
@@ -196,11 +192,7 @@ export default class MediaRepo {
 						"=",
 						"lucid_media.title_translation_key_id",
 					)
-					.on(
-						"title_translations.locale_code",
-						"=",
-						props.localeCode,
-					),
+					.on("title_translations.locale_code", "=", props.localeCode),
 			)
 			.leftJoin("lucid_translations as alt_translations", (join) =>
 				join

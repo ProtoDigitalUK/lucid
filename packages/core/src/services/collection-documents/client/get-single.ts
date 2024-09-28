@@ -12,9 +12,7 @@ const getSingle: ServiceFn<
 		{
 			collectionKey: string;
 			status: "published" | "draft";
-			query: z.infer<
-				typeof collectionDocumentsSchema.client.getSingle.query
-			>;
+			query: z.infer<typeof collectionDocumentsSchema.client.getSingle.query>;
 		},
 	],
 	ClientDocumentResponse
@@ -60,13 +58,10 @@ const getSingle: ServiceFn<
 
 	if (data.query.include?.includes("bricks")) {
 		const bricksRes =
-			await context.services.collection.document.brick.getMultiple(
-				context,
-				{
-					versionId: documentRes.version_id,
-					collectionKey: collectionRes.data.key,
-				},
-			);
+			await context.services.collection.document.brick.getMultiple(context, {
+				versionId: documentRes.version_id,
+				collectionKey: collectionRes.data.key,
+			});
 		if (bricksRes.error) return bricksRes;
 
 		return {

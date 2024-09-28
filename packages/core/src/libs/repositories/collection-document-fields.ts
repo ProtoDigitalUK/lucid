@@ -31,8 +31,7 @@ export default class CollectionDocumentFieldsRepo {
 			.values(
 				props.items.map((f) => {
 					return {
-						collection_document_version_id:
-							f.collectionDocumentVersionId,
+						collection_document_version_id: f.collectionDocumentVersionId,
 						collection_brick_id: f.collectionBrickId,
 						key: f.key,
 						type: f.type,
@@ -59,11 +58,9 @@ export default class CollectionDocumentFieldsRepo {
 			documentId?: number | null;
 		};
 	}) => {
-		let query = this.db
-			.updateTable("lucid_collection_document_fields")
-			.set({
-				document_id: props.data.documentId,
-			});
+		let query = this.db.updateTable("lucid_collection_document_fields").set({
+			document_id: props.data.documentId,
+		});
 
 		query = queryBuilder.update(query, props.where);
 

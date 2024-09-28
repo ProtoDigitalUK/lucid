@@ -99,9 +99,7 @@ const Migration00000004: MigrationFn = (adapter) => {
 					col.references("lucid_users.id").onDelete("cascade"),
 				)
 				.addColumn("token_type", "varchar(255)")
-				.addColumn("token", "varchar(255)", (col) =>
-					col.notNull().unique(),
-				)
+				.addColumn("token", "varchar(255)", (col) => col.notNull().unique())
 				.addColumn("created_at", "timestamp", (col) =>
 					defaultTimestamp(col, adapter),
 				)

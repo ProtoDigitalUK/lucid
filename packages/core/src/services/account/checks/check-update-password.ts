@@ -110,9 +110,7 @@ const checkUpdatePassword: ServiceFn<
 		data.password,
 		data.currentPassword as string,
 		{
-			secret: Buffer.from(
-				decrypt(data.encryptedSecret, data.encryptionKey),
-			),
+			secret: Buffer.from(decrypt(data.encryptedSecret, data.encryptionKey)),
 		},
 	);
 

@@ -35,8 +35,7 @@ export default {
 			},
 			{
 				name: "Editor",
-				description:
-					"The editor role has permissions to manage content.",
+				description: "The editor role has permissions to manage content.",
 				permissions: [
 					...permissionGroups.media.permissions,
 					...permissionGroups.content.permissions,

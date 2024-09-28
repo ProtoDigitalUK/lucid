@@ -33,10 +33,7 @@ const createSingle: ServiceFn<
 
 	const [localeExistsRes, awaitingSyncRes] = await Promise.all([
 		context.services.locale.checks.checkLocalesExist(context, {
-			localeCodes: getUniqueLocaleCodes([
-				data.title || [],
-				data.alt || [],
-			]),
+			localeCodes: getUniqueLocaleCodes([data.title || [], data.alt || []]),
 		}),
 		context.services.media.checks.checkAwaitingSync(context, {
 			key: data.key,
@@ -99,9 +96,7 @@ const createSingle: ServiceFn<
 		}),
 	]);
 	if (mediaRes === undefined) {
-		await context.config.media?.strategy?.deleteSingle(
-			syncMediaRes.data.key,
-		);
+		await context.config.media?.strategy?.deleteSingle(syncMediaRes.data.key);
 		return {
 			error: {
 				type: "basic",

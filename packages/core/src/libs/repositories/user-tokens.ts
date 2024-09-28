@@ -12,9 +12,7 @@ export default class UserTokensRepo {
 		select: K[];
 		where: QueryBuilderWhere<"lucid_user_tokens">;
 	}) => {
-		let query = this.db
-			.selectFrom("lucid_user_tokens")
-			.select<K>(props.select);
+		let query = this.db.selectFrom("lucid_user_tokens").select<K>(props.select);
 
 		query = queryBuilder.select(query, props.where);
 

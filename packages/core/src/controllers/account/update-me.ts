@@ -46,8 +46,7 @@ export default {
 	controller: updateMeController,
 	zodSchema: accountSchema.updateMe,
 	swaggerSchema: {
-		description:
-			"Used to update the current authenticated users information",
+		description: "Used to update the current authenticated users information",
 		tags: ["account"],
 		summary: "Update the authenticated user",
 		response: {

@@ -12,17 +12,14 @@ const getSingleController: RouteController<
 	typeof mediaSchema.getSingle.body,
 	typeof mediaSchema.getSingle.query
 > = async (request, reply) => {
-	const media = await serviceWrapper(
-		request.server.services.media.getSingle,
-		{
-			transaction: false,
-			defaultError: {
-				type: "basic",
-				name: T("route_media_fetch_error_name"),
-				message: T("route_media_fetch_error_message"),
-			},
+	const media = await serviceWrapper(request.server.services.media.getSingle, {
+		transaction: false,
+		defaultError: {
+			type: "basic",
+			name: T("route_media_fetch_error_name"),
+			message: T("route_media_fetch_error_message"),
 		},
-	)(
+	})(
 		{
 			db: request.server.config.db.client,
 			config: request.server.config,

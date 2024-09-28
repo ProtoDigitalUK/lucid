@@ -9,10 +9,7 @@ const tokenController: RouteController<
 	typeof authSchema.token.query
 > = async (request, reply) => {
 	const payloadRes =
-		await request.server.services.auth.refreshToken.verifyToken(
-			request,
-			reply,
-		);
+		await request.server.services.auth.refreshToken.verifyToken(request, reply);
 	if (payloadRes.error) throw new LucidAPIError(payloadRes.error);
 
 	const [refreshRes, accessRes] = await Promise.all([

@@ -134,9 +134,7 @@ class CollectionBuilder extends FieldBuilder {
 	}
 	queryIncludeFields(all?: boolean) {
 		if (all)
-			return this.flatFields
-				.filter((f) => f.type !== "tab")
-				.map((f) => f.key);
+			return this.flatFields.filter((f) => f.type !== "tab").map((f) => f.key);
 
 		const fieldKeys = Array.from(this.includeFieldKeys);
 		for (const field of this.filterableFieldKeys) {
@@ -151,8 +149,7 @@ class CollectionBuilder extends FieldBuilder {
 		if (!bricks) return undefined;
 
 		return bricks.filter(
-			(brick, index) =>
-				bricks.findIndex((b) => b.key === brick.key) === index,
+			(brick, index) => bricks.findIndex((b) => b.key === brick.key) === index,
 		);
 	};
 	#fieldCollectionHelper = (

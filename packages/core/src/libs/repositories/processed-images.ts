@@ -16,9 +16,7 @@ export default class ProcessedImagesRepo {
 
 		query = queryBuilder.select(query, props.where);
 
-		return query.executeTakeFirst() as Promise<
-			{ count: string } | undefined
-		>;
+		return query.executeTakeFirst() as Promise<{ count: string } | undefined>;
 	};
 	// ----------------------------------------
 	// select
@@ -61,9 +59,7 @@ export default class ProcessedImagesRepo {
 	deleteMultiple = async (props: {
 		where: QueryBuilderWhere<"lucid_processed_images">;
 	}) => {
-		let query = this.db
-			.deleteFrom("lucid_processed_images")
-			.returning("key");
+		let query = this.db.deleteFrom("lucid_processed_images").returning("key");
 
 		query = queryBuilder.delete(query, props.where);
 

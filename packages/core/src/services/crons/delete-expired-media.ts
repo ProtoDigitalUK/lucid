@@ -36,9 +36,7 @@ const deleteExpiredMedia: ServiceFn<[], undefined> = async (context) => {
 		};
 	}
 
-	await mediaStrategyRes.data.deleteMultiple(
-		allExpiredMedia.map((m) => m.key),
-	);
+	await mediaStrategyRes.data.deleteMultiple(allExpiredMedia.map((m) => m.key));
 	await MediaAwaitingSyncRepo.deleteMultiple({
 		where: [
 			{

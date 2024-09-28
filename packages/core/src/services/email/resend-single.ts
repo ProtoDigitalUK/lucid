@@ -72,9 +72,7 @@ const resendSingle: ServiceFn<
 		data: {
 			deliveryStatus: result.success ? "delivered" : "failed",
 			lastErrorMessage: result.success ? undefined : result.message,
-			lastSuccessAt: result.success
-				? new Date().toISOString()
-				: undefined,
+			lastSuccessAt: result.success ? new Date().toISOString() : undefined,
 			sentCount: email.sent_count + (result.success ? 1 : 0),
 			errorCount: email.error_count + (result.success ? 0 : 1),
 			lastAttemptAt: new Date().toISOString(),

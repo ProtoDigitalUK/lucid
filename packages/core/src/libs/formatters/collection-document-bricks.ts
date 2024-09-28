@@ -73,14 +73,10 @@ export default class CollectionDocumentBricksFormatter {
 							host: props.config.host,
 							builder: builder,
 							localisation: {
-								locales: props.config.localisation.locales.map(
-									(l) => l.code,
-								),
-								default:
-									props.config.localisation.defaultLocale,
+								locales: props.config.localisation.locales.map((l) => l.code),
+								default: props.config.localisation.defaultLocale,
 							},
-							collectionTranslations:
-								props.collection.data.config.translations,
+							collectionTranslations: props.collection.data.config.translations,
 							collections: props.config.collections,
 						},
 					),
@@ -111,12 +107,9 @@ export default class CollectionDocumentBricksFormatter {
 					{
 						host: props.config.host,
 						builder: props.collection,
-						collectionTranslations:
-							props.collection.data.config.translations,
+						collectionTranslations: props.collection.data.config.translations,
 						localisation: {
-							locales: props.config.localisation.locales.map(
-								(l) => l.code,
-							),
+							locales: props.config.localisation.locales.map((l) => l.code),
 							default: props.config.localisation.defaultLocale,
 						},
 						collections: props.config.collections,

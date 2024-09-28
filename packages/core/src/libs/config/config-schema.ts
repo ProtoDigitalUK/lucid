@@ -59,10 +59,7 @@ const ConfigSchema = z.object({
 	),
 	fastifyExtensions: z
 		.array(
-			z
-				.function()
-				.args(FastifyInstanceSchema)
-				.returns(z.promise(z.void())),
+			z.function().args(FastifyInstanceSchema).returns(z.promise(z.void())),
 		)
 		.optional(),
 	collections: z.array(z.unknown()),

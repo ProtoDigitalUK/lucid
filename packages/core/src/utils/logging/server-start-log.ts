@@ -19,9 +19,7 @@ const serverStartLog = async (address: string, start: [number, number]) => {
 	console.log(
 		`┃ 📖 Documentation    ${textBlue}${constants.documentation}${reset}`,
 	);
-	console.log(
-		`┃ 🖥️  Lucid UI         ${textBlue}${constants.lucidUi}${reset}`,
-	);
+	console.log(`┃ 🖥️  Lucid UI         ${textBlue}${constants.lucidUi}${reset}`);
 	console.log("");
 	console.log(`${textGray}Press CTRL-C to stop the server${reset}`);
 	console.log("");

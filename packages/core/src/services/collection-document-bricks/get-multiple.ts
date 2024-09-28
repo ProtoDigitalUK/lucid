@@ -44,13 +44,11 @@ const getMultiple: ServiceFn<
 				collection: collectionRes.data,
 				config: context.config,
 			}),
-			fields: CollectionDocumentBricksFormatter.formatCollectionPseudoBrick(
-				{
-					bricks: bricks,
-					collection: collectionRes.data,
-					config: context.config,
-				},
-			),
+			fields: CollectionDocumentBricksFormatter.formatCollectionPseudoBrick({
+				bricks: bricks,
+				collection: collectionRes.data,
+				config: context.config,
+			}),
 		},
 	};
 };

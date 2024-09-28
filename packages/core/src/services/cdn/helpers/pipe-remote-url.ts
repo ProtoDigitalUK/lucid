@@ -31,9 +31,7 @@ const pipeRemoteUrl = async (data: {
 				}
 
 				if (statusCode !== 200) {
-					reject(
-						new Error(`Request failed. Status code: ${statusCode}`),
-					);
+					reject(new Error(`Request failed. Status code: ${statusCode}`));
 					return;
 				}
 

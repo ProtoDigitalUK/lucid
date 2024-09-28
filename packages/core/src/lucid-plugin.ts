@@ -48,9 +48,7 @@ const lucidPlugin = async (fastify: FastifyInstance) => {
 					description: "Lucid CMS",
 					version: packageJson.version,
 				},
-				host: config.host
-					.replace("http://", "")
-					.replace("https://", ""),
+				host: config.host.replace("http://", "").replace("https://", ""),
 				schemes: ["http"],
 				consumes: ["application/json", "multipart/form-data"],
 				produces: ["application/json"],
@@ -146,8 +144,7 @@ const lucidPlugin = async (fastify: FastifyInstance) => {
 
 		// Error handling
 		fastify.setErrorHandler((error, request, reply) => {
-			const { name, message, status, errorResponse, code } =
-				decodeError(error);
+			const { name, message, status, errorResponse, code } = decodeError(error);
 
 			if (message) {
 				logger("error", {

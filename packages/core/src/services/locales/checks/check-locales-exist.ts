@@ -46,9 +46,7 @@ const checkLocalesExist: ServiceFn<
 					body: {
 						translations: {
 							code: "invalid",
-							message: T(
-								"make_sure_all_translations_locales_exist",
-							),
+							message: T("make_sure_all_translations_locales_exist"),
 						},
 					},
 				},

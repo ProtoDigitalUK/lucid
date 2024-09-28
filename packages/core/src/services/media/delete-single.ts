@@ -74,10 +74,7 @@ const deleteSingle: ServiceFn<
 		context.services.media.strategies.delete(context, {
 			key: deleteMedia.key,
 			size: deleteMedia.file_size,
-			processedSize: processedImages.reduce(
-				(acc, i) => acc + i.file_size,
-				0,
-			),
+			processedSize: processedImages.reduce((acc, i) => acc + i.file_size, 0),
 		}),
 		context.services.translation.deleteMultiple(context, {
 			ids: [

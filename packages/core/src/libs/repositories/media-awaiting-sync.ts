@@ -8,9 +8,7 @@ export default class MediaAwaitingSyncRepo {
 
 	// ----------------------------------------
 	// select
-	selectSingle = async <
-		K extends keyof Select<LucidMediaAwaitingSync>,
-	>(props: {
+	selectSingle = async <K extends keyof Select<LucidMediaAwaitingSync>>(props: {
 		select: K[];
 		where: QueryBuilderWhere<"lucid_media_awaiting_sync">;
 	}) => {

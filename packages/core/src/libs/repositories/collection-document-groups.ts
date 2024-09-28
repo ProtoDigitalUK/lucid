@@ -22,8 +22,7 @@ export default class CollectionDocumentGroupsRepo {
 			.insertInto("lucid_collection_document_groups")
 			.values(
 				props.items.flatMap((g) => ({
-					collection_document_version_id:
-						g.collectionDocumentVersionId,
+					collection_document_version_id: g.collectionDocumentVersionId,
 					collection_brick_id: g.collectionBrickId,
 					group_order: g.groupOrder,
 					repeater_key: g.repeaterKey,
@@ -55,8 +54,7 @@ export default class CollectionDocumentGroupsRepo {
 					return {
 						parent_group_id: g.parentGroupId,
 						group_id: g.groupId,
-						collection_document_version_id:
-							g.collectionDocumentVersionId,
+						collection_document_version_id: g.collectionDocumentVersionId,
 						collection_brick_id: g.collectionBrickId,
 						group_order: g.groupOrder,
 						repeater_key: g.repeaterKey,

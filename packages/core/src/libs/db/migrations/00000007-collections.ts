@@ -146,10 +146,7 @@ const Migration00000007: MigrationFn = (adapter) => {
 						.onDelete("cascade"),
 				)
 				.addColumn("locale_code", "text", (col) =>
-					col
-						.references("lucid_locales.code")
-						.onDelete("cascade")
-						.notNull(),
+					col.references("lucid_locales.code").onDelete("cascade").notNull(),
 				)
 				.addColumn("key", "text", (col) => col.notNull())
 				.addColumn("type", "text", (col) => col.notNull())
@@ -193,7 +190,7 @@ const Migration00000007: MigrationFn = (adapter) => {
 				.column("group_id")
 				.execute();
 		},
-		async down(db: Kysely<unknown>) {},
+		async down(_db: Kysely<unknown>) {},
 	};
 };
 

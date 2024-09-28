@@ -23,12 +23,9 @@ const updateMediaStorage: ServiceFn<[], undefined> = async (context) => {
 	const totlaMediaSize = mediaItems.reduce((acc, item) => {
 		return acc + item.file_size;
 	}, 0);
-	const totalProcessedImagesSize = processeddImagesItems.reduce(
-		(acc, item) => {
-			return acc + item.file_size;
-		},
-		0,
-	);
+	const totalProcessedImagesSize = processeddImagesItems.reduce((acc, item) => {
+		return acc + item.file_size;
+	}, 0);
 
 	await OptionsRepo.updateSingle({
 		where: [

@@ -14,12 +14,9 @@ const deleteSingle: ServiceFn<
 	undefined
 > = async (context, data) => {
 	const collectionRes =
-		await context.services.collection.document.checks.checkCollection(
-			context,
-			{
-				key: data.collectionKey,
-			},
-		);
+		await context.services.collection.document.checks.checkCollection(context, {
+			key: data.collectionKey,
+		});
 	if (collectionRes.error) return collectionRes;
 
 	if (collectionRes.data.config.locked === true) {

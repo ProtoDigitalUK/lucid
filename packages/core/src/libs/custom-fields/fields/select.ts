@@ -73,9 +73,7 @@ class SelectCustomField extends CustomField<"select"> {
 		if (!valueValidate.valid) return valueValidate;
 
 		if (this.config.options) {
-			const optionValues = this.config.options.map(
-				(option) => option.value,
-			);
+			const optionValues = this.config.options.map((option) => option.value);
 			if (!optionValues.includes(value as string)) {
 				return {
 					valid: false,

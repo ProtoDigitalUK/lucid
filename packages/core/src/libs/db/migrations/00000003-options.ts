@@ -6,9 +6,7 @@ const Migration00000003: MigrationFn = (adapter) => {
 		async up(db: Kysely<unknown>) {
 			await db.schema
 				.createTable("lucid_options")
-				.addColumn("name", "text", (col) =>
-					col.unique().notNull().primaryKey(),
-				)
+				.addColumn("name", "text", (col) => col.unique().notNull().primaryKey())
 				.addColumn("value_int", "integer")
 				.addColumn("value_text", "text")
 				.addColumn("value_bool", "integer")

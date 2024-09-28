@@ -30,12 +30,9 @@ const upsertSingle: ServiceFn<
 
 	// Check collection exists
 	const collectionRes =
-		await context.services.collection.document.checks.checkCollection(
-			context,
-			{
-				key: data.collectionKey,
-			},
-		);
+		await context.services.collection.document.checks.checkCollection(context, {
+			key: data.collectionKey,
+		});
 	if (collectionRes.error) return collectionRes;
 
 	// Check collection is locked
@@ -138,17 +135,14 @@ const upsertSingle: ServiceFn<
 	// ----------------------------------------------
 	// Create and manage document versions
 	const createVersionRes =
-		await context.services.collection.document.versions.createSingle(
-			context,
-			{
-				documentId: document.id,
-				userId: data.userId,
-				publish: data.publish,
-				bricks: bodyData.bricks,
-				fields: bodyData.fields,
-				collection: collectionRes.data,
-			},
-		);
+		await context.services.collection.document.versions.createSingle(context, {
+			documentId: document.id,
+			userId: data.userId,
+			publish: data.publish,
+			bricks: bodyData.bricks,
+			fields: bodyData.fields,
+			collection: collectionRes.data,
+		});
 	if (createVersionRes.error) return createVersionRes;
 
 	// ----------------------------------------------

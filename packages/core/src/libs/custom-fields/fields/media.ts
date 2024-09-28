@@ -51,10 +51,7 @@ class MediaCustomField extends CustomField<"media"> {
 			value: props.data?.media_id ?? null,
 			meta: {
 				id: props.data?.media_id ?? null,
-				url: createCdnUrl(
-					props.formatMeta.host,
-					props.data?.media_key ?? "",
-				),
+				url: createCdnUrl(props.formatMeta.host, props.data?.media_key ?? ""),
 				key: props.data?.media_key ?? null,
 				mimeType: props.data?.media_mime_type ?? null,
 				extension: props.data?.media_file_extension ?? null,
@@ -118,8 +115,7 @@ class MediaCustomField extends CustomField<"media"> {
 				return {
 					valid: false,
 					message: T("field_media_extension", {
-						extensions:
-							this.config.validation.extensions.join(", "),
+						extensions: this.config.validation.extensions.join(", "),
 					}),
 				};
 			}

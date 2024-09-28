@@ -47,13 +47,10 @@ const getSingle: ServiceFn<
 
 	if (data.query.include?.includes("bricks")) {
 		const bricksRes =
-			await context.services.collection.document.brick.getMultiple(
-				context,
-				{
-					versionId: data.versionId,
-					collectionKey: document.collection_key,
-				},
-			);
+			await context.services.collection.document.brick.getMultiple(context, {
+				versionId: data.versionId,
+				collectionKey: document.collection_key,
+			});
 		if (bricksRes.error) return bricksRes;
 
 		return {

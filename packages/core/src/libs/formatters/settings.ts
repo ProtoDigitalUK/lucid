@@ -21,8 +21,7 @@ export default class SettingsFormatter {
 				storage: {
 					total: props.config.media.storage,
 					remaining:
-						props.config.media.storage -
-						props.settings.mediaStorageUsed,
+						props.config.media.storage - props.settings.mediaStorageUsed,
 					used: props.settings.mediaStorageUsed,
 					limit: props.config.media.storage,
 				},

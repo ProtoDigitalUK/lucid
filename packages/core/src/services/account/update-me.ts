@@ -43,52 +43,50 @@ const updateMe: ServiceFn<
 		};
 	}
 
-	const [userWithEmail, userWithUsername, updatePassword] = await Promise.all(
-		[
-			data.email !== undefined
-				? UsersRepo.selectSingle({
-						select: ["id"],
-						where: [
-							{
-								key: "email",
-								operator: "=",
-								value: data.email,
-							},
-							{
-								key: "id",
-								operator: "!=",
-								value: data.auth.id,
-							},
-						],
-					})
-				: undefined,
-			data.username !== undefined
-				? UsersRepo.selectSingle({
-						select: ["id"],
-						where: [
-							{
-								key: "username",
-								operator: "=",
-								value: data.username,
-							},
-							{
-								key: "id",
-								operator: "!=",
-								value: data.auth.id,
-							},
-						],
-					})
-				: undefined,
-			context.services.account.checks.checkUpdatePassword(context, {
-				encryptedSecret: getUserRes.secret,
-				password: getUserRes.password,
-				currentPassword: data.currentPassword,
-				newPassword: data.newPassword,
-				passwordConfirmation: data.passwordConfirmation,
-				encryptionKey: context.config.keys.encryptionKey,
-			}),
-		],
-	);
+	const [userWithEmail, userWithUsername, updatePassword] = await Promise.all([
+		data.email !== undefined
+			? UsersRepo.selectSingle({
+					select: ["id"],
+					where: [
+						{
+							key: "email",
+							operator: "=",
+							value: data.email,
+						},
+						{
+							key: "id",
+							operator: "!=",
+							value: data.auth.id,
+						},
+					],
+				})
+			: undefined,
+		data.username !== undefined
+			? UsersRepo.selectSingle({
+					select: ["id"],
+					where: [
+						{
+							key: "username",
+							operator: "=",
+							value: data.username,
+						},
+						{
+							key: "id",
+							operator: "!=",
+							value: data.auth.id,
+						},
+					],
+				})
+			: undefined,
+		context.services.account.checks.checkUpdatePassword(context, {
+			encryptedSecret: getUserRes.secret,
+			password: getUserRes.password,
+			currentPassword: data.currentPassword,
+			newPassword: data.newPassword,
+			passwordConfirmation: data.passwordConfirmation,
+			encryptionKey: context.config.keys.encryptionKey,
+		}),
+	]);
 	if (updatePassword.error) return updatePassword;
 
 	if (data.email !== undefined && userWithEmail !== undefined) {

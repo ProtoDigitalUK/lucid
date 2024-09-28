@@ -74,12 +74,9 @@ export default class CollectionDocumentsFormatter {
 					{
 						host: props.config.host,
 						builder: props.collection,
-						collectionTranslations:
-							props.collection.data.config.translations,
+						collectionTranslations: props.collection.data.config.translations,
 						localisation: {
-							locales: props.config.localisation.locales.map(
-								(l) => l.code,
-							),
+							locales: props.config.localisation.locales.map((l) => l.code),
 							default: props.config.localisation.defaultLocale,
 						},
 						collections: props.config.collections,
@@ -95,12 +92,9 @@ export default class CollectionDocumentsFormatter {
 					{
 						host: props.config.host,
 						builder: props.collection,
-						collectionTranslations:
-							props.collection.data.config.translations,
+						collectionTranslations: props.collection.data.config.translations,
 						localisation: {
-							locales: props.config.localisation.locales.map(
-								(l) => l.code,
-							),
+							locales: props.config.localisation.locales.map((l) => l.code),
 							default: props.config.localisation.defaultLocale,
 						},
 						collections: props.config.collections,
@@ -175,9 +169,7 @@ export default class CollectionDocumentsFormatter {
 					? res.bricks.map((b) => {
 							return {
 								...b,
-								fields: FieldsFormatter.objectifyFields(
-									b.fields,
-								),
+								fields: FieldsFormatter.objectifyFields(b.fields),
 							} satisfies BrickAltResponse;
 						})
 					: null,

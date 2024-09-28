@@ -34,10 +34,7 @@ const getSingle: ServiceFn<
 
 	const CollectionsFormatter = Formatter.get("collections");
 
-	if (
-		data.include?.documentId === true &&
-		collection.data.mode === "single"
-	) {
+	if (data.include?.documentId === true && collection.data.mode === "single") {
 		const CollectionDocumentsRepo = Repository.get(
 			"collection-documents",
 			context.db,

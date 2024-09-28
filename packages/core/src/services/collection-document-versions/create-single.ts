@@ -63,15 +63,12 @@ const createSingle: ServiceFn<
 	}
 	// save bricks for the draft
 	const createMultipleBricks =
-		await context.services.collection.document.brick.createMultiple(
-			context,
-			{
-				versionId: newDraftVersion.id,
-				bricks: data.bricks,
-				fields: data.fields,
-				collection: data.collection,
-			},
-		);
+		await context.services.collection.document.brick.createMultiple(context, {
+			versionId: newDraftVersion.id,
+			bricks: data.bricks,
+			fields: data.fields,
+			collection: data.collection,
+		});
 	if (createMultipleBricks.error) return createMultipleBricks;
 
 	// TODO: if save and publish, clone new draft as published

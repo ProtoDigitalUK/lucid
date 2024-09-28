@@ -82,10 +82,7 @@ const verifyToken = async (
 		};
 	} catch (err) {
 		const [refreshRes, accessRes] = await Promise.all([
-			request.server.services.auth.refreshToken.clearToken(
-				request,
-				reply,
-			),
+			request.server.services.auth.refreshToken.clearToken(request, reply),
 			request.server.services.auth.accessToken.clearToken(reply),
 		]);
 		if (refreshRes.error) return refreshRes;

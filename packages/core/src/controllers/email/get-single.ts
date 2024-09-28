@@ -12,17 +12,14 @@ const getSingleController: RouteController<
 	typeof emailsSchema.getSingle.body,
 	typeof emailsSchema.getSingle.query
 > = async (request, reply) => {
-	const email = await serviceWrapper(
-		request.server.services.email.getSingle,
-		{
-			transaction: false,
-			defaultError: {
-				type: "basic",
-				name: T("route_email_fetch_error_name"),
-				message: T("route_email_fetch_error_message"),
-			},
+	const email = await serviceWrapper(request.server.services.email.getSingle, {
+		transaction: false,
+		defaultError: {
+			type: "basic",
+			name: T("route_email_fetch_error_name"),
+			message: T("route_email_fetch_error_message"),
 		},
-	)(
+	})(
 		{
 			db: request.server.config.db.client,
 			config: request.server.config,

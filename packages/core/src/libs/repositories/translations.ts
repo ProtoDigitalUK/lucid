@@ -22,11 +22,9 @@ export default class TranslationsRepo {
 				})),
 			)
 			.onConflict((oc) =>
-				oc
-					.columns(["translation_key_id", "locale_code"])
-					.doUpdateSet((eb) => ({
-						value: eb.ref("excluded.value"),
-					})),
+				oc.columns(["translation_key_id", "locale_code"]).doUpdateSet((eb) => ({
+					value: eb.ref("excluded.value"),
+				})),
 			)
 			.execute();
 	};

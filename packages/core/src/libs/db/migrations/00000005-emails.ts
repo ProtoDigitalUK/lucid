@@ -14,9 +14,7 @@ const Migration00000005: MigrationFn = (adapter) => {
 				.addColumn("id", primaryKeyColumnType(adapter), (col) =>
 					primaryKeyColumn(col, adapter),
 				)
-				.addColumn("email_hash", "char(64)", (col) =>
-					col.unique().notNull(),
-				)
+				.addColumn("email_hash", "char(64)", (col) => col.unique().notNull())
 				.addColumn("from_address", "text", (col) => col.notNull())
 				.addColumn("from_name", "text", (col) => col.notNull())
 				.addColumn("to_address", "text", (col) => col.notNull())
@@ -27,9 +25,7 @@ const Migration00000005: MigrationFn = (adapter) => {
 				.addColumn("template", "text", (col) => col.notNull())
 				.addColumn("data", "text")
 				.addColumn("type", "text", (col) => col.notNull()) // 'internal' or 'external'
-				.addColumn("sent_count", "integer", (col) =>
-					col.notNull().defaultTo(0),
-				)
+				.addColumn("sent_count", "integer", (col) => col.notNull().defaultTo(0))
 				.addColumn("error_count", "integer", (col) =>
 					col.notNull().defaultTo(0),
 				)

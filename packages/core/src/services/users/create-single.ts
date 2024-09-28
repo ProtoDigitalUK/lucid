@@ -47,18 +47,14 @@ const createSingle: ServiceFn<
 							userExists.email === data.email
 								? {
 										code: "invalid",
-										message: T(
-											"duplicate_entry_error_message",
-										),
+										message: T("duplicate_entry_error_message"),
 									}
 								: undefined,
 						username:
 							userExists.username === data.username
 								? {
 										code: "invalid",
-										message: T(
-											"duplicate_entry_error_message",
-										),
+										message: T("duplicate_entry_error_message"),
 									}
 								: undefined,
 					},
@@ -95,14 +91,11 @@ const createSingle: ServiceFn<
 		minutes: constants.userInviteTokenExpirationMinutes,
 	}).toISOString();
 
-	const userTokenRes = await context.services.user.token.createSingle(
-		context,
-		{
-			userId: newUser.id,
-			tokenType: "password_reset",
-			expiryDate: expiryDate,
-		},
-	);
+	const userTokenRes = await context.services.user.token.createSingle(context, {
+		userId: newUser.id,
+		tokenType: "password_reset",
+		expiryDate: expiryDate,
+	});
 	if (userTokenRes.error) return userTokenRes;
 
 	const sendEmailRes = await context.services.email.sendEmail(context, {

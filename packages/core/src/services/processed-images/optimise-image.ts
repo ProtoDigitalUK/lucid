@@ -48,8 +48,7 @@ const optimiseImage: ServiceFn<
 		const outputBuffer = await transform.toBuffer();
 		const meta = await sharp(outputBuffer).metadata();
 
-		const mimeType =
-			mime.lookup(data.options.format || "jpg") || "image/jpeg";
+		const mimeType = mime.lookup(data.options.format || "jpg") || "image/jpeg";
 
 		return {
 			error: undefined,
@@ -69,8 +68,7 @@ const optimiseImage: ServiceFn<
 				type: "basic",
 				message:
 					// @ts-expect-error
-					error?.message ||
-					"An error occurred while optimising the image",
+					error?.message || "An error occurred while optimising the image",
 			},
 			data: undefined,
 		};

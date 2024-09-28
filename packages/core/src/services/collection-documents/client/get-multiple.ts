@@ -12,9 +12,7 @@ const getMultiple: ServiceFn<
 		{
 			collectionKey: string;
 			status: DocumentVersionType;
-			query: z.infer<
-				typeof collectionDocumentsSchema.client.getMultiple.query
-			>;
+			query: z.infer<typeof collectionDocumentsSchema.client.getMultiple.query>;
 		},
 	],
 	{

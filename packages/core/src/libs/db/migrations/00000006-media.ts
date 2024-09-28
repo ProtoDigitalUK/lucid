@@ -16,9 +16,7 @@ const Migration00000006: MigrationFn = (adapter) => {
 				)
 				.addColumn("key", "text", (col) => col.unique().notNull())
 				.addColumn("e_tag", "text")
-				.addColumn("visible", "integer", (col) =>
-					col.notNull().defaultTo(1),
-				)
+				.addColumn("visible", "integer", (col) => col.notNull().defaultTo(1))
 				.addColumn("type", "text", (col) => col.notNull())
 				.addColumn("mime_type", "text", (col) => col.notNull())
 				.addColumn("file_extension", "text", (col) => col.notNull())

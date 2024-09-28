@@ -42,9 +42,7 @@ class JsonCustomField extends CustomField<"json"> {
 	}) {
 		return {
 			value:
-				Formatter.parseJSON<Record<string, unknown>>(
-					props.data.json_value,
-				) ??
+				Formatter.parseJSON<Record<string, unknown>>(props.data.json_value) ??
 				this.config.default ??
 				null,
 			meta: null,

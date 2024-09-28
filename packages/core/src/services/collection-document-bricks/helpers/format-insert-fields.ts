@@ -28,9 +28,7 @@ const formatInsertFields = (props: {
 			});
 			if (!fieldInstance) return null;
 
-			const targetGroup = props.groups.find(
-				(g) => g.ref === field.groupRef,
-			);
+			const targetGroup = props.groups.find((g) => g.ref === field.groupRef);
 			return fieldInstance.getInsertField({
 				item: field,
 				brickId: props.brick.id,

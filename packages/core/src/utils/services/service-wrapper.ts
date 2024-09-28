@@ -41,10 +41,7 @@ const serviceWrapper =
 				const result = await fn(service, ...args);
 				if (result.error)
 					return {
-						error: mergeServiceError(
-							result.error,
-							wrapperConfig.defaultError,
-						),
+						error: mergeServiceError(result.error, wrapperConfig.defaultError),
 						data: undefined,
 					};
 				return result;
@@ -76,10 +73,7 @@ const serviceWrapper =
 
 			if (error instanceof TransactionError) {
 				return {
-					error: mergeServiceError(
-						error.error,
-						wrapperConfig.defaultError,
-					),
+					error: mergeServiceError(error.error, wrapperConfig.defaultError),
 					data: undefined,
 				};
 			}

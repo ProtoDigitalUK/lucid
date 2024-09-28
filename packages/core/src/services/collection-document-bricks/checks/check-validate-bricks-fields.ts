@@ -278,10 +278,7 @@ const getAllDocuments = async (
 		const ids = allFieldIdsOfType<number>(fields, "document");
 		if (ids.length === 0) return [];
 
-		const DocumentsRepo = Repository.get(
-			"collection-documents",
-			context.db,
-		);
+		const DocumentsRepo = Repository.get("collection-documents", context.db);
 
 		return await DocumentsRepo.selectMultiple({
 			select: ["id", "collection_key"],

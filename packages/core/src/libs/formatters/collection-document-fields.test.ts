@@ -20,8 +20,7 @@ const BannerBrick = new BrickBuilder("banner", {
 	})
 	.addText("title", {
 		labels: {
-			description:
-				"The title of the banner. This is displayed as an H1 tag.",
+			description: "The title of the banner. This is displayed as an H1 tag.",
 		},
 		validation: {
 			required: true,

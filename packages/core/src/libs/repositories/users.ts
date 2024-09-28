@@ -69,15 +69,9 @@ export default class UsersRepo {
 								props.config.db
 									.jsonArrayFrom(
 										eb
-											.selectFrom(
-												"lucid_role_permissions",
-											)
+											.selectFrom("lucid_role_permissions")
 											.select(["permission"])
-											.whereRef(
-												"role_id",
-												"=",
-												"lucid_roles.id",
-											),
+											.whereRef("role_id", "=", "lucid_roles.id"),
 									)
 									.as("permissions"),
 							])
@@ -107,9 +101,7 @@ export default class UsersRepo {
 					eb("email", "=", props.data.email),
 				]),
 			)
-			.executeTakeFirst() as Promise<
-			Pick<Select<LucidUsers>, K> | undefined
-		>;
+			.executeTakeFirst() as Promise<Pick<Select<LucidUsers>, K> | undefined>;
 	};
 	selectMultiple = async <K extends keyof Select<LucidUsers>>(props: {
 		select: K[];

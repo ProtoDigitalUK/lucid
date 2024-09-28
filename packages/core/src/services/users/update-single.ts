@@ -148,8 +148,7 @@ const updateSingle: ServiceFn<
 				email: data.email,
 				password: hashedPassword,
 				secret: encryptSecret,
-				superAdmin:
-					data.auth.superAdmin === 1 ? data.superAdmin : undefined,
+				superAdmin: data.auth.superAdmin === 1 ? data.superAdmin : undefined,
 				updatedAt: new Date().toISOString(),
 				triggerPasswordReset: data.triggerPasswordReset,
 				isDeleted: data.isDeleted,

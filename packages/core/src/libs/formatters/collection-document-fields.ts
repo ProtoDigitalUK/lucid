@@ -334,16 +334,13 @@ export default class CollectionDocumentFieldsFormatter {
 	): FieldResponse => {
 		return data.fields.reduce<FieldResponse>(
 			(acc, field) => {
-				const cfInstance = meta.builder.fields.get(
-					meta.fieldConfig.key,
-				);
+				const cfInstance = meta.builder.fields.get(meta.fieldConfig.key);
 				if (!cfInstance) return acc;
 
 				if (acc.translations === undefined) acc.translations = {};
 				if (acc.meta === undefined || acc.meta === null) acc.meta = {};
 
-				if (meta.includeGroupId)
-					acc.groupId = field.group_id ?? undefined;
+				if (meta.includeGroupId) acc.groupId = field.group_id ?? undefined;
 
 				const fieldRes = cfInstance.responseValueFormat({
 					data: field,
@@ -351,9 +348,8 @@ export default class CollectionDocumentFieldsFormatter {
 				});
 
 				acc.translations[field.locale_code] = fieldRes.value;
-				(acc.meta as Record<string, FieldResponseMeta>)[
-					field.locale_code
-				] = fieldRes.meta;
+				(acc.meta as Record<string, FieldResponseMeta>)[field.locale_code] =
+					fieldRes.meta;
 
 				return acc;
 			},
@@ -384,19 +380,12 @@ export default class CollectionDocumentFieldsFormatter {
 
 		const emptyLocales = meta.localisation.locales.filter(
 			(l) =>
-				!(
-					data.field.translations as Record<
-						string,
-						FieldResponseValue
-					>
-				)[l],
+				!(data.field.translations as Record<string, FieldResponseValue>)[l],
 		);
 		for (const locale of emptyLocales) {
-			(data.field.translations as Record<string, FieldResponseValue>)[
-				locale
-			] = meta.fieldConfig.default ?? null;
-			(data.field.meta as Record<string, FieldResponseMeta>)[locale] =
-				null;
+			(data.field.translations as Record<string, FieldResponseValue>)[locale] =
+				meta.fieldConfig.default ?? null;
+			(data.field.meta as Record<string, FieldResponseMeta>)[locale] = null;
 		}
 		return data.field;
 	};

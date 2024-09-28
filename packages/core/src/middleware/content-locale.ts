@@ -18,9 +18,7 @@ const contentLocale = async (request: FastifyRequest) => {
 			services: request.server.services,
 		},
 		{
-			code: Array.isArray(contentLocale)
-				? contentLocale[0]
-				: contentLocale,
+			code: Array.isArray(contentLocale) ? contentLocale[0] : contentLocale,
 		},
 	);
 	if (localeRes.error) throw new LucidAPIError(localeRes.error);

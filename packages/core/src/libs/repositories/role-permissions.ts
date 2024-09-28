@@ -30,9 +30,7 @@ export default class RolePermissionsRepo {
 	deleteMultiple = async (props: {
 		where: QueryBuilderWhere<"lucid_role_permissions">;
 	}) => {
-		let query = this.db
-			.deleteFrom("lucid_role_permissions")
-			.returning("id");
+		let query = this.db.deleteFrom("lucid_role_permissions").returning("id");
 
 		query = queryBuilder.delete(query, props.where);
 

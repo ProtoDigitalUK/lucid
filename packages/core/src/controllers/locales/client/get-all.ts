@@ -15,17 +15,14 @@ const getAllController: RouteController<
 	typeof localeSchema.client.getAll.body,
 	typeof localeSchema.client.getAll.query
 > = async (request, reply) => {
-	const locales = await serviceWrapper(
-		request.server.services.locale.getAll,
-		{
-			transaction: false,
-			defaultError: {
-				type: "basic",
-				name: T("route_locale_fetch_error_name"),
-				message: T("route_locale_fetch_error_message"),
-			},
+	const locales = await serviceWrapper(request.server.services.locale.getAll, {
+		transaction: false,
+		defaultError: {
+			type: "basic",
+			name: T("route_locale_fetch_error_name"),
+			message: T("route_locale_fetch_error_message"),
 		},
-	)({
+	})({
 		db: request.server.config.db.client,
 		config: request.server.config,
 		services: request.server.services,

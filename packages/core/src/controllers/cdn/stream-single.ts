@@ -42,8 +42,7 @@ const streamSingleController: RouteController<
 				error: response.error,
 			},
 		);
-		if (streamErrorImage.error)
-			throw new LucidAPIError(streamErrorImage.error);
+		if (streamErrorImage.error) throw new LucidAPIError(streamErrorImage.error);
 
 		reply.header("Content-Type", streamErrorImage.data.contentType);
 		return reply.send(streamErrorImage.data.body);

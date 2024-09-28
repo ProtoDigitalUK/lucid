@@ -21,12 +21,9 @@ const deleteMultiple: ServiceFn<
 	}
 
 	const collectionRes =
-		await context.services.collection.document.checks.checkCollection(
-			context,
-			{
-				key: data.collectionKey,
-			},
-		);
+		await context.services.collection.document.checks.checkCollection(context, {
+			key: data.collectionKey,
+		});
 	if (collectionRes.error) return collectionRes;
 
 	if (collectionRes.data.config.locked === true) {
@@ -81,9 +78,7 @@ const deleteMultiple: ServiceFn<
 						ids: {
 							code: "only_found",
 							message: T("only_found_ids_error_message", {
-								ids: getDocuments
-									.map((doc) => doc.id)
-									.join(", "),
+								ids: getDocuments.map((doc) => doc.id).join(", "),
 							}),
 						},
 					},

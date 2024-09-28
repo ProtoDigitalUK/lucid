@@ -91,10 +91,7 @@ export default {
 					.union([
 						z.record(
 							z.string(),
-							z.union([
-								filterSchemas.single,
-								filterSchemas.union,
-							]),
+							z.union([filterSchemas.single, filterSchemas.union]),
 						),
 						z.object({
 							documentId: filterSchemas.single.optional(),
@@ -119,29 +116,17 @@ export default {
 					.union([
 						z.record(
 							z.string(),
-							z.union([
-								filterSchemas.single,
-								filterSchemas.union,
-							]),
+							z.union([filterSchemas.single, filterSchemas.union]),
 						),
 						z.object({
 							documentId: z
-								.union([
-									filterSchemas.single,
-									filterSchemas.union,
-								])
+								.union([filterSchemas.single, filterSchemas.union])
 								.optional(),
 							documentCreatedBy: z
-								.union([
-									filterSchemas.single,
-									filterSchemas.union,
-								])
+								.union([filterSchemas.single, filterSchemas.union])
 								.optional(),
 							documentUpdatedBy: z
-								.union([
-									filterSchemas.single,
-									filterSchemas.union,
-								])
+								.union([filterSchemas.single, filterSchemas.union])
 								.optional(),
 							documentCreatedAt: filterSchemas.single.optional(),
 							documentUpdatedAt: filterSchemas.single.optional(),

@@ -47,9 +47,7 @@ class LinkCustomField extends CustomField<"link"> {
 		data: FieldProp;
 		formatMeta: FieldFormatMeta;
 	}) {
-		const linkVal = Formatter.parseJSON<LinkResValue>(
-			props.data.json_value,
-		);
+		const linkVal = Formatter.parseJSON<LinkResValue>(props.data.json_value);
 		return {
 			value: {
 				url: linkVal?.url ?? this.config.default.url ?? null,

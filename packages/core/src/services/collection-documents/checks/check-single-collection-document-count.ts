@@ -61,9 +61,7 @@ const checkSingleCollectionDocumentCount: ServiceFn<
 					body: {
 						collectionKey: {
 							code: "invalid",
-							message: T(
-								"this_collection_has_a_document_already",
-							),
+							message: T("this_collection_has_a_document_already"),
 						},
 					},
 				},

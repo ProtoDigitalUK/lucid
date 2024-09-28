@@ -20,8 +20,7 @@ const toolkitWrapper = async <T extends unknown[], R>(props: {
 			...props.config?.defaultError,
 			type: props.config?.defaultError?.type ?? "toolkit",
 			message:
-				props.config?.defaultError?.message ??
-				T("toolkit_error_message"),
+				props.config?.defaultError?.message ?? T("toolkit_error_message"),
 		},
 		schema: props.config?.schema,
 		schemaArgIndex: props.config?.schemaArgIndex,

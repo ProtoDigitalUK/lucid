@@ -88,14 +88,9 @@ const addRemainingQuery = (query: unknown) => {
 	const remainingQuery = Object.fromEntries(
 		Object.entries(queryObject).filter(
 			([key]) =>
-				![
-					"include",
-					"exclude",
-					"filter",
-					"sort",
-					"page",
-					"perPage",
-				].includes(key),
+				!["include", "exclude", "filter", "sort", "page", "perPage"].includes(
+					key,
+				),
 		),
 	);
 	return remainingQuery;

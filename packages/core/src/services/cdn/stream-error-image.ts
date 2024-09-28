@@ -27,10 +27,7 @@ const streamErrorImage: ServiceFn<
 		};
 	}
 
-	if (
-		context.config.media?.fallbackImage === false ||
-		data.fallback === "0"
-	) {
+	if (context.config.media?.fallbackImage === false || data.fallback === "0") {
 		return {
 			error: {
 				type: "basic",

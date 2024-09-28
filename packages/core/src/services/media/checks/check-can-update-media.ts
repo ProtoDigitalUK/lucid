@@ -57,12 +57,9 @@ const checkCanUpdateMedia: ServiceFn<
 					body: {
 						file: {
 							code: "storage",
-							message: T(
-								"file_exceeds_storage_limit_max_limit_is",
-								{
-									size: storageLimit,
-								},
-							),
+							message: T("file_exceeds_storage_limit_max_limit_is", {
+								size: storageLimit,
+							}),
 						},
 					},
 				},

@@ -39,13 +39,10 @@ const syncMedia: ServiceFn<
 	});
 	if (injectMediaRes.error) return injectMediaRes;
 
-	const updateStorageRes = await context.services.option.updateSingle(
-		context,
-		{
-			name: "media_storage_used",
-			valueInt: proposedSizeRes.data.proposedSize,
-		},
-	);
+	const updateStorageRes = await context.services.option.updateSingle(context, {
+		name: "media_storage_used",
+		valueInt: proposedSizeRes.data.proposedSize,
+	});
 	if (updateStorageRes.error) return updateStorageRes;
 
 	return {

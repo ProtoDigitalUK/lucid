@@ -5,9 +5,7 @@ const CustomFieldSchema = z.object({
 	key: z.string(),
 	labels: z
 		.object({
-			title: z
-				.union([z.string(), z.record(z.string(), z.string())])
-				.optional(),
+			title: z.union([z.string(), z.record(z.string(), z.string())]).optional(),
 			description: z
 				.union([z.string(), z.record(z.string(), z.string())])
 				.optional(),

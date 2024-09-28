@@ -32,8 +32,7 @@ const regenerateKeysController: RouteController<
 			id: Number.parseInt(request.params.id),
 		},
 	);
-	if (regenerateKeysRes.error)
-		throw new LucidAPIError(regenerateKeysRes.error);
+	if (regenerateKeysRes.error) throw new LucidAPIError(regenerateKeysRes.error);
 
 	reply.status(200).send(
 		formatAPIResponse(request, {
@@ -46,8 +45,7 @@ export default {
 	controller: regenerateKeysController,
 	zodSchema: clientIntegrationsSchema.regenerateKeys,
 	swaggerSchema: {
-		description:
-			"Regenerates the API key for the given client integration.",
+		description: "Regenerates the API key for the given client integration.",
 		tags: ["client-integrations"],
 		summary: "Regenerate a single client integration API key.",
 		response: {

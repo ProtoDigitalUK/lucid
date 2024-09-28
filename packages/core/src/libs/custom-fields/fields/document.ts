@@ -70,8 +70,7 @@ class DocumentCustomField extends CustomField<"document"> {
 				},
 				{
 					builder: CollectionBuilder,
-					collectionTranslations:
-						CollectionBuilder.data.config.translations,
+					collectionTranslations: CollectionBuilder.data.config.translations,
 					localisation: props.formatMeta.localisation,
 					collections: props.formatMeta.collections,
 					host: props.formatMeta.host,
@@ -83,10 +82,7 @@ class DocumentCustomField extends CustomField<"document"> {
 			value: props.data?.document_id ?? null,
 			meta: {
 				id: props.data.document_id ?? null,
-				fields:
-					Object.keys(documentFields).length > 0
-						? documentFields
-						: null,
+				fields: Object.keys(documentFields).length > 0 ? documentFields : null,
 			},
 		} satisfies CFResponse<"document">;
 	}
@@ -110,10 +106,7 @@ class DocumentCustomField extends CustomField<"document"> {
 			userId: null,
 		} satisfies CFInsertItem<"document">;
 	}
-	cfSpecificValidation(
-		value: unknown,
-		relationData?: DocumentReferenceData[],
-	) {
+	cfSpecificValidation(value: unknown, relationData?: DocumentReferenceData[]) {
 		const valueSchema = z.number();
 
 		const valueValidate = zodSafeParse(value, valueSchema);

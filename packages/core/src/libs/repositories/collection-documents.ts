@@ -236,18 +236,12 @@ export default class CollectionDocumentsRepo {
 									props.config.db
 										.jsonArrayFrom(
 											eb
-												.selectFrom(
-													"lucid_translations",
-												)
+												.selectFrom("lucid_translations")
 												.select([
 													"lucid_translations.value",
 													"lucid_translations.locale_code",
 												])
-												.where(
-													"lucid_translations.value",
-													"is not",
-													null,
-												)
+												.where("lucid_translations.value", "is not", null)
 												.whereRef(
 													"lucid_translations.translation_key_id",
 													"=",
@@ -258,18 +252,12 @@ export default class CollectionDocumentsRepo {
 									props.config.db
 										.jsonArrayFrom(
 											eb
-												.selectFrom(
-													"lucid_translations",
-												)
+												.selectFrom("lucid_translations")
 												.select([
 													"lucid_translations.value",
 													"lucid_translations.locale_code",
 												])
-												.where(
-													"lucid_translations.value",
-													"is not",
-													null,
-												)
+												.where("lucid_translations.value", "is not", null)
 												.whereRef(
 													"lucid_translations.translation_key_id",
 													"=",
@@ -310,8 +298,7 @@ export default class CollectionDocumentsRepo {
 												.where(
 													"doc_bricks.brick_type",
 													"=",
-													constants.brickTypes
-														.collectionFields,
+													constants.brickTypes.collectionFields,
 												)
 												.whereRef(
 													"doc_fields.collection_document_version_id",
@@ -348,8 +335,7 @@ export default class CollectionDocumentsRepo {
 												.where(
 													"doc_bricks.brick_type",
 													"=",
-													constants.brickTypes
-														.collectionFields,
+													constants.brickTypes.collectionFields,
 												)
 												.whereRef(
 													"doc_groups.collection_document_version_id",
@@ -396,14 +382,10 @@ export default class CollectionDocumentsRepo {
 							documentId: "lucid_collection_documents.id",
 							documentCollectionKey:
 								"lucid_collection_documents.collection_key",
-							documentCreatedBy:
-								"lucid_collection_documents.created_by",
-							documentUpdatedBy:
-								"lucid_collection_documents.updated_by",
-							documentCreatedAt:
-								"lucid_collection_documents.created_at",
-							documentUpdatedAt:
-								"lucid_collection_documents.updated_at",
+							documentCreatedBy: "lucid_collection_documents.created_by",
+							documentUpdatedBy: "lucid_collection_documents.updated_by",
+							documentCreatedAt: "lucid_collection_documents.created_at",
+							documentUpdatedAt: "lucid_collection_documents.updated_at",
 						},
 					},
 				},
@@ -483,9 +465,7 @@ export default class CollectionDocumentsRepo {
 				"lucid_collection_document_versions.document_id",
 				"lucid_collection_documents.id",
 			)
-			.select(
-				sql`count(distinct lucid_collection_documents.id)`.as("count"),
-			)
+			.select(sql`count(distinct lucid_collection_documents.id)`.as("count"))
 			.leftJoin(
 				"lucid_users",
 				"lucid_users.id",
@@ -590,18 +570,12 @@ export default class CollectionDocumentsRepo {
 									props.config.db
 										.jsonArrayFrom(
 											eb
-												.selectFrom(
-													"lucid_translations",
-												)
+												.selectFrom("lucid_translations")
 												.select([
 													"lucid_translations.value",
 													"lucid_translations.locale_code",
 												])
-												.where(
-													"lucid_translations.value",
-													"is not",
-													null,
-												)
+												.where("lucid_translations.value", "is not", null)
 												.whereRef(
 													"lucid_translations.translation_key_id",
 													"=",
@@ -612,18 +586,12 @@ export default class CollectionDocumentsRepo {
 									props.config.db
 										.jsonArrayFrom(
 											eb
-												.selectFrom(
-													"lucid_translations",
-												)
+												.selectFrom("lucid_translations")
 												.select([
 													"lucid_translations.value",
 													"lucid_translations.locale_code",
 												])
-												.where(
-													"lucid_translations.value",
-													"is not",
-													null,
-												)
+												.where("lucid_translations.value", "is not", null)
 												.whereRef(
 													"lucid_translations.translation_key_id",
 													"=",
@@ -664,8 +632,7 @@ export default class CollectionDocumentsRepo {
 												.where(
 													"doc_bricks.brick_type",
 													"=",
-													constants.brickTypes
-														.collectionFields,
+													constants.brickTypes.collectionFields,
 												)
 												.whereRef(
 													"doc_fields.collection_document_version_id",
@@ -702,8 +669,7 @@ export default class CollectionDocumentsRepo {
 												.where(
 													"doc_bricks.brick_type",
 													"=",
-													constants.brickTypes
-														.collectionFields,
+													constants.brickTypes.collectionFields,
 												)
 												.whereRef(
 													"doc_groups.collection_document_version_id",
@@ -766,14 +732,10 @@ export default class CollectionDocumentsRepo {
 							documentId: "lucid_collection_documents.id",
 							documentCollectionKey:
 								"lucid_collection_documents.collection_key",
-							documentCreatedBy:
-								"lucid_collection_documents.created_by",
-							documentUpdatedBy:
-								"lucid_collection_documents.updated_by",
-							documentCreatedAt:
-								"lucid_collection_documents.created_at",
-							documentUpdatedAt:
-								"lucid_collection_documents.updated_at",
+							documentCreatedBy: "lucid_collection_documents.created_by",
+							documentUpdatedBy: "lucid_collection_documents.updated_by",
+							documentCreatedAt: "lucid_collection_documents.created_at",
+							documentUpdatedAt: "lucid_collection_documents.updated_at",
 						},
 						sorts: {
 							createdAt: "created_at",

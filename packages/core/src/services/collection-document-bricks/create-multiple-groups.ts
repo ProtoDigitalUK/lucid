@@ -79,9 +79,7 @@ const createMultipleGroups: ServiceFn<
 			let targetGroupId = null;
 			let parentGroupId = null;
 
-			const findTargetGroup = groupsRes.find(
-				(res) => res.ref === group.ref,
-			);
+			const findTargetGroup = groupsRes.find((res) => res.ref === group.ref);
 			if (findTargetGroup === undefined) continue;
 
 			targetGroupId = findTargetGroup.group_id;
