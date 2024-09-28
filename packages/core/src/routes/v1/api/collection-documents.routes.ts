@@ -3,19 +3,49 @@ import r from "../../../utils/route.js";
 import collectionDocuments from "../../../controllers/collection-documents/index.js";
 
 const collectionDocumentsRoutes = async (fastify: FastifyInstance) => {
+	// Create draft document
 	r(fastify, {
 		method: "post",
-		url: "/:collectionKey",
+		url: "/:collectionKey/draft",
+		permissions: ["create_content"],
+		middleware: {
+			authenticate: true,
+			validateCSRF: true,
+		},
+		swaggerSchema: collectionDocuments.createDraft.swaggerSchema,
+		zodSchema: collectionDocuments.createDraft.zodSchema,
+		controller: collectionDocuments.createDraft.controller,
+	});
+
+	// Update draft document
+	r(fastify, {
+		method: "post",
+		url: "/:collectionKey/:id/draft",
 		permissions: ["update_content"],
 		middleware: {
 			authenticate: true,
 			validateCSRF: true,
 		},
-		swaggerSchema: collectionDocuments.upsertSingle.swaggerSchema,
-		zodSchema: collectionDocuments.upsertSingle.zodSchema,
-		controller: collectionDocuments.upsertSingle.controller,
+		swaggerSchema: collectionDocuments.updateDraft.swaggerSchema,
+		zodSchema: collectionDocuments.updateDraft.zodSchema,
+		controller: collectionDocuments.updateDraft.controller,
 	});
 
+	// Publish document
+	r(fastify, {
+		method: "post",
+		url: "/:collectionKey/:id/publish",
+		permissions: ["publish_content"],
+		middleware: {
+			authenticate: true,
+			validateCSRF: true,
+		},
+		swaggerSchema: collectionDocuments.updatePublish.swaggerSchema,
+		zodSchema: collectionDocuments.updatePublish.zodSchema,
+		controller: collectionDocuments.updatePublish.controller,
+	});
+
+	// Restore revision
 	r(fastify, {
 		method: "post",
 		url: "/:collectionKey/:id/:versionId/restore-revision",
@@ -29,6 +59,7 @@ const collectionDocumentsRoutes = async (fastify: FastifyInstance) => {
 		controller: collectionDocuments.restoreRevision.controller,
 	});
 
+	// Get single document
 	r(fastify, {
 		method: "get",
 		url: "/:collectionKey/:id/:statusOrId",
@@ -40,6 +71,7 @@ const collectionDocumentsRoutes = async (fastify: FastifyInstance) => {
 		controller: collectionDocuments.getSingle.controller,
 	});
 
+	// Delete single document
 	r(fastify, {
 		method: "delete",
 		url: "/:collectionKey/:id",
@@ -53,6 +85,7 @@ const collectionDocumentsRoutes = async (fastify: FastifyInstance) => {
 		controller: collectionDocuments.deleteSingle.controller,
 	});
 
+	// Delete multiple documents
 	r(fastify, {
 		method: "delete",
 		url: "/:collectionKey",
@@ -66,6 +99,7 @@ const collectionDocumentsRoutes = async (fastify: FastifyInstance) => {
 		controller: collectionDocuments.deleteMultiple.controller,
 	});
 
+	// Get multiple documents
 	r(fastify, {
 		method: "get",
 		url: "/:collectionKey/:status",

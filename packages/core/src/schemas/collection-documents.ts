@@ -4,10 +4,30 @@ import { FieldSchema } from "./collection-fields.js";
 import defaultQuery, { filterSchemas } from "./default-query.js";
 
 export default {
-	upsertSingle: {
+	updateDraft: {
 		body: z.object({
-			publish: z.union([z.literal(1), z.literal(0)]).optional(),
-			documentId: z.number().optional(),
+			bricks: z.array(BrickSchema).optional(),
+			fields: z.array(FieldSchema).optional(),
+		}),
+		query: undefined,
+		params: z.object({
+			collectionKey: z.string(),
+			id: z.string(),
+		}),
+	},
+	updatePublish: {
+		body: z.object({
+			bricks: z.array(BrickSchema).optional(),
+			fields: z.array(FieldSchema).optional(),
+		}),
+		query: undefined,
+		params: z.object({
+			collectionKey: z.string(),
+			id: z.string(),
+		}),
+	},
+	createDraft: {
+		body: z.object({
 			bricks: z.array(BrickSchema).optional(),
 			fields: z.array(FieldSchema).optional(),
 		}),
@@ -159,7 +179,7 @@ export default {
 			}),
 			params: z.object({
 				collectionKey: z.string(),
-				status: z.enum(["published", "draft", "revision"]),
+				status: z.enum(["published", "draft"]),
 			}),
 			body: undefined,
 		},

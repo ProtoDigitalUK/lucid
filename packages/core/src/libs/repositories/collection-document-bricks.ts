@@ -39,7 +39,7 @@ export default class CollectionDocumentBricksRepo {
 		documentFieldsRelationStatus: Exclude<DocumentVersionType, "revision">;
 		config: Config;
 	}) => {
-		return this.db
+		const query = this.db
 			.selectFrom("lucid_collection_document_bricks")
 			.select((eb) => [
 				"lucid_collection_document_bricks.id",
@@ -153,7 +153,6 @@ export default class CollectionDocumentBricksRepo {
 											),
 									)
 									.as("media_alt_translations"),
-
 								props.config.db
 									.jsonArrayFrom(
 										eb
@@ -173,9 +172,9 @@ export default class CollectionDocumentBricksRepo {
 												"lucid_collection_document_versions as inner_versions",
 												(join) =>
 													join.onRef(
-														"inner_versions.document_id",
+														"inner_versions.id",
 														"=",
-														"doc_fields.collection_document_id",
+														"doc_fields.collection_document_version_id",
 													),
 											)
 											.select([
@@ -230,9 +229,9 @@ export default class CollectionDocumentBricksRepo {
 												"lucid_collection_document_versions as inner_versions",
 												(join) =>
 													join.onRef(
-														"inner_versions.document_id",
+														"inner_versions.id",
 														"=",
-														"doc_groups.collection_document_id",
+														"doc_groups.collection_document_version_id",
 													),
 											)
 											.select([
@@ -277,8 +276,11 @@ export default class CollectionDocumentBricksRepo {
 				"lucid_collection_document_bricks.collection_document_version_id",
 				"=",
 				props.versionId,
-			)
-			.execute();
+			);
+
+		console.log(query.compile());
+
+		return query.execute();
 	};
 	// ----------------------------------------
 	// create

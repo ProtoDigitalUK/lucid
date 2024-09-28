@@ -128,7 +128,6 @@ export default class CollectionDocumentsRepo {
 			)
 			.executeTakeFirst();
 	};
-	// TODO: update to use status to join sub document fields
 	selectSingleFiltered = async (props: {
 		documentFilters: QueryParamFilters;
 		documentFieldFilters: DocumentFieldFilters[];
@@ -493,7 +492,6 @@ export default class CollectionDocumentsRepo {
 			Array<Pick<Select<LucidCollectionDocuments>, K>>
 		>;
 	};
-	// TODO: update to use status to join sub document fields
 	selectMultipleFiltered = async (props: {
 		status: DocumentVersionType;
 		/** The status used to determine which version of the document custom field relations to fetch */
@@ -691,6 +689,7 @@ export default class CollectionDocumentsRepo {
 												),
 										)
 										.as("media_alt_translations"),
+
 									props.config.db
 										.jsonArrayFrom(
 											eb
@@ -710,9 +709,9 @@ export default class CollectionDocumentsRepo {
 													"lucid_collection_document_versions as inner_versions",
 													(join) =>
 														join.onRef(
-															"inner_versions.document_id",
+															"inner_versions.id",
 															"=",
-															"doc_fields.collection_document_id",
+															"doc_fields.collection_document_version_id",
 														),
 												)
 												.select([
@@ -739,7 +738,7 @@ export default class CollectionDocumentsRepo {
 												.whereRef(
 													"doc_fields.collection_document_id",
 													"=",
-													"lucid_collection_document_fields.collection_document_id",
+													"lucid_collection_document_fields.document_id",
 												)
 												.where(
 													"inner_versions.version_type",
@@ -767,9 +766,9 @@ export default class CollectionDocumentsRepo {
 													"lucid_collection_document_versions as inner_versions",
 													(join) =>
 														join.onRef(
-															"inner_versions.document_id",
+															"inner_versions.id",
 															"=",
-															"doc_groups.collection_document_id",
+															"doc_groups.collection_document_version_id",
 														),
 												)
 												.select([
@@ -791,7 +790,7 @@ export default class CollectionDocumentsRepo {
 												.whereRef(
 													"doc_groups.collection_document_id",
 													"=",
-													"lucid_collection_document_fields.collection_document_id",
+													"lucid_collection_document_fields.document_id",
 												)
 												.where(
 													"inner_versions.version_type",

@@ -8,10 +8,10 @@ import serviceWrapper from "../../utils/services/service-wrapper.js";
 import { LucidAPIError } from "../../utils/errors/index.js";
 import type { RouteController } from "../../types/types.js";
 
-const upsertSingleController: RouteController<
-	typeof collectionDocumentsSchema.upsertSingle.params,
-	typeof collectionDocumentsSchema.upsertSingle.body,
-	typeof collectionDocumentsSchema.upsertSingle.query
+const createDraftController: RouteController<
+	typeof collectionDocumentsSchema.createDraft.params,
+	typeof collectionDocumentsSchema.createDraft.body,
+	typeof collectionDocumentsSchema.createDraft.query
 > = async (request, reply) => {
 	const documentId = await serviceWrapper(
 		request.server.services.collection.document.upsertSingle,
@@ -19,12 +19,8 @@ const upsertSingleController: RouteController<
 			transaction: true,
 			defaultError: {
 				type: "basic",
-				name: request.body.documentId
-					? T("route_document_update_error_name")
-					: T("route_document_create_error_name"),
-				message: request.body.documentId
-					? T("route_document_update_error_message")
-					: T("route_document_create_error_message"),
+				name: T("route_document_create_error_name"),
+				message: T("route_document_create_error_message"),
 			},
 		},
 	)(
@@ -35,9 +31,8 @@ const upsertSingleController: RouteController<
 		},
 		{
 			collectionKey: request.params.collectionKey,
-			publish: request.body.publish ?? 0,
+			publish: 0,
 			userId: request.auth.id,
-			documentId: request.body.documentId,
 			bricks: request.body.bricks,
 			fields: request.body.fields,
 		},
@@ -54,18 +49,15 @@ const upsertSingleController: RouteController<
 };
 
 export default {
-	controller: upsertSingleController,
-	zodSchema: collectionDocumentsSchema.upsertSingle,
+	controller: createDraftController,
+	zodSchema: collectionDocumentsSchema.createDraft,
 	swaggerSchema: {
-		description: "Create or update a single collection document.",
+		description: "Create a single collection document draft.",
 		tags: ["collection-documents"],
-		summary: "Create or update a single collection document.",
+		summary: "Create a single collection document draft.",
 		body: {
 			type: "object",
 			properties: {
-				documentId: {
-					type: "number",
-				},
 				bricks: {
 					type: "array",
 					items: swaggerBodyBricksObj,
