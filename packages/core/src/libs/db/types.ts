@@ -190,6 +190,7 @@ export interface LucidCollectionDocumentVersions {
 	id: Generated<number>;
 	document_id: number;
 	version_type: DocumentVersionType;
+	previous_version_type: DocumentVersionType | null;
 	created_at: TimestampImmutable;
 	created_by: number | null;
 }

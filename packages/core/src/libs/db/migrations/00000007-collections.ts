@@ -48,7 +48,7 @@ const Migration00000007: MigrationFn = (adapter) => {
 						.notNull(),
 				)
 				.addColumn("version_type", "text", (col) => col.notNull()) // draft, published, revision
-
+				.addColumn("previous_version_type", "text") // draft, published, revision
 				.addColumn("created_at", "timestamp", (col) =>
 					defaultTimestamp(col, adapter),
 				)

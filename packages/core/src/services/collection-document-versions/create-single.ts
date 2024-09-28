@@ -42,6 +42,7 @@ const createSingle: ServiceFn<
 		],
 		data: {
 			version_type: "revision",
+			previous_version_type: "draft",
 			created_by: data.userId,
 		},
 	});

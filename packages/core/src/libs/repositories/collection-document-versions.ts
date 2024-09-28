@@ -1,11 +1,34 @@
 import queryBuilder, {
 	type QueryBuilderWhere,
 } from "../query-builder/index.js";
-import type { KyselyDB, DocumentVersionType } from "../db/types.js";
+import type {
+	KyselyDB,
+	DocumentVersionType,
+	LucidCollectionDocumentVersions,
+	Select,
+} from "../db/types.js";
 
 export default class CollectionDocumentVersionsRepo {
 	constructor(private db: KyselyDB) {}
 
+	// ----------------------------------------
+	// select
+	selectSingle = async <
+		K extends keyof Select<LucidCollectionDocumentVersions>,
+	>(props: {
+		select: K[];
+		where: QueryBuilderWhere<"lucid_collection_document_versions">;
+	}) => {
+		let query = this.db
+			.selectFrom("lucid_collection_document_versions")
+			.select(props.select);
+
+		query = queryBuilder.select(query, props.where);
+
+		return query.executeTakeFirst() as Promise<
+			Pick<Select<LucidCollectionDocumentVersions>, K> | undefined
+		>;
+	};
 	// ----------------------------------------
 	// create
 	createSingle = async (props: {
@@ -29,6 +52,7 @@ export default class CollectionDocumentVersionsRepo {
 		where: QueryBuilderWhere<"lucid_collection_document_versions">;
 		data: {
 			version_type?: DocumentVersionType;
+			previous_version_type?: DocumentVersionType;
 			created_by?: number;
 		};
 	}) => {
@@ -36,6 +60,7 @@ export default class CollectionDocumentVersionsRepo {
 			.updateTable("lucid_collection_document_versions")
 			.set({
 				version_type: props.data.version_type,
+				previous_version_type: props.data.previous_version_type,
 				created_by: props.data.created_by,
 			})
 			.returning("id");

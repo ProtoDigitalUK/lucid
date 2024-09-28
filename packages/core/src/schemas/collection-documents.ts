@@ -22,7 +22,7 @@ export default {
 		}),
 		params: z.object({
 			id: z.string(),
-			versionId: z.string(),
+			status: z.union([z.literal("published"), z.literal("draft")]),
 			collectionKey: z.string(),
 		}),
 		body: undefined,

@@ -42,6 +42,7 @@ export default class CollectionDocumentsRepo {
 		id: number;
 		collectionKey: string;
 		config: Config;
+		status: DocumentVersionType;
 	}) => {
 		return this.db
 			.selectFrom("lucid_collection_documents")
@@ -54,6 +55,11 @@ export default class CollectionDocumentsRepo {
 				"lucid_collection_documents.updated_by",
 			])
 			.leftJoin(
+				"lucid_collection_document_versions",
+				"lucid_collection_document_versions.document_id",
+				"lucid_collection_documents.id",
+			)
+			.leftJoin(
 				"lucid_users as cb_user",
 				"cb_user.id",
 				"lucid_collection_documents.created_by",
@@ -64,19 +70,28 @@ export default class CollectionDocumentsRepo {
 				"lucid_collection_documents.updated_by",
 			)
 			.select([
+				// created by
 				"cb_user.id as cb_user_id",
 				"cb_user.email as cb_user_email",
 				"cb_user.first_name as cb_user_first_name",
 				"cb_user.last_name as cb_user_last_name",
 				"cb_user.username as cb_user_username",
+				// updated by
 				"ub_user.id as ub_user_id",
 				"ub_user.email as ub_user_email",
 				"ub_user.first_name as ub_user_first_name",
 				"ub_user.last_name as ub_user_last_name",
 				"ub_user.username as ub_user_username",
+				// version
+				"lucid_collection_document_versions.id as version_id",
 			])
 			.where("lucid_collection_documents.id", "=", props.id)
 			.where("lucid_collection_documents.is_deleted", "=", 0)
+			.where(
+				"lucid_collection_document_versions.version_type",
+				"=",
+				props.status,
+			)
 			.where(
 				"lucid_collection_documents.collection_key",
 				"=",
