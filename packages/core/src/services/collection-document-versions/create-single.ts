@@ -1,6 +1,4 @@
-import T from "../../translations/index.js";
 import Repository from "../../libs/repositories/index.js";
-
 import type { BrickSchema } from "../../schemas/collection-bricks.js";
 import type { FieldSchemaType } from "../../schemas/collection-fields.js";
 import type { CollectionBuilder } from "../../exports/builders.js";
@@ -12,9 +10,8 @@ const createSingle: ServiceFn<
 		{
 			documentId: number;
 			collection: CollectionBuilder;
-			publish: BooleanInt;
 			userId: number;
-
+			publish: BooleanInt;
 			bricks?: Array<BrickSchema>;
 			fields?: Array<FieldSchemaType>;
 		},
@@ -26,7 +23,9 @@ const createSingle: ServiceFn<
 		context.db,
 	);
 
-	// update current draft if it exists and turn into a revision
+	const versionType = data.publish ? "published" : "draft";
+
+	// Update the current version of the targeted type to a revision
 	await VersionsRepo.updateSingle({
 		where: [
 			{
@@ -37,23 +36,24 @@ const createSingle: ServiceFn<
 			{
 				key: "version_type",
 				operator: "=",
-				value: "draft",
+				value: versionType,
 			},
 		],
 		data: {
 			version_type: "revision",
-			previous_version_type: "draft",
+			previous_version_type: versionType,
 			created_by: data.userId,
 		},
 	});
 
-	// create new draft
-	const newDraftVersion = await VersionsRepo.createSingle({
+	// Create new version (draft or published based on the publish value)
+	const newVersion = await VersionsRepo.createSingle({
 		document_id: data.documentId,
-		version_type: "draft",
+		version_type: versionType,
 		created_by: data.userId,
 	});
-	if (newDraftVersion === undefined) {
+
+	if (newVersion === undefined) {
 		return {
 			error: {
 				type: "basic",
@@ -62,21 +62,18 @@ const createSingle: ServiceFn<
 			data: undefined,
 		};
 	}
-	// save bricks for the draft
+
+	// Save bricks for the new version
 	const createMultipleBricks =
 		await context.services.collection.document.brick.createMultiple(context, {
-			versionId: newDraftVersion.id,
+			versionId: newVersion.id,
 			documentId: data.documentId,
 			bricks: data.bricks,
 			fields: data.fields,
 			collection: data.collection,
 		});
-	if (createMultipleBricks.error) return createMultipleBricks;
 
-	// TODO: if save and publish, clone new draft as published
-	if (data.publish === 1) {
-		console.log("publish draft (clones current draft as published)");
-	}
+	if (createMultipleBricks.error) return createMultipleBricks;
 
 	return {
 		error: undefined,

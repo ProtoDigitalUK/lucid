@@ -138,7 +138,7 @@ const upsertSingle: ServiceFn<
 		await context.services.collection.document.versions.createSingle(context, {
 			documentId: document.id,
 			userId: data.userId,
-			publish: data.publish,
+			publish: data.documentId === undefined ? 0 : data.publish, // if we're creating a new document, we don't want to publish it
 			bricks: bodyData.bricks,
 			fields: bodyData.fields,
 			collection: collectionRes.data,

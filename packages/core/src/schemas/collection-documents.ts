@@ -6,13 +6,22 @@ import defaultQuery, { filterSchemas } from "./default-query.js";
 export default {
 	upsertSingle: {
 		body: z.object({
+			publish: z.union([z.literal(1), z.literal(0)]).optional(),
 			documentId: z.number().optional(),
 			bricks: z.array(BrickSchema).optional(),
 			fields: z.array(FieldSchema).optional(),
-			publish: z.union([z.literal(1), z.literal(0)]).optional(),
 		}),
 		query: undefined,
 		params: z.object({
+			collectionKey: z.string(),
+		}),
+	},
+	restoreRevision: {
+		body: undefined,
+		query: undefined,
+		params: z.object({
+			id: z.string(),
+			versionId: z.string(),
 			collectionKey: z.string(),
 		}),
 	},

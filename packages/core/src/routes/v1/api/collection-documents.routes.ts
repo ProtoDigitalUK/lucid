@@ -17,6 +17,19 @@ const collectionDocumentsRoutes = async (fastify: FastifyInstance) => {
 	});
 
 	r(fastify, {
+		method: "post",
+		url: "/:collectionKey/:id/:versionId/restore-revision",
+		permissions: ["restore_content"],
+		middleware: {
+			authenticate: true,
+			validateCSRF: true,
+		},
+		swaggerSchema: collectionDocuments.restoreRevision.swaggerSchema,
+		zodSchema: collectionDocuments.restoreRevision.zodSchema,
+		controller: collectionDocuments.restoreRevision.controller,
+	});
+
+	r(fastify, {
 		method: "get",
 		url: "/:collectionKey/:id/:statusOrId",
 		middleware: {

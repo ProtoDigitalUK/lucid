@@ -318,6 +318,8 @@ export type Permission =
 	| "delete_email"
 	| "send_email"
 	| "create_content"
+	| "publish_content"
+	| "restore_content"
 	| "update_content"
 	| "delete_content"
 	| "delete_collection"

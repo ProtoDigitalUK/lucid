@@ -35,11 +35,11 @@ const upsertSingleController: RouteController<
 		},
 		{
 			collectionKey: request.params.collectionKey,
+			publish: request.body.publish ?? 0,
 			userId: request.auth.id,
 			documentId: request.body.documentId,
 			bricks: request.body.bricks,
 			fields: request.body.fields,
-			publish: request.body.publish ?? 0,
 		},
 	);
 	if (documentId.error) throw new LucidAPIError(documentId.error);

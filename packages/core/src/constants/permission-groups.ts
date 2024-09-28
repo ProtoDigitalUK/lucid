@@ -19,7 +19,13 @@ const permissionGroups: Record<PermissionGroupKey, PermissionGroup> = {
 	},
 	content: {
 		key: "content_permissions",
-		permissions: ["create_content", "update_content", "delete_content"],
+		permissions: [
+			"create_content",
+			"update_content",
+			"delete_content",
+			"restore_content",
+			"publish_content",
+		],
 	},
 	"client-integrations": {
 		key: "client-integrations_permissions",
