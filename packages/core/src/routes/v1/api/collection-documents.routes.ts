@@ -18,7 +18,7 @@ const collectionDocumentsRoutes = async (fastify: FastifyInstance) => {
 
 	r(fastify, {
 		method: "get",
-		url: "/:collectionKey/:id",
+		url: "/:collectionKey/:id/:status",
 		middleware: {
 			authenticate: true,
 		},
@@ -55,7 +55,7 @@ const collectionDocumentsRoutes = async (fastify: FastifyInstance) => {
 
 	r(fastify, {
 		method: "get",
-		url: "/:collectionKey",
+		url: "/:collectionKey/:status",
 		middleware: {
 			authenticate: true,
 		},

@@ -613,7 +613,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{BASE_URL}}/api/v1/collections/documents/page/1?include=bricks",
+									"raw": "{{BASE_URL}}/api/v1/collections/documents/page/1/draft?include=bricks",
 									"host": [
 										"{{BASE_URL}}"
 									],
@@ -623,7 +623,8 @@
 										"collections",
 										"documents",
 										"page",
-										"1"
+										"1",
+										"draft"
 									],
 									"query": [
 										{
@@ -641,7 +642,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{BASE_URL}}/api/v1/collections/documents/page",
+									"raw": "{{BASE_URL}}/api/v1/collections/documents/page/draft",
 									"host": [
 										"{{BASE_URL}}"
 									],
@@ -650,7 +651,8 @@
 										"v1",
 										"collections",
 										"documents",
-										"page"
+										"page",
+										"draft"
 									],
 									"query": [
 										{
