@@ -28,6 +28,7 @@ const getSingle: ServiceFn<
 			collectionKey: data.collectionKey,
 			config: context.config,
 			status: data.status,
+			versionId: data.versionId,
 		}),
 		context.services.collection.getSingleInstance(context, {
 			key: data.collectionKey,

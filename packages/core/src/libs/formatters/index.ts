@@ -59,7 +59,9 @@ class Formatter {
 		}
 	}
 	// helpers
-	static formatDate = (date: Date | string | null): string | null => {
+	static formatDate = (
+		date: Date | string | null | undefined,
+	): string | null => {
 		if (typeof date === "string") {
 			return date;
 		}

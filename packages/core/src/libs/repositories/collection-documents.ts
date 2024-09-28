@@ -43,6 +43,7 @@ export default class CollectionDocumentsRepo {
 		collectionKey: string;
 		config: Config;
 		status?: DocumentVersionType;
+		versionId?: number;
 	}) => {
 		return this.db
 			.selectFrom("lucid_collection_documents")
@@ -61,11 +62,37 @@ export default class CollectionDocumentsRepo {
 						"lucid_collection_document_versions.document_id",
 						"lucid_collection_documents.id",
 					)
-					.select(["lucid_collection_document_versions.id as version_id"])
+					.select([
+						"lucid_collection_document_versions.id as version_id",
+						"lucid_collection_document_versions.version_type as version_type",
+						"lucid_collection_document_versions.previous_version_type as previous_version_type",
+						"lucid_collection_document_versions.created_at as version_created_at",
+						"lucid_collection_document_versions.created_by as version_created_by",
+					])
 					.where(
 						"lucid_collection_document_versions.version_type",
 						"=",
 						props.status as DocumentVersionType,
+					),
+			)
+			.$if(props.versionId !== undefined, (eb) =>
+				eb
+					.leftJoin(
+						"lucid_collection_document_versions",
+						"lucid_collection_document_versions.document_id",
+						"lucid_collection_documents.id",
+					)
+					.select([
+						"lucid_collection_document_versions.id as version_id",
+						"lucid_collection_document_versions.version_type as version_type",
+						"lucid_collection_document_versions.previous_version_type as previous_version_type",
+						"lucid_collection_document_versions.created_at as version_created_at",
+						"lucid_collection_document_versions.created_by as version_created_by",
+					])
+					.where(
+						"lucid_collection_document_versions.id",
+						"=",
+						props.versionId as number,
 					),
 			)
 			.leftJoin(

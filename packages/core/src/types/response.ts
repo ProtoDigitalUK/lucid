@@ -1,4 +1,4 @@
-import type { BooleanInt } from "../libs/db/types.js";
+import type { BooleanInt, DocumentVersionType } from "../libs/db/types.js";
 import type { CollectionBrickConfig } from "../libs/builders/collection-builder/types.js";
 import type { ErrorResult } from "./errors.js";
 import type {
@@ -216,6 +216,11 @@ export interface FieldGroupAltResponse {
 export interface CollectionDocumentResponse {
 	id: number;
 	collectionKey: string | null;
+	status: DocumentVersionType | null;
+	versionId: number | null;
+	previousStatus: DocumentVersionType | null;
+	versionCreatedAt: string | null;
+	versionCreatedBy: number | null;
 
 	createdBy: {
 		id: number;

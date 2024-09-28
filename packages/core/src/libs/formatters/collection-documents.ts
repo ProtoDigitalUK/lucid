@@ -14,6 +14,7 @@ import CollectionDocumentBricksFormatter, {
 	type GroupProp,
 } from "./collection-document-bricks.js";
 import type { Config } from "../../exports/types.js";
+import type { DocumentVersionType } from "../../libs/db/types.js";
 
 interface DocumentPropT {
 	id: number;
@@ -34,6 +35,12 @@ interface DocumentPropT {
 	ub_user_first_name?: string | null;
 	ub_user_last_name?: string | null;
 	ub_user_username?: string | null;
+	// Version
+	version_id?: number | null;
+	version_type?: DocumentVersionType | null;
+	previous_version_type?: DocumentVersionType | null;
+	version_created_at?: Date | string | null;
+	version_created_by?: number | null;
 
 	fields?: FieldProp[];
 	groups?: GroupProp[];
@@ -106,6 +113,11 @@ export default class CollectionDocumentsFormatter {
 		return {
 			id: props.document.id,
 			collectionKey: props.document.collection_key,
+			status: props.document.version_type ?? null,
+			versionId: props.document.version_id ?? null,
+			previousStatus: props.document.previous_version_type ?? null,
+			versionCreatedAt: Formatter.formatDate(props.document.version_created_at),
+			versionCreatedBy: props.document.version_created_by ?? null,
 			bricks: props.bricks ?? null,
 			fields: fields,
 			createdBy: props.document.cb_user_id
@@ -185,7 +197,20 @@ export default class CollectionDocumentsFormatter {
 			id: {
 				type: "number",
 			},
+			versionId: {
+				type: "number",
+				nullable: true,
+			},
 			collectionKey: {
+				type: "string",
+				nullable: true,
+			},
+			status: {
+				type: "string",
+				nullable: true,
+				enum: ["published", "draft", "revision"],
+			},
+			previousStatus: {
 				type: "string",
 				nullable: true,
 			},
@@ -256,6 +281,14 @@ export default class CollectionDocumentsFormatter {
 						nullable: true,
 					},
 				},
+			},
+			versionCreatedAt: {
+				type: "string",
+				nullable: true,
+			},
+			versionCreatedBy: {
+				type: "number",
+				nullable: true,
 			},
 		},
 	};
