@@ -573,7 +573,7 @@
 					"name": "Documents",
 					"item": [
 						{
-							"name": "Upsert Single",
+							"name": "Create Single",
 							"request": {
 								"method": "POST",
 								"header": [
@@ -584,7 +584,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    // \"documentId\": 1,\n    \"bricks\": [\n        {\n            \"key\": \"intro\",\n            \"order\": 0,\n            \"type\": \"builder\",\n            \"open\": 1,\n            \"fields\": [\n                {\n                    \"key\": \"title\",\n                    \"type\": \"text\",\n                    // \"translations\": {\n                    //     \"en\": \"Title Value\"\n                    // }\n                    \"value\": \"Title Test\"\n                },\n                {\n                    \"key\": \"intro\",\n                    \"type\": \"wysiwyg\",\n                    \"translations\": {\n                        \"en\": \"<p>Hello</p>\"\n                    }\n                }\n            ]\n        }\n    ],\n    \"fields\": [\n        {\n            \"key\": \"page_title\",\n            \"type\": \"text\",\n            \"translations\": {\n                \"en\": \"Homepage\"\n            }\n        },\n        {\n            \"key\": \"author\",\n            \"type\": \"user\",\n            \"translations\": {\n                \"en\": 1\n            }\n        },\n        {\n            \"key\": \"notifications\",\n            \"type\": \"repeater\",\n            \"groups\": [\n                {\n                    \"id\": \"ref-group1\",\n                    \"open\": 1,\n                    \"fields\": [\n                        {\n                            \"key\": \"notification_title\",\n                            \"type\": \"text\",\n                            \"translations\": {\n                                \"en\": \"John Smith\"\n                            }\n                        },\n                        {\n                            \"key\": \"notification_reason\",\n                            \"type\": \"repeater\",\n                            \"groups\": [\n                                {\n                                    \"id\": \"ref-group11\",\n                                    \"open\": 0,\n                                    \"fields\": [\n                                        {\n                                            \"key\": \"notification_reason_title\",\n                                            \"type\": \"text\",\n                                            \"translations\": {\n                                                \"en\": \"Reason 1\"\n                                            }\n                                        }\n                                    ]\n                                },\n                                {\n                                    \"id\": \"ref-group12\",\n                                    \"open\": 1,\n                                    \"fields\": [\n                                        {\n                                            \"key\": \"notification_reason_title\",\n                                            \"type\": \"text\",\n                                            \"translations\": {\n                                                \"en\": \"Reason 2\"\n                                            }\n                                        }\n                                    ]\n                                }\n                            ]\n                        }\n                    ]\n                },\n                {\n                    \"id\": \"ref-group2\",\n                    \"open\": 0,\n                    \"fields\": [\n                        {\n                            \"key\": \"notification_title\",\n                            \"type\": \"text\",\n                            \"translations\": {\n                                \"en\": \"Sarah Smith\"\n                            }\n                        },\n                        {\n                            \"key\": \"notification_reason\",\n                            \"type\": \"repeater\",\n                            \"groups\": [\n                                {\n                                    \"id\":\"ref-group21\",\n                                    \"open\": 1,\n                                    \"fields\": [\n                                        {\n                                            \"key\": \"notification_reason_title\",\n                                            \"type\": \"text\",\n                                            \"translations\": {\n                                                \"en\": \"Reason 3\"\n                                            }\n                                        }\n                                    ]\n                                },\n                                {\n                                    \"id\": \"ref-group22\",\n                                    \"open\": 0,\n                                    \"fields\": [\n                                        {\n                                            \"key\": \"notification_reason_title\",\n                                            \"type\": \"text\",\n                                            \"translations\": {\n                                                \"en\": \"Reason 4\"\n                                            }\n                                        }\n                                    ]\n                                }\n                            ]\n                        }\n                    ]\n                },\n                {\n                    \"id\": \"ref-group3\",\n                    \"open\": 1,\n                    \"fields\": [\n                        {\n                            \"key\": \"notification_title\",\n                            \"type\": \"text\",\n                            \"translations\": {\n                                \"en\": \"Don Smith\"\n                            }\n                        },\n                        {\n                            \"key\": \"notification_reason\",\n                            \"type\": \"repeater\",\n                            \"groups\": [\n                                {\n                                    \"id\": \"ref-group31\",\n                                    \"open\": 0,\n                                    \"fields\": [\n                                        {\n                                            \"key\": \"notification_reason_title\",\n                                            \"type\": \"text\",\n                                            \"translations\": {\n                                                \"en\": \"Reason 5\"\n                                            }\n                                        }\n                                    ]\n                                },\n                                {\n                                    \"id\": \"ref-group32\",\n                                    \"open\": 0,\n                                    \"fields\": [\n                                        {\n                                            \"key\": \"notification_reason_title\",\n                                            \"type\": \"text\",\n                                            \"translations\": {\n                                                \"en\": \"Reason 6\"\n                                            }\n                                        }\n                                    ]\n                                },\n                                {\n                                    \"id\": \"ref-group33\",\n                                    \"open\": 0,\n                                    \"fields\": [\n                                        {\n                                            \"key\": \"notification_reason_title\",\n                                            \"type\": \"text\",\n                                            \"translations\": {\n                                                \"en\": \"Reason 7\"\n                                            }\n                                        }\n                                    ]\n                                }\n                            ]\n                        }\n                    ]\n                }\n            ]\n        }\n    ]\n}",
+									"raw": "{\n    \"bricks\": [\n        // {\n\t\t// \t\"id\": \"ref-1\",\n        //     \"key\": \"intro\",\n        //     \"order\": 0,\n        //     \"type\": \"builder\",\n        //     \"open\": 1,\n        //     \"fields\": [\n        //         {\n        //             \"key\": \"title\",\n        //             \"type\": \"text\",\n        //             // \"translations\": {\n        //             //     \"en\": \"Title Value\"\n        //             // }\n        //             \"value\": \"Title Test\"\n        //         },\n        //         {\n        //             \"key\": \"intro\",\n        //             \"type\": \"wysiwyg\",\n        //             \"translations\": {\n        //                 \"en\": \"<p>Hello</p>\"\n        //             }\n        //         }\n        //     ]\n        // }\n    ],\n    \"fields\": [\n        {\n            \"key\": \"title\",\n            \"type\": \"text\",\n            \"translations\": {\n                \"en\": \"Homepage\",\n\t\t\t\t\"fr\": \"Hompage FR\"\n            }\n        },\n\t\t{\n\t\t\t\"key\": \"document\",\n\t\t\t\"type\": \"document\",\n\t\t\t\"value\": null\n\t\t}\n\n        // {\n        //     \"key\": \"page_title\",\n        //     \"type\": \"text\",\n        //     \"translations\": {\n        //         \"en\": \"Homepage\"\n        //     }\n        // },\n        // {\n        //     \"key\": \"author\",\n        //     \"type\": \"user\",\n        //     \"translations\": {\n        //         \"en\": 1\n        //     }\n        // },\n        // {\n        //     \"key\": \"notifications\",\n        //     \"type\": \"repeater\",\n        //     \"groups\": [\n        //         {\n        //             \"id\": \"ref-group1\",\n        //             \"open\": 1,\n        //             \"fields\": [\n        //                 {\n        //                     \"key\": \"notification_title\",\n        //                     \"type\": \"text\",\n        //                     \"translations\": {\n        //                         \"en\": \"John Smith\"\n        //                     }\n        //                 },\n        //                 {\n        //                     \"key\": \"notification_reason\",\n        //                     \"type\": \"repeater\",\n        //                     \"groups\": [\n        //                         {\n        //                             \"id\": \"ref-group11\",\n        //                             \"open\": 0,\n        //                             \"fields\": [\n        //                                 {\n        //                                     \"key\": \"notification_reason_title\",\n        //                                     \"type\": \"text\",\n        //                                     \"translations\": {\n        //                                         \"en\": \"Reason 1\"\n        //                                     }\n        //                                 }\n        //                             ]\n        //                         },\n        //                         {\n        //                             \"id\": \"ref-group12\",\n        //                             \"open\": 1,\n        //                             \"fields\": [\n        //                                 {\n        //                                     \"key\": \"notification_reason_title\",\n        //                                     \"type\": \"text\",\n        //                                     \"translations\": {\n        //                                         \"en\": \"Reason 2\"\n        //                                     }\n        //                                 }\n        //                             ]\n        //                         }\n        //                     ]\n        //                 }\n        //             ]\n        //         },\n        //         {\n        //             \"id\": \"ref-group2\",\n        //             \"open\": 0,\n        //             \"fields\": [\n        //                 {\n        //                     \"key\": \"notification_title\",\n        //                     \"type\": \"text\",\n        //                     \"translations\": {\n        //                         \"en\": \"Sarah Smith\"\n        //                     }\n        //                 },\n        //                 {\n        //                     \"key\": \"notification_reason\",\n        //                     \"type\": \"repeater\",\n        //                     \"groups\": [\n        //                         {\n        //                             \"id\":\"ref-group21\",\n        //                             \"open\": 1,\n        //                             \"fields\": [\n        //                                 {\n        //                                     \"key\": \"notification_reason_title\",\n        //                                     \"type\": \"text\",\n        //                                     \"translations\": {\n        //                                         \"en\": \"Reason 3\"\n        //                                     }\n        //                                 }\n        //                             ]\n        //                         },\n        //                         {\n        //                             \"id\": \"ref-group22\",\n        //                             \"open\": 0,\n        //                             \"fields\": [\n        //                                 {\n        //                                     \"key\": \"notification_reason_title\",\n        //                                     \"type\": \"text\",\n        //                                     \"translations\": {\n        //                                         \"en\": \"Reason 4\"\n        //                                     }\n        //                                 }\n        //                             ]\n        //                         }\n        //                     ]\n        //                 }\n        //             ]\n        //         },\n        //         {\n        //             \"id\": \"ref-group3\",\n        //             \"open\": 1,\n        //             \"fields\": [\n        //                 {\n        //                     \"key\": \"notification_title\",\n        //                     \"type\": \"text\",\n        //                     \"translations\": {\n        //                         \"en\": \"Don Smith\"\n        //                     }\n        //                 },\n        //                 {\n        //                     \"key\": \"notification_reason\",\n        //                     \"type\": \"repeater\",\n        //                     \"groups\": [\n        //                         {\n        //                             \"id\": \"ref-group31\",\n        //                             \"open\": 0,\n        //                             \"fields\": [\n        //                                 {\n        //                                     \"key\": \"notification_reason_title\",\n        //                                     \"type\": \"text\",\n        //                                     \"translations\": {\n        //                                         \"en\": \"Reason 5\"\n        //                                     }\n        //                                 }\n        //                             ]\n        //                         },\n        //                         {\n        //                             \"id\": \"ref-group32\",\n        //                             \"open\": 0,\n        //                             \"fields\": [\n        //                                 {\n        //                                     \"key\": \"notification_reason_title\",\n        //                                     \"type\": \"text\",\n        //                                     \"translations\": {\n        //                                         \"en\": \"Reason 6\"\n        //                                     }\n        //                                 }\n        //                             ]\n        //                         },\n        //                         {\n        //                             \"id\": \"ref-group33\",\n        //                             \"open\": 0,\n        //                             \"fields\": [\n        //                                 {\n        //                                     \"key\": \"notification_reason_title\",\n        //                                     \"type\": \"text\",\n        //                                     \"translations\": {\n        //                                         \"en\": \"Reason 7\"\n        //                                     }\n        //                                 }\n        //                             ]\n        //                         }\n        //                     ]\n        //                 }\n        //             ]\n        //         }\n        //     ]\n        // }\n    ]\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -592,7 +592,7 @@
 									}
 								},
 								"url": {
-									"raw": "{{BASE_URL}}/api/v1/collections/documents/page",
+									"raw": "{{BASE_URL}}/api/v1/collections/documents/test/draft",
 									"host": [
 										"{{BASE_URL}}"
 									],
@@ -601,7 +601,120 @@
 										"v1",
 										"collections",
 										"documents",
-										"page"
+										"test",
+										"draft"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update Draft",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "_csrf",
+										"value": "{{CSRF}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"bricks\": [\n        // {\n\t\t// \t\"id\": \"ref-1\",\n        //     \"key\": \"intro\",\n        //     \"order\": 0,\n        //     \"type\": \"builder\",\n        //     \"open\": 1,\n        //     \"fields\": [\n        //         {\n        //             \"key\": \"title\",\n        //             \"type\": \"text\",\n        //             // \"translations\": {\n        //             //     \"en\": \"Title Value\"\n        //             // }\n        //             \"value\": \"Title Test\"\n        //         },\n        //         {\n        //             \"key\": \"intro\",\n        //             \"type\": \"wysiwyg\",\n        //             \"translations\": {\n        //                 \"en\": \"<p>Hello</p>\"\n        //             }\n        //         }\n        //     ]\n        // }\n    ],\n    \"fields\": [\n        {\n            \"key\": \"title\",\n            \"type\": \"text\",\n            \"translations\": {\n                \"en\": \"Homepage\",\n\t\t\t\t\"fr\": \"Hompage FR\"\n            }\n        },\n\t\t{\n\t\t\t\"key\": \"document\",\n\t\t\t\"type\": \"document\",\n\t\t\t\"value\": null\n\t\t}\n\n        // {\n        //     \"key\": \"page_title\",\n        //     \"type\": \"text\",\n        //     \"translations\": {\n        //         \"en\": \"Homepage\"\n        //     }\n        // },\n        // {\n        //     \"key\": \"author\",\n        //     \"type\": \"user\",\n        //     \"translations\": {\n        //         \"en\": 1\n        //     }\n        // },\n        // {\n        //     \"key\": \"notifications\",\n        //     \"type\": \"repeater\",\n        //     \"groups\": [\n        //         {\n        //             \"id\": \"ref-group1\",\n        //             \"open\": 1,\n        //             \"fields\": [\n        //                 {\n        //                     \"key\": \"notification_title\",\n        //                     \"type\": \"text\",\n        //                     \"translations\": {\n        //                         \"en\": \"John Smith\"\n        //                     }\n        //                 },\n        //                 {\n        //                     \"key\": \"notification_reason\",\n        //                     \"type\": \"repeater\",\n        //                     \"groups\": [\n        //                         {\n        //                             \"id\": \"ref-group11\",\n        //                             \"open\": 0,\n        //                             \"fields\": [\n        //                                 {\n        //                                     \"key\": \"notification_reason_title\",\n        //                                     \"type\": \"text\",\n        //                                     \"translations\": {\n        //                                         \"en\": \"Reason 1\"\n        //                                     }\n        //                                 }\n        //                             ]\n        //                         },\n        //                         {\n        //                             \"id\": \"ref-group12\",\n        //                             \"open\": 1,\n        //                             \"fields\": [\n        //                                 {\n        //                                     \"key\": \"notification_reason_title\",\n        //                                     \"type\": \"text\",\n        //                                     \"translations\": {\n        //                                         \"en\": \"Reason 2\"\n        //                                     }\n        //                                 }\n        //                             ]\n        //                         }\n        //                     ]\n        //                 }\n        //             ]\n        //         },\n        //         {\n        //             \"id\": \"ref-group2\",\n        //             \"open\": 0,\n        //             \"fields\": [\n        //                 {\n        //                     \"key\": \"notification_title\",\n        //                     \"type\": \"text\",\n        //                     \"translations\": {\n        //                         \"en\": \"Sarah Smith\"\n        //                     }\n        //                 },\n        //                 {\n        //                     \"key\": \"notification_reason\",\n        //                     \"type\": \"repeater\",\n        //                     \"groups\": [\n        //                         {\n        //                             \"id\":\"ref-group21\",\n        //                             \"open\": 1,\n        //                             \"fields\": [\n        //                                 {\n        //                                     \"key\": \"notification_reason_title\",\n        //                                     \"type\": \"text\",\n        //                                     \"translations\": {\n        //                                         \"en\": \"Reason 3\"\n        //                                     }\n        //                                 }\n        //                             ]\n        //                         },\n        //                         {\n        //                             \"id\": \"ref-group22\",\n        //                             \"open\": 0,\n        //                             \"fields\": [\n        //                                 {\n        //                                     \"key\": \"notification_reason_title\",\n        //                                     \"type\": \"text\",\n        //                                     \"translations\": {\n        //                                         \"en\": \"Reason 4\"\n        //                                     }\n        //                                 }\n        //                             ]\n        //                         }\n        //                     ]\n        //                 }\n        //             ]\n        //         },\n        //         {\n        //             \"id\": \"ref-group3\",\n        //             \"open\": 1,\n        //             \"fields\": [\n        //                 {\n        //                     \"key\": \"notification_title\",\n        //                     \"type\": \"text\",\n        //                     \"translations\": {\n        //                         \"en\": \"Don Smith\"\n        //                     }\n        //                 },\n        //                 {\n        //                     \"key\": \"notification_reason\",\n        //                     \"type\": \"repeater\",\n        //                     \"groups\": [\n        //                         {\n        //                             \"id\": \"ref-group31\",\n        //                             \"open\": 0,\n        //                             \"fields\": [\n        //                                 {\n        //                                     \"key\": \"notification_reason_title\",\n        //                                     \"type\": \"text\",\n        //                                     \"translations\": {\n        //                                         \"en\": \"Reason 5\"\n        //                                     }\n        //                                 }\n        //                             ]\n        //                         },\n        //                         {\n        //                             \"id\": \"ref-group32\",\n        //                             \"open\": 0,\n        //                             \"fields\": [\n        //                                 {\n        //                                     \"key\": \"notification_reason_title\",\n        //                                     \"type\": \"text\",\n        //                                     \"translations\": {\n        //                                         \"en\": \"Reason 6\"\n        //                                     }\n        //                                 }\n        //                             ]\n        //                         },\n        //                         {\n        //                             \"id\": \"ref-group33\",\n        //                             \"open\": 0,\n        //                             \"fields\": [\n        //                                 {\n        //                                     \"key\": \"notification_reason_title\",\n        //                                     \"type\": \"text\",\n        //                                     \"translations\": {\n        //                                         \"en\": \"Reason 7\"\n        //                                     }\n        //                                 }\n        //                             ]\n        //                         }\n        //                     ]\n        //                 }\n        //             ]\n        //         }\n        //     ]\n        // }\n    ]\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{BASE_URL}}/api/v1/collections/documents/test/1/draft",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"collections",
+										"documents",
+										"test",
+										"1",
+										"draft"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update Publish",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "_csrf",
+										"value": "{{CSRF}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"bricks\": [],\n    \"fields\": [\n        {\n            \"key\": \"title\",\n            \"type\": \"text\",\n            \"translations\": {\n                \"en\": \"Homepage Published\",\n\t\t\t\t\"fr\": \"Homepage Published FR\"\n            }\n        },\n\t\t{\n\t\t\t\"key\": \"document\",\n\t\t\t\"type\": \"document\",\n\t\t\t\"value\": null\n\t\t}\n    ]\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{BASE_URL}}/api/v1/collections/documents/test/1/publish",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"collections",
+										"documents",
+										"test",
+										"1",
+										"publish"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Restore Revision",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "_csrf",
+										"value": "{{CSRF}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{BASE_URL}}/api/v1/collections/documents/test/1/1/restore-revision",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"collections",
+										"documents",
+										"test",
+										"1",
+										"1",
+										"restore-revision"
 									]
 								}
 							},
@@ -613,7 +726,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{BASE_URL}}/api/v1/collections/documents/page/1/draft?include=bricks",
+									"raw": "{{BASE_URL}}/api/v1/collections/documents/test/1/published?include=bricks",
 									"host": [
 										"{{BASE_URL}}"
 									],
@@ -622,9 +735,9 @@
 										"v1",
 										"collections",
 										"documents",
-										"page",
+										"test",
 										"1",
-										"draft"
+										"published"
 									],
 									"query": [
 										{
@@ -642,7 +755,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{BASE_URL}}/api/v1/collections/documents/page/draft",
+									"raw": "{{BASE_URL}}/api/v1/collections/documents/test/published",
 									"host": [
 										"{{BASE_URL}}"
 									],
@@ -651,8 +764,8 @@
 										"v1",
 										"collections",
 										"documents",
-										"page",
-										"draft"
+										"test",
+										"published"
 									],
 									"query": [
 										{
