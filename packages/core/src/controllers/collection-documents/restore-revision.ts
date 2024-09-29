@@ -30,6 +30,7 @@ const restoreRevisionController: RouteController<
 			versionId: Number.parseInt(request.params.versionId),
 			userId: request.auth.id,
 			documentId: Number.parseInt(request.params.id),
+			collectionKey: request.params.collectionKey,
 		},
 	);
 	if (restoreRevisionRes.error)

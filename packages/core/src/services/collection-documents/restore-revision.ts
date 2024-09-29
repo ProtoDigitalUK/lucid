@@ -1,5 +1,6 @@
 import T from "../../translations/index.js";
 import Repository from "../../libs/repositories/index.js";
+import executeHooks from "../../utils/hooks/execute-hooks.js";
 import type { ServiceFn } from "../../utils/services/types.js";
 
 // TODO: down the line, this should instead clone the revision and turn it into a draft as opposed to turning the revision into a draft
@@ -11,10 +12,19 @@ const restoreRevision: ServiceFn<
 			documentId: number;
 			versionId: number;
 			userId: number;
+			collectionKey: string;
 		},
 	],
 	undefined
 > = async (context, data) => {
+	const collectionRes = await context.services.collection.getSingleInstance(
+		context,
+		{
+			key: data.collectionKey,
+		},
+	);
+	if (collectionRes.error) return collectionRes;
+
 	const VersionsRepo = Repository.get(
 		"collection-document-versions",
 		context.db,
@@ -81,6 +91,29 @@ const restoreRevision: ServiceFn<
 			data: undefined,
 		};
 	}
+
+	// fire version promote hook
+	const hookResponse = await executeHooks(
+		{
+			service: "collection-documents",
+			event: "beforeUpsert",
+			config: context.config,
+			collectionInstance: collectionRes.data,
+		},
+		context,
+		{
+			meta: {
+				collectionKey: data.collectionKey,
+				userId: data.userId,
+			},
+			data: {
+				documentId: data.documentId,
+				versionId: restorRevisionRes.id,
+				versionType: "draft",
+			},
+		},
+	);
+	if (hookResponse.error) return hookResponse;
 
 	return {
 		error: undefined,

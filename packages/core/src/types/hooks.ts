@@ -102,6 +102,22 @@ export type HookServiceHandlers = {
 			],
 			undefined
 		>;
+		versionPromote: ServiceFn<
+			[
+				{
+					meta: {
+						collectionKey: string;
+						userId: number;
+					};
+					data: {
+						documentId: number;
+						versionId: number;
+						versionType: DocumentVersionType;
+					};
+				},
+			],
+			undefined
+		>;
 	};
 };
 
@@ -119,7 +135,8 @@ export type CollectionDocumentHooks =
 	| LucidHook<"collection-documents", "beforeUpsert">
 	| LucidHook<"collection-documents", "afterUpsert">
 	| LucidHook<"collection-documents", "beforeDelete">
-	| LucidHook<"collection-documents", "afterDelete">;
+	| LucidHook<"collection-documents", "afterDelete">
+	| LucidHook<"collection-documents", "versionPromote">;
 
 // add all hooks to this type
 export type AllHooks = CollectionDocumentHooks;
