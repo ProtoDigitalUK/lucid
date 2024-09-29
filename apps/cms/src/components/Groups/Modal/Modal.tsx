@@ -30,8 +30,7 @@ export const Modal: Component<ModalProps> = (props) => {
 							class={classNames(
 								"max-w-2xl w-full bg-container-3 rounded-xl overflow-hidden border-border border m-auto pointer-events-auto",
 								{
-									"max-w-7xl":
-										props.options?.size === "large",
+									"max-w-7xl": props.options?.size === "large",
 								},
 							)}
 						>

@@ -39,7 +39,7 @@ export default class CollectionDocumentBricksRepo {
 		documentFieldsRelationStatus: Exclude<DocumentVersionType, "revision">;
 		config: Config;
 	}) => {
-		const query = this.db
+		return this.db
 			.selectFrom("lucid_collection_document_bricks")
 			.select((eb) => [
 				"lucid_collection_document_bricks.id",
@@ -276,11 +276,8 @@ export default class CollectionDocumentBricksRepo {
 				"lucid_collection_document_bricks.collection_document_version_id",
 				"=",
 				props.versionId,
-			);
-
-		console.log(query.compile());
-
-		return query.execute();
+			)
+			.execute();
 	};
 	// ----------------------------------------
 	// create

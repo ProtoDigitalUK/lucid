@@ -22,8 +22,7 @@ export const Label: Component<LabelProps> = (props) => {
 					"text-sm transition-colors duration-200 ease-in-out flex justify-between",
 					{
 						"text-primary-hover": props.focused,
-						"pt-2 px-2.5":
-							props.noPadding !== true && props.theme === "full",
+						"pt-2 px-2.5": props.noPadding !== true && props.theme === "full",
 						"mb-2": props.noPadding === true,
 					},
 				)}

@@ -60,16 +60,11 @@ const MediaBasicCard: Component<MediaBasicCardProps> = (props) => {
 		>
 			{/* Image */}
 			<AspectRatio ratio="16:9" innerClass={"overflow-hidden"}>
-				<MediaPreview
-					media={props.media}
-					alt={alt() || title() || ""}
-				/>
+				<MediaPreview media={props.media} alt={alt() || title() || ""} />
 			</AspectRatio>
 			{/* Content */}
 			<div class="p-2.5 border-t border-border">
-				<h3 class="line-clamp-1 text-sm">
-					{title() || T()("no_translation")}
-				</h3>
+				<h3 class="line-clamp-1 text-sm">{title() || T()("no_translation")}</h3>
 			</div>
 		</li>
 	);

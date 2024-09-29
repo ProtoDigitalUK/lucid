@@ -38,9 +38,7 @@ export const GroupBody: Component<GroupBodyProps> = (props) => {
 	const parentGroupId = createMemo(() => props.state.parentGroupId);
 	const parentRepeaterKey = createMemo(() => props.state.parentRepeaterKey);
 	const repeaterKey = createMemo(() => props.state.repeaterKey);
-	const configChildrenFields = createMemo(
-		() => props.state.fieldConfig.fields,
-	);
+	const configChildrenFields = createMemo(() => props.state.fieldConfig.fields);
 	const nextRepeaterDepth = createMemo(() => props.state.repeaterDepth + 1);
 	const groupFields = createMemo(() => {
 		return props.state.fields;
@@ -68,8 +66,7 @@ export const GroupBody: Component<GroupBodyProps> = (props) => {
 			}}
 			data-dragkey={props.state.dragDropKey}
 			class={classNames("w-full mb-2.5 last:mb-0", {
-				"opacity-60":
-					props.state.dragDrop.getDragging()?.index === groupId(),
+				"opacity-60": props.state.dragDrop.getDragging()?.index === groupId(),
 			})}
 			onDragStart={(e) =>
 				props.state.dragDrop.onDragStart(e, {
@@ -93,8 +90,7 @@ export const GroupBody: Component<GroupBodyProps> = (props) => {
 					{
 						"border-b-0 rounded-b-none": getGroupOpen(),
 						"ring-1 ring-inset":
-							props.state.dragDrop.getDraggingTarget()?.index ===
-							groupId(),
+							props.state.dragDrop.getDraggingTarget()?.index === groupId(),
 					},
 				)}
 				onClick={toggleDropdown}
@@ -171,8 +167,7 @@ export const GroupBody: Component<GroupBodyProps> = (props) => {
 					"border-border-input bg-[#181818] transform-gpu origin-top border-x border-b mb-2.5 last:mb-0 rounded-b-md overflow-hidden w-full duration-200 transition-all",
 					{
 						"bg-container-3": props.state.repeaterDepth % 2 !== 0,
-						"scale-y-100 h-auto opacity-100 visible":
-							getGroupOpen(),
+						"scale-y-100 h-auto opacity-100 visible": getGroupOpen(),
 						"scale-y-0 h-0 opacity-0 invisible": !getGroupOpen(),
 					},
 				)}

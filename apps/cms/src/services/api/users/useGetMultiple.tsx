@@ -19,9 +19,7 @@ const useGetMultiple = (params: QueryHook<QueryParams>) => {
 	const queryParams = createMemo(() =>
 		serviceHelpers.getQueryParams<QueryParams>(params?.queryParams || {}),
 	);
-	const queryKey = createMemo(() =>
-		serviceHelpers.getQueryKey(queryParams()),
-	);
+	const queryKey = createMemo(() => serviceHelpers.getQueryKey(queryParams()));
 
 	// -----------------------------
 	// Query

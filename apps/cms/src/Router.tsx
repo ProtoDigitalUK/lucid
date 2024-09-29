@@ -35,15 +35,11 @@ const AppRouter: Component = () => {
 				/>
 				<Route
 					path="/collections/:collectionKey/create"
-					component={() => (
-						<CollectionsDocumentsEditRoute mode="create" />
-					)}
+					component={() => <CollectionsDocumentsEditRoute mode="create" />}
 				/>
 				<Route
 					path="/collections/:collectionKey/:documentId"
-					component={() => (
-						<CollectionsDocumentsEditRoute mode="edit" />
-					)}
+					component={() => <CollectionsDocumentsEditRoute mode="edit" />}
 				/>
 				{/* Media */}
 				<Route path="/media" component={MediaListRoute} />
@@ -63,10 +59,7 @@ const AppRouter: Component = () => {
 			{/* Non authenticated */}
 			<Route path="/admin" component={AuthRoutes}>
 				<Route path="/login" component={LoginRoute} />
-				<Route
-					path="/forgot-password"
-					component={ForgotPasswordRoute}
-				/>
+				<Route path="/forgot-password" component={ForgotPasswordRoute} />
 				<Route path="/reset-password" component={ResetPasswordRoute} />
 			</Route>
 		</Router>

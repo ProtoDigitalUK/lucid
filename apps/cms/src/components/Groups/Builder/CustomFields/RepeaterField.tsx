@@ -62,9 +62,7 @@ export const RepeaterField: Component<RepeaterFieldProps> = (props) => {
 			})}
 		>
 			<p
-				class={
-					"block text-sm transition-colors duration-200 ease-in-out mb-2"
-				}
+				class={"block text-sm transition-colors duration-200 ease-in-out mb-2"}
 			>
 				{helpers.getLocaleValue({
 					value: fieldConfig().labels?.title,
@@ -82,8 +80,7 @@ export const RepeaterField: Component<RepeaterFieldProps> = (props) => {
 								targetGroupId: targetindex,
 
 								groupId: props.state.groupId,
-								parentRepeaterKey:
-									props.state.parentRepeaterKey,
+								parentRepeaterKey: props.state.parentRepeaterKey,
 							});
 						}}
 					>
@@ -101,10 +98,8 @@ export const RepeaterField: Component<RepeaterFieldProps> = (props) => {
 											dragDrop: dragDrop,
 											repeaterKey: fieldConfig().key,
 											groupIndex: i(),
-											repeaterDepth:
-												props.state.repeaterDepth,
-											parentRepeaterKey:
-												props.state.parentRepeaterKey,
+											repeaterDepth: props.state.repeaterDepth,
+											parentRepeaterKey: props.state.parentRepeaterKey,
 											parentGroupId: props.state.groupId,
 										}}
 									/>

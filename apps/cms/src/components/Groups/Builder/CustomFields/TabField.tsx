@@ -45,8 +45,7 @@ export const TabField: Component<{
 			class={classNames(
 				"border-b border-border -mb-px text-sm font-medium py-1 px-2 first:pl-0 focus:outline-none ring-inset focus:ring-1 ring-primary-base",
 				{
-					"border-primary-base":
-						props.getActiveTab() === props.tab.key,
+					"border-primary-base": props.getActiveTab() === props.tab.key,
 					"border-error-base": hasChildrenError(),
 				},
 			)}

@@ -51,11 +51,7 @@ export const useUpdateMedia = (id: Accessor<number | undefined>) => {
 			});
 
 			let bodyMessage = "";
-			if (
-				response.headers
-					.get("content-type")
-					?.includes("application/json")
-			) {
+			if (response.headers.get("content-type")?.includes("application/json")) {
 				const body = await response.json();
 				bodyMessage = body?.message || "";
 			}
@@ -126,9 +122,7 @@ export const useUpdateMedia = (id: Accessor<number | undefined>) => {
 	});
 	const errors = createMemo(() => {
 		return (
-			updateSingle.errors() ||
-			getPresignedUrl.errors() ||
-			getUploadErrors()
+			updateSingle.errors() || getPresignedUrl.errors() || getUploadErrors()
 		);
 	});
 

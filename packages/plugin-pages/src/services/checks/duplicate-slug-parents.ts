@@ -4,6 +4,7 @@ import type {
 	ServiceFn,
 	FieldSchemaType,
 	FieldErrors,
+	DocumentVersionType,
 } from "@lucidcms/core/types";
 
 /**
@@ -12,7 +13,9 @@ import type {
 const checkDuplicateSlugParents: ServiceFn<
 	[
 		{
-			documentId?: number;
+			documentId: number;
+			versionId: number;
+			versionType: Exclude<DocumentVersionType, "revision">;
 			collectionKey: string;
 			fields: {
 				slug: FieldSchemaType;
@@ -40,14 +43,19 @@ const checkDuplicateSlugParents: ServiceFn<
 		const duplicates = await context.db
 			.selectFrom("lucid_collection_documents")
 			.leftJoin(
-				"lucid_collection_document_fields as slugFields",
-				"slugFields.collection_document_id",
+				"lucid_collection_document_versions",
+				"lucid_collection_document_versions.document_id",
 				"lucid_collection_documents.id",
 			)
 			.leftJoin(
+				"lucid_collection_document_fields as slugFields",
+				"slugFields.collection_document_version_id",
+				"lucid_collection_document_versions.id",
+			)
+			.leftJoin(
 				"lucid_collection_document_fields as parentPageFields",
-				"parentPageFields.collection_document_id",
-				"lucid_collection_documents.id",
+				"parentPageFields.collection_document_version_id",
+				"lucid_collection_document_versions.id",
 			)
 			.select([
 				"lucid_collection_documents.id",
@@ -64,11 +72,7 @@ const checkDuplicateSlugParents: ServiceFn<
 							and([
 								eb("slugFields.text_value", "=", slug),
 								localeCode
-									? eb(
-											"slugFields.locale_code",
-											"=",
-											localeCode,
-										)
+									? eb("slugFields.locale_code", "=", localeCode)
 									: eb("slugFields.locale_code", "is", null),
 							]),
 						),
@@ -94,13 +98,14 @@ const checkDuplicateSlugParents: ServiceFn<
 								),
 								eb("parentPageFields.document_id", "is", null),
 							]),
+					eb(
+						"lucid_collection_document_versions.version_type",
+						"=",
+						data.versionType,
+					),
 				]),
 			)
-			.where(
-				"lucid_collection_documents.id",
-				"!=",
-				data.documentId || null,
-			)
+			.where("lucid_collection_documents.id", "!=", data.documentId || null)
 			.where(
 				"lucid_collection_documents.collection_key",
 				"=",
@@ -118,14 +123,11 @@ const checkDuplicateSlugParents: ServiceFn<
 					groupId: undefined,
 					key: constants.fields.slug.key,
 					localeCode:
-						duplicate.locale_code ||
-						context.config.localisation.defaultLocale,
+						duplicate.locale_code || context.config.localisation.defaultLocale,
 					message:
 						duplicate.document_id === null
 							? T("duplicate_slug_field_found_message")
-							: T(
-									"duplicate_slug_and_parent_page_field_found_message",
-								),
+							: T("duplicate_slug_and_parent_page_field_found_message"),
 				});
 			}
 
@@ -153,9 +155,7 @@ const checkDuplicateSlugParents: ServiceFn<
 			error: {
 				type: "basic",
 				status: 500,
-				message: T(
-					"an_unknown_error_occurred_checking_for_duplicate_slugs",
-				),
+				message: T("an_unknown_error_occurred_checking_for_duplicate_slugs"),
 			},
 			data: undefined,
 		};

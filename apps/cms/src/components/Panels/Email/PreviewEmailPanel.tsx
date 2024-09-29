@@ -54,33 +54,23 @@ const PreviewEmailPanel: Component<PreviewEmailPanelProps> = (props) => {
 						items={[
 							{
 								label: T()("subject"),
-								value:
-									email.data?.data.mailDetails.subject ??
-									undefined,
+								value: email.data?.data.mailDetails.subject ?? undefined,
 							},
 							{
 								label: T()("template"),
-								value:
-									email.data?.data.mailDetails.template ??
-									undefined,
+								value: email.data?.data.mailDetails.template ?? undefined,
 							},
 							{
 								label: T()("to"),
-								value:
-									email.data?.data.mailDetails.to ??
-									undefined,
+								value: email.data?.data.mailDetails.to ?? undefined,
 							},
 							{
 								label: T()("from"),
-								value:
-									email.data?.data.mailDetails.from.address ??
-									undefined,
+								value: email.data?.data.mailDetails.from.address ?? undefined,
 							},
 							{
 								label: T()("status"),
-								value:
-									email.data?.data.deliveryStatus ??
-									undefined,
+								value: email.data?.data.deliveryStatus ?? undefined,
 							},
 							{
 								label: T()("sent_count"),

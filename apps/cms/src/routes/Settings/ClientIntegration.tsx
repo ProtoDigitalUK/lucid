@@ -121,15 +121,11 @@ const GeneralSettingsRoute: Component = (props) => {
 								)}
 							</For>
 						</Match>
-						<Match
-							when={clientIntegrations.data?.data.length === 0}
-						>
+						<Match when={clientIntegrations.data?.data.length === 0}>
 							<InfoRow.Content>
 								<ErrorBlock
 									content={{
-										title: T()(
-											"no_client_integrations_found_title",
-										),
+										title: T()("no_client_integrations_found_title"),
 										description: T()(
 											"no_client_integrations_found_descriptions",
 										),
@@ -144,10 +140,7 @@ const GeneralSettingsRoute: Component = (props) => {
 										size="medium"
 										onClick={() => {
 											rowTarget.setTargetId(undefined);
-											rowTarget.setTrigger(
-												"update",
-												true,
-											);
+											rowTarget.setTrigger("update", true);
 										}}
 									>
 										{T()("create_integration")}

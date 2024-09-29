@@ -27,10 +27,7 @@ interface UseCreateSingleProps {
 const useCreateSingle = (props?: UseCreateSingleProps) => {
 	// -----------------------------
 	// Mutation
-	return serviceHelpers.useMutationWrapper<
-		Params,
-		ResponseBody<RoleResponse>
-	>({
+	return serviceHelpers.useMutationWrapper<Params, ResponseBody<RoleResponse>>({
 		mutationFn: createSingleReq,
 		getSuccessToast: () => ({
 			title: T()("role_created_toast_title"),

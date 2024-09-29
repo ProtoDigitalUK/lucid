@@ -82,9 +82,7 @@ const SelectMediaContent: Component = () => {
 
 	// ----------------------------------
 	// Memos
-	const contentLocale = createMemo(
-		() => contentLocaleStore.get.contentLocale,
-	);
+	const contentLocale = createMemo(() => contentLocaleStore.get.contentLocale);
 
 	// ----------------------------------
 	// Queries
@@ -202,10 +200,7 @@ const SelectMediaContent: Component = () => {
 						/>
 					</div>
 					<div>
-						<Query.PerPage
-							options={[10, 20, 40]}
-							searchParams={searchParams}
-						/>
+						<Query.PerPage options={[10, 20, 40]} searchParams={searchParams} />
 					</div>
 				</div>
 			</div>
@@ -257,14 +252,9 @@ const SelectMediaContent: Component = () => {
 								<MediaBasicCard
 									media={item}
 									contentLocale={contentLocale()}
-									current={
-										item.id ===
-										mediaSelectStore.get.selected
-									}
+									current={item.id === mediaSelectStore.get.selected}
 									onClick={() => {
-										mediaSelectStore.get.onSelectCallback(
-											item,
-										);
+										mediaSelectStore.get.onSelectCallback(item);
 										mediaSelectStore.set("open", false);
 									}}
 								/>

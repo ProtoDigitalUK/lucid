@@ -86,9 +86,7 @@ const CreateUserPanel: Component<CreateUserPanelProps> = (props) => {
 							superAdmin: userStore.get.user?.superAdmin
 								? getIsSuperAdmin()
 								: undefined,
-							roleIds: getSelectedRoles().map(
-								(role) => role.value,
-							) as number[],
+							roleIds: getSelectedRoles().map((role) => role.value) as number[],
 						},
 					});
 				},
@@ -137,10 +135,7 @@ const CreateUserPanel: Component<CreateUserPanelProps> = (props) => {
 								label: T()("first_name"),
 							}}
 							noMargin={true}
-							errors={getBodyError(
-								"firstName",
-								createUser.errors,
-							)}
+							errors={getBodyError("firstName", createUser.errors)}
 							theme="full"
 						/>
 						<Form.Input
@@ -201,10 +196,7 @@ const CreateUserPanel: Component<CreateUserPanelProps> = (props) => {
 							copy={{
 								label: T()("is_super_admin"),
 							}}
-							errors={getBodyError(
-								"superAdmin",
-								createUser.errors,
-							)}
+							errors={getBodyError("superAdmin", createUser.errors)}
 							theme="full"
 						/>
 					</Show>

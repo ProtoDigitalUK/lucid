@@ -51,8 +51,7 @@ export const PerPage: Component<PerPageProps> = (props) => {
 								class={classNames(
 									"w-full flex items-center justify-between group focus:outline-none focus:ring-1 focus:ring-primary-base px-1.5 py-1 rounded-md",
 									{
-										"bg-container-2 text-body":
-											currentPerPage() === perpage,
+										"bg-container-2 text-body": currentPerPage() === perpage,
 									},
 								)}
 								onClick={() => {
@@ -64,13 +63,8 @@ export const PerPage: Component<PerPageProps> = (props) => {
 								}}
 								type="button"
 							>
-								<label
-									for={`${perpage}`}
-									class="text-body text-sm"
-								>
-									<span class="line-clamp-1 text-left">
-										{perpage}
-									</span>
+								<label for={`${perpage}`} class="text-body text-sm">
+									<span class="line-clamp-1 text-left">{perpage}</span>
 								</label>
 							</button>
 						</li>

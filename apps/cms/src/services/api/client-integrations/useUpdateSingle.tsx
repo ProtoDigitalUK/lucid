@@ -40,10 +40,7 @@ const useUpdateSingle = (props?: UseUpdateSingleProps) => {
 		ResponseBody<ClientIntegrationResponse>
 	>({
 		mutationFn: updateSingleReq,
-		invalidates: [
-			"clientIntegrations.getAll",
-			"clientIntegrations.getSingle",
-		],
+		invalidates: ["clientIntegrations.getAll", "clientIntegrations.getSingle"],
 		onSuccess: () => {
 			spawnToast({
 				title: T()("client_integration_update_toast_title"),

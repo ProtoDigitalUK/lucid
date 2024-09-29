@@ -74,10 +74,7 @@ export const Tr: Component<TrProps> = (props) => {
 					type={"td"}
 					value={props?.selected || false}
 					onChange={() => {
-						if (
-							props.callbacks?.setSelected &&
-							props?.index !== undefined
-						) {
+						if (props.callbacks?.setSelected && props?.index !== undefined) {
 							props.callbacks.setSelected(props?.index);
 						}
 					}}

@@ -33,8 +33,7 @@ const NavigationGuard: Component<NavigationGuardProps> = (props) => {
 			callbacks={{
 				onConfirm: () => {
 					if (props.state.targetElement) {
-						const href =
-							props.state.targetElement.getAttribute("href");
+						const href = props.state.targetElement.getAttribute("href");
 						if (href) navigate(href);
 					}
 					if (props.state.targetCallback) {
@@ -61,10 +60,7 @@ export const navGuardHook = (props?: {
 	const [getModalOpen, setModalOpen] = createSignal<boolean>(false);
 
 	const clickEvent = (e: MouseEvent) => {
-		if (
-			props?.brickMutateLock &&
-			brickStore.get.documentMutated === false
-		) {
+		if (props?.brickMutateLock && brickStore.get.documentMutated === false) {
 			return;
 		}
 		e.preventDefault();

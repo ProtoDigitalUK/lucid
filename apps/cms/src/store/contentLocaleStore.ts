@@ -39,8 +39,7 @@ const [get, set] = createStore<ContentLangStoreT>({
 	setContentLocale(contentLocale?: string) {
 		if (contentLocale === undefined)
 			localStorage.removeItem("lucid_content_locale");
-		else
-			localStorage.setItem("lucid_content_locale", String(contentLocale));
+		else localStorage.setItem("lucid_content_locale", String(contentLocale));
 		set("contentLocale", contentLocale);
 	},
 });

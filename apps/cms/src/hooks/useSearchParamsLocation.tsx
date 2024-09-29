@@ -81,8 +81,7 @@ const useSearchParamsLocation = (
 	const filterValueToString = (value?: FilterValues) => {
 		if (value === undefined) return undefined;
 		if (typeof value === "boolean") return value ? "1" : "0";
-		if (Array.isArray(value))
-			return value.length ? value.join(",") : undefined;
+		if (Array.isArray(value)) return value.length ? value.join(",") : undefined;
 		return value.toString();
 	};
 
@@ -136,13 +135,8 @@ const useSearchParamsLocation = (
 					const currentSortArr = currentSorts.split(",");
 
 					for (const sort of currentSortArr) {
-						const sortKey = sort.startsWith("-")
-							? sort.slice(1)
-							: sort;
-						if (
-							schema?.sorts &&
-							schema?.sorts[sortKey] !== undefined
-						) {
+						const sortKey = sort.startsWith("-") ? sort.slice(1) : sort;
+						if (schema?.sorts && schema?.sorts[sortKey] !== undefined) {
 							if (sort.startsWith("-")) {
 								sorts.push({
 									key: sort.slice(1),
@@ -162,20 +156,15 @@ const useSearchParamsLocation = (
 
 				for (const [key, value] of Object.entries(params.sorts)) {
 					if (value === undefined) {
-						const index = sorts.findIndex(
-							(sort) => sort.key === key,
-						);
+						const index = sorts.findIndex((sort) => sort.key === key);
 						if (index !== -1) {
 							sorts.splice(index, 1);
 						}
 					} else {
-						const index = sorts.findIndex(
-							(sort) => sort.key === key,
-						);
+						const index = sorts.findIndex((sort) => sort.key === key);
 						if (index !== -1) {
 							sorts[index].value = value;
-							sorts[index].raw =
-								value === "asc" ? key : `-${key}`;
+							sorts[index].raw = value === "asc" ? key : `-${key}`;
 						} else {
 							sorts.push({
 								key,
@@ -204,10 +193,7 @@ const useSearchParamsLocation = (
 				searchParams.delete("page");
 			}
 			if (params.pagination.perPage) {
-				searchParams.set(
-					"perPage",
-					params.pagination.perPage.toString(),
-				);
+				searchParams.set("perPage", params.pagination.perPage.toString());
 			} else {
 				searchParams.delete("perPage");
 			}
@@ -243,10 +229,7 @@ const useSearchParamsLocation = (
 				const filterKey = key.slice(7, -1); // remove filter[ and ]
 
 				// If schema filter value is boolean, convert to boolean
-				if (
-					schema?.filters &&
-					schema.filters[filterKey]?.type === "boolean"
-				) {
+				if (schema?.filters && schema.filters[filterKey]?.type === "boolean") {
 					if (value === "1") filters.set(filterKey, true);
 					else if (value === "0") filters.set(filterKey, false);
 					else filters.set(filterKey, undefined);

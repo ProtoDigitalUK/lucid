@@ -77,10 +77,7 @@ export const CheckboxInput: Component<CheckboxInputProps> = (props) => {
 				)}
 			</Checkbox.Root>
 
-			<Form.DescribedBy
-				id={props.id}
-				describedBy={props.copy?.describedBy}
-			/>
+			<Form.DescribedBy id={props.id} describedBy={props.copy?.describedBy} />
 			<Form.Tooltip copy={props.copy?.tooltip} theme={undefined} />
 			<Form.ErrorMessage id={props.id} errors={props.errors} />
 		</div>

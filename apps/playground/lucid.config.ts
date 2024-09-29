@@ -83,8 +83,13 @@ export default lucid.config({
 	plugins: [
 		LucidPages({
 			collections: [
+				// {
+				// 	collectionKey: "page",
+				// 	enableTranslations: true,
+				// 	displayFullSlug: true,
+				// },
 				{
-					collectionKey: "page",
+					collectionKey: "test",
 					enableTranslations: true,
 					displayFullSlug: true,
 				},

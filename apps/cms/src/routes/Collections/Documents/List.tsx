@@ -86,17 +86,13 @@ const CollectionsDocumentsListRoute: Component = () => {
 					<Headers.Standard
 						copy={{
 							title: collection.data?.data?.title,
-							description:
-								collection.data?.data?.description || "",
+							description: collection.data?.data?.description || "",
 						}}
 						actions={{
-							contentLocale:
-								collection.data?.data.translations ?? false,
+							contentLocale: collection.data?.data.translations ?? false,
 							createLink: {
 								link: `/admin/collections/${collectionKey()}/create`,
-								permission: userStore.get.hasPermission([
-									"create_content",
-								]).all,
+								permission: userStore.get.hasPermission(["create_content"]).all,
 								label: T()("create_dynamic", {
 									name: collection.data?.data.singular || "",
 								}),
@@ -106,78 +102,49 @@ const CollectionsDocumentsListRoute: Component = () => {
 							bottom: (
 								<Query.Row
 									searchParams={searchParams}
-									filters={getCollectionFieldFilters().map(
-										(field) => {
-											switch (field.type) {
-												case "checkbox": {
-													return {
-														label: helpers.getLocaleValue(
-															{
-																value: field
-																	.labels
-																	.title,
-																fallback:
-																	field.key,
-															},
-														),
-														key: field.key,
-														type: "boolean",
-													};
-												}
-												case "select": {
-													return {
-														label: helpers.getLocaleValue(
-															{
-																value: field
-																	.labels
-																	.title,
-																fallback:
-																	field.key,
-															},
-														),
-														key: field.key,
-														type: "select",
-														options:
-															field.options?.map(
-																(
-																	option,
-																	i,
-																) => ({
-																	value: option.value,
-																	label: helpers.getLocaleValue(
-																		{
-																			value: option.label,
-																			fallback:
-																				T()(
-																					"option_label",
-																					{
-																						count: i,
-																					},
-																				),
-																		},
-																	),
-																}),
-															),
-													};
-												}
-												default: {
-													return {
-														label: helpers.getLocaleValue(
-															{
-																value: field
-																	.labels
-																	.title,
-																fallback:
-																	field.key,
-															},
-														),
-														key: field.key,
-														type: "text",
-													};
-												}
+									filters={getCollectionFieldFilters().map((field) => {
+										switch (field.type) {
+											case "checkbox": {
+												return {
+													label: helpers.getLocaleValue({
+														value: field.labels.title,
+														fallback: field.key,
+													}),
+													key: field.key,
+													type: "boolean",
+												};
 											}
-										},
-									)}
+											case "select": {
+												return {
+													label: helpers.getLocaleValue({
+														value: field.labels.title,
+														fallback: field.key,
+													}),
+													key: field.key,
+													type: "select",
+													options: field.options?.map((option, i) => ({
+														value: option.value,
+														label: helpers.getLocaleValue({
+															value: option.label,
+															fallback: T()("option_label", {
+																count: i,
+															}),
+														}),
+													})),
+												};
+											}
+											default: {
+												return {
+													label: helpers.getLocaleValue({
+														value: field.labels.title,
+														fallback: field.key,
+													}),
+													key: field.key,
+													type: "text",
+												};
+											}
+										}
+									})}
 									perPage={[]}
 								/>
 							),

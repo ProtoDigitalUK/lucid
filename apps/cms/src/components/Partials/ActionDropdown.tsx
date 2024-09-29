@@ -63,47 +63,30 @@ const ActionDropdown: Component<ActionDropdownProps> = (props) => {
 							<Show when={action.hide !== true}>
 								<li
 									class={classNames({
-										"opacity-50":
-											action.permission === false,
+										"opacity-50": action.permission === false,
 									})}
 								>
 									<Switch>
 										<Match when={action.type === "link"}>
 											<A
 												href={action.href || "/"}
-												class={classNames(
-													liItemClasses,
-													{
-														"cursor-not-allowed":
-															action.permission ===
-															false,
-													},
-												)}
+												class={classNames(liItemClasses, {
+													"cursor-not-allowed": action.permission === false,
+												})}
 												onClick={(e) => {
 													e.stopPropagation();
-													if (
-														action.permission ===
-														false
-													) {
+													if (action.permission === false) {
 														spawnToast({
-															title: T()(
-																"no_permission_toast_title",
-															),
-															message: T()(
-																"no_permission_toast_message",
-															),
+															title: T()("no_permission_toast_title"),
+															message: T()("no_permission_toast_message"),
 															status: "warning",
 														});
 														e.preventDefault();
 													}
 												}}
 											>
-												<span class="line-clamp-1 mr-2.5">
-													{action.label}
-												</span>
-												<FaSolidChevronRight
-													size={14}
-												/>
+												<span class="line-clamp-1 mr-2.5">{action.label}</span>
+												<FaSolidChevronRight size={14} />
 											</A>
 										</Match>
 										<Match when={action.type === "button"}>
@@ -111,44 +94,23 @@ const ActionDropdown: Component<ActionDropdownProps> = (props) => {
 												type="button"
 												onClick={(e) => {
 													e.stopPropagation();
-													if (
-														action.permission ===
-														false
-													) {
+													if (action.permission === false) {
 														spawnToast({
-															title: T()(
-																"no_permission_toast_title",
-															),
-															message: T()(
-																"no_permission_toast_message",
-															),
+															title: T()("no_permission_toast_title"),
+															message: T()("no_permission_toast_message"),
 															status: "warning",
 														});
 														return;
 													}
 													action.onClick?.();
 												}}
-												class={classNames(
-													liItemClasses,
-													{
-														"cursor-not-allowed":
-															action.permission ===
-															false,
-													},
-												)}
+												class={classNames(liItemClasses, {
+													"cursor-not-allowed": action.permission === false,
+												})}
 											>
-												<span class="line-clamp-1 mr-2.5">
-													{action.label}
-												</span>
-												<Show
-													when={
-														action.isLoading !==
-														true
-													}
-												>
-													<FaSolidChevronRight
-														size={14}
-													/>
+												<span class="line-clamp-1 mr-2.5">{action.label}</span>
+												<Show when={action.isLoading !== true}>
+													<FaSolidChevronRight size={14} />
 												</Show>
 												<Show when={action.isLoading}>
 													<Spinner size="sm" />

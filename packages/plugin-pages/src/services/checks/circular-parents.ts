@@ -1,7 +1,11 @@
 import T from "../../translations/index.js";
 import constants from "../../constants.js";
 import { sql } from "kysely";
-import type { ServiceFn, FieldSchemaType } from "@lucidcms/core/types";
+import type {
+	ServiceFn,
+	FieldSchemaType,
+	DocumentVersionType,
+} from "@lucidcms/core/types";
 
 /**
  *  Recursively checks all parent pages for a circular reference and errors in that case
@@ -10,7 +14,8 @@ const checkCircularParents: ServiceFn<
 	[
 		{
 			defaultLocale: string;
-			documentId?: number;
+			documentId: number;
+			versionType: Exclude<DocumentVersionType, "revision">;
 			fields: {
 				parentPage: FieldSchemaType;
 			};
@@ -30,40 +35,50 @@ const checkCircularParents: ServiceFn<
 			.with("recursive_cte", (db) =>
 				db
 					.selectFrom("lucid_collection_document_fields")
+					.innerJoin(
+						"lucid_collection_document_versions",
+						"lucid_collection_document_versions.id",
+						"lucid_collection_document_fields.collection_document_version_id",
+					)
 					.select([
-						"collection_document_id",
-						"document_id",
+						"lucid_collection_document_versions.document_id",
+						"lucid_collection_document_fields.document_id as parent_document_id",
 						sql<number>`1`.as("depth"),
 					])
 					.where(
-						"collection_document_id",
+						"lucid_collection_document_versions.document_id",
 						"=",
 						data.fields.parentPage.value,
 					)
-					.where("key", "=", "parentPage")
+					.where("lucid_collection_document_fields.key", "=", "parentPage")
+					.where(
+						"lucid_collection_document_versions.version_type",
+						"=",
+						data.versionType,
+					)
 					.unionAll(
 						db
-							.selectFrom(
-								"lucid_collection_document_fields as lcdf",
+							.selectFrom("lucid_collection_document_fields as lcdf")
+							.innerJoin(
+								"lucid_collection_document_versions as lcdv",
+								"lcdv.id",
+								"lcdf.collection_document_version_id",
 							)
 							.innerJoin(
 								// @ts-expect-error
 								"recursive_cte as rc",
-								"rc.document_id",
-								"lcdf.collection_document_id",
+								"rc.parent_document_id",
+								"lcdv.document_id",
 							)
 							// @ts-expect-error
 							.select([
-								"lcdf.collection_document_id",
-								"lcdf.document_id",
+								"lcdv.document_id",
+								"lcdf.document_id as parent_document_id",
 								sql<number>`rc.depth + 1`.as("depth"),
 							])
 							.where("lcdf.key", "=", "parentPage")
-							.where(
-								"rc.depth",
-								"<",
-								constants.maxHierarchyDepth,
-							),
+							.where("lcdv.version_type", "=", data.versionType)
+							.where("rc.depth", "<", constants.maxHierarchyDepth),
 					),
 			)
 			.selectFrom("recursive_cte")
@@ -89,9 +104,7 @@ const checkCircularParents: ServiceFn<
 									groupId: undefined,
 									key: constants.fields.parentPage.key,
 									localeCode: data.defaultLocale, //* parentPage doesnt use translations so always use default locale
-									message: T(
-										"circular_parents_error_message",
-									),
+									message: T("circular_parents_error_message"),
 								},
 							],
 						},
@@ -110,9 +123,7 @@ const checkCircularParents: ServiceFn<
 			error: {
 				type: "basic",
 				status: 500,
-				message: T(
-					"an_unknown_error_occurred_checking_for_circular_parents",
-				),
+				message: T("an_unknown_error_occurred_checking_for_circular_parents"),
 			},
 			data: undefined,
 		};

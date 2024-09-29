@@ -7,9 +7,7 @@ const ForgotPasswordRoute: Component = () => {
 	// Render
 	return (
 		<>
-			<h1 class="mb-2 text-center">
-				{T()("forgot_password_route_title")}
-			</h1>
+			<h1 class="mb-2 text-center">{T()("forgot_password_route_title")}</h1>
 			<p class="mb-10 text-center">
 				{T()("forgot_password_route_description")}
 			</p>

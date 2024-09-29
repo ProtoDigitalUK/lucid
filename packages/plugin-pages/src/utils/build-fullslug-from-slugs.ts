@@ -46,10 +46,7 @@ const buildFullSlugFromSlugs = (data: {
 	});
 
 	return postSlugFormat(
-		joinSlugs(
-			parentFullSlug || data.topLevelFullSlug || "",
-			slugFieldValue,
-		),
+		joinSlugs(parentFullSlug || data.topLevelFullSlug || "", slugFieldValue),
 	);
 };
 

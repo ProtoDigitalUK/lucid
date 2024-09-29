@@ -21,18 +21,14 @@ const checkRootSlugWithParent = (data: {
 }): Awaited<ServiceResponse<undefined>> => {
 	if (data.collection.enableTranslations && data.fields.slug.translations) {
 		const fieldErrors: FieldErrors[] = [];
-		for (const [key, value] of Object.entries(
-			data.fields.slug.translations,
-		)) {
+		for (const [key, value] of Object.entries(data.fields.slug.translations)) {
 			if (value === "/" && data.fields.parentPage.value) {
 				fieldErrors.push({
 					brickId: constants.collectionFieldBrickId,
 					groupId: undefined,
 					key: constants.fields.slug.key,
 					localeCode: key,
-					message: T(
-						"slug_cannot_be_slash_and_parent_page_set_message",
-					),
+					message: T("slug_cannot_be_slash_and_parent_page_set_message"),
 				});
 			}
 		}
@@ -41,9 +37,7 @@ const checkRootSlugWithParent = (data: {
 				error: {
 					type: "basic",
 					status: 400,
-					message: T(
-						"slug_cannot_be_slash_and_parent_page_set_message",
-					),
+					message: T("slug_cannot_be_slash_and_parent_page_set_message"),
 					errorResponse: {
 						body: {
 							fields: fieldErrors,
@@ -67,9 +61,7 @@ const checkRootSlugWithParent = (data: {
 								groupId: undefined,
 								key: constants.fields.parentPage.key,
 								localeCode: data.defaultLocale,
-								message: T(
-									"slug_cannot_be_slash_and_parent_page_set_message",
-								),
+								message: T("slug_cannot_be_slash_and_parent_page_set_message"),
 							},
 						],
 					},

@@ -47,16 +47,12 @@ export const CollectionSubMenu: Component<{
 					<Match when={true}>
 						{/* Multi Collections */}
 						<Show when={props.state.multiCollections.length > 0}>
-							<Navigation.LinkGroup
-								title={T()("multiple_documents")}
-							>
+							<Navigation.LinkGroup title={T()("multiple_documents")}>
 								<For each={props.state.multiCollections}>
 									{(collection) => (
 										<Navigation.Link
 											title={collection.title}
-											href={`/admin/collections/${
-												collection.key
-											}`}
+											href={`/admin/collections/${collection.key}`}
 											icon="page"
 											activeIfIncludes={`/admin/collections/${collection.key}`}
 										/>
@@ -66,9 +62,7 @@ export const CollectionSubMenu: Component<{
 						</Show>
 						{/* Single Collections */}
 						<Show when={props.state.singleCollections.length > 0}>
-							<Navigation.LinkGroup
-								title={T()("single_documents")}
-							>
+							<Navigation.LinkGroup title={T()("single_documents")}>
 								<For each={props.state.singleCollections}>
 									{(collection) => (
 										<Navigation.Link

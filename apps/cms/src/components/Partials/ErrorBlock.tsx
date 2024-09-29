@@ -29,13 +29,10 @@ const ErrorBlock: Component<{
 					/>
 				</Show>
 
-				<h2 class="mb-15">
-					{props.content.title ?? T()("error_title")}
-				</h2>
+				<h2 class="mb-15">{props.content.title ?? T()("error_title")}</h2>
 				<p
 					class={classNames({
-						"max-w-96":
-							props.options?.contentMaxWidth === undefined,
+						"max-w-96": props.options?.contentMaxWidth === undefined,
 						"max-w-md": props.options?.contentMaxWidth === "md",
 					})}
 				>

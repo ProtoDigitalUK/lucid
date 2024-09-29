@@ -31,16 +31,9 @@ interface UseUpdateSingleProps {
 const useUpdateSingle = (props?: UseUpdateSingleProps) => {
 	// -----------------------------
 	// Mutation
-	return serviceHelpers.useMutationWrapper<
-		Params,
-		ResponseBody<RoleResponse>
-	>({
+	return serviceHelpers.useMutationWrapper<Params, ResponseBody<RoleResponse>>({
 		mutationFn: updateSingleReq,
-		invalidates: [
-			"roles.getMultiple",
-			"roles.getSingle",
-			"users.getSingle",
-		],
+		invalidates: ["roles.getMultiple", "roles.getSingle", "users.getSingle"],
 		onSuccess: () => {
 			spawnToast({
 				title: T()("role_update_toast_title"),

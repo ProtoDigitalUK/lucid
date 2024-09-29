@@ -25,10 +25,7 @@ interface UseDeleteProps {
 const useDeleteSingle = (props: UseDeleteProps) => {
 	// -----------------------------
 	// Mutation
-	return serviceHelpers.useMutationWrapper<
-		Params,
-		ResponseBody<UserResponse>
-	>({
+	return serviceHelpers.useMutationWrapper<Params, ResponseBody<UserResponse>>({
 		mutationFn: deleteSingleReq,
 		getSuccessToast: () => ({
 			title: T()("user_deleted_toast_title"),

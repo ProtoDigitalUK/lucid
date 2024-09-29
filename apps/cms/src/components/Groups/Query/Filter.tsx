@@ -65,9 +65,7 @@ const FilterItem: Component<FilterItemProps> = (props) => {
 		} else if (Array.isArray(filter)) {
 			setMultiValue(
 				filter.map((v) => {
-					const label = props.filter.options?.find(
-						(o) => o.value === v,
-					)?.label;
+					const label = props.filter.options?.find((o) => o.value === v)?.label;
 					return {
 						value: v,
 						label: label || v.toString(),
@@ -276,10 +274,7 @@ export const Filter: Component<FilterProps> = (props) => {
 			>
 				<For each={props.filters}>
 					{(filter) => (
-						<FilterItem
-							filter={filter}
-							searchParams={props.searchParams}
-						/>
+						<FilterItem filter={filter} searchParams={props.searchParams} />
 					)}
 				</For>
 			</DropdownContent>

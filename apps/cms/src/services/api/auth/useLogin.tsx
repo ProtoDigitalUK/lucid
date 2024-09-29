@@ -30,10 +30,7 @@ const useLogin = (props?: UseLoginProps) => {
 
 	// -----------------------------
 	// Mutation
-	return serviceHelpers.useMutationWrapper<
-		Params,
-		ResponseBody<UserResponse>
-	>({
+	return serviceHelpers.useMutationWrapper<Params, ResponseBody<UserResponse>>({
 		mutationFn: loginReq,
 		getSuccessToast: () => ({
 			title: T()("login_success_toast_title"),

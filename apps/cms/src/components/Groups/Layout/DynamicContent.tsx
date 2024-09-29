@@ -65,22 +65,14 @@ export const DynamicContent: Component<{
 						</div>
 					</Match>
 					<Match
-						when={
-							props.state?.isEmpty &&
-							props.options?.hideNoEntries !== true
-						}
+						when={props.state?.isEmpty && props.options?.hideNoEntries !== true}
 					>
 						<div class="flex-1 flex items-center justify-center">
-							<Show
-								when={
-									!props.state?.searchParams?.hasFiltersApplied()
-								}
-							>
+							<Show when={!props.state?.searchParams?.hasFiltersApplied()}>
 								<NoEntriesBlock
 									copy={{
 										title: props.copy?.noEntries?.title,
-										description:
-											props.copy?.noEntries?.description,
+										description: props.copy?.noEntries?.description,
 										button: props.copy?.noEntries?.button,
 									}}
 									callbacks={{
@@ -88,9 +80,7 @@ export const DynamicContent: Component<{
 									}}
 								/>
 							</Show>
-							<Show
-								when={props.state?.searchParams?.hasFiltersApplied()}
-							>
+							<Show when={props.state?.searchParams?.hasFiltersApplied()}>
 								<ErrorBlock
 									content={{
 										title: T()("no_results"),
@@ -125,9 +115,7 @@ export const DynamicContent: Component<{
 							}}
 						/>
 					</Match>
-					<Match when={props.state?.isSuccess}>
-						{props.children}
-					</Match>
+					<Match when={props.state?.isSuccess}>{props.children}</Match>
 				</Switch>
 			</div>
 			{props.slot?.footer}

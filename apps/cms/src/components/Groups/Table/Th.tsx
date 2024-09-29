@@ -57,9 +57,7 @@ export const Th: Component<ThProps> = (props) => {
 				props?.classes,
 			)}
 			style={{
-				width: props.options?.width
-					? `${props.options.width}px`
-					: undefined,
+				width: props.options?.width ? `${props.options.width}px` : undefined,
 			}}
 			aria-sort={sortFull()}
 		>
@@ -68,9 +66,7 @@ export const Th: Component<ThProps> = (props) => {
 					<Switch>
 						<Match when={props.options?.sortable !== true}>
 							<div class="flex items-center min-h-[50px]">
-								<span class="text-base mr-2.5 fill-body">
-									{props?.icon}
-								</span>
+								<span class="text-base mr-2.5 fill-body">{props?.icon}</span>
 								<span class="text-base text-body font-display">
 									{props?.label}
 								</span>
@@ -80,8 +76,7 @@ export const Th: Component<ThProps> = (props) => {
 							<button
 								class="justify-between flex items-center w-full min-h-[50px]"
 								onClick={() => {
-									if (props.searchParams === undefined)
-										return;
+									if (props.searchParams === undefined) return;
 									if (props.key === undefined) return;
 
 									let sortValue: "asc" | "desc" | undefined;
@@ -102,29 +97,18 @@ export const Th: Component<ThProps> = (props) => {
 								type="button"
 							>
 								<div class="flex items-center">
-									<span class="text-base mr-2.5 fill-body">
-										{props?.icon}
-									</span>
+									<span class="text-base mr-2.5 fill-body">{props?.icon}</span>
 									<span class="text-base text-body font-display">
 										{props?.label}
 									</span>
 								</div>
 								<Switch>
-									<Match
-										when={
-											sort() === "desc" ||
-											sort() === "asc"
-										}
-									>
+									<Match when={sort() === "desc" || sort() === "asc"}>
 										<FaSolidCaretUp
 											aria-hidden="true"
-											class={classNames(
-												"w-3 h-3 ml-2 text-title",
-												{
-													"transform rotate-180":
-														sort() === "desc",
-												},
-											)}
+											class={classNames("w-3 h-3 ml-2 text-title", {
+												"transform rotate-180": sort() === "desc",
+											})}
 										/>
 									</Match>
 									<Match when={sort() === undefined}>
@@ -138,9 +122,7 @@ export const Th: Component<ThProps> = (props) => {
 						</Match>
 					</Switch>
 				</Match>
-				<Match when={props.children !== undefined}>
-					{props.children}
-				</Match>
+				<Match when={props.children !== undefined}>{props.children}</Match>
 			</Switch>
 		</th>
 	);

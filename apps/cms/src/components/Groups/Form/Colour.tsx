@@ -51,9 +51,7 @@ export const Colour: Component<ColourProps> = (props) => {
 				value={props.value}
 				onInput={(e) => props.onChange(e.currentTarget.value)}
 				aria-describedby={
-					props.copy?.describedBy
-						? `${props.id}-description`
-						: undefined
+					props.copy?.describedBy ? `${props.id}-description` : undefined
 				}
 				required={props.required}
 				disabled={props.disabled}
@@ -81,10 +79,7 @@ export const Colour: Component<ColourProps> = (props) => {
 					</For>
 				</ul>
 			</Show>
-			<Form.DescribedBy
-				id={props.id}
-				describedBy={props.copy?.describedBy}
-			/>
+			<Form.DescribedBy id={props.id} describedBy={props.copy?.describedBy} />
 			<Form.ErrorMessage id={props.id} errors={props.errors} />
 		</div>
 	);

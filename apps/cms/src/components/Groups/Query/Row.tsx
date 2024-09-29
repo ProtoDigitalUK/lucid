@@ -42,8 +42,7 @@ export const QueryRow: Component<QueryRowProps> = (props) => {
 						class={classNames(
 							"z-20 relative text-sm flex items-center gap-2 ml-2.5 hover:text-error-hover duration-200 transition-colors group",
 							{
-								"opacity-50":
-									!props.searchParams.hasFiltersApplied(),
+								"opacity-50": !props.searchParams.hasFiltersApplied(),
 							},
 						)}
 						onClick={(e) => {
@@ -60,11 +59,7 @@ export const QueryRow: Component<QueryRowProps> = (props) => {
 			<div>
 				<Show when={props.perPage !== undefined}>
 					<Query.PerPage
-						options={
-							props.perPage?.length === 0
-								? undefined
-								: props.perPage
-						}
+						options={props.perPage?.length === 0 ? undefined : props.perPage}
 						searchParams={props.searchParams}
 					/>
 				</Show>

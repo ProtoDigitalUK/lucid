@@ -34,8 +34,7 @@ export const BrickBody: Component<BrickProps> = (props) => {
 	// Memos
 	const allTabs = createMemo(
 		() =>
-			props.state.configFields?.filter((field) => field.type === "tab") ||
-			[],
+			props.state.configFields?.filter((field) => field.type === "tab") || [],
 	);
 
 	// -------------------------------

@@ -96,9 +96,7 @@ const MediaCard: Component<MediaCardProps> = (props) => {
 								props.rowTarget.setTargetId(props.media.id);
 								props.rowTarget.setTrigger("delete", true);
 							},
-							permission: userStore.get.hasPermission([
-								"delete_media",
-							]).all,
+							permission: userStore.get.hasPermission(["delete_media"]).all,
 						},
 					]}
 					options={{
@@ -108,10 +106,7 @@ const MediaCard: Component<MediaCardProps> = (props) => {
 			</div>
 			{/* Image */}
 			<AspectRatio ratio="16:9" innerClass={"overflow-hidden"}>
-				<MediaPreview
-					media={props.media}
-					alt={alt() || title() || ""}
-				/>
+				<MediaPreview media={props.media} alt={alt() || title() || ""} />
 				<span class="inset-0 top-auto absolute flex gap-1 p-15">
 					<Pill theme="secondary">
 						{helpers.bytesToSize(props.media.meta.fileSize)}
@@ -121,9 +116,7 @@ const MediaCard: Component<MediaCardProps> = (props) => {
 			</AspectRatio>
 			{/* Content */}
 			<div class="p-15 border-t border-border">
-				<h3 class="mb-0.5 line-clamp-1">
-					{title() || T()("no_translation")}
-				</h3>
+				<h3 class="mb-0.5 line-clamp-1">{title() || T()("no_translation")}</h3>
 				<ClickToCopy
 					type="simple"
 					text={props.media.key}

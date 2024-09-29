@@ -29,8 +29,7 @@ const RoleRow: Component<RoleRowProps> = (props) => {
 						props.rowTarget.setTargetId(props.role.id);
 						props.rowTarget.setTrigger("update", true);
 					},
-					permission: userStore.get.hasPermission(["update_role"])
-						.all,
+					permission: userStore.get.hasPermission(["update_role"]).all,
 				},
 				{
 					label: T()("delete"),
@@ -39,8 +38,7 @@ const RoleRow: Component<RoleRowProps> = (props) => {
 						props.rowTarget.setTargetId(props.role.id);
 						props.rowTarget.setTrigger("delete", true);
 					},
-					permission: userStore.get.hasPermission(["delete_role"])
-						.all,
+					permission: userStore.get.hasPermission(["delete_role"]).all,
 				},
 			]}
 			options={props.options}

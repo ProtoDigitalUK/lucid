@@ -10,29 +10,25 @@ const TestCollection = new CollectionBuilder("test", {
 	translations: true,
 	hooks: [],
 	bricks: {},
-})
-	.addText(
-		"title",
-		{
-			labels: {
-				title: {
-					en: "Title",
-				},
-			},
-			hidden: false,
-			disabled: false,
-			validation: {
-				required: true,
-				zod: z.string().min(2).max(128),
+}).addText(
+	"title",
+	{
+		labels: {
+			title: {
+				en: "Title",
 			},
 		},
-		{
-			list: true,
-			filterable: true,
+		hidden: false,
+		disabled: false,
+		validation: {
+			required: true,
+			zod: z.string().min(2).max(128),
 		},
-	)
-	.addDocument("document", {
-		collection: "test",
-	});
+	},
+	{
+		list: true,
+		filterable: true,
+	},
+);
 
 export default TestCollection;

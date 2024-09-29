@@ -40,9 +40,7 @@ export const ColumnToggle: Component<ColumnToggleProps> = (props) => {
 						<li class="mb-1.5 last-of-type:mb-0 text-body">
 							<Form.Checkbox
 								value={column.include}
-								onChange={() =>
-									props.callbacks.toggle(column.index)
-								}
+								onChange={() => props.callbacks.toggle(column.index)}
 								copy={{
 									label: column.label,
 								}}

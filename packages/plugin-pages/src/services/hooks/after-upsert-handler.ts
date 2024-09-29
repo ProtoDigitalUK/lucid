@@ -26,10 +26,13 @@ const afterUpsertHandler =
 			};
 		}
 
+		console.log("after upsert fields", data.data.fields);
+
 		// ----------------------------------------------------------------
 		// Build and store fullSlugs
 		const descendantsRes = await getDescendantFields(context, {
 			ids: [data.data.documentId],
+			versionType: data.data.versionType,
 		});
 		if (descendantsRes.error) return descendantsRes;
 
@@ -40,6 +43,8 @@ const afterUpsertHandler =
 				data: undefined,
 			};
 		}
+
+		console.log("descendantsRes", descendantsRes.data[0]?.fields);
 
 		const currentFullSlugField = data.data.fields.find((field) => {
 			return field.key === constants.fields.fullSlug.key;
@@ -61,6 +66,7 @@ const afterUpsertHandler =
 
 		await updateFullSlugFields(context, {
 			docFullSlugs: docFullSlugsRes.data,
+			versionType: data.data.versionType,
 		});
 
 		return {

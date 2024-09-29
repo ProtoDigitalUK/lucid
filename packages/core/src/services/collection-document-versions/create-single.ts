@@ -83,7 +83,7 @@ const createSingle: ServiceFn<
 			data: {
 				documentId: data.documentId,
 				versionId: newVersion.id,
-				versionType: newVersion.version_type,
+				versionType: versionType,
 				bricks: data.bricks,
 				fields: data.fields,
 			},
@@ -123,7 +123,7 @@ const createSingle: ServiceFn<
 			data: {
 				documentId: data.documentId,
 				versionId: newVersion.id,
-				versionType: newVersion.version_type,
+				versionType: versionType,
 				bricks: bodyData.bricks || [],
 				fields: bodyData.fields || [],
 			},

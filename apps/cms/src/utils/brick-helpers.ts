@@ -35,17 +35,14 @@ const findFieldRecursive = (props: {
 					for (const subField of group.fields) {
 						if (
 							subField.key === props.targetKey &&
-							(!subField.groupId ||
-								subField.groupId === props.groupId)
+							(!subField.groupId || subField.groupId === props.groupId)
 						) {
 							return subField;
 						}
 						// Recursive check in case of nested repeater fields
 						if (subField.type === "repeater") {
 							const found = findFieldRecursive({
-								fields:
-									subField.groups?.flatMap((g) => g.fields) ||
-									[],
+								fields: subField.groups?.flatMap((g) => g.fields) || [],
 								targetKey: props.targetKey,
 								groupId: props.groupId,
 								repeaterKey: props.repeaterKey,
@@ -126,9 +123,7 @@ const getFieldMeta = <T extends FieldResponseMeta>(props: {
 		props.fieldConfig.translations === true &&
 		collectionTranslations === true
 	) {
-		return (props.fieldData.meta as Record<string, T>)?.[
-			props.contentLocale
-		];
+		return (props.fieldData.meta as Record<string, T>)?.[props.contentLocale];
 	}
 	return props.fieldData.meta as T;
 };

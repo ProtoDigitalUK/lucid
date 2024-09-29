@@ -86,8 +86,7 @@ const GeneralSettingsRoute: Component = (props) => {
 					<InfoRow.Content
 						title={T()("storage_remaining_title", {
 							storage: helpers.bytesToSize(
-								settingsData.data?.data?.media.storage
-									.remaining,
+								settingsData.data?.data?.media.storage.remaining,
 							),
 						})}
 					>
@@ -99,8 +98,7 @@ const GeneralSettingsRoute: Component = (props) => {
 									settingsData.data?.data?.media.storage.used,
 								),
 								end: helpers.bytesToSize(
-									settingsData.data?.data?.media.storage
-										.limit,
+									settingsData.data?.data?.media.storage.limit,
 								),
 							}}
 						/>
@@ -111,16 +109,12 @@ const GeneralSettingsRoute: Component = (props) => {
 				<InfoRow.Root
 					title={T()("processed_images")}
 					description={T()("processed_images_setting_message", {
-						limit:
-							settingsData.data?.data?.media.processed
-								.imageLimit || 0,
+						limit: settingsData.data?.data?.media.processed.imageLimit || 0,
 					})}
 				>
 					<InfoRow.Content
 						title={T()("clear_all")}
-						description={T()(
-							"clear_all_processed_images_setting_message",
-						)}
+						description={T()("clear_all_processed_images_setting_message")}
 					>
 						<Button
 							size="small"
@@ -129,15 +123,10 @@ const GeneralSettingsRoute: Component = (props) => {
 							onClick={() => {
 								setOpenClearAllProcessedImages(true);
 							}}
-							permission={
-								userStore.get.hasPermission(["update_media"])
-									.all
-							}
+							permission={userStore.get.hasPermission(["update_media"]).all}
 						>
 							{T()("clear_all_processed_images_button", {
-								count:
-									settingsData.data?.data?.media.processed
-										.total || 0,
+								count: settingsData.data?.data?.media.processed.total || 0,
 							})}
 						</Button>
 					</InfoRow.Content>
@@ -158,9 +147,7 @@ const GeneralSettingsRoute: Component = (props) => {
 								contentLocales().map((locale) => ({
 									label: locale.name || locale.code,
 									value: `${locale.code} ${
-										locale.isDefault === 1
-											? `(${T()("default")})`
-											: ""
+										locale.isDefault === 1 ? `(${T()("default")})` : ""
 									} `,
 								})) || []
 							}
@@ -179,15 +166,13 @@ const GeneralSettingsRoute: Component = (props) => {
 							items={[
 								{
 									label: T()("media_enabled"),
-									value: settingsData.data?.data?.media
-										.enabled
+									value: settingsData.data?.data?.media.enabled
 										? T()("yes")
 										: T()("no"),
 								},
 								{
 									label: T()("email_enabled"),
-									value: settingsData.data?.data?.email
-										.enabled
+									value: settingsData.data?.data?.email.enabled
 										? T()("yes")
 										: T()("no"),
 								},

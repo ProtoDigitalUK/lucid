@@ -15,8 +15,7 @@ export const ErrorMessage: Component<ErrorMessageProps> = (props) => {
 					size={16}
 					class="text-error-base mt-[3px] mr-2"
 				/>
-				{typeof props.errors?.message === "string" &&
-					props.errors?.message}
+				{typeof props.errors?.message === "string" && props.errors?.message}
 			</a>
 		</Show>
 	);

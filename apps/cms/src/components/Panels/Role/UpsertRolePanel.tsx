@@ -26,9 +26,9 @@ interface UpsertRolePanelProps {
 const UpsertRolePanel: Component<UpsertRolePanelProps> = (props) => {
 	// ---------------------------------
 	// State
-	const [selectedPermissions, setSelectedPermissions] = createSignal<
-		string[]
-	>([]);
+	const [selectedPermissions, setSelectedPermissions] = createSignal<string[]>(
+		[],
+	);
 	const [getName, setName] = createSignal("");
 
 	// ---------------------------------
@@ -120,12 +120,9 @@ const UpsertRolePanel: Component<UpsertRolePanelProps> = (props) => {
 	});
 
 	const allSelected = createMemo(() => {
-		const totalOptionPerms = permissions.data?.data.reduce(
-			(acc, option) => {
-				return acc + option.permissions.length;
-			},
-			0,
-		);
+		const totalOptionPerms = permissions.data?.data.reduce((acc, option) => {
+			return acc + option.permissions.length;
+		}, 0);
 
 		if (selectedPermissions().length === totalOptionPerms) {
 			return true;
@@ -211,10 +208,7 @@ const UpsertRolePanel: Component<UpsertRolePanelProps> = (props) => {
 					</InputGrid>
 					{/* Global perms */}
 					<div class="w-full mb-30 last:mb-0">
-						<SectionHeading
-							title={T()("permissions")}
-							headingType="h3"
-						>
+						<SectionHeading title={T()("permissions")} headingType="h3">
 							<div>
 								<Form.Checkbox
 									value={allSelected()}
@@ -222,8 +216,7 @@ const UpsertRolePanel: Component<UpsertRolePanelProps> = (props) => {
 										if (value) {
 											setSelectedPermissions(
 												permissions.data?.data.flatMap(
-													(option) =>
-														option.permissions,
+													(option) => option.permissions,
 												) || [],
 											);
 										} else {
@@ -246,31 +239,14 @@ const UpsertRolePanel: Component<UpsertRolePanelProps> = (props) => {
 											<For each={option.permissions}>
 												{(permission) => (
 													<Form.Checkbox
-														value={selectedPermissions().includes(
-															permission,
-														)}
+														value={selectedPermissions().includes(permission)}
 														onChange={() =>
-															setSelectedPermissions(
-																(prev) => {
-																	if (
-																		prev.includes(
-																			permission,
-																		)
-																	) {
-																		return prev.filter(
-																			(
-																				p,
-																			) =>
-																				p !==
-																				permission,
-																		);
-																	}
-																	return [
-																		...prev,
-																		permission,
-																	];
-																},
-															)
+															setSelectedPermissions((prev) => {
+																if (prev.includes(permission)) {
+																	return prev.filter((p) => p !== permission);
+																}
+																return [...prev, permission];
+															})
 														}
 														copy={{
 															label: T()(

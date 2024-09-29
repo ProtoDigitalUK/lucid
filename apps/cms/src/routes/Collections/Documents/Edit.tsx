@@ -64,9 +64,7 @@ const CollectionsDocumentsEditRoute: Component<
 	const documentId = createMemo(
 		() => Number.parseInt(params.documentId) || undefined,
 	);
-	const contentLocale = createMemo(
-		() => contentLocaleStore.get.contentLocale,
-	);
+	const contentLocale = createMemo(() => contentLocaleStore.get.contentLocale);
 	const canFetchDocument = createMemo(() => {
 		return contentLocale() !== undefined && documentId() !== undefined;
 	});
@@ -102,9 +100,7 @@ const CollectionsDocumentsEditRoute: Component<
 		onSuccess: (data) => {
 			brickStore.set("fieldsErrors", []);
 			if (props.mode === "create") {
-				navigate(
-					`/admin/collections/${collectionKey()}/${data.data.id}`,
-				);
+				navigate(`/admin/collections/${collectionKey()}/${data.data.id}`);
 				queryClient.invalidateQueries({
 					queryKey: ["collections.getAll"],
 				});
@@ -221,8 +217,7 @@ const CollectionsDocumentsEditRoute: Component<
 						{
 							"py-15 md:py-15 before:bg-opacity-95 before:bg-container-1":
 								getHasScrolled(),
-							"py-15 md:py-30 before:bg-container-3":
-								!getHasScrolled(),
+							"py-15 md:py-30 before:bg-container-3": !getHasScrolled(),
 						},
 					)}
 				>
@@ -231,8 +226,7 @@ const CollectionsDocumentsEditRoute: Component<
 							"overflow-hidden transform-gpu duration-200 transition-all ",
 							{
 								"opacity-100": !getHasScrolled(),
-								"opacity-0 -translate-y-full max-h-0":
-									getHasScrolled(),
+								"opacity-0 -translate-y-full max-h-0": getHasScrolled(),
 							},
 						)}
 					>
@@ -241,15 +235,11 @@ const CollectionsDocumentsEditRoute: Component<
 								{
 									link: `/admin/collections/${collectionKey()}`,
 									label: collection.data?.data.title || "",
-									include:
-										collection.data?.data.mode ===
-										"multiple",
+									include: collection.data?.data.mode === "multiple",
 								},
 								{
 									link: `/admin/collections/${collectionKey()}/${
-										props.mode === "create"
-											? "create"
-											: documentId()
+										props.mode === "create" ? "create" : documentId()
 									}`,
 									label:
 										props.mode === "create"
@@ -291,9 +281,7 @@ const CollectionsDocumentsEditRoute: Component<
 						<div class="w-full md:w-auto flex items-center gap-2.5">
 							<Show when={collection.data?.data.translations}>
 								<div class="w-full md:w-auto md:min-w-[220px]">
-									<ContentLocaleSelect
-										hasError={brickTranslationErrors()}
-									/>
+									<ContentLocaleSelect hasError={brickTranslationErrors()} />
 								</div>
 							</Show>
 							<Button
@@ -304,8 +292,7 @@ const CollectionsDocumentsEditRoute: Component<
 								disabled={canSaveDocument()}
 							>
 								{T()("save", {
-									singular:
-										collection.data?.data.singular || "",
+									singular: collection.data?.data.singular || "",
 								})}
 							</Button>
 							<Show
@@ -329,13 +316,9 @@ const CollectionsDocumentsEditRoute: Component<
 									theme="input-style"
 									size="x-icon"
 									type="button"
-									onClick={() =>
-										setPanelOpen(!getPanelOpen())
-									}
+									onClick={() => setPanelOpen(!getPanelOpen())}
 								>
-									<span class="sr-only">
-										{T()("toggle_panel")}
-									</span>
+									<span class="sr-only">{T()("toggle_panel")}</span>
 									<FaSolidChevronLeft
 										class={classNames(
 											"transform-gpu transition-transform duration-200",
@@ -356,14 +339,10 @@ const CollectionsDocumentsEditRoute: Component<
 							fields={collection.data?.data.fields || []}
 						/>
 						<Document.FixedBricks
-							brickConfig={
-								collection.data?.data.fixedBricks || []
-							}
+							brickConfig={collection.data?.data.fixedBricks || []}
 						/>
 						<Document.BuilderBricks
-							brickConfig={
-								collection.data?.data.builderBricks || []
-							}
+							brickConfig={collection.data?.data.builderBricks || []}
 						/>
 					</div>
 					{/* Sidebar */}
@@ -391,15 +370,11 @@ const CollectionsDocumentsEditRoute: Component<
 										},
 										{
 											label: T()("fixed_bricks"),
-											value: collection.data?.data
-												.fixedBricks?.length,
+											value: collection.data?.data.fixedBricks?.length,
 										},
 										{
-											label: T()(
-												"available_builder_bricks",
-											),
-											value: collection.data?.data
-												.builderBricks?.length,
+											label: T()("available_builder_bricks"),
+											value: collection.data?.data.builderBricks?.length,
 										},
 										{
 											label: T()("total_bricks"),
@@ -410,9 +385,7 @@ const CollectionsDocumentsEditRoute: Component<
 											value: (
 												<Pill
 													theme={
-														brickStore.get
-															.fieldsErrors
-															?.length > 0
+														brickStore.get.fieldsErrors?.length > 0
 															? "red"
 															: "grey"
 													}
@@ -423,13 +396,7 @@ const CollectionsDocumentsEditRoute: Component<
 										},
 										{
 											label: T()("created_at"),
-											value: (
-												<DateText
-													date={
-														doc.data?.data.createdAt
-													}
-												/>
-											),
+											value: <DateText date={doc.data?.data.createdAt} />,
 											show: props.mode === "edit",
 										},
 										{
@@ -437,18 +404,9 @@ const CollectionsDocumentsEditRoute: Component<
 											value: (
 												<UserDisplay
 													user={{
-														username:
-															doc.data?.data
-																.createdBy
-																?.username,
-														firstName:
-															doc.data?.data
-																.createdBy
-																?.firstName,
-														lastName:
-															doc.data?.data
-																.createdBy
-																?.lastName,
+														username: doc.data?.data.createdBy?.username,
+														firstName: doc.data?.data.createdBy?.firstName,
+														lastName: doc.data?.data.createdBy?.lastName,
 														thumbnail: undefined,
 													}}
 													mode="long"
@@ -459,13 +417,7 @@ const CollectionsDocumentsEditRoute: Component<
 										},
 										{
 											label: T()("last_updated_at"),
-											value: (
-												<DateText
-													date={
-														doc.data?.data.updatedAt
-													}
-												/>
-											),
+											value: <DateText date={doc.data?.data.updatedAt} />,
 											show: props.mode === "edit",
 										},
 										{
@@ -473,18 +425,9 @@ const CollectionsDocumentsEditRoute: Component<
 											value: (
 												<UserDisplay
 													user={{
-														username:
-															doc.data?.data
-																.updatedBy
-																?.username,
-														firstName:
-															doc.data?.data
-																.updatedBy
-																?.firstName,
-														lastName:
-															doc.data?.data
-																.updatedBy
-																?.lastName,
+														username: doc.data?.data.updatedBy?.username,
+														firstName: doc.data?.data.updatedBy?.firstName,
+														lastName: doc.data?.data.updatedBy?.lastName,
 														thumbnail: undefined,
 													}}
 													mode="long"
@@ -521,9 +464,7 @@ const CollectionsDocumentsEditRoute: Component<
 					collection={collection.data?.data as CollectionResponse}
 					callbacks={{
 						onSuccess: () => {
-							navigate(
-								`/admin/collections/${collection.data?.data.key}`,
-							);
+							navigate(`/admin/collections/${collection.data?.data.key}`);
 						},
 					}}
 				/>

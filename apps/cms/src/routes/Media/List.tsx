@@ -75,11 +75,8 @@ const MediaListRoute: Component = () => {
 						alerts={[
 							{
 								type: "warning",
-								message: T()(
-									"media_support_config_stategy_error",
-								),
-								show:
-									settings.data?.data.media.enabled === false,
+								message: T()("media_support_config_stategy_error"),
+								show: settings.data?.data.media.enabled === false,
 							},
 						]}
 					/>
@@ -94,9 +91,7 @@ const MediaListRoute: Component = () => {
 							create: {
 								open: getOpenCreateMediaPanel(),
 								setOpen: setOpenCreateMediaPanel,
-								permission: userStore.get.hasPermission([
-									"create_media",
-								]).all,
+								permission: userStore.get.hasPermission(["create_media"]).all,
 							},
 							contentLocale: true,
 						}}

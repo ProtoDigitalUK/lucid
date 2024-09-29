@@ -25,10 +25,7 @@ export const FixedBricks: Component<FixedBricksProps> = (props) => {
 		<ul>
 			<For each={fixedBricks()}>
 				{(brick) => (
-					<FixedBrickRow
-						brick={brick}
-						brickConfig={props.brickConfig}
-					/>
+					<FixedBrickRow brick={brick} brickConfig={props.brickConfig} />
 				)}
 			</For>
 		</ul>

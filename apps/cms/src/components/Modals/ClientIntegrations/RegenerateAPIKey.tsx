@@ -43,8 +43,7 @@ const RegenerateAPIKey: Component<RegenerateAPIKeyProps> = (props) => {
 			}}
 			callbacks={{
 				onConfirm: () => {
-					const id =
-						typeof props.id === "function" ? props.id() : props.id;
+					const id = typeof props.id === "function" ? props.id() : props.id;
 					if (!id) return console.error("No id provided");
 					regenerateAPIKey.action.mutate({
 						id: id,

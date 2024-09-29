@@ -50,8 +50,7 @@ const EmailRow: Component<EmailRowProps> = (props) => {
 						props.rowTarget.setTargetId(props.email.id);
 						props.rowTarget.setTrigger("delete", true);
 					},
-					permission: userStore.get.hasPermission(["delete_email"])
-						.all,
+					permission: userStore.get.hasPermission(["delete_email"]).all,
 				},
 			]}
 		>

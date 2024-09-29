@@ -39,9 +39,7 @@ export const Dashboard: Component = () => {
 				links={[
 					{
 						title: T()("starting_point_collections"),
-						description: T()(
-							"starting_point_collections_description",
-						),
+						description: T()("starting_point_collections_description"),
 						href: "/admin/collections",
 						icon: "collection",
 					},

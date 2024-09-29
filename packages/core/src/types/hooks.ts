@@ -39,16 +39,18 @@ export type HookServiceHandlers = {
 						userId: number;
 					};
 					data: {
-						documentId?: number;
-						versionId?: number;
-						versionType?: DocumentVersionType;
+						documentId: number;
+						versionId: number;
+						versionType: Exclude<DocumentVersionType, "revision">;
 						bricks?: Array<BrickSchema>;
 						fields?: Array<FieldSchemaType>;
 					};
 				},
 			],
 			| {
-					documentId?: number;
+					documentId: number;
+					versionId: number;
+					versionType: Exclude<DocumentVersionType, "revision">;
 					bricks?: Array<BrickSchema>;
 					fields?: Array<FieldSchemaType>;
 			  }
@@ -64,7 +66,7 @@ export type HookServiceHandlers = {
 					data: {
 						documentId: number;
 						versionId: number;
-						versionType: DocumentVersionType;
+						versionType: Exclude<DocumentVersionType, "revision">;
 						bricks: Array<BrickSchema>;
 						fields: Array<FieldSchemaType>;
 					};

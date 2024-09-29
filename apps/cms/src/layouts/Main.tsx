@@ -69,11 +69,7 @@ const MainLayout: Component<MainLayoutProps> = (props) => {
 					<Match when={isLoading()}>
 						<div class="fixed inset-0 z-50 bg-container-1 flex items-center justify-center">
 							<div class="absolute inset-0 z-20 flex-col flex items-center justify-center">
-								<img
-									src={LogoIcon}
-									alt="logo"
-									class="size-6 animate-spin"
-								/>
+								<img src={LogoIcon} alt="logo" class="size-6 animate-spin" />
 							</div>
 						</div>
 					</Match>

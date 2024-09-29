@@ -68,11 +68,7 @@ const useSingleFileUpload = (data: UseSingleFileUploadProps) => {
 				accept={data.accept}
 				required={data.required}
 				disabled={data.disabled}
-				errors={
-					data.errors
-						? getBodyError(data.name, data.errors)
-						: undefined
-				}
+				errors={data.errors ? getBodyError(data.name, data.errors) : undefined}
 				noMargin={data.noMargin}
 			/>
 		),

@@ -82,8 +82,7 @@ export const WYSIWYG: Component<WYSIWYGProps> = (props) => {
 			/>
 			<div
 				class={classnames("mt-1 bg-container-4 rounded-md", {
-					"cursor-not-allowed opacity-80 pointer-events-none":
-						props.disabled,
+					"cursor-not-allowed opacity-80 pointer-events-none": props.disabled,
 				})}
 			>
 				<div
@@ -93,10 +92,7 @@ export const WYSIWYG: Component<WYSIWYGProps> = (props) => {
 					class="[&>.ql-editor]:min-h-72"
 				/>
 			</div>
-			<Form.DescribedBy
-				id={props.id}
-				describedBy={props.copy?.describedBy}
-			/>
+			<Form.DescribedBy id={props.id} describedBy={props.copy?.describedBy} />
 			<Form.ErrorMessage id={props.id} errors={props.errors} />
 		</div>
 	);

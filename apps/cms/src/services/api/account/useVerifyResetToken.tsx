@@ -14,9 +14,7 @@ const useVerifyResetToken = (params: QueryHook<QueryParams>) => {
 	const queryParams = createMemo(() =>
 		serviceHelpers.getQueryParams<QueryParams>(params.queryParams),
 	);
-	const queryKey = createMemo(() =>
-		serviceHelpers.getQueryKey(queryParams()),
-	);
+	const queryKey = createMemo(() => serviceHelpers.getQueryKey(queryParams()));
 
 	// -----------------------------
 	// Query
@@ -28,9 +26,7 @@ const useVerifyResetToken = (params: QueryHook<QueryParams>) => {
 					message: string;
 				}>
 			>({
-				url: `/api/v1/account/reset-password/${
-					queryParams().location?.token
-				}`,
+				url: `/api/v1/account/reset-password/${queryParams().location?.token}`,
 				config: {
 					method: "GET",
 				},

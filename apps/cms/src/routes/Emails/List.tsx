@@ -66,11 +66,8 @@ const EmailListRoute: Component = () => {
 						alerts={[
 							{
 								type: "warning",
-								message: T()(
-									"email_support_config_stategy_error",
-								),
-								show:
-									settings.data?.data.media.enabled === false,
+								message: T()("email_support_config_stategy_error"),
+								show: settings.data?.data.media.enabled === false,
 							},
 						]}
 					/>

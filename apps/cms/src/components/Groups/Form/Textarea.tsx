@@ -43,8 +43,7 @@ export const Textarea: Component<TextareaProps> = (props) => {
 					{
 						"border-primary-base bg-container-3":
 							inputFocus() && props.theme === "full",
-						"border-error-base":
-							props.errors?.message !== undefined,
+						"border-error-base": props.errors?.message !== undefined,
 						"bg-container-4 rounded-md border border-border-input":
 							props.theme === "full",
 					},
@@ -78,9 +77,7 @@ export const Textarea: Component<TextareaProps> = (props) => {
 					onInput={(e) => props.onChange(e.currentTarget.value)}
 					placeholder={props.copy?.placeholder}
 					aria-describedby={
-						props.copy?.describedBy
-							? `${props.id}-description`
-							: undefined
+						props.copy?.describedBy ? `${props.id}-description` : undefined
 					}
 					autofocus={props.autoFoucs}
 					required={props.required}
@@ -94,10 +91,7 @@ export const Textarea: Component<TextareaProps> = (props) => {
 					rows={props.rows ?? 6}
 				/>
 			</div>
-			<Form.DescribedBy
-				id={props.id}
-				describedBy={props.copy?.describedBy}
-			/>
+			<Form.DescribedBy id={props.id} describedBy={props.copy?.describedBy} />
 			<Form.ErrorMessage id={props.id} errors={props.errors} />
 		</div>
 	);

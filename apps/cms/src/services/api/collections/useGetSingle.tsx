@@ -14,9 +14,7 @@ const useGetSingle = (params: QueryHook<QueryParams>) => {
 	const queryParams = createMemo(() =>
 		serviceHelpers.getQueryParams<QueryParams>(params.queryParams),
 	);
-	const queryKey = createMemo(() =>
-		serviceHelpers.getQueryKey(queryParams()),
-	);
+	const queryKey = createMemo(() => serviceHelpers.getQueryKey(queryParams()));
 
 	// -----------------------------
 	// Query
@@ -24,9 +22,7 @@ const useGetSingle = (params: QueryHook<QueryParams>) => {
 		queryKey: ["collections.getSingle", queryKey(), params.key?.()],
 		queryFn: () =>
 			request<ResponseBody<CollectionResponse>>({
-				url: `/api/v1/collections/${
-					queryParams().location?.collectionKey
-				}`,
+				url: `/api/v1/collections/${queryParams().location?.collectionKey}`,
 				config: {
 					method: "GET",
 				},

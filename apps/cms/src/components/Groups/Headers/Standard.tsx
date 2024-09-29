@@ -91,8 +91,7 @@ export const Standard: Component<{
 							>
 								<FaSolidPlus />
 								<span class="sr-only">
-									{props.actions?.create?.label ??
-										T()("create")}
+									{props.actions?.create?.label ?? T()("create")}
 								</span>
 							</Button>
 						</Show>
@@ -109,8 +108,7 @@ export const Standard: Component<{
 							>
 								<FaSolidPlus />
 								<span class="sr-only">
-									{props.actions?.createLink?.label ??
-										T()("create")}
+									{props.actions?.createLink?.label ?? T()("create")}
 								</span>
 							</Link>
 						</Show>
@@ -124,16 +122,10 @@ export const Standard: Component<{
 								theme="primary"
 								size="x-icon"
 								href={props.actions?.link?.href}
-								target={
-									props.actions?.link?.newTab
-										? "_blank"
-										: undefined
-								}
+								target={props.actions?.link?.newTab ? "_blank" : undefined}
 							>
 								{props.actions?.link?.icon}
-								<span class="sr-only">
-									{props.actions?.link?.label}
-								</span>
+								<span class="sr-only">{props.actions?.link?.label}</span>
 							</Link>
 						</Show>
 						<Show
@@ -146,9 +138,7 @@ export const Standard: Component<{
 								theme="danger"
 								size="x-icon"
 								type="button"
-								onClick={() =>
-									props.actions?.delete?.setOpen(true)
-								}
+								onClick={() => props.actions?.delete?.setOpen(true)}
 							>
 								<span class="sr-only">{T()("delete")}</span>
 								<FaSolidTrash />

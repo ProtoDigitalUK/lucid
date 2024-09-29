@@ -105,8 +105,7 @@ export const Select: Component<SelectProps> = (props) => {
 							"border-primary-base bg-container-3":
 								inputFocus() && props.theme === "full",
 							"border-error-base":
-								props.errors?.message !== undefined ||
-								props.hasError,
+								props.errors?.message !== undefined || props.hasError,
 							"bg-container-4 rounded-md border border-border-input":
 								props.theme === "full",
 						},
@@ -127,22 +126,17 @@ export const Select: Component<SelectProps> = (props) => {
 							"focus:outline-none px-2.5 text-sm text-title font-medium w-full flex justify-between disabled:cursor-not-allowed disabled:opacity-80",
 							{
 								"bg-container-4 border border-border-input flex items-center rounded-md focus:border-primary-base duration-200 transition-colors":
-									props.theme === "basic" ||
-									props.theme === "basic-small",
+									props.theme === "basic" || props.theme === "basic-small",
 								"h-10 bg-container-4 border-border-input":
 									props.theme === "basic",
 								"h-9 bg-container-4 border-border-input":
 									props.theme === "basic-small",
-								"mt-1":
-									props.theme !== "full" && props.copy?.label,
+								"mt-1": props.theme !== "full" && props.copy?.label,
 								"pt-2 h-10 flex items-center":
-									props.copy?.label === undefined &&
-									props.theme === "full",
-								"bg-transparent pb-2 pt-1 rounded-b-md":
-									props.theme === "full",
+									props.copy?.label === undefined && props.theme === "full",
+								"bg-transparent pb-2 pt-1 rounded-b-md": props.theme === "full",
 								"border-error-base":
-									props.hasError &&
-									props.theme === "basic-small",
+									props.hasError && props.theme === "basic-small",
 							},
 						)}
 						onFocus={() => setInputFocus(true)}
@@ -152,9 +146,7 @@ export const Select: Component<SelectProps> = (props) => {
 						{selectedLabel() ? (
 							<span class="truncate">{selectedLabel()}</span>
 						) : (
-							<span class="text-body">
-								{T()("nothing_selected")}
-							</span>
+							<span class="text-body">{T()("nothing_selected")}</span>
 						)}
 						<div class="flex items-center gap-1">
 							<Show when={props.noClear !== true}>
@@ -163,14 +155,10 @@ export const Select: Component<SelectProps> = (props) => {
 									class="pointer-events-auto h-5 w-5 flex items-center justify-center rounded-full text-primary-contrast hover:bg-error-base duration-200 transition-colors focus:outline-none focus:ring-1 ring-error-base focus:fill-error-base"
 									onClick={(e) => {
 										e.stopPropagation();
-										console.log("clear");
 										props.onChange(undefined);
 									}}
 								>
-									<FaSolidXmark
-										size={16}
-										class="text-title"
-									/>
+									<FaSolidXmark size={16} class="text-title" />
 								</button>
 							</Show>
 							<FaSolidSort size={16} class="text-title ml-1" />
@@ -195,17 +183,12 @@ export const Select: Component<SelectProps> = (props) => {
 								<input
 									type="text"
 									class="bg-container-1 px-2.5 rounded-md w-full border border-border text-sm text-title font-medium h-10 focus:outline-none focus:border-primary-base"
-									placeholder={
-										props.copy?.searchPlaceholder ||
-										T()("search")
-									}
+									placeholder={props.copy?.searchPlaceholder || T()("search")}
 									value={props.search?.value || ""}
 									onKeyDown={(e) => {
 										e.stopPropagation();
 									}}
-									onInput={(e) =>
-										setSearchQuery(e.currentTarget.value)
-									}
+									onInput={(e) => setSearchQuery(e.currentTarget.value)}
 								/>
 
 								<Switch>
@@ -234,9 +217,7 @@ export const Select: Component<SelectProps> = (props) => {
 												}}
 											>
 												<FaSolidXmark size={14} />
-												<span class="sr-only">
-													{T()("clear")}
-												</span>
+												<span class="sr-only">{T()("clear")}</span>
 											</button>
 										</div>
 									</Match>
@@ -258,36 +239,22 @@ export const Select: Component<SelectProps> = (props) => {
 											}}
 											onKeyDown={(e) => {
 												if (e.key === "Enter") {
-													props.onChange(
-														option.value,
-													);
+													props.onChange(option.value);
 													setDebouncedValue("");
 													setOpen(false);
 												}
 											}}
 										>
 											<span>{option.label}</span>
-											<Show
-												when={
-													props.value === option.value
-												}
-											>
-												<FaSolidCheck
-													size={14}
-													class="text-current mr-2"
-												/>
+											<Show when={props.value === option.value}>
+												<FaSolidCheck size={14} class="text-current mr-2" />
 											</Show>
 										</li>
 									)}
 								</For>
 							</ul>
 						</Match>
-						<Match
-							when={
-								props.options.length === 0 &&
-								props.search?.value
-							}
-						>
+						<Match when={props.options.length === 0 && props.search?.value}>
 							<span class="text-body w-full block px-2.5 py-1 text-sm">
 								{T()("no_results_found")}
 							</span>
@@ -300,10 +267,7 @@ export const Select: Component<SelectProps> = (props) => {
 					</Switch>
 				</DropdownContent>
 			</DropdownMenu.Root>
-			<Form.DescribedBy
-				id={props.id}
-				describedBy={props.copy?.describedBy}
-			/>
+			<Form.DescribedBy id={props.id} describedBy={props.copy?.describedBy} />
 			<Form.ErrorMessage id={props.id} errors={props.errors} />
 		</div>
 	);

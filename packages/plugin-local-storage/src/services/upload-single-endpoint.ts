@@ -17,15 +17,12 @@ const uploadSingle: ServiceFn<
 	],
 	boolean
 > = async (context, data) => {
-	const checkPresignedTokenRes = await checks.validatePresignedToken(
-		context,
-		{
-			pluginOptions: data.pluginOptions,
-			key: data.key,
-			token: data.token,
-			timestamp: data.timestamp,
-		},
-	);
+	const checkPresignedTokenRes = await checks.validatePresignedToken(context, {
+		pluginOptions: data.pluginOptions,
+		key: data.key,
+		token: data.token,
+		timestamp: data.timestamp,
+	});
 	if (checkPresignedTokenRes.error) return checkPresignedTokenRes;
 
 	const { targetDir, targetPath } = keyPaths(

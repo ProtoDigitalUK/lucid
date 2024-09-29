@@ -131,9 +131,7 @@ export const NavigationSidebar: Component = () => {
 							href="/admin/emails"
 							icon="email"
 							title={T()("emails")}
-							permission={
-								userStore.get.hasPermission(["read_email"]).all
-							}
+							permission={userStore.get.hasPermission(["read_email"]).all}
 						/>
 						<Navigation.IconLink
 							type="link"
@@ -171,9 +169,7 @@ export const NavigationSidebar: Component = () => {
 							</li>
 						</Show>
 					</ul>
-					<small class="text-[6px] leading-none">
-						v{packageJson.version}
-					</small>
+					<small class="text-[6px] leading-none">v{packageJson.version}</small>
 				</div>
 			</div>
 			{/* SUbMenus */}

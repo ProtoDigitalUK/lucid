@@ -129,10 +129,7 @@ export const TableRoot: Component<TableRootProps> = (props) => {
 	// Effects
 	createEffect(() => {
 		const handleResize = () => {
-			if (
-				overflowRef &&
-				overflowRef.scrollWidth > overflowRef.clientWidth
-			) {
+			if (overflowRef && overflowRef.scrollWidth > overflowRef.clientWidth) {
 				overflowRef.setAttribute("data-overflowing", "true");
 			} else {
 				overflowRef?.setAttribute("data-overflowing", "false");
@@ -190,11 +187,7 @@ export const TableRoot: Component<TableRootProps> = (props) => {
 									/>
 								)}
 							</Index>
-							<Table.Th
-								classes={
-									"text-right right-0 hover:bg-container-3"
-								}
-							>
+							<Table.Th classes={"text-right right-0 hover:bg-container-3"}>
 								<Table.ColumnToggle
 									columns={includeRows() || []}
 									callbacks={{
@@ -252,18 +245,14 @@ export const TableRoot: Component<TableRootProps> = (props) => {
 			</div>
 			{/* Select Action */}
 			<Show
-				when={
-					selectedCount() > 0 &&
-					props.callbacks?.deleteRows !== undefined
-				}
+				when={selectedCount() > 0 && props.callbacks?.deleteRows !== undefined}
 			>
 				<Table.SelectAction
 					data={{
 						selected: selectedCount(),
 					}}
 					callbacks={{
-						reset: () =>
-							setSelected((prev) => prev.map(() => false)),
+						reset: () => setSelected((prev) => prev.map(() => false)),
 						delete: async () => {
 							if (props.callbacks?.deleteRows) {
 								await props.callbacks.deleteRows(selected());

@@ -69,11 +69,9 @@ const CustomToast: Component<CustomToastProps> = (props) => {
 						"w-6 h-6 flex items-center justify-center rounded-full min-w-[24px]",
 						{
 							"bg-primary-base text-primary-contrast":
-								props.type === "success" ||
-								props.type === "info",
+								props.type === "success" || props.type === "info",
 							"bg-error-base text-white": props.type === "error",
-							"bg-warning-base text-primary-contrast":
-								props.type === "warning",
+							"bg-warning-base text-primary-contrast": props.type === "warning",
 						},
 					)}
 				>

@@ -56,8 +56,7 @@ export const Input: Component<InputProps> = (props) => {
 					{
 						"border-primary-base bg-container-3":
 							inputFocus() && props.theme === "full",
-						"border-error-base":
-							props.errors?.message !== undefined,
+						"border-error-base": props.errors?.message !== undefined,
 						"bg-container-4 rounded-md border border-border-input":
 							props.theme === "full",
 					},
@@ -79,8 +78,7 @@ export const Input: Component<InputProps> = (props) => {
 							"pt-2": props.copy?.label === undefined,
 							"bg-container-4 border border-border-input h-10 rounded-md mt-1 focus:border-primary-base duration-200 transition-colors":
 								props.theme === "basic",
-							"bg-transparent pb-2 pt-1 rounded-b-md":
-								props.theme === "full",
+							"bg-transparent pb-2 pt-1 rounded-b-md": props.theme === "full",
 						},
 					)}
 					onKeyDown={(e) => {
@@ -93,9 +91,7 @@ export const Input: Component<InputProps> = (props) => {
 					onInput={(e) => props.onChange(e.currentTarget.value)}
 					placeholder={props.copy?.placeholder}
 					aria-describedby={
-						props.copy?.describedBy
-							? `${props.id}-description`
-							: undefined
+						props.copy?.describedBy ? `${props.id}-description` : undefined
 					}
 					autocomplete={props.autoComplete}
 					autofocus={props.autoFoucs}
@@ -127,10 +123,7 @@ export const Input: Component<InputProps> = (props) => {
 				</Show>
 				<Form.Tooltip copy={props.copy?.tooltip} theme={props.theme} />
 			</div>
-			<Form.DescribedBy
-				id={props.id}
-				describedBy={props.copy?.describedBy}
-			/>
+			<Form.DescribedBy id={props.id} describedBy={props.copy?.describedBy} />
 			<Form.ErrorMessage id={props.id} errors={props.errors} />
 		</div>
 	);

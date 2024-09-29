@@ -11,9 +11,7 @@ interface ContentLocaleSelectProps {
 const ContentLocaleSelect: Component<ContentLocaleSelectProps> = (props) => {
 	// ----------------------------------
 	// Memos
-	const contentLocale = createMemo(
-		() => contentLocaleStore.get.contentLocale,
-	);
+	const contentLocale = createMemo(() => contentLocaleStore.get.contentLocale);
 	const locales = createMemo(() => contentLocaleStore.get.locales);
 	const options = createMemo(() => {
 		return (
@@ -35,12 +33,8 @@ const ContentLocaleSelect: Component<ContentLocaleSelectProps> = (props) => {
 					id={"content-locale"}
 					value={contentLocale()}
 					onChange={(value) => {
-						if (!value)
-							contentLocaleStore.get.setContentLocale(undefined);
-						else
-							contentLocaleStore.get.setContentLocale(
-								value.toString(),
-							);
+						if (!value) contentLocaleStore.get.setContentLocale(undefined);
+						else contentLocaleStore.get.setContentLocale(value.toString());
 					}}
 					name={"content-locale"}
 					options={options()}

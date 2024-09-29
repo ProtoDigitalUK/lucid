@@ -90,9 +90,7 @@ const UpdateUserPanel: Component<UpdateUserPanelProps> = (props) => {
 				superAdmin: user.data?.data.superAdmin,
 			},
 			{
-				roleIds: getSelectedRoles().map(
-					(role) => role.value,
-				) as number[],
+				roleIds: getSelectedRoles().map((role) => role.value) as number[],
 				superAdmin: getIsSuperAdmin(),
 			},
 		);
@@ -165,10 +163,7 @@ const UpdateUserPanel: Component<UpdateUserPanelProps> = (props) => {
 							copy={{
 								label: T()("is_super_admin"),
 							}}
-							errors={getBodyError(
-								"superAdmin",
-								updateUser.errors,
-							)}
+							errors={getBodyError("superAdmin", updateUser.errors)}
 							theme="full"
 						/>
 					</Show>

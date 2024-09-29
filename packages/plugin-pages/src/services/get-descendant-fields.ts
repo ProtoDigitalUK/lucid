@@ -1,12 +1,14 @@
 import T from "../translations/index.js";
 import constants from "../constants.js";
-import type { ServiceFn } from "@lucidcms/core/types";
+import type { ServiceFn, DocumentVersionType } from "@lucidcms/core/types";
 
 export type DescendantFieldsResponse = {
 	collection_document_id: number;
+	collection_document_version_id: number;
 	fields: {
 		key: string;
 		collection_document_id: number;
+		collection_document_version_id: number;
 		locale_code: string;
 		text_value: string | null;
 		document_id: number | null;
@@ -20,6 +22,7 @@ const getDescendantFields: ServiceFn<
 	[
 		{
 			ids: number[];
+			versionType: Exclude<DocumentVersionType, "revision">;
 		},
 	],
 	Array<DescendantFieldsResponse>
@@ -29,13 +32,26 @@ const getDescendantFields: ServiceFn<
 			.with("recursive_cte", (db) =>
 				db
 					.selectFrom("lucid_collection_document_fields as lcdf")
-					.select(["lcdf.collection_document_id", "lcdf.document_id"])
+					.innerJoin(
+						"lucid_collection_document_versions as lcdv",
+						"lcdv.id",
+						"lcdf.collection_document_version_id",
+					)
+					.select([
+						"lcdv.document_id as collection_document_id",
+						"lcdf.document_id",
+						"lcdf.collection_document_version_id",
+					])
 					.where("lcdf.document_id", "in", data.ids)
 					.where("lcdf.key", "=", "parentPage")
+					.where("lcdv.version_type", "=", data.versionType)
 					.unionAll(
 						db
-							.selectFrom(
-								"lucid_collection_document_fields as lcdf",
+							.selectFrom("lucid_collection_document_fields as lcdf")
+							.innerJoin(
+								"lucid_collection_document_versions as lcdv",
+								"lcdv.id",
+								"lcdf.collection_document_version_id",
 							)
 							.innerJoin(
 								// @ts-expect-error
@@ -45,39 +61,50 @@ const getDescendantFields: ServiceFn<
 							)
 							// @ts-expect-error
 							.select([
-								"lcdf.collection_document_id",
+								"lcdv.document_id as collection_document_id",
 								"lcdf.document_id",
+								"lcdf.collection_document_version_id",
 							])
-							.where("lcdf.key", "=", "parentPage"),
+							.where("lcdf.key", "=", "parentPage")
+							.where("lcdv.version_type", "=", data.versionType),
 					),
 			)
 			.selectFrom("recursive_cte")
 			.select((eb) => [
 				"collection_document_id",
+				"collection_document_version_id",
 				context.config.db
 					.jsonArrayFrom(
 						eb
-							.selectFrom("lucid_collection_document_fields")
+							.selectFrom("lucid_collection_document_fields as lcdf")
+							.innerJoin(
+								"lucid_collection_document_versions as lcdv",
+								"lcdv.id",
+								"lcdf.collection_document_version_id",
+							)
 							.select([
-								"lucid_collection_document_fields.key",
-								"lucid_collection_document_fields.text_value",
-								"lucid_collection_document_fields.document_id",
-								"lucid_collection_document_fields.collection_document_id",
-								"lucid_collection_document_fields.locale_code",
+								"lcdf.key",
+								"lcdf.text_value",
+								"lcdf.document_id",
+								"lcdv.document_id as collection_document_id",
+								"lcdf.collection_document_version_id",
+								"lcdf.locale_code",
 							])
-							.where("key", "in", [
+							.where("lcdf.key", "in", [
 								constants.fields.slug.key,
 								constants.fields.fullSlug.key,
 								constants.fields.parentPage.key,
 							])
 							.whereRef(
-								"lucid_collection_document_fields.collection_document_id",
+								"lcdv.document_id",
 								"=",
 								"recursive_cte.collection_document_id",
-							),
+							)
+							.where("lcdv.version_type", "=", data.versionType),
 					)
 					.as("fields"),
 			])
+			.where("collection_document_id", "not in", data.ids)
 			.execute();
 
 		return {
@@ -86,20 +113,20 @@ const getDescendantFields: ServiceFn<
 				return (
 					self.findIndex(
 						(e) =>
-							e.collection_document_id ===
-							d.collection_document_id,
+							e.collection_document_id === d.collection_document_id &&
+							e.collection_document_version_id ===
+								d.collection_document_version_id,
 					) === i
 				);
 			}),
 		};
 	} catch (error) {
+		console.error("Error in getDescendantFields:", error);
 		return {
 			error: {
 				type: "basic",
 				status: 500,
-				message: T(
-					"an_unknown_error_occurred_getting_descendant_fields",
-				),
+				message: T("an_unknown_error_occurred_getting_descendant_fields"),
 			},
 			data: undefined,
 		};

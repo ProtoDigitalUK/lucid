@@ -117,12 +117,7 @@ export const Panel: Component<{
 					>
 						<Switch>
 							{/* Loading / Not Open */}
-							<Match
-								when={
-									!props.state.open ||
-									props.fetchState?.isLoading
-								}
-							>
+							<Match when={!props.state.open || props.fetchState?.isLoading}>
 								<div class="skeleton absolute inset-15 rounded-xl overflow-hidden" />
 							</Match>
 							{/* Fetch Error */}
@@ -145,19 +140,13 @@ export const Panel: Component<{
 											<Show when={props.copy?.title}>
 												<h2>{props.copy?.title}</h2>
 											</Show>
-											<Show
-												when={props.copy?.description}
-											>
-												<p class="mt-1">
-													{props.copy?.description}
-												</p>
+											<Show when={props.copy?.description}>
+												<p class="mt-1">{props.copy?.description}</p>
 											</Show>
 										</div>
 										<Dialog.CloseButton class="flex items-center w-10 h-10 min-w-10 rounded-full focus:outline-none focus:ring-1 ring-primary-base bg-container-4 border border-border hover:bg-container-3 justify-center">
 											<FaSolidArrowRight class="text-title" />
-											<span class="sr-only">
-												{T()("back")}
-											</span>
+											<span class="sr-only">{T()("back")}</span>
 										</Dialog.CloseButton>
 									</div>
 									<Show when={props.langauge?.contentLocale}>
@@ -165,10 +154,7 @@ export const Panel: Component<{
 											<ContentLocaleSelect
 												value={contentLocale()}
 												setValue={setContentLocale}
-												hasError={
-													props.langauge
-														?.hascontentLocaleError
-												}
+												hasError={props.langauge?.hascontentLocaleError}
 											/>
 										</div>
 									</Show>
@@ -178,17 +164,14 @@ export const Panel: Component<{
 									class="flex-grow flex flex-col justify-between"
 									onSubmit={(e) => {
 										e.preventDefault();
-										if (props.callbacks?.onSubmit)
-											props.callbacks?.onSubmit();
+										if (props.callbacks?.onSubmit) props.callbacks?.onSubmit();
 									}}
 								>
 									{/* content */}
 									<div
 										class={classNames({
-											"p-15":
-												props.options?.padding === "15",
-											"p-15 md:p-30":
-												props.options?.padding === "30",
+											"p-15": props.options?.padding === "15",
+											"p-15 md:p-30": props.options?.padding === "30",
 										})}
 									>
 										{props.children({
@@ -205,14 +188,8 @@ export const Panel: Component<{
 													theme="primary"
 													size="medium"
 													classes="mr-15"
-													loading={
-														props.mutateState
-															?.isLoading
-													}
-													disabled={
-														props.mutateState
-															?.isDisabled
-													}
+													loading={props.mutateState?.isLoading}
+													disabled={props.mutateState?.isDisabled}
 												>
 													{props.copy?.submit}
 												</Button>
@@ -221,25 +198,15 @@ export const Panel: Component<{
 												size="medium"
 												theme="border-outline"
 												type="button"
-												onClick={() =>
-													props.state.setOpen(false)
-												}
+												onClick={() => props.state.setOpen(false)}
 											>
 												{T()("close")}
 											</Button>
 										</div>
-										<Show
-											when={
-												props.mutateState?.errors
-													?.message
-											}
-										>
+										<Show when={props.mutateState?.errors?.message}>
 											<ErrorMessage
 												theme="basic"
-												message={
-													props.mutateState?.errors
-														?.message
-												}
+												message={props.mutateState?.errors?.message}
 											/>
 										</Show>
 									</div>

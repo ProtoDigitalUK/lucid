@@ -95,10 +95,8 @@ export const DocumentsList: Component<{
 						collectionMultiple: props.state.collection?.title,
 					}),
 					description: T()("no_documents_description", {
-						collectionMultiple:
-							props.state.collection?.title.toLowerCase(),
-						collectionSingle:
-							props.state.collection?.singular.toLowerCase(),
+						collectionMultiple: props.state.collection?.title.toLowerCase(),
+						collectionSingle: props.state.collection?.singular.toLowerCase(),
 					}),
 					button: T()("create_document", {
 						collectionSingle: props.state.collection?.singular,
@@ -154,9 +152,7 @@ export const DocumentsList: Component<{
 								index={i}
 								document={doc()}
 								fieldInclude={props.state.fieldIncludes()}
-								collection={
-									props.state.collection as CollectionResponse
-								}
+								collection={props.state.collection as CollectionResponse}
 								include={include}
 								contentLocale={contentLocale()}
 								selected={selected[i]}
@@ -171,23 +167,18 @@ export const DocumentsList: Component<{
 										label: T()("edit"),
 										type: "link",
 										href: `/admin/collections/${props.state.collection?.key}/${doc().id}`,
-										permission: userStore.get.hasPermission(
-											["update_content"],
-										).all,
+										permission: userStore.get.hasPermission(["update_content"])
+											.all,
 									},
 									{
 										label: T()("delete"),
 										type: "button",
 										onClick: () => {
 											rowTarget.setTargetId(doc().id);
-											rowTarget.setTrigger(
-												"delete",
-												true,
-											);
+											rowTarget.setTrigger("delete", true);
 										},
-										permission: userStore.get.hasPermission(
-											["delete_content"],
-										).all,
+										permission: userStore.get.hasPermission(["delete_content"])
+											.all,
 									},
 								]}
 							/>

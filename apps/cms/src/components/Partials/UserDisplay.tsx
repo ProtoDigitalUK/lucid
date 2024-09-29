@@ -38,9 +38,7 @@ const UserDisplay: Component<UserDisplayProps> = (props) => {
 				})}
 			</span>
 			<Switch>
-				<Match when={props.mode === "short"}>
-					{props.user.username}
-				</Match>
+				<Match when={props.mode === "short"}>{props.user.username}</Match>
 				<Match when={props.mode === "long"}>
 					{helpers.formatUserName({
 						username: props.user.username,

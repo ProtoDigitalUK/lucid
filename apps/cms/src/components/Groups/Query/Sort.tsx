@@ -57,9 +57,7 @@ const SortItem: Component<SortItemProps> = (props) => {
 					for={`${props.sort.key}`}
 					class="text-body flex items-center justify-between text-sm mr-2"
 				>
-					<span class="line-clamp-1 text-left">
-						{props.sort.label}
-					</span>
+					<span class="line-clamp-1 text-left">{props.sort.label}</span>
 				</label>
 				<div
 					class={classNames(
@@ -67,21 +65,16 @@ const SortItem: Component<SortItemProps> = (props) => {
 						{
 							"bg-primary-base group-hover:bg-primary-hover":
 								sort() === "desc" || sort() === "asc",
-							"bg-container-2 group-hover:bg-container-4":
-								sort() === undefined,
+							"bg-container-2 group-hover:bg-container-4": sort() === undefined,
 						},
 					)}
 				>
 					<Switch>
 						<Match when={sort() === "desc" || sort() === "asc"}>
 							<FaSolidCaretUp
-								class={classNames(
-									"w-3 h-3 text-primary-contrast",
-									{
-										"transform rotate-180":
-											sort() === "desc",
-									},
-								)}
+								class={classNames("w-3 h-3 text-primary-contrast", {
+									"transform rotate-180": sort() === "desc",
+								})}
 							/>
 						</Match>
 						<Match when={sort() === undefined}>
@@ -113,12 +106,7 @@ export const Sort: Component<SortProps> = (props) => {
 				}}
 			>
 				<For each={props.sorts}>
-					{(sort) => (
-						<SortItem
-							sort={sort}
-							searchParams={props.searchParams}
-						/>
-					)}
+					{(sort) => <SortItem sort={sort} searchParams={props.searchParams} />}
 				</For>
 			</DropdownContent>
 		</DropdownMenu.Root>

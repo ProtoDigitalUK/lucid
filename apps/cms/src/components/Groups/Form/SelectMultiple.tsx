@@ -80,8 +80,7 @@ export const SelectMultiple: Component<SelectMultipleProps> = (props) => {
 						{
 							"border-primary-base bg-container-3":
 								inputFocus() && props.theme === "full",
-							"border-error-base":
-								props.errors?.message !== undefined,
+							"border-error-base": props.errors?.message !== undefined,
 							"bg-container-4 rounded-md border border-border-input":
 								props.theme === "full",
 						},
@@ -100,14 +99,11 @@ export const SelectMultiple: Component<SelectMultipleProps> = (props) => {
 						class={classnames(
 							"w-full pointer-events-none z-10 focus:outline-none px-2.5 text-sm text-title font-medium justify-between flex ",
 							{
-								"pt-2 min-h-[40px]":
-									props.copy?.label === undefined,
-								"min-h-[32px] mt-1":
-									props.copy?.label !== undefined,
+								"pt-2 min-h-[40px]": props.copy?.label === undefined,
+								"min-h-[32px] mt-1": props.copy?.label !== undefined,
 								"bg-container-1 border border-border flex items-center min-h-[40px] rounded-md mt-1 focus:border-primary-base duration-200 transition-colors":
 									props.theme === "basic",
-								"bg-transparent pb-2 rounded-b-md":
-									props.theme === "full",
+								"bg-transparent pb-2 rounded-b-md": props.theme === "full",
 							},
 						)}
 					>
@@ -124,18 +120,12 @@ export const SelectMultiple: Component<SelectMultipleProps> = (props) => {
 												e.stopPropagation();
 												e.preventDefault();
 												setValues(
-													props.values.filter(
-														(v) =>
-															v.value !==
-															value.value,
-													),
+													props.values.filter((v) => v.value !== value.value),
 												);
 											}}
 										>
 											<FaSolidXmark size={16} class="" />
-											<span class="sr-only">
-												{T()("remove")}
-											</span>
+											<span class="sr-only">{T()("remove")}</span>
 										</button>
 									</span>
 								)}
@@ -175,15 +165,10 @@ export const SelectMultiple: Component<SelectMultipleProps> = (props) => {
 											<span>{option.label}</span>
 											<Show
 												when={props.values.find(
-													(v) =>
-														v.value ===
-														option.value,
+													(v) => v.value === option.value,
 												)}
 											>
-												<FaSolidCheck
-													size={14}
-													class="fill-current mr-2"
-												/>
+												<FaSolidCheck size={14} class="fill-current mr-2" />
 											</Show>
 										</DropdownMenu.Item>
 									)}
@@ -199,10 +184,7 @@ export const SelectMultiple: Component<SelectMultipleProps> = (props) => {
 				</DropdownContent>
 			</DropdownMenu.Root>
 
-			<Form.DescribedBy
-				id={props.id}
-				describedBy={props.copy?.describedBy}
-			/>
+			<Form.DescribedBy id={props.id} describedBy={props.copy?.describedBy} />
 			<Form.ErrorMessage id={props.id} errors={props.errors} />
 		</div>
 	);

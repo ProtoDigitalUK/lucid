@@ -46,15 +46,8 @@ const resolveObject = (obj?: Record<string, QueryParamsValueT>) => {
 
 // Get query params
 const getQueryParams = <T extends QueryParams>(params: T) => {
-	const {
-		queryString,
-		filters,
-		location,
-		headers,
-		include,
-		perPage,
-		exclude,
-	} = params;
+	const { queryString, filters, location, headers, include, perPage, exclude } =
+		params;
 
 	return {
 		queryString: helpers.resolveValue(queryString) as string,

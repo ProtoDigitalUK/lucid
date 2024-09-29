@@ -104,19 +104,13 @@ const AddBrick: Component<AddBrickProps> = (props) => {
 											"flex items-center font-medium w-full p-2.5 rounded-md transition-colors duration-200",
 											{
 												"bg-container-2":
-													brickConfig.key ===
-													getHighlightedBrick(),
+													brickConfig.key === getHighlightedBrick(),
 												"bg-container-3":
-													brickConfig.key !==
-													getHighlightedBrick(),
+													brickConfig.key !== getHighlightedBrick(),
 											},
 										)}
-										onMouseOver={() =>
-											setHighlightedBrick(brickConfig.key)
-										}
-										onFocus={() =>
-											setHighlightedBrick(brickConfig.key)
-										}
+										onMouseOver={() => setHighlightedBrick(brickConfig.key)}
+										onFocus={() => setHighlightedBrick(brickConfig.key)}
 										onClick={() => {
 											brickStore.get.addBrick({
 												brickConfig: brickConfig,
@@ -152,8 +146,7 @@ const AddBrick: Component<AddBrickProps> = (props) => {
 											value: highlightedBrick()?.title,
 											fallback: highlightedBrick()?.key,
 										}),
-										image: highlightedBrick()?.preview
-											?.image,
+										image: highlightedBrick()?.preview?.image,
 									},
 								}}
 								options={{

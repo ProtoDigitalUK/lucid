@@ -87,10 +87,8 @@ export const JSONTextarea: Component<JSONTextareaProps> = (props) => {
 					{
 						"border-primary-base bg-container-3":
 							inputFocus() && props.theme === "full",
-						"border-error-base":
-							props.errors?.message !== undefined,
-						"bg-container-4 rounded-md border":
-							props.theme === "full",
+						"border-error-base": props.errors?.message !== undefined,
+						"bg-container-4 rounded-md border": props.theme === "full",
 					},
 				)}
 			>
@@ -127,8 +125,7 @@ export const JSONTextarea: Component<JSONTextareaProps> = (props) => {
 									0,
 									start,
 								)}\t${value.substring(end, value.length)}`;
-								textarea.selectionStart =
-									textarea.selectionEnd = start + 1;
+								textarea.selectionStart = textarea.selectionEnd = start + 1;
 							}
 						}}
 						id={props.id}
@@ -137,9 +134,7 @@ export const JSONTextarea: Component<JSONTextareaProps> = (props) => {
 						onInput={inputChange}
 						placeholder={props.copy?.placeholder}
 						aria-describedby={
-							props.copy?.describedBy
-								? `${props.id}-description`
-								: undefined
+							props.copy?.describedBy ? `${props.id}-description` : undefined
 						}
 						autofocus={props.autoFoucs}
 						required={props.required}
@@ -158,10 +153,7 @@ export const JSONTextarea: Component<JSONTextareaProps> = (props) => {
 					</Show>
 				</div>
 			</div>
-			<Form.DescribedBy
-				id={props.id}
-				describedBy={props.copy?.describedBy}
-			/>
+			<Form.DescribedBy id={props.id} describedBy={props.copy?.describedBy} />
 			<Form.ErrorMessage id={props.id} errors={props.errors} />
 		</div>
 	);

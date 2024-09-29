@@ -51,11 +51,7 @@ export const useCreateMedia = () => {
 			});
 
 			let bodyMessage = "";
-			if (
-				response.headers
-					.get("content-type")
-					?.includes("application/json")
-			) {
+			if (response.headers.get("content-type")?.includes("application/json")) {
 				const body = await response.json();
 				bodyMessage = body?.message || "";
 			}
@@ -122,9 +118,7 @@ export const useCreateMedia = () => {
 	});
 	const errors = createMemo(() => {
 		return (
-			createSingle.errors() ||
-			getPresignedUrl.errors() ||
-			getUploadErrors()
+			createSingle.errors() || getPresignedUrl.errors() || getUploadErrors()
 		);
 	});
 

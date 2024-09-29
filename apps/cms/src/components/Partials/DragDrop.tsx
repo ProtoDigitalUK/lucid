@@ -82,8 +82,7 @@ const DragDrop: Component<DragDropProps> = (props) => {
 				valid = true;
 				return;
 			}
-			if (node.parentNode)
-				checkParentNodes(node.parentNode as HTMLElement);
+			if (node.parentNode) checkParentNodes(node.parentNode as HTMLElement);
 		};
 		checkParentNodes(target);
 

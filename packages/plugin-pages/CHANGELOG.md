@@ -1,5 +1,11 @@
 # @lucidcms/plugin-pages
 
+## 0.2.0
+
+### Minor Changes
+
+- Updated the plugin to work with draft and published versions of documents.
+
 ## 0.1.3
 
 ### Patch Changes

@@ -64,14 +64,11 @@ export const MediaSelect: Component<MediaSelectProps> = (props) => {
 					averageColour: media.meta.averageColour ?? null,
 					isDark: media.meta.isDark ?? null,
 					isLight: media.meta.isLight ?? null,
-					title: media.title.reduce<Record<string, string>>(
-						(acc, t) => {
-							if (!t.localeCode) return acc;
-							acc[t.localeCode] = t.value ?? "";
-							return acc;
-						},
-						{},
-					),
+					title: media.title.reduce<Record<string, string>>((acc, t) => {
+						if (!t.localeCode) return acc;
+						acc[t.localeCode] = t.value ?? "";
+						return acc;
+					}, {}),
 					alt: media.alt.reduce<Record<string, string>>((acc, t) => {
 						if (!t.localeCode) return acc;
 						acc[t.localeCode] = t.value ?? "";
@@ -88,9 +85,7 @@ export const MediaSelect: Component<MediaSelectProps> = (props) => {
 
 	// -------------------------------
 	// Memos
-	const contentLocale = createMemo(
-		() => contentLocaleStore.get.contentLocale,
-	);
+	const contentLocale = createMemo(() => contentLocaleStore.get.contentLocale);
 
 	// -------------------------------
 	// Render
@@ -132,8 +127,7 @@ export const MediaSelect: Component<MediaSelectProps> = (props) => {
 										<MediaPreview
 											media={{
 												url: props.meta?.url || "",
-												type:
-													props.meta?.type || "image",
+												type: props.meta?.type || "image",
 											}}
 											alt={helpers.getRecordTranslation(
 												props.meta?.alt,
@@ -176,10 +170,7 @@ export const MediaSelect: Component<MediaSelectProps> = (props) => {
 					</Match>
 				</Switch>
 			</div>
-			<Form.DescribedBy
-				id={props.id}
-				describedBy={props.copy?.describedBy}
-			/>
+			<Form.DescribedBy id={props.id} describedBy={props.copy?.describedBy} />
 			<Form.ErrorMessage id={props.id} errors={props.errors} />
 		</div>
 	);

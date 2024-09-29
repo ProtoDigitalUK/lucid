@@ -48,8 +48,7 @@ const DeleteDocument: Component<DeleteDocumentProps> = (props) => {
 			}}
 			callbacks={{
 				onConfirm: () => {
-					const id =
-						typeof props.id === "function" ? props.id() : props.id;
+					const id = typeof props.id === "function" ? props.id() : props.id;
 					if (!id) return console.error("No id provided");
 					deleteDocument.action.mutate({
 						id: id,

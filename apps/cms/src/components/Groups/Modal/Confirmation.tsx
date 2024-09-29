@@ -35,9 +35,7 @@ export const Confirmation: Component<{
 				<div class="fixed inset-0 z-50 flex items-center justify-center p-15 overflow-y-auto">
 					<AlertDialog.Content class="z-50 bg-container-3 rounded-xl border-border border max-w-2xl w-full m-auto animate-animate-modal-hide data-[expanded]:animate-animate-modal-show">
 						<div class="flex items-baseline justify-between mx-5 py-5 border-b border-border">
-							<AlertDialog.Title>
-								{props.copy.title}
-							</AlertDialog.Title>
+							<AlertDialog.Title>{props.copy.title}</AlertDialog.Title>
 							<AlertDialog.CloseButton class="hover:text-error-contrast ring-error-base focus:ring-1 focus:outline-none h-8 w-8 min-w-[32px] rounded-full flex justify-center items-center bg-container-3 hover:bg-error-base duration-200 transition-colors">
 								<FaSolidXmark class="fill-current" />
 							</AlertDialog.CloseButton>
@@ -71,13 +69,8 @@ export const Confirmation: Component<{
 									{T()("cancel")}
 								</Button>
 							</div>
-							<Show
-								when={props.state.isError && props.copy.error}
-							>
-								<ErrorMessage
-									theme="basic"
-									message={props.copy.error}
-								/>
+							<Show when={props.state.isError && props.copy.error}>
+								<ErrorMessage theme="basic" message={props.copy.error} />
 							</Show>
 						</div>
 					</AlertDialog.Content>

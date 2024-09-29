@@ -64,10 +64,7 @@ const ResetPasswordForm: Component<ResetPasswordFormProps> = (props) => {
 					label: T()("confirm_password"),
 				}}
 				required={true}
-				errors={getBodyError(
-					"passwordConfirmation",
-					resetPassword.errors,
-				)}
+				errors={getBodyError("passwordConfirmation", resetPassword.errors)}
 				theme="full"
 			/>
 		</Form.Root>

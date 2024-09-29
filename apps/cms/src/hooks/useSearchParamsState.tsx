@@ -29,8 +29,7 @@ const useSearchParamsState = (
 	const filterValueToString = (value?: FilterValues) => {
 		if (value === undefined) return undefined;
 		if (typeof value === "boolean") return value ? "1" : "0";
-		if (Array.isArray(value))
-			return value.length ? value.join(",") : undefined;
+		if (Array.isArray(value)) return value.length ? value.join(",") : undefined;
 		return value.toString();
 	};
 	const setParams = (params: {

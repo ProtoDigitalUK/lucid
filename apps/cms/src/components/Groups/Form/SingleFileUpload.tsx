@@ -177,9 +177,7 @@ export const SingleFileUpload: Component<SingleFileUploadProps> = (props) => {
 					<Match when={showState() === "new-file"}>
 						<FilePreviewScreen
 							data={{
-								url: URL.createObjectURL(
-									props.state.value as File,
-								),
+								url: URL.createObjectURL(props.state.value as File),
 								type: fileType(),
 								name: props.state.value?.name as string,
 							}}
@@ -204,15 +202,9 @@ export const SingleFileUpload: Component<SingleFileUploadProps> = (props) => {
 							</p>
 							<Show when={props.currentFile !== undefined}>
 								<div class="mt-5 text-center flex flex-col items-center">
-									<Show
-										when={
-											props.disableRemoveCurrent !== true
-										}
-									>
+									<Show when={props.disableRemoveCurrent !== true}>
 										<p class="text-sm">
-											{T()(
-												"if_left_blank_file_will_be_removed",
-											)}
+											{T()("if_left_blank_file_will_be_removed")}
 										</p>
 									</Show>
 
@@ -223,12 +215,7 @@ export const SingleFileUpload: Component<SingleFileUploadProps> = (props) => {
 									>
 										<FaSolidArrowRotateLeft class="mr-2 text-sm" />
 										<Switch fallback={"keep current file"}>
-											<Match
-												when={
-													props.disableRemoveCurrent ===
-													true
-												}
-											>
+											<Match when={props.disableRemoveCurrent === true}>
 												{T()("back_to_current_file")}
 											</Match>
 										</Switch>
@@ -241,14 +228,11 @@ export const SingleFileUpload: Component<SingleFileUploadProps> = (props) => {
 						<FilePreviewScreen
 							data={{
 								url: props.currentFile?.url as string,
-								type: props.currentFile
-									?.type as MediaResponse["type"],
+								type: props.currentFile?.type as MediaResponse["type"],
 								name: props.currentFile?.name as string,
 							}}
 							actions={{
-								clearFile: props.disableRemoveCurrent
-									? undefined
-									: clearFile,
+								clearFile: props.disableRemoveCurrent ? undefined : clearFile,
 								downloadFile,
 								uploadFile,
 							}}
@@ -256,10 +240,7 @@ export const SingleFileUpload: Component<SingleFileUploadProps> = (props) => {
 					</Match>
 				</Switch>
 			</div>
-			<Form.DescribedBy
-				id={props.id}
-				describedBy={props.copy?.describedBy}
-			/>
+			<Form.DescribedBy id={props.id} describedBy={props.copy?.describedBy} />
 			<Form.ErrorMessage id={props.id} errors={props.errors} />
 		</div>
 	);

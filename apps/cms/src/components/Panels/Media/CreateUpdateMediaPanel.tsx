@@ -43,8 +43,7 @@ const CreateUpdateMediaPanel: Component<CreateUpdateMediaPanelProps> = (
 		disableRemoveCurrent: true,
 		name: "file",
 		required: true,
-		errors:
-			panelMode() === "create" ? createMedia.errors : updateMedia?.errors,
+		errors: panelMode() === "create" ? createMedia.errors : updateMedia?.errors,
 		noMargin: false,
 	});
 
@@ -68,9 +67,7 @@ const CreateUpdateMediaPanel: Component<CreateUpdateMediaPanelProps> = (
 			const type = helpers.getMediaType(MediaFile.getMimeType());
 			return type === "image";
 		}
-		return panelMode() === "create"
-			? false
-			: media.data?.data.type === "image";
+		return panelMode() === "create" ? false : media.data?.data.type === "image";
 	});
 
 	const mutateIsLoading = createMemo(() => {
@@ -243,22 +240,17 @@ const CreateUpdateMediaPanel: Component<CreateUpdateMediaPanelProps> = (
 										) || ""
 									}
 									onChange={(val) => {
-										helpers.updateTranslation(
-											targetAction()?.setTitle,
-											{
-												localeCode: locale.code,
-												value: val,
-											},
-										);
+										helpers.updateTranslation(targetAction()?.setTitle, {
+											localeCode: locale.code,
+											value: val,
+										});
 									}}
 									name={`name-${locale.code}`}
 									type="text"
 									copy={{
 										label: T()("name"),
 									}}
-									errors={getErrorObject(
-										inputError(index())?.name,
-									)}
+									errors={getErrorObject(inputError(index())?.name)}
 									autoComplete="off"
 									theme="full"
 								/>
@@ -272,22 +264,17 @@ const CreateUpdateMediaPanel: Component<CreateUpdateMediaPanelProps> = (
 											) || ""
 										}
 										onChange={(val) => {
-											helpers.updateTranslation(
-												targetAction()?.setAlt,
-												{
-													localeCode: locale.code,
-													value: val,
-												},
-											);
+											helpers.updateTranslation(targetAction()?.setAlt, {
+												localeCode: locale.code,
+												value: val,
+											});
 										}}
 										name={`alt-${locale.code}`}
 										type="text"
 										copy={{
 											label: T()("alt"),
 										}}
-										errors={getErrorObject(
-											inputError(index())?.alt,
-										)}
+										errors={getErrorObject(inputError(index())?.alt)}
 										theme="full"
 									/>
 								</Show>
@@ -320,15 +307,11 @@ const CreateUpdateMediaPanel: Component<CreateUpdateMediaPanelProps> = (
 								},
 								{
 									label: T()("created_at"),
-									value: dateHelpers.formatDate(
-										media.data?.data.createdAt,
-									),
+									value: dateHelpers.formatDate(media.data?.data.createdAt),
 								},
 								{
 									label: T()("updated_at"),
-									value: dateHelpers.formatDate(
-										media.data?.data.updatedAt,
-									),
+									value: dateHelpers.formatDate(media.data?.data.updatedAt),
 								},
 							]}
 						/>

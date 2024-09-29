@@ -25,29 +25,33 @@ const beforeDeleteHandler =
 			};
 		}
 
-		const descendantsRes = await getDescendantFields(context, {
-			ids: data.data.ids,
-		});
-		if (descendantsRes.error) return descendantsRes;
+		// Process both draft and published versions
+		const versionTypes: ("draft" | "published")[] = ["draft", "published"];
 
-		// exit early - nothing to do
-		if (descendantsRes.data.length === 0) {
-			return {
-				error: undefined,
-				data: undefined,
-			};
+		for (const versionType of versionTypes) {
+			const descendantsRes = await getDescendantFields(context, {
+				ids: data.data.ids,
+				versionType,
+			});
+			if (descendantsRes.error) return descendantsRes;
+
+			// Skip to next version type if no descendants found
+			if (descendantsRes.data.length === 0) {
+				continue;
+			}
+
+			const docFullSlugsRes = constructChildFullSlug({
+				descendants: descendantsRes.data,
+				localisation: context.config.localisation,
+				collection: targetCollectionRes.data,
+			});
+			if (docFullSlugsRes.error) return docFullSlugsRes;
+
+			await updateFullSlugFields(context, {
+				docFullSlugs: docFullSlugsRes.data,
+				versionType,
+			});
 		}
-
-		const docFullSlugsRes = constructChildFullSlug({
-			descendants: descendantsRes.data,
-			localisation: context.config.localisation,
-			collection: targetCollectionRes.data,
-		});
-		if (docFullSlugsRes.error) return docFullSlugsRes;
-
-		await updateFullSlugFields(context, {
-			docFullSlugs: docFullSlugsRes.data,
-		});
 
 		return {
 			error: undefined,

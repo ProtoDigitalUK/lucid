@@ -7,7 +7,7 @@ import type { FieldSchemaType, ServiceResponse } from "@lucidcms/core/types";
  */
 const checkParentIsPageOfSelf = (data: {
 	defaultLocale: string;
-	documentId: number | undefined;
+	documentId: number;
 	fields: {
 		parentPage: FieldSchemaType;
 	};
@@ -29,9 +29,7 @@ const checkParentIsPageOfSelf = (data: {
 								groupId: undefined,
 								key: constants.fields.parentPage.key,
 								localeCode: data.defaultLocale, //* parentPage doesnt use translations so always use default locale
-								message: T(
-									"cannot_have_self_as_parent_page_message",
-								),
+								message: T("cannot_have_self_as_parent_page_message"),
 							},
 						],
 					},

@@ -30,9 +30,7 @@ export const MediaList: Component<{
 
 	// ----------------------------------
 	// Memos
-	const contentLocale = createMemo(
-		() => contentLocaleStore.get.contentLocale,
-	);
+	const contentLocale = createMemo(() => contentLocaleStore.get.contentLocale);
 
 	// ----------------------------------
 	// Queries

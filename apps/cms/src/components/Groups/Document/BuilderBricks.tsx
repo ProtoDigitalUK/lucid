@@ -132,11 +132,9 @@ const BuilderBrickRow: Component<BuilderBrickRowProps> = (props) => {
 			class={classNames(
 				"drag-item w-full bg-container-2 border border-border rounded-md mb-15 last:mb-0 focus-within:outline-none focus-within:ring-1 ring-inset ring-primary-base",
 				{
-					"opacity-60":
-						props.dragDrop.getDragging()?.index === brickIndex(),
+					"opacity-60": props.dragDrop.getDragging()?.index === brickIndex(),
 					"ring-1 ring-inset":
-						props.dragDrop.getDraggingTarget()?.index ===
-						brickIndex(),
+						props.dragDrop.getDraggingTarget()?.index === brickIndex(),
 				},
 			)}
 			onDragStart={(e) =>

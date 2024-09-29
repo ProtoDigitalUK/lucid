@@ -37,8 +37,7 @@ export const Breadcrumbs: Component<{
 									</A>
 									<Show
 										when={
-											props.breadcrumbs &&
-											i() < props.breadcrumbs.length - 1
+											props.breadcrumbs && i() < props.breadcrumbs.length - 1
 										}
 									>
 										<FaSolidCaretRight class="mx-2.5 text-sm" />

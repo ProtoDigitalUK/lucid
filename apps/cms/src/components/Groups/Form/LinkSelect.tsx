@@ -86,10 +86,7 @@ export const LinkSelect: Component<LinkSelectProps> = (props) => {
 							>
 								<span class="line-clamp-1">{linkLabel()}</span>
 								<span class="ml-2.5 flex items-center border-l border-current pl-2.5">
-									<FaSolidPen
-										size={12}
-										class="text-current"
-									/>
+									<FaSolidPen size={12} class="text-current" />
 								</span>
 							</Button>
 							<Button
@@ -109,10 +106,7 @@ export const LinkSelect: Component<LinkSelectProps> = (props) => {
 					</Match>
 				</Switch>
 			</div>
-			<Form.DescribedBy
-				id={props.id}
-				describedBy={props.copy?.describedBy}
-			/>
+			<Form.DescribedBy id={props.id} describedBy={props.copy?.describedBy} />
 			<Form.ErrorMessage id={props.id} errors={props.errors} />
 		</div>
 	);

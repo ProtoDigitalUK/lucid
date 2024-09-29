@@ -108,10 +108,7 @@ const getMediaType = (mimeType?: string): MediaResponse["type"] => {
 		normalizedMimeType.startsWith("application/vnd")
 	)
 		return "document";
-	if (
-		normalizedMimeType.includes("zip") ||
-		normalizedMimeType.includes("tar")
-	)
+	if (normalizedMimeType.includes("zip") || normalizedMimeType.includes("tar"))
 		return "archive";
 
 	return "unknown";
@@ -202,9 +199,7 @@ const getTranslation = (
 	}[],
 	contentLocale?: string,
 ) => {
-	const translation = translations?.find(
-		(t) => t.localeCode === contentLocale,
-	);
+	const translation = translations?.find((t) => t.localeCode === contentLocale);
 	return translation?.value ?? null;
 };
 const getRecordTranslation = (

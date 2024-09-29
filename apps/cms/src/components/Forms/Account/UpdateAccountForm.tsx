@@ -166,10 +166,7 @@ const UpdateAccountForm: Component<UpdateAccountFormProps> = (props) => {
 						copy={{
 							label: T()("confirm_password"),
 						}}
-						errors={getBodyError(
-							"passwordConfirmation",
-							updateMe.errors,
-						)}
+						errors={getBodyError("passwordConfirmation", updateMe.errors)}
 						theme="full"
 					/>
 				</Show>

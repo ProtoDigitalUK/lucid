@@ -43,8 +43,7 @@ const DeleteClientIntegration: Component<DeleteClientIntegrationProps> = (
 			}}
 			callbacks={{
 				onConfirm: () => {
-					const id =
-						typeof props.id === "function" ? props.id() : props.id;
+					const id = typeof props.id === "function" ? props.id() : props.id;
 					if (!id) return console.error("No id provided");
 					deleteIntegration.action.mutate({
 						id: id,

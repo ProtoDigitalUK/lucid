@@ -44,14 +44,10 @@ export const NavigationLink: Component<NavigationLinkProps> = (props) => {
 			>
 				<Switch>
 					<Match when={props.icon === "page"}>
-						<FaSolidFile
-							class={classNames("w-4 h-4 text-current")}
-						/>
+						<FaSolidFile class={classNames("w-4 h-4 text-current")} />
 					</Match>
 				</Switch>
-				<span class="ml-2.5 block text-sm font-medium">
-					{props.title}
-				</span>
+				<span class="ml-2.5 block text-sm font-medium">{props.title}</span>
 			</A>
 		</li>
 	);

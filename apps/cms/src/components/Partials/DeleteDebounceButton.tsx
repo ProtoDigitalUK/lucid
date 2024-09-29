@@ -27,8 +27,7 @@ const DeleteDebounceButton: Component<DeleteButtonProps> = (props) => {
 			class={classNames(
 				"transition-all duration-200 cursor-pointer focus:outline-none focus:ring-1 ring-primary-base",
 				{
-					"text-icon-base hover:text-error-base":
-						getConfirmRemove() === 0,
+					"text-icon-base hover:text-error-base": getConfirmRemove() === 0,
 					"text-error-hover animate-pulse": getConfirmRemove() === 1,
 				},
 			)}

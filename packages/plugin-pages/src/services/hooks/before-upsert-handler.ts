@@ -37,20 +37,15 @@ const beforeUpsertHandler =
 		const checkFieldsExistRes = checkFieldsExist({
 			fields: {
 				slug: data.data.fields?.find(
-					(f) =>
-						f.key === constants.fields.slug.key &&
-						f.type === "text",
+					(f) => f.key === constants.fields.slug.key && f.type === "text",
 				),
 				parentPage: data.data.fields?.find(
 					(f) =>
-						f.key === constants.fields.parentPage.key &&
-						f.type === "document",
+						f.key === constants.fields.parentPage.key && f.type === "document",
 				),
 				//* dont care what this value is - only needed to update translations/value
 				fullSlug: data.data.fields?.find(
-					(f) =>
-						f.key === constants.fields.fullSlug.key &&
-						f.type === "text",
+					(f) => f.key === constants.fields.fullSlug.key && f.type === "text",
 				),
 			},
 		});
@@ -80,6 +75,8 @@ const beforeUpsertHandler =
 			context,
 			{
 				documentId: data.data.documentId,
+				versionId: data.data.versionId,
+				versionType: data.data.versionType,
 				collectionKey: targetCollectionRes.data.collectionKey,
 				fields: {
 					slug: slug,
@@ -87,8 +84,7 @@ const beforeUpsertHandler =
 				},
 			},
 		);
-		if (checkDuplicateSlugParentsRes.error)
-			return checkDuplicateSlugParentsRes;
+		if (checkDuplicateSlugParentsRes.error) return checkDuplicateSlugParentsRes;
 
 		// ----------------------------------------------------------------
 		// Build and set fullSlug
@@ -108,6 +104,7 @@ const beforeUpsertHandler =
 		if (parentPage.value) {
 			const circularParentsRes = await checkCircularParents(context, {
 				documentId: data.data.documentId,
+				versionType: data.data.versionType,
 				defaultLocale: context.config.localisation.defaultLocale,
 				fields: {
 					parentPage: parentPage,
@@ -117,6 +114,7 @@ const beforeUpsertHandler =
 
 			const parentFieldsRes = await getParentFields(context, {
 				defaultLocale: context.config.localisation.defaultLocale,
+				versionType: data.data.versionType,
 				fields: {
 					parentPage: parentPage,
 				},

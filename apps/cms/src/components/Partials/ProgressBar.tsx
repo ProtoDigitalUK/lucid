@@ -34,21 +34,14 @@ const ProgressBar: Component<ProgressBarProps> = (props) => {
 				aria-valuetext={`${getProgress()}% progress`}
 			>
 				<div
-					class={classNames(
-						"h-full rounded-md duration-200 transition-all",
-						{
-							// usage
-							"bg-error-base":
-								props.type === "usage" && getProgress() > 90,
-							"bg-white":
-								props.type === "usage" && getProgress() <= 90,
-							// target
-							"bg-primary-base":
-								props.type === "target" && getProgress() > 90,
-							"bg-primary-base ":
-								props.type === "target" && getProgress() <= 90,
-						},
-					)}
+					class={classNames("h-full rounded-md duration-200 transition-all", {
+						// usage
+						"bg-error-base": props.type === "usage" && getProgress() > 90,
+						"bg-white": props.type === "usage" && getProgress() <= 90,
+						// target
+						"bg-primary-base": props.type === "target" && getProgress() > 90,
+						"bg-primary-base ": props.type === "target" && getProgress() <= 90,
+					})}
 					style={{
 						width: `${getProgress()}%`,
 					}}

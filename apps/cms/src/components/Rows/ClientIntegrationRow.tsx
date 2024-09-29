@@ -23,8 +23,7 @@ const ClientIntegrationRow: Component<ClientIntegrationRow> = (props) => {
 		return userStore.get.hasPermission(["delete_client_integration"]).all;
 	});
 	const hasRegeneratePermission = createMemo(() => {
-		return userStore.get.hasPermission(["regenerate_client_integration"])
-			.all;
+		return userStore.get.hasPermission(["regenerate_client_integration"]).all;
 	});
 
 	// ----------------------------------
@@ -34,8 +33,7 @@ const ClientIntegrationRow: Component<ClientIntegrationRow> = (props) => {
 			<div class="flex items-start">
 				<span
 					class={classNames("w-4 h-4 rounded-full block mr-2.5", {
-						"bg-primary-base":
-							props.clientIntegration.enabled === 1,
+						"bg-primary-base": props.clientIntegration.enabled === 1,
 						"bg-error-base": props.clientIntegration.enabled === 0,
 					})}
 				/>
@@ -45,8 +43,7 @@ const ClientIntegrationRow: Component<ClientIntegrationRow> = (props) => {
 							"mb-2": props.clientIntegration.description,
 						})}
 					>
-						{props.clientIntegration.name} (
-						{props.clientIntegration.key})
+						{props.clientIntegration.name} ({props.clientIntegration.key})
 					</h3>
 					<Show when={props.clientIntegration.description}>
 						<p class="text-sm mb-0 leading-none">
@@ -61,9 +58,7 @@ const ClientIntegrationRow: Component<ClientIntegrationRow> = (props) => {
 						type: "button",
 						label: T()("update"),
 						onClick: () => {
-							props.rowTarget.setTargetId(
-								props.clientIntegration.id,
-							);
+							props.rowTarget.setTargetId(props.clientIntegration.id);
 							props.rowTarget.setTrigger("update", true);
 						},
 						permission: hasUpdatePermission(),
@@ -72,9 +67,7 @@ const ClientIntegrationRow: Component<ClientIntegrationRow> = (props) => {
 						type: "button",
 						label: T()("delete"),
 						onClick: () => {
-							props.rowTarget.setTargetId(
-								props.clientIntegration.id,
-							);
+							props.rowTarget.setTargetId(props.clientIntegration.id);
 							props.rowTarget.setTrigger("delete", true);
 						},
 						permission: hasDeletePermission(),
@@ -83,13 +76,8 @@ const ClientIntegrationRow: Component<ClientIntegrationRow> = (props) => {
 						type: "button",
 						label: T()("regenerate_api_key"),
 						onClick: () => {
-							props.rowTarget.setTargetId(
-								props.clientIntegration.id,
-							);
-							props.rowTarget.setTrigger(
-								"regenerateAPIKey",
-								true,
-							);
+							props.rowTarget.setTargetId(props.clientIntegration.id);
+							props.rowTarget.setTrigger("regenerateAPIKey", true);
 						},
 						permission: hasRegeneratePermission(),
 					},

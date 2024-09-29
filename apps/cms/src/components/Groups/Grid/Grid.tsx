@@ -42,9 +42,7 @@ export const GridRoot: Component<{
 						</Match>
 					</Switch>
 				</Match>
-				<Match when={props.state?.isLoading === false}>
-					{props.children}
-				</Match>
+				<Match when={props.state?.isLoading === false}>{props.children}</Match>
 			</Switch>
 		</ul>
 	);

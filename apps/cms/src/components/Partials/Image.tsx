@@ -15,20 +15,14 @@ const Image: Component<ImageProps> = (props) => {
 	return (
 		<KImage.Root>
 			<KImage.Img
-				class={classNames(
-					"object-cover block w-full h-full",
-					props.classes,
-				)}
+				class={classNames("object-cover block w-full h-full", props.classes)}
 				src={props.src}
 				loading={props.loading}
 				alt={props.alt}
 				decoding="async"
 			/>
 			<KImage.Fallback
-				class={classNames(
-					"bg-container-4 w-full h-full block",
-					props.classes,
-				)}
+				class={classNames("bg-container-4 w-full h-full block", props.classes)}
 			/>
 		</KImage.Root>
 	);

@@ -57,10 +57,7 @@ const StartingPoints: Component<StartingPointsProps> = (props) => {
 						<div>
 							<h3 class="text-sm font-medium text-title">
 								<A href={link.href} class="focus:outline-none">
-									<span
-										class="absolute inset-0"
-										aria-hidden="true"
-									/>
+									<span class="absolute inset-0" aria-hidden="true" />
 									<span>{link.title}</span>
 									<span aria-hidden="true"> &rarr;</span>
 								</A>

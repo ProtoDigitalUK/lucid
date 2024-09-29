@@ -24,9 +24,7 @@ const UserRow: Component<UserRowProps> = (props) => {
 		return props.user.id === userStore.get.user?.id;
 	});
 	const username = createMemo(() => {
-		return currentUser()
-			? `${props.user.username} (you)`
-			: props.user.username;
+		return currentUser() ? `${props.user.username} (you)` : props.user.username;
 	});
 
 	// ----------------------------------
@@ -44,8 +42,7 @@ const UserRow: Component<UserRowProps> = (props) => {
 						props.rowTarget.setTrigger("update", true);
 					},
 					permission:
-						userStore.get.hasPermission(["update_user"]).all &&
-						!currentUser(),
+						userStore.get.hasPermission(["update_user"]).all && !currentUser(),
 				},
 				{
 					label: T()("delete"),
@@ -55,8 +52,7 @@ const UserRow: Component<UserRowProps> = (props) => {
 						props.rowTarget.setTrigger("delete", true);
 					},
 					permission:
-						userStore.get.hasPermission(["delete_user"]).all &&
-						!currentUser(),
+						userStore.get.hasPermission(["delete_user"]).all && !currentUser(),
 				},
 				{
 					label: T()("reset_password"),
@@ -66,17 +62,13 @@ const UserRow: Component<UserRowProps> = (props) => {
 						props.rowTarget.setTrigger("passwordReset", true);
 					},
 					permission:
-						userStore.get.hasPermission(["update_user"]).all &&
-						!currentUser(),
+						userStore.get.hasPermission(["update_user"]).all && !currentUser(),
 				},
 			]}
 			options={props.options}
 			callbacks={props.callbacks}
 		>
-			<TextCol
-				text={username()}
-				options={{ include: props?.include[0] }}
-			/>
+			<TextCol text={username()} options={{ include: props?.include[0] }} />
 			<TextCol
 				text={props.user.firstName}
 				options={{ include: props?.include[1] }}
@@ -86,9 +78,7 @@ const UserRow: Component<UserRowProps> = (props) => {
 				options={{ include: props?.include[2] }}
 			/>
 			<PillCol
-				text={
-					props.user.superAdmin ? T()("super_admin") : T()("standard")
-				}
+				text={props.user.superAdmin ? T()("super_admin") : T()("standard")}
 				options={{ include: props?.include[3] }}
 			/>
 			<TextCol

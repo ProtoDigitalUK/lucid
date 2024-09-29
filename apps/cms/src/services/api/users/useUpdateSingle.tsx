@@ -32,10 +32,7 @@ interface UseUpdateSingleProps {
 const useUpdateSingle = (props?: UseUpdateSingleProps) => {
 	// -----------------------------
 	// Mutation
-	return serviceHelpers.useMutationWrapper<
-		Params,
-		ResponseBody<UserResponse>
-	>({
+	return serviceHelpers.useMutationWrapper<Params, ResponseBody<UserResponse>>({
 		mutationFn: updateSingleReq,
 		getSuccessToast: () => ({
 			title: T()("user_update_toast_title"),

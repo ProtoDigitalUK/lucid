@@ -33,10 +33,8 @@ const DetailsList: Component<DetailsListProps> = (props) => {
 								{
 									"flex-col items-start lg:justify-between":
 										props.type === "text",
-									"justify-between items-center":
-										props.type === "pill",
-									"lg:flex-row lg:items-center":
-										!item.stacked,
+									"justify-between items-center": props.type === "pill",
+									"lg:flex-row lg:items-center": !item.stacked,
 								},
 							)}
 						>
@@ -46,9 +44,7 @@ const DetailsList: Component<DetailsListProps> = (props) => {
 										{item.label}
 									</span>
 									<Show when={item.value !== undefined}>
-										<Pill theme="primary">
-											{item.value}
-										</Pill>
+										<Pill theme="primary">{item.value}</Pill>
 									</Show>
 								</Match>
 								<Match when={props.type === "text"}>

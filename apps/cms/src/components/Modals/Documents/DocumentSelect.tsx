@@ -53,9 +53,7 @@ const DocumentSelectContent: Component = () => {
 
 	// ----------------------------------
 	// Memos
-	const collectionKey = createMemo(
-		() => documentSelectStore.get.collectionKey,
-	);
+	const collectionKey = createMemo(() => documentSelectStore.get.collectionKey);
 	const contentLocale = createMemo(
 		() => contentLocaleStore.get.contentLocale ?? "",
 	);
@@ -128,66 +126,54 @@ const DocumentSelectContent: Component = () => {
 				<div class="w-full mt-15 flex justify-between">
 					<div class="flex gap-5">
 						<Query.Filter
-							filters={getCollectionFieldFilters().map(
-								(field) => {
-									switch (field.type) {
-										case "checkbox": {
-											return {
-												label: helpers.getLocaleValue({
-													value: field.labels.title,
-													fallback: field.key,
-												}),
-												key: field.key,
-												type: "boolean",
-											};
-										}
-										case "select": {
-											return {
-												label: helpers.getLocaleValue({
-													value: field.labels.title,
-													fallback: field.key,
-												}),
-												key: field.key,
-												type: "select",
-												options: field.options?.map(
-													(option, i) => ({
-														value: option.value,
-														label: helpers.getLocaleValue(
-															{
-																value: option.label,
-																fallback: T()(
-																	"option_label",
-																	{
-																		count: i,
-																	},
-																),
-															},
-														),
-													}),
-												),
-											};
-										}
-										default: {
-											return {
-												label: helpers.getLocaleValue({
-													value: field.labels.title,
-													fallback: field.key,
-												}),
-												key: field.key,
-												type: "text",
-											};
-										}
+							filters={getCollectionFieldFilters().map((field) => {
+								switch (field.type) {
+									case "checkbox": {
+										return {
+											label: helpers.getLocaleValue({
+												value: field.labels.title,
+												fallback: field.key,
+											}),
+											key: field.key,
+											type: "boolean",
+										};
 									}
-								},
-							)}
+									case "select": {
+										return {
+											label: helpers.getLocaleValue({
+												value: field.labels.title,
+												fallback: field.key,
+											}),
+											key: field.key,
+											type: "select",
+											options: field.options?.map((option, i) => ({
+												value: option.value,
+												label: helpers.getLocaleValue({
+													value: option.label,
+													fallback: T()("option_label", {
+														count: i,
+													}),
+												}),
+											})),
+										};
+									}
+									default: {
+										return {
+											label: helpers.getLocaleValue({
+												value: field.labels.title,
+												fallback: field.key,
+											}),
+											key: field.key,
+											type: "text",
+										};
+									}
+								}
+							})}
 							searchParams={searchParams}
 						/>
 					</div>
 					<div>
-						<Query.PerPage
-							options={[10, 20, 40]}
-							searchParams={searchParams}
-						/>
+						<Query.PerPage options={[10, 20, 40]} searchParams={searchParams} />
 					</div>
 				</div>
 			</div>
@@ -207,18 +193,12 @@ const DocumentSelectContent: Component = () => {
 							title: T()("no_documents", {
 								collectionMultiple: collection.data?.data.title,
 							}),
-							description: T()(
-								"no_documents_description_doc_select",
-								{
-									collectionMultiple:
-										collection.data?.data?.title.toLowerCase(),
-									collectionSingle:
-										collection.data?.data?.singular.toLowerCase(),
-								},
-							),
+							description: T()("no_documents_description_doc_select", {
+								collectionMultiple: collection.data?.data?.title.toLowerCase(),
+								collectionSingle: collection.data?.data?.singular.toLowerCase(),
+							}),
 							button: T()("create_document", {
-								collectionSingle:
-									collection.data?.data?.singular,
+								collectionSingle: collection.data?.data?.singular,
 							}),
 						},
 					}}
@@ -247,10 +227,7 @@ const DocumentSelectContent: Component = () => {
 										index={i}
 										document={doc()}
 										fieldInclude={getCollectionFieldIncludes()}
-										collection={
-											collection.data
-												?.data as CollectionResponse
-										}
+										collection={collection.data?.data as CollectionResponse}
 										include={include}
 										contentLocale={contentLocale()}
 										selected={selected[i]}
@@ -260,19 +237,11 @@ const DocumentSelectContent: Component = () => {
 										callbacks={{
 											setSelected: setSelected,
 											onClick: () => {
-												documentSelectStore.get.onSelectCallback(
-													doc(),
-												);
-												documentSelectStore.set(
-													"open",
-													false,
-												);
+												documentSelectStore.get.onSelectCallback(doc());
+												documentSelectStore.set("open", false);
 											},
 										}}
-										current={
-											doc().id ===
-											documentSelectStore.get.selected
-										}
+										current={doc().id === documentSelectStore.get.selected}
 									/>
 								)}
 							</Index>

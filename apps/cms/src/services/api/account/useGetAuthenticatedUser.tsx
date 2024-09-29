@@ -19,9 +19,7 @@ const useGetAuthenticatedUser = (
 	const queryParams = createMemo(() =>
 		serviceHelpers.getQueryParams<QueryParams>(params.queryParams),
 	);
-	const queryKey = createMemo(() =>
-		serviceHelpers.getQueryKey(queryParams()),
-	);
+	const queryKey = createMemo(() => serviceHelpers.getQueryKey(queryParams()));
 
 	const query = createQuery(() => ({
 		queryKey: ["users.getSingle", queryKey(), params.key?.()],

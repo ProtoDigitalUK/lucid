@@ -23,18 +23,12 @@ const useGetMultiple = (params: QueryHook<QueryParams>) => {
 	const queryParams = createMemo(() =>
 		serviceHelpers.getQueryParams<QueryParams>(params.queryParams),
 	);
-	const queryKey = createMemo(() =>
-		serviceHelpers.getQueryKey(queryParams()),
-	);
+	const queryKey = createMemo(() => serviceHelpers.getQueryKey(queryParams()));
 
 	// -----------------------------
 	// Query
 	return createQuery(() => ({
-		queryKey: [
-			"collections.document.getMultiple",
-			queryKey(),
-			params.key?.(),
-		],
+		queryKey: ["collections.document.getMultiple", queryKey(), params.key?.()],
 		queryFn: () =>
 			request<ResponseBody<CollectionDocumentResponse[]>>({
 				url: `/api/v1/collections/documents/${

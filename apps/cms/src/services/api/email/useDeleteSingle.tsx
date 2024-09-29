@@ -25,19 +25,18 @@ interface UseDeleteProps {
 const useDeleteSingle = (props: UseDeleteProps) => {
 	// -----------------------------
 	// Mutation
-	return serviceHelpers.useMutationWrapper<
-		Params,
-		ResponseBody<EmailResponse>
-	>({
-		mutationFn: deleteSingleReq,
-		getSuccessToast: () => ({
-			title: T()("email_deleted_toast_title"),
-			message: T()("email_deleted_toast_message"),
-		}),
-		invalidates: ["email.getMultiple"],
-		onSuccess: props.onSuccess,
-		onError: props.onError,
-	});
+	return serviceHelpers.useMutationWrapper<Params, ResponseBody<EmailResponse>>(
+		{
+			mutationFn: deleteSingleReq,
+			getSuccessToast: () => ({
+				title: T()("email_deleted_toast_title"),
+				message: T()("email_deleted_toast_message"),
+			}),
+			invalidates: ["email.getMultiple"],
+			onSuccess: props.onSuccess,
+			onError: props.onError,
+		},
+	);
 };
 
 export default useDeleteSingle;
