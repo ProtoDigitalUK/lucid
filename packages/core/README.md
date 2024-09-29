@@ -30,7 +30,7 @@ Effortlessly configure Lucid to meet your content needs with our flexible config
     - TypeScript-First: Ensures type safety and improved developer experience.
     - Multiple Database Support: Choose from PostgreSQL, LibSQL, or SQLite.
     - Extensible Architecture: Plugins and hooks for custom feature development.
-- 🚀 Advanced Functionality:
+- 🔧 Capabilities:
     - Image Processing: On-demand resizing and reformatting, including next-gen formats (AVIF, WebP).
     - Email Integration: Customisable email strategies with template management.
     - User Management: Invite users and assign roles with granular permissions.
