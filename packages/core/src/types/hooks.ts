@@ -1,3 +1,4 @@
+import type { DocumentVersionType } from "../libs/db/types.js";
 import type { BrickSchema } from "../schemas/collection-bricks.js";
 import type { FieldSchemaType } from "../schemas/collection-fields.js";
 import type { ServiceFn } from "../utils/services/types.js";
@@ -39,6 +40,8 @@ export type HookServiceHandlers = {
 					};
 					data: {
 						documentId?: number;
+						versionId?: number;
+						versionType?: DocumentVersionType;
 						bricks?: Array<BrickSchema>;
 						fields?: Array<FieldSchemaType>;
 					};
@@ -60,6 +63,8 @@ export type HookServiceHandlers = {
 					};
 					data: {
 						documentId: number;
+						versionId: number;
+						versionType: DocumentVersionType;
 						bricks: Array<BrickSchema>;
 						fields: Array<FieldSchemaType>;
 					};

@@ -1,4 +1,6 @@
 import Repository from "../../libs/repositories/index.js";
+import executeHooks from "../../utils/hooks/execute-hooks.js";
+import merge from "lodash.merge";
 import type { BrickSchema } from "../../schemas/collection-bricks.js";
 import type { FieldSchemaType } from "../../schemas/collection-fields.js";
 import type { CollectionBuilder } from "../../exports/builders.js";
@@ -63,17 +65,71 @@ const createSingle: ServiceFn<
 		};
 	}
 
+	// ----------------------------------------------
+	// Fire beforeUpsert hook and merge result with data
+	const hookResponse = await executeHooks(
+		{
+			service: "collection-documents",
+			event: "beforeUpsert",
+			config: context.config,
+			collectionInstance: data.collection,
+		},
+		context,
+		{
+			meta: {
+				collectionKey: data.collection.key,
+				userId: data.userId,
+			},
+			data: {
+				documentId: data.documentId,
+				versionId: newVersion.id,
+				versionType: newVersion.version_type,
+				bricks: data.bricks,
+				fields: data.fields,
+			},
+		},
+	);
+	if (hookResponse.error) return hookResponse;
+
+	const bodyData = merge(data, hookResponse.data);
+
 	// Save bricks for the new version
 	const createMultipleBricks =
 		await context.services.collection.document.brick.createMultiple(context, {
 			versionId: newVersion.id,
 			documentId: data.documentId,
-			bricks: data.bricks,
-			fields: data.fields,
+			bricks: bodyData.bricks,
+			fields: bodyData.fields,
 			collection: data.collection,
 		});
 
 	if (createMultipleBricks.error) return createMultipleBricks;
+
+	// ----------------------------------------------
+	// Fire afterUpsert hook
+	const hookAfterRes = await executeHooks(
+		{
+			service: "collection-documents",
+			event: "afterUpsert",
+			config: context.config,
+			collectionInstance: data.collection,
+		},
+		context,
+		{
+			meta: {
+				collectionKey: data.collection.key,
+				userId: data.userId,
+			},
+			data: {
+				documentId: data.documentId,
+				versionId: newVersion.id,
+				versionType: newVersion.version_type,
+				bricks: bodyData.bricks || [],
+				fields: bodyData.fields || [],
+			},
+		},
+	);
+	if (hookAfterRes.error) return hookAfterRes;
 
 	return {
 		error: undefined,

@@ -1,7 +1,6 @@
 import T from "../../translations/index.js";
 import Repository from "../../libs/repositories/index.js";
-import executeHooks from "../../utils/hooks/execute-hooks.js";
-import merge from "lodash.merge";
+
 import type { BrickSchema } from "../../schemas/collection-bricks.js";
 import type { FieldSchemaType } from "../../schemas/collection-fields.js";
 import type { ServiceFn } from "../../utils/services/types.js";
@@ -91,28 +90,6 @@ const upsertSingle: ServiceFn<
 	if (checkDocumentCount.error) return checkDocumentCount;
 
 	// ----------------------------------------------
-	// Fire beforeUpsert hook and merge result with data
-	const hookResponse = await executeHooks(
-		{
-			service: "collection-documents",
-			event: "beforeUpsert",
-			config: context.config,
-			collectionInstance: collectionRes.data,
-		},
-		context,
-		{
-			meta: {
-				collectionKey: data.collectionKey,
-				userId: data.userId,
-			},
-			data: data,
-		},
-	);
-	if (hookResponse.error) return hookResponse;
-
-	const bodyData = merge(data, hookResponse.data);
-
-	// ----------------------------------------------
 	// Upsert document
 	const document = await CollectionDocumentsRepo.upsertSingle({
 		id: data.documentId,
@@ -139,35 +116,11 @@ const upsertSingle: ServiceFn<
 			documentId: document.id,
 			userId: data.userId,
 			publish: data.documentId === undefined ? 0 : data.publish, // if we're creating a new document, we don't want to publish it
-			bricks: bodyData.bricks,
-			fields: bodyData.fields,
+			bricks: data.bricks,
+			fields: data.fields,
 			collection: collectionRes.data,
 		});
 	if (createVersionRes.error) return createVersionRes;
-
-	// ----------------------------------------------
-	// Fire afterUpsert hook
-	const hookAfterRes = await executeHooks(
-		{
-			service: "collection-documents",
-			event: "afterUpsert",
-			config: context.config,
-			collectionInstance: collectionRes.data,
-		},
-		context,
-		{
-			meta: {
-				collectionKey: data.collectionKey,
-				userId: data.userId,
-			},
-			data: {
-				documentId: document.id,
-				bricks: bodyData.bricks || [],
-				fields: bodyData.fields || [],
-			},
-		},
-	);
-	if (hookAfterRes.error) return hookAfterRes;
 
 	return {
 		error: undefined,
