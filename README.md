@@ -10,9 +10,6 @@
 > [!CAUTION]
 > Lucid is still in Alpha and under heavy development, so please for the time being avoid using in any production setting. There is currently no commitment to backwards compatibility and breaking changes will be released on a regular basis while APIs and interfaces are being finalised.
 
-> [!NOTE]  
-> The development of Lucid over the next few months will reduced while we focus on building out a new related internal project. Critical issues will still be addressed promptly. Stay tuned for more details on the new project.
-
 <hr/>
 
 A TypeScript-first, fully extensible headless CMS. Constructed using Fastify and SolidJS, it features sophisticated collection and brick builders, a wide range of plugins, and database adapters for PostgreSQL, LibSQL, and SQLite. It achieves the perfect balance of developer experience and an intuitive, easy-to-use interface for creators and end-users alike, without compromising on performance and flexibility.
@@ -21,18 +18,26 @@ Effortlessly configure Lucid to meet your content needs with our flexible config
 
 ## ✨ Features
 
-- **Multiple Database Supported:** Choose between PostgreSQL, LibSQL, and SQLite database adapters.
-- **Collection Builder:** Set collections to single or multiple document mode, toggle translation support, add fixed and dynamic bricks, and use any of the 13 custom fields to structure the collections to meet your content needs.
-- **Brick Builder:** Define groups of custom fields that can be used within collections as either fixed or dynamic bricks. With access to 15 unique custom fiels, have the flexibility to create the content you want.
-- **Media Library:** Upload and manage images, videos, audio, and documents, and use them throughout your content via the media custom field.
-- **Extensible Email Support:** Define custom strategies for how Lucid should handle sending emails, use the exported sendEmail service to extend Lucid, update and create new templates, and view all sent emails from the emails list route.
-- **Image Processing:** Use the CDN route to resize and reformat images on request, with support for next-gen formats like AVIF and WebP.
-- **Users and Roles:** Invite as many users as you like and assign them roles with comprehensive permissions.
-- **Full Localisation Support:** Full localisation support out of the box for collections and media with opt-in/out flags against individual fields.
-- **Plugin Support:** Use plugins to to extend Lucid with a range of first party and third party solutions.
-- **Hook Support:** Extend Lucid further through a range of hooks, giving you full flexibility to add custom features.
-- **Client Integrations:** Register and manage client integrations allowing a head to request data from Lucid.
-- **Toolkit:** Call client route services programmatically enabling you to extend Lucid.
+- 📝 Flexible Content Modelling:
+    - Collection Builder: Create single or multiple document collections with customisable fields and translation support.
+    - Brick Builder: Define reusable field groups for structured content creation.
+    - 15+ Custom Fields: Tailor your content structure with a wide range of field types.
+- 🎛️ Powerful Content Management:
+    - Revisions & Drafts: Full content history with easy version restoration.
+    - Media Library: Centralised management for images, videos, audio, and documents.
+    - Localisation: Built-in support for multilingual content.
+- 🛠️ Developer-Friendly:
+    - TypeScript-First: Ensures type safety and improved developer experience.
+    - Multiple Database Support: Choose from PostgreSQL, LibSQL, or SQLite.
+    - Extensible Architecture: Plugins and hooks for custom feature development.
+- 🚀 Advanced Functionality:
+    - Image Processing: On-demand resizing and reformatting, including next-gen formats (AVIF, WebP).
+    - Email Integration: Customisable email strategies with template management.
+    - User Management: Invite users and assign roles with granular permissions.
+- 🔌 Integration & Scalability:
+    - Client Integrations: Manage connections for headless front-ends.
+    - API Toolkit: Programmatically interact with Lucid's services.
+    - Plugin Ecosystem: Extend functionality with first-party and third-party plugins.
 
 ## 🛠️ First Party Plugins
 
