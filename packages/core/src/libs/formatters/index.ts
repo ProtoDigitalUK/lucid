@@ -14,6 +14,7 @@ import CollectionsFormatter from "./collections.js";
 import CollectionDocumentFieldsFormatter from "./collection-document-fields.js";
 import CollectionDocumentsFormatter from "./collection-documents.js";
 import CollectionDocumentBricksFormatter from "./collection-document-bricks.js";
+import CollectionDocumentVersions from "./collection-document-versions.js";
 import ClientIntegrationsFormatter from "./client-integrations.js";
 
 // biome-ignore lint/complexity/noStaticOnlyClass: <explanation>
@@ -48,6 +49,8 @@ class Formatter {
 				return new CollectionDocumentBricksFormatter() as FormatterReturnType<T>;
 			case "collection-document-fields":
 				return new CollectionDocumentFieldsFormatter() as FormatterReturnType<T>;
+			case "collection-document-versions":
+				return new CollectionDocumentVersions() as FormatterReturnType<T>;
 			case "client-integrations":
 				return new ClientIntegrationsFormatter() as FormatterReturnType<T>;
 			default:
@@ -105,6 +108,7 @@ type FormatterClassMap = {
 	"collection-documents": CollectionDocumentsFormatter;
 	"collection-document-bricks": CollectionDocumentBricksFormatter;
 	"collection-document-fields": CollectionDocumentFieldsFormatter;
+	"collection-document-versions": CollectionDocumentVersions;
 	"client-integrations": ClientIntegrationsFormatter;
 };
 

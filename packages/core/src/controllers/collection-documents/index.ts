@@ -1,6 +1,7 @@
 import client from "./client/index.js";
 import getSingle from "./get-single.js";
 import getMultiple from "./get-multiple.js";
+import getMultipleRevisions from "./get-multiple-revisions.js";
 import deleteMultiple from "./delete-multiple.js";
 import deleteSingle from "./delete-single.js";
 import restoreRevision from "./restore-revision.js";
@@ -12,6 +13,7 @@ export default {
 	client,
 	getSingle,
 	getMultiple,
+	getMultipleRevisions,
 	deleteMultiple,
 	deleteSingle,
 	restoreRevision,

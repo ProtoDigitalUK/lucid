@@ -147,6 +147,8 @@
 	"route_document_delete_error_message": "An error occurred while deleting the document(s).",
 	"route_document_restore_revision_error_name": "Document(s) Restore Revision Error",
 	"route_document_restore_revision_error_message": "An error occurred while restoring the document revision.",
+	"route_document_revision_fetch_error_name": "Document Revision(s) Fetch Error",
+	"route_document_revision_fetch_error_message": "An error occurred while fetching the document revision(s).",
 	"route_document_fetch_error_name": "Document(s) Fetch Error",
 	"route_document_fetch_error_message": "An error occurred while fetching the document(s).",
 	"route_document_update_error_name": "Document Update Error",

@@ -96,9 +96,35 @@ export default {
 		}),
 		params: z.object({
 			collectionKey: z.string(),
-			status: z.enum(["published", "draft", "revision"]),
+			status: z.enum(["published", "draft"]),
 		}),
 		body: undefined,
+	},
+	getMultipleRevisions: {
+		body: undefined,
+		query: z.object({
+			filter: z
+				.object({
+					createdBy: z
+						.union([filterSchemas.single, filterSchemas.union])
+						.optional(),
+				})
+				.optional(),
+			sort: z
+				.array(
+					z.object({
+						key: z.enum(["createdAt"]),
+						value: z.enum(["asc", "desc"]),
+					}),
+				)
+				.optional(),
+			page: defaultQuery.page,
+			perPage: defaultQuery.perPage,
+		}),
+		params: z.object({
+			collectionKey: z.string(),
+			id: z.string(),
+		}),
 	},
 	deleteSingle: {
 		body: undefined,

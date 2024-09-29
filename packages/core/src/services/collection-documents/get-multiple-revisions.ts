@@ -1,0 +1,56 @@
+import Repository from "../../libs/repositories/index.js";
+import Formatter from "../../libs/formatters/index.js";
+import type z from "zod";
+import type collectionDocumentsSchema from "../../schemas/collection-documents.js";
+import type { ServiceFn } from "../../utils/services/types.js";
+import type { CollectionDocumentVersionResponse } from "../../types/response.js";
+
+const getMultipleRevisions: ServiceFn<
+	[
+		{
+			collectionKey: string;
+			documentId: number;
+			query: z.infer<
+				typeof collectionDocumentsSchema.getMultipleRevisions.query
+			>;
+		},
+	],
+	{
+		data: CollectionDocumentVersionResponse[];
+		count: number;
+	}
+> = async (context, data) => {
+	const collectionRes = await context.services.collection.getSingleInstance(
+		context,
+		{
+			key: data.collectionKey,
+		},
+	);
+	if (collectionRes.error) return collectionRes;
+
+	const VersionsRepo = Repository.get(
+		"collection-document-versions",
+		context.db,
+	);
+	const VersionsFormatter = Formatter.get("collection-document-versions");
+
+	const [revisions, revisionsCount] =
+		await VersionsRepo.selectMultipleRevisions({
+			query: data.query,
+			documentId: data.documentId,
+			collectionKey: data.collectionKey,
+			config: context.config,
+		});
+
+	return {
+		error: undefined,
+		data: {
+			data: VersionsFormatter.formatMultiple({
+				versions: revisions,
+			}),
+			count: Formatter.parseCount(revisionsCount?.count),
+		},
+	};
+};
+
+export default getMultipleRevisions;

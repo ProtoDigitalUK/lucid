@@ -7,6 +7,7 @@ import type {
 	FieldResponseMeta,
 	FieldResponseValue,
 } from "../libs/custom-fields/types.js";
+import type { BrickTypes } from "../libs/builders/brick-builder/types.js";
 
 export interface UserResponse {
 	id: number;
@@ -211,6 +212,29 @@ export interface FieldGroupAltResponse {
 	order: number;
 	open: BooleanInt | null;
 	fields: Record<string, FieldAltResponse>;
+}
+
+export interface CollectionDocumentVersionResponse {
+	id: number;
+	versionType: DocumentVersionType;
+	previousVersionType: DocumentVersionType | null;
+	createdAt: string | null;
+	createdBy: number | null;
+	document: {
+		id: number | null;
+		collectionKey: string | null;
+		createdBy: number | null;
+		createdAt: string | null;
+		updatedAt: string | null;
+		updatedBy: number | null;
+	};
+	bricks: Record<
+		Partial<BrickTypes>,
+		Array<{
+			id: number;
+			brickKey: string | null;
+		}>
+	>;
 }
 
 export interface CollectionDocumentResponse {

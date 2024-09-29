@@ -799,6 +799,63 @@
 							"response": []
 						},
 						{
+							"name": "Get Multiple Revisions",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{BASE_URL}}/api/v1/collections/documents/test/1/revisions",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"collections",
+										"documents",
+										"test",
+										"1",
+										"revisions"
+									],
+									"query": [
+										{
+											"key": "sort",
+											"value": "createdAt",
+											"disabled": true
+										},
+										{
+											"key": "page",
+											"value": "1",
+											"disabled": true
+										},
+										{
+											"key": "perPage",
+											"value": "-1",
+											"disabled": true
+										},
+										{
+											"key": "filter[createdBy]",
+											"value": "1",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
 							"name": "Delete Single",
 							"request": {
 								"method": "DELETE",
