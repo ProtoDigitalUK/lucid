@@ -13,6 +13,7 @@
 	"an_unknown_error_occurred_getting_descendant_fields": "An error occurred while getting the descendant page fields.",
 	"an_unknown_error_occurred_updating_fullslug_fields": "An error occurred while updating the fullSlug children fields.",
 	"slug_field_validation_error_message": "The slug field may only contain letters, numbers, underscores, and hyphens.",
+	"an_unknown_error_occurred_getting_document_version_fields": "An error occurred while getting the document version fields.",
 	"full_slug": "Full Slug",
 	"slug": "Slug",
 	"parent_page": "Parent Page"

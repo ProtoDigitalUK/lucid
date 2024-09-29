@@ -121,7 +121,6 @@ const getDescendantFields: ServiceFn<
 			}),
 		};
 	} catch (error) {
-		console.error("Error in getDescendantFields:", error);
 		return {
 			error: {
 				type: "basic",

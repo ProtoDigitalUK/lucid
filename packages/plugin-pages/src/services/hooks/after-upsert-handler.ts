@@ -20,13 +20,12 @@ const afterUpsertHandler =
 			collectionKey: data.meta.collectionKey,
 		});
 		if (targetCollectionRes.error) {
+			//* early return as doesnt apply to the current collection
 			return {
 				error: undefined,
 				data: undefined,
 			};
 		}
-
-		console.log("after upsert fields", data.data.fields);
 
 		// ----------------------------------------------------------------
 		// Build and store fullSlugs
@@ -43,8 +42,6 @@ const afterUpsertHandler =
 				data: undefined,
 			};
 		}
-
-		console.log("descendantsRes", descendantsRes.data[0]?.fields);
 
 		const currentFullSlugField = data.data.fields.find((field) => {
 			return field.key === constants.fields.fullSlug.key;

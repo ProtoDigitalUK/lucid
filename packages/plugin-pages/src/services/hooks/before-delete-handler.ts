@@ -19,6 +19,7 @@ const beforeDeleteHandler =
 			collectionKey: data.meta.collectionKey,
 		});
 		if (targetCollectionRes.error) {
+			//* early return as doesnt apply to the current collection
 			return {
 				error: undefined,
 				data: undefined,

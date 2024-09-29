@@ -7,3 +7,4 @@ export { default as setFullSlug } from "./set-full-slug.js";
 export { default as getDescendantFields } from "./get-descendant-fields.js";
 export { default as constructChildFullSlug } from "./construct-child-fullslugs.js";
 export { default as updateFullSlugFields } from "./update-fullslug-fields.js";
+export { default as getDocumentVersionFields } from "./get-document-version-fields.js";
