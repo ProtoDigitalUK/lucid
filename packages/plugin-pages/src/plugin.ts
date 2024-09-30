@@ -8,6 +8,7 @@ import {
 	beforeUpsertHandler,
 	afterUpsertHandler,
 	beforeDeleteHandler,
+	versionPromoteHandler,
 } from "./services/hooks/index.js";
 
 const plugin: LucidPluginOptions<PluginOptions> = async (config, plugin) => {
@@ -49,8 +50,11 @@ const plugin: LucidPluginOptions<PluginOptions> = async (config, plugin) => {
 		event: "beforeDelete",
 		handler: beforeDeleteHandler(options),
 	});
-
-	// TODO: when revision support is added, we will have to run the afterUpsertHandler when a revision is made the active revision to ensure all of its children slugs are correct.
+	config.hooks.push({
+		service: "collection-documents",
+		event: "versionPromote",
+		handler: versionPromoteHandler(options),
+	});
 
 	return {
 		key: PLUGIN_KEY,

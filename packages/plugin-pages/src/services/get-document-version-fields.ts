@@ -4,6 +4,7 @@ import type {
 	ServiceFn,
 	FieldSchemaType,
 	DocumentVersionType,
+	CustomFieldMap,
 } from "@lucidcms/core/types";
 
 /**
@@ -24,6 +25,7 @@ const getDocumentVersionFields: ServiceFn<
 		locale_code: string;
 		text_value: string | null;
 		document_id: number | null;
+		type: keyof CustomFieldMap;
 	}> | null
 > = async (context, data) => {
 	try {
@@ -40,6 +42,7 @@ const getDocumentVersionFields: ServiceFn<
 				"lucid_collection_document_fields.document_id",
 				"lucid_collection_document_fields.collection_brick_id",
 				"lucid_collection_document_fields.locale_code",
+				"lucid_collection_document_fields.type",
 				"lucid_collection_document_versions.document_id as collection_document_id",
 			])
 			.where(

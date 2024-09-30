@@ -13,6 +13,7 @@ import {
 	setFullSlug,
 	getDocumentVersionFields,
 } from "../index.js";
+import fieldResToSchema from "../../utils/field-res-to-schema.js";
 import type { PluginOptionsInternal } from "../../types/index.js";
 import type {
 	LucidHookCollection,
@@ -52,7 +53,27 @@ const versionPromoteHandler =
 		// ----------------------------------------------------------------
 
 		if (createFullSlug) {
-			// TODO: add a fn to convert doc fields into FieldSchemaType
+			const checkFieldsExistRes = checkFieldsExist({
+				fields: {
+					slug: fieldResToSchema(
+						"slug",
+						targetCollectionRes.data.enableTranslations,
+						docVersionFieldRes.data || [],
+					),
+					parentPage: fieldResToSchema(
+						"parentPage",
+						targetCollectionRes.data.enableTranslations,
+						docVersionFieldRes.data || [],
+					),
+					fullSlug: fieldResToSchema(
+						"fullSlug",
+						targetCollectionRes.data.enableTranslations,
+						docVersionFieldRes.data || [],
+					),
+				},
+			});
+			if (checkFieldsExistRes.error) return checkFieldsExistRes;
+			const { slug, parentPage, fullSlug } = checkFieldsExistRes.data;
 
 			const checkDuplicateSlugParentsRes = await checkDuplicateSlugParents(
 				context,
@@ -70,65 +91,60 @@ const versionPromoteHandler =
 			if (checkDuplicateSlugParentsRes.error)
 				return checkDuplicateSlugParentsRes;
 
-			/*
-                /* raminging steps from the beforeUpsert hook
+			let parentFieldsData:
+				| Array<{
+						key: string;
+						collection_document_id: number;
+						collection_brick_id: number;
+						locale_code: string;
+						text_value: string | null;
+						document_id: number | null;
+				  }>
+				| undefined = undefined;
 
-                let parentFieldsData:
-                    | Array<{
-                            key: string;
-                            collection_document_id: number;
-                            collection_brick_id: number;
-                            locale_code: string;
-                            text_value: string | null;
-                            document_id: number | null;
-                    }>
-                    | undefined = undefined;
+			// parent page checks and query
+			if (parentPage.value) {
+				const circularParentsRes = await checkCircularParents(context, {
+					documentId: data.data.documentId,
+					versionType: data.data.versionType,
+					defaultLocale: context.config.localisation.defaultLocale,
+					fields: {
+						parentPage: parentPage,
+					},
+				});
+				if (circularParentsRes.error) return circularParentsRes;
 
-                // parent page checks and query
-                if (parentPage.value) {
-                    const circularParentsRes = await checkCircularParents(context, {
-                        documentId: data.data.documentId,
-                        versionType: data.data.versionType,
-                        defaultLocale: context.config.localisation.defaultLocale,
-                        fields: {
-                            parentPage: parentPage,
-                        },
-                    });
-                    if (circularParentsRes.error) return circularParentsRes;
+				const parentFieldsRes = await getParentFields(context, {
+					defaultLocale: context.config.localisation.defaultLocale,
+					versionType: data.data.versionType,
+					fields: {
+						parentPage: parentPage,
+					},
+				});
+				if (parentFieldsRes.error) return parentFieldsRes;
 
-                    const parentFieldsRes = await getParentFields(context, {
-                        defaultLocale: context.config.localisation.defaultLocale,
-                        versionType: data.data.versionType,
-                        fields: {
-                            parentPage: parentPage,
-                        },
-                    });
-                    if (parentFieldsRes.error) return parentFieldsRes;
+				parentFieldsData = parentFieldsRes.data;
+			}
 
-                    parentFieldsData = parentFieldsRes.data;
-                }
+			// fullSlug construction
+			const fullSlugRes = constructParentFullSlug({
+				parentFields: parentFieldsData,
+				localisation: context.config.localisation,
+				collection: targetCollectionRes.data,
+				fields: {
+					slug: slug,
+				},
+			});
+			if (fullSlugRes.error) return fullSlugRes;
 
-                // fullSlug construction
-                const fullSlugRes = constructParentFullSlug({
-                    parentFields: parentFieldsData,
-                    localisation: context.config.localisation,
-                    collection: targetCollectionRes.data,
-                    fields: {
-                        slug: slug,
-                    },
-                });
-                if (fullSlugRes.error) return fullSlugRes;
-
-                setFullSlug({
-                    fullSlug: fullSlugRes.data,
-                    defaultLocale: context.config.localisation.defaultLocale,
-                    collection: targetCollectionRes.data,
-                    fields: {
-                        fullSlug: fullSlug,
-                    },
-                });
-
-            */
+			setFullSlug({
+				fullSlug: fullSlugRes.data,
+				defaultLocale: context.config.localisation.defaultLocale,
+				collection: targetCollectionRes.data,
+				fields: {
+					fullSlug: fullSlug,
+				},
+			});
 
 			// TODO: update the doc versions fullSlug fields
 		}
