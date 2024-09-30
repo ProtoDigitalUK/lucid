@@ -4,7 +4,7 @@
 
 ### Minor Changes
 
-- Updated the plugin to work with draft and published versions of documents.
+- Updated the plugin to work with the draft and published versions document db changes and new versionPromote hook.
 
 ## 0.1.3
 

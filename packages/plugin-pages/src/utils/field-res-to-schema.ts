@@ -3,6 +3,7 @@ import type { FieldSchemaType, CustomFieldMap } from "@lucidcms/core/types";
 const fieldResToSchema = (
 	key: string,
 	enableTranslations: boolean,
+	defaultLocale: string,
 	items: Array<{
 		key: string;
 		collection_document_id: number;
@@ -25,15 +26,21 @@ const fieldResToSchema = (
 	if (enableTranslations) {
 		result.translations = {};
 		for (const item of items) {
-			if (item.text_value !== null) {
+			if (item.type === "text") {
 				result.translations[item.locale_code] = item.text_value;
-				result.type = item.type as FieldSchemaType["type"];
+			} else if (item.type === "document") {
+				result.translations[item.locale_code] = item.document_id;
 			}
+			result.type = item.type as FieldSchemaType["type"];
 		}
 	} else {
-		const defaultItem = items.find((item) => item.locale_code === "en");
-		if (defaultItem && defaultItem.text_value !== null) {
-			result.value = defaultItem.text_value;
+		const defaultItem = items.find(
+			(item) => item.locale_code === defaultLocale,
+		);
+		if (defaultItem) {
+			if (defaultItem.type === "text") result.value = defaultItem.text_value;
+			else if (defaultItem.type === "document")
+				result.value = defaultItem.document_id;
 			result.type = defaultItem.type as FieldSchemaType["type"];
 		}
 	}

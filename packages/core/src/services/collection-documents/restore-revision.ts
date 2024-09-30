@@ -96,7 +96,7 @@ const restoreRevision: ServiceFn<
 	const hookResponse = await executeHooks(
 		{
 			service: "collection-documents",
-			event: "beforeUpsert",
+			event: "versionPromote",
 			config: context.config,
 			collectionInstance: collectionRes.data,
 		},

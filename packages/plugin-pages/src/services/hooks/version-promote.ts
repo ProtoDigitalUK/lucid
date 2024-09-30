@@ -1,8 +1,6 @@
 import constants from "../../constants.js";
 import {
 	checkDuplicateSlugParents,
-	checkRootSlugWithParent,
-	checkParentIsPageOfSelf,
 	checkFieldsExist,
 	checkCircularParents,
 } from "../checks/index.js";
@@ -12,13 +10,12 @@ import {
 	constructParentFullSlug,
 	setFullSlug,
 	getDocumentVersionFields,
+	updateFullSlugFields,
 } from "../index.js";
 import fieldResToSchema from "../../utils/field-res-to-schema.js";
+import afterUpsertHandler from "./after-upsert-handler.js";
 import type { PluginOptionsInternal } from "../../types/index.js";
-import type {
-	LucidHookCollection,
-	FieldSchemaType,
-} from "@lucidcms/core/types";
+import type { LucidHookCollection } from "@lucidcms/core/types";
 
 const versionPromoteHandler =
 	(
@@ -50,31 +47,35 @@ const versionPromoteHandler =
 		if (docVersionFieldRes.error) return docVersionFieldRes;
 		if (docVersionFieldRes.data === null) createFullSlug = false;
 
+		// Format fields
+		const checkFieldsExistRes = checkFieldsExist({
+			fields: {
+				slug: fieldResToSchema(
+					constants.fields.slug.key,
+					targetCollectionRes.data.enableTranslations,
+					context.config.localisation.defaultLocale,
+					docVersionFieldRes.data || [],
+				),
+				parentPage: fieldResToSchema(
+					constants.fields.parentPage.key,
+					false,
+					context.config.localisation.defaultLocale,
+					docVersionFieldRes.data || [],
+				),
+				fullSlug: fieldResToSchema(
+					constants.fields.fullSlug.key,
+					targetCollectionRes.data.enableTranslations,
+					context.config.localisation.defaultLocale,
+					docVersionFieldRes.data || [],
+				),
+			},
+		});
+		if (checkFieldsExistRes.error) return checkFieldsExistRes;
+		const { slug, parentPage, fullSlug } = checkFieldsExistRes.data;
+
 		// ----------------------------------------------------------------
-
+		// create fullSlug - close to the beforeUpsert hook
 		if (createFullSlug) {
-			const checkFieldsExistRes = checkFieldsExist({
-				fields: {
-					slug: fieldResToSchema(
-						"slug",
-						targetCollectionRes.data.enableTranslations,
-						docVersionFieldRes.data || [],
-					),
-					parentPage: fieldResToSchema(
-						"parentPage",
-						targetCollectionRes.data.enableTranslations,
-						docVersionFieldRes.data || [],
-					),
-					fullSlug: fieldResToSchema(
-						"fullSlug",
-						targetCollectionRes.data.enableTranslations,
-						docVersionFieldRes.data || [],
-					),
-				},
-			});
-			if (checkFieldsExistRes.error) return checkFieldsExistRes;
-			const { slug, parentPage, fullSlug } = checkFieldsExistRes.data;
-
 			const checkDuplicateSlugParentsRes = await checkDuplicateSlugParents(
 				context,
 				{
@@ -146,10 +147,34 @@ const versionPromoteHandler =
 				},
 			});
 
-			// TODO: update the doc versions fullSlug fields
+			const updateFullSlugRes = await updateFullSlugFields(context, {
+				docFullSlugs: [
+					{
+						documentId: data.data.documentId,
+						versionId: data.data.versionId,
+						fullSlugs: fullSlugRes.data,
+					},
+				],
+				versionType: data.data.versionType,
+			});
+			if (updateFullSlugRes.error) return updateFullSlugRes;
 		}
 
-		// TODO: run the afterUpsert hook to update all of the documents versions potential descendants
+		// ----------------------------------------------------------------
+		// run the afterUpsert hook to update all of the documents versions potential descendants
+		await afterUpsertHandler(options)(context, {
+			meta: {
+				collectionKey: data.meta.collectionKey,
+				userId: data.meta.userId,
+			},
+			data: {
+				documentId: data.data.documentId,
+				versionId: data.data.versionId,
+				versionType: data.data.versionType,
+				bricks: [],
+				fields: [slug, parentPage, fullSlug],
+			},
+		});
 
 		return {
 			error: undefined,
