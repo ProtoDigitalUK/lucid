@@ -1,5 +1,4 @@
 import T from "@/translations";
-import type { Accessor } from "solid-js";
 import request from "@/utils/request";
 import serviceHelpers from "@/utils/service-helpers";
 import type { BrickData } from "@/store/brickStore";

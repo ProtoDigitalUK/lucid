@@ -114,8 +114,8 @@ const CollectionsDocumentsEditRoute: Component<
 		getCollectionName: () =>
 			collection.data?.data.singular || T()("collection"),
 	});
-	const upsertDocument = api.collections.document.useUpsertSingle({
-		onSuccess: (data) => {
+	const updateDraft = api.collections.document.useUpdateDraft({
+		onSuccess: () => {
 			brickStore.set("fieldsErrors", []);
 		},
 		onError: (errors) => {
@@ -141,13 +141,13 @@ const CollectionsDocumentsEditRoute: Component<
 	});
 	const isSaving = createMemo(() => {
 		return (
-			upsertDocument.action.isPending ||
+			updateDraft.action.isPending ||
 			createDocument.action.isPending ||
 			doc.isRefetching
 		);
 	});
 	const mutateErrors = createMemo(() => {
-		return upsertDocument.errors() || createDocument.errors();
+		return updateDraft.errors() || createDocument.errors();
 	});
 	const brickTranslationErrors = createMemo(() => {
 		const errors = getBodyError<FieldErrors[]>("fields", mutateErrors());
@@ -170,10 +170,10 @@ const CollectionsDocumentsEditRoute: Component<
 				},
 			});
 		} else {
-			upsertDocument.action.mutate({
+			updateDraft.action.mutate({
 				collectionKey: collectionKey(),
+				documentId: documentId() as number,
 				body: {
-					documentId: documentId(),
 					bricks: brickHelpers.getUpsertBricks(),
 					fields: brickHelpers.getCollectionPseudoBrickFields(),
 				},

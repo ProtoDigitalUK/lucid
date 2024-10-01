@@ -1,5 +1,4 @@
 import T from "@/translations";
-import type { Accessor } from "solid-js";
 import request from "@/utils/request";
 import serviceHelpers from "@/utils/service-helpers";
 import type { BrickData } from "@/store/brickStore";
@@ -11,20 +10,20 @@ import type {
 
 interface Params {
 	collectionKey: string;
+	documentId: number;
 	body: {
-		documentId?: number;
 		bricks?: Array<BrickData>;
 		fields?: Array<FieldResponse>;
 	};
 }
 
-export const upsertSingleReq = (params: Params) => {
+export const createDraftReq = (params: Params) => {
 	return request<
 		ResponseBody<{
 			id: number;
 		}>
 	>({
-		url: `/api/v1/collections/documents/${params.collectionKey}`,
+		url: `/api/v1/collections/documents/${params.collectionKey}/${params.documentId}/draft`,
 		csrf: true,
 		config: {
 			method: "POST",
@@ -33,7 +32,7 @@ export const upsertSingleReq = (params: Params) => {
 	});
 };
 
-interface UseUpdateSingleProps {
+interface UseCreateDraftProps {
 	onSuccess?: (
 		_data: ResponseBody<{
 			id: number;
@@ -43,7 +42,7 @@ interface UseUpdateSingleProps {
 	getCollectionName: () => string;
 }
 
-const useUpsertSingle = (props: UseUpdateSingleProps) => {
+const useCreateDraft = (props: UseCreateDraftProps) => {
 	// -----------------------------
 	// Mutation
 	return serviceHelpers.useMutationWrapper<
@@ -52,7 +51,7 @@ const useUpsertSingle = (props: UseUpdateSingleProps) => {
 			id: number;
 		}>
 	>({
-		mutationFn: upsertSingleReq,
+		mutationFn: createDraftReq,
 		getSuccessToast: () => {
 			return {
 				title: T()("update_toast_title", {
@@ -72,4 +71,4 @@ const useUpsertSingle = (props: UseUpdateSingleProps) => {
 	});
 };
 
-export default useUpsertSingle;
+export default useCreateDraft;
