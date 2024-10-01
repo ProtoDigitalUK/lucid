@@ -96,16 +96,27 @@ const CollectionsDocumentsEditRoute: Component<
 
 	// ----------------------------------
 	// Mutations
+	const createDocument = api.collections.document.useCreateSingle({
+		onSuccess: (data) => {
+			brickStore.set("fieldsErrors", []);
+			navigate(`/admin/collections/${collectionKey()}/${data.data.id}`);
+			queryClient.invalidateQueries({
+				queryKey: ["collections.getAll"],
+			});
+			return;
+		},
+		onError: (errors) => {
+			brickStore.set(
+				"fieldsErrors",
+				getBodyError<FieldErrors[]>("fields", errors) || [],
+			);
+		},
+		getCollectionName: () =>
+			collection.data?.data.singular || T()("collection"),
+	});
 	const upsertDocument = api.collections.document.useUpsertSingle({
 		onSuccess: (data) => {
 			brickStore.set("fieldsErrors", []);
-			if (props.mode === "create") {
-				navigate(`/admin/collections/${collectionKey()}/${data.data.id}`);
-				queryClient.invalidateQueries({
-					queryKey: ["collections.getAll"],
-				});
-				return;
-			}
 		},
 		onError: (errors) => {
 			brickStore.set(
@@ -129,10 +140,14 @@ const CollectionsDocumentsEditRoute: Component<
 		return collection.isSuccess && doc.isSuccess;
 	});
 	const isSaving = createMemo(() => {
-		return upsertDocument.action.isPending || doc.isRefetching;
+		return (
+			upsertDocument.action.isPending ||
+			createDocument.action.isPending ||
+			doc.isRefetching
+		);
 	});
 	const mutateErrors = createMemo(() => {
-		return upsertDocument.errors();
+		return upsertDocument.errors() || createDocument.errors();
 	});
 	const brickTranslationErrors = createMemo(() => {
 		const errors = getBodyError<FieldErrors[]>("fields", mutateErrors());
@@ -146,14 +161,24 @@ const CollectionsDocumentsEditRoute: Component<
 	// ---------------------------------
 	// Functions
 	const upsertDocumentAction = async () => {
-		upsertDocument.action.mutate({
-			collectionKey: collectionKey(),
-			body: {
-				documentId: documentId(),
-				bricks: brickHelpers.getUpsertBricks(),
-				fields: brickHelpers.getCollectionPseudoBrickFields(),
-			},
-		});
+		if (props.mode === "create") {
+			createDocument.action.mutate({
+				collectionKey: collectionKey(),
+				body: {
+					bricks: brickHelpers.getUpsertBricks(),
+					fields: brickHelpers.getCollectionPseudoBrickFields(),
+				},
+			});
+		} else {
+			upsertDocument.action.mutate({
+				collectionKey: collectionKey(),
+				body: {
+					documentId: documentId(),
+					bricks: brickHelpers.getUpsertBricks(),
+					fields: brickHelpers.getCollectionPseudoBrickFields(),
+				},
+			});
+		}
 		brickStore.set("documentMutated", false);
 	};
 	const windowScroll = (e: Event) => {
