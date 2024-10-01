@@ -54,6 +54,7 @@ export const DocumentsList: Component<{
 			queryString: props.state.searchParams.getQueryString,
 			location: {
 				collectionKey: collectionKey,
+				versionType: "draft",
 			},
 		},
 		enabled: () => props.state.searchParams.getSettled(),

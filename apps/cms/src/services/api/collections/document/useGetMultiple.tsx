@@ -5,6 +5,7 @@ import serviceHelpers from "@/utils/service-helpers";
 import type {
 	ResponseBody,
 	CollectionDocumentResponse,
+	DocumentVersionType,
 } from "@lucidcms/core/types";
 
 interface QueryParams {
@@ -15,6 +16,7 @@ interface QueryParams {
 	>;
 	location: {
 		collectionKey: Accessor<string | undefined> | string;
+		versionType: Exclude<DocumentVersionType, "revision">;
 	};
 	perPage?: Accessor<number> | number;
 }
@@ -33,7 +35,7 @@ const useGetMultiple = (params: QueryHook<QueryParams>) => {
 			request<ResponseBody<CollectionDocumentResponse[]>>({
 				url: `/api/v1/collections/documents/${
 					queryParams().location?.collectionKey
-				}`,
+				}/${queryParams().location?.versionType}`,
 				query: queryParams(),
 				config: {
 					method: "GET",

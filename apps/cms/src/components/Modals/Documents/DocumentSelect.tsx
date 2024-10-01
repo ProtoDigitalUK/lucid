@@ -73,6 +73,7 @@ const DocumentSelectContent: Component = () => {
 			queryString: searchParams.getQueryString,
 			location: {
 				collectionKey: collectionKey,
+				versionType: "draft",
 			},
 		},
 		enabled: () => searchParams.getSettled() && collection.isSuccess,
