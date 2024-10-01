@@ -40,6 +40,7 @@ import Pill from "@/components/Partials/Pill";
 
 interface CollectionsDocumentsEditRouteProps {
 	mode: "create" | "edit";
+	version: "draft" | "published";
 }
 
 const CollectionsDocumentsEditRoute: Component<
@@ -85,6 +86,7 @@ const CollectionsDocumentsEditRoute: Component<
 			location: {
 				collectionKey: collectionKey,
 				id: documentId,
+				version: props.version,
 			},
 			include: {
 				bricks: true,

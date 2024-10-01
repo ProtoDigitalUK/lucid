@@ -5,12 +5,14 @@ import serviceHelpers from "@/utils/service-helpers";
 import type {
 	ResponseBody,
 	CollectionDocumentResponse,
+	DocumentVersionType,
 } from "@lucidcms/core/types";
 
 interface QueryParams {
 	location: {
 		collectionKey?: Accessor<string | undefined> | string;
 		id?: Accessor<number | undefined> | number;
+		version: DocumentVersionType;
 	};
 	include: {
 		bricks: Accessor<boolean | undefined> | boolean;
@@ -31,7 +33,7 @@ const useGetSingle = (params: QueryHook<QueryParams>) => {
 			request<ResponseBody<CollectionDocumentResponse>>({
 				url: `/api/v1/collections/documents/${
 					queryParams().location?.collectionKey
-				}/${queryParams().location?.id}`,
+				}/${queryParams().location?.id}/${queryParams().location?.version}`,
 				query: queryParams(),
 				config: {
 					method: "GET",

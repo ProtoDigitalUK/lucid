@@ -35,11 +35,15 @@ const AppRouter: Component = () => {
 				/>
 				<Route
 					path="/collections/:collectionKey/create"
-					component={() => <CollectionsDocumentsEditRoute mode="create" />}
+					component={() => (
+						<CollectionsDocumentsEditRoute mode="create" version="draft" />
+					)}
 				/>
 				<Route
 					path="/collections/:collectionKey/:documentId"
-					component={() => <CollectionsDocumentsEditRoute mode="edit" />}
+					component={() => (
+						<CollectionsDocumentsEditRoute mode="edit" version="draft" />
+					)}
 				/>
 				{/* Media */}
 				<Route path="/media" component={MediaListRoute} />
