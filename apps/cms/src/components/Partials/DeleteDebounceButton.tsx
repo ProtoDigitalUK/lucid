@@ -5,6 +5,7 @@ import { debounce } from "@solid-primitives/scheduled";
 import { FaSolidTrashCan } from "solid-icons/fa";
 
 interface DeleteButtonProps {
+	disabled?: boolean;
 	callback: () => void;
 }
 
@@ -42,6 +43,7 @@ const DeleteDebounceButton: Component<DeleteButtonProps> = (props) => {
 			aria-label={
 				getConfirmRemove() === 1 ? T()("confirm_delete") : T()("delete")
 			}
+			disabled={props.disabled}
 		>
 			<FaSolidTrashCan class="w-4" />
 		</button>

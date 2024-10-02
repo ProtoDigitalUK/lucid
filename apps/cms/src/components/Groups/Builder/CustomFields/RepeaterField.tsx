@@ -38,6 +38,9 @@ export const RepeaterField: Component<RepeaterFieldProps> = (props) => {
 			props.state.groupId || ""
 		}`;
 	});
+	const isDisabled = createMemo(
+		() => !canAddGroup() || fieldConfig().disabled || brickStore.get.locked,
+	);
 
 	// -------------------------------
 	// Functions
@@ -123,7 +126,7 @@ export const RepeaterField: Component<RepeaterFieldProps> = (props) => {
 					theme="secondary"
 					size="x-small"
 					onClick={addGroup}
-					disabled={!canAddGroup() || fieldConfig().disabled}
+					disabled={isDisabled()}
 				>
 					{T()("add_entry")}
 				</Button>

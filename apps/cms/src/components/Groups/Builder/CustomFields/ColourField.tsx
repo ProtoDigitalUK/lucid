@@ -45,6 +45,9 @@ export const ColourField: Component<ColourFieldProps> = (props) => {
 			contentLocale: props.state.contentLocale,
 		});
 	});
+	const isDisabled = createMemo(
+		() => props.state.fieldConfig.disabled || brickStore.get.locked,
+	);
 
 	// -------------------------------
 	// Effects
@@ -88,7 +91,7 @@ export const ColourField: Component<ColourFieldProps> = (props) => {
 				}}
 				altLocaleError={props.state.altLocaleError}
 				presets={props.state.fieldConfig.presets}
-				disabled={props.state.fieldConfig.disabled}
+				disabled={isDisabled()}
 				errors={props.state.fieldError}
 				required={props.state.fieldConfig.validation?.required || false}
 			/>

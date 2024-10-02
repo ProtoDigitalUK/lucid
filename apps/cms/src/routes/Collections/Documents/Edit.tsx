@@ -31,6 +31,7 @@ import LinkSelectModal from "@/components/Modals/CustomField/LinkSelect";
 import UserDisplay from "@/components/Partials/UserDisplay";
 import BrickImagePreview from "@/components/Modals/Bricks/ImagePreview";
 import Pill from "@/components/Partials/Pill";
+import Alert from "@/components/Blocks/Alert";
 
 interface CollectionsDocumentsEditRouteProps {
 	mode: "create" | "edit" | "locked";
@@ -182,6 +183,7 @@ const CollectionsDocumentsEditRoute: Component<
 			collection.data?.data.translations || false,
 		);
 		brickStore.get.setBricks(doc.data?.data, collection.data?.data);
+		brickStore.set("locked", props.mode === "locked");
 	};
 
 	// ---------------------------------
@@ -232,7 +234,19 @@ const CollectionsDocumentsEditRoute: Component<
 						setDeleteOpen: setDeleteOpen,
 					}}
 				/>
-				<div class="w-full mt-[162px] md:mt-[192px] flex flex-grow overflow-hidden bg-container-3 rounded-t-xl border-x border-t border-border z-10 relative">
+				<div class="w-full mt-[162px] md:mt-[192px] flex flex-col flex-grow overflow-hidden bg-container-3 rounded-t-xl border-x border-t border-border z-10 relative">
+					<Show when={props.mode === "locked"}>
+						<Alert
+							style="layout"
+							alerts={[
+								{
+									type: "warning",
+									message: T()("locked_document_message"),
+									show: props.mode === "locked",
+								},
+							]}
+						/>
+					</Show>
 					{/* Fields & Bricks */}
 					<div class="w-full flex flex-col">
 						<Document.CollectionPseudoBrick
@@ -369,7 +383,7 @@ const CollectionsDocumentsEditRoute: Component<
 					}}
 				/>
 				<Show when={isSaving()}>
-					<div class="fixed inset-0 bg-white bg-opacity-40 animate-pulse z-50" />
+					<div class="fixed inset-0 bg-black bg-opacity-40 animate-pulse z-50" />
 				</Show>
 			</Match>
 		</Switch>

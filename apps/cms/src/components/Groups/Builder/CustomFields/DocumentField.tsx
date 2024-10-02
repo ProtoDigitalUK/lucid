@@ -48,6 +48,9 @@ export const DocumentField: Component<DocumentFieldProps> = (props) => {
 			contentLocale: props.state.contentLocale,
 		});
 	});
+	const isDisabled = createMemo(
+		() => props.state.fieldConfig.disabled || brickStore.get.locked,
+	);
 
 	// -------------------------------
 	// Effects
@@ -90,7 +93,7 @@ export const DocumentField: Component<DocumentFieldProps> = (props) => {
 			}}
 			errors={props.state.fieldError}
 			altLocaleError={props.state.altLocaleError}
-			disabled={props.state.fieldConfig.disabled}
+			disabled={isDisabled()}
 			required={props.state.fieldConfig.validation?.required || false}
 		/>
 	);

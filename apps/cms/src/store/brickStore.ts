@@ -26,6 +26,7 @@ type BrickStoreT = {
 	bricks: Array<BrickData>;
 	fieldsErrors: Array<FieldErrors>;
 	documentMutated: boolean;
+	locked: boolean;
 	imagePreview: {
 		open: boolean;
 		data:
@@ -104,6 +105,7 @@ type BrickStoreT = {
 const [get, set] = createStore<BrickStoreT>({
 	bricks: [],
 	fieldsErrors: [],
+	locked: false,
 	documentMutated: false,
 	collectionTranslations: false,
 	imagePreview: {

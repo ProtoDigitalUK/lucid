@@ -120,27 +120,30 @@ export const StickyHeader: Component<{
 			>
 				<A
 					href={`/admin/collections/${props.state.collectionKey()}/draft/${props.state.documentId()}`}
-					class="text-lg font-display pr-1 py-2 font-semibold after:absolute after:-bottom-px after:left-0 after:right-0 after:h-px after:bg-primary-base relative cursor-pointer"
+					class="text-lg font-display pr-1 py-2 font-semibold after:absolute after:-bottom-px after:left-0 after:right-0 after:h-px relative cursor-pointer"
+					activeClass="after:bg-primary-base"
 				>
 					{T()("draft")}
 				</A>
 				<A
 					href={`/admin/collections/${props.state.collectionKey()}/published/${props.state.documentId()}`}
-					class="text-lg font-display pr-1 py-2 font-semibold after:absolute after:-bottom-px after:left-0 after:right-0 after:h-px after:bg-primary-base relative cursor-pointer"
+					class="text-lg font-display pr-1 py-2 font-semibold after:absolute after:-bottom-px after:left-0 after:right-0 after:h-px relative cursor-pointer"
+					activeClass="after:bg-primary-base"
 				>
 					{T()("published")}
 				</A>
-				<span
-					class="text-lg font-display px-1 py-2 font-semibold opacity-50 cursor-not-allowed"
-					title="Coming soon"
-				>
-					{T()("preview")}
-				</span>
+
 				<span
 					class="text-lg font-display px-1 py-2 font-semibold opacity-50 cursor-not-allowed"
 					title="Coming soon"
 				>
 					{T()("revisions")}
+				</span>
+				<span
+					class="text-lg font-display px-1 py-2 font-semibold opacity-50 cursor-not-allowed"
+					title="Coming soon"
+				>
+					{T()("preview")}
 				</span>
 			</div>
 			{/* Actions */}
@@ -159,17 +162,21 @@ export const StickyHeader: Component<{
 						/>
 					</div>
 				</Show>
-				<Button
-					type="button"
-					theme="primary"
-					size="x-small"
-					onClick={props.actions.upsertDocumentAction}
-					disabled={props.state.canSaveDocument()}
+				<Show
+					when={props.state.mode === "edit" && props.state.version === "draft"}
 				>
-					{T()("save", {
-						singular: props.state.collection?.singular || "",
-					})}
-				</Button>
+					<Button
+						type="button"
+						theme="primary"
+						size="x-small"
+						onClick={props.actions.upsertDocumentAction}
+						disabled={props.state.canSaveDocument()}
+					>
+						{T()("save", {
+							singular: props.state.collection?.singular || "",
+						})}
+					</Button>
+				</Show>
 				<Show
 					when={
 						props.state.mode === "edit" &&

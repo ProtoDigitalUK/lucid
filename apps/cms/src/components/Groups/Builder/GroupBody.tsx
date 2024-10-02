@@ -43,6 +43,9 @@ export const GroupBody: Component<GroupBodyProps> = (props) => {
 	const groupFields = createMemo(() => {
 		return props.state.fields;
 	});
+	const isDisabled = createMemo(
+		() => props.state.fieldConfig.disabled || brickStore.get.locked,
+	);
 
 	// -------------------------------
 	// Functions
@@ -146,6 +149,7 @@ export const GroupBody: Component<GroupBodyProps> = (props) => {
 								parentRepeaterKey: parentRepeaterKey(),
 							});
 						}}
+						disabled={isDisabled()}
 					/>
 					<button
 						type="button"

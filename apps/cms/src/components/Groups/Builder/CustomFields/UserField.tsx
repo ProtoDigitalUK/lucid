@@ -45,6 +45,9 @@ export const UserField: Component<UserFieldProps> = (props) => {
 			contentLocale: props.state.contentLocale,
 		});
 	});
+	const isDisabled = createMemo(
+		() => props.state.fieldConfig.disabled || brickStore.get.locked,
+	);
 
 	// -------------------------------
 	// Effects
@@ -87,7 +90,7 @@ export const UserField: Component<UserFieldProps> = (props) => {
 			name={props.state.fieldConfig.key}
 			errors={props.state.fieldError}
 			altLocaleError={props.state.altLocaleError}
-			disabled={props.state.fieldConfig.disabled}
+			disabled={isDisabled()}
 			required={props.state.fieldConfig.validation?.required || false}
 			theme={"basic"}
 		/>

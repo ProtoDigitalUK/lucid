@@ -56,6 +56,9 @@ export const MediaField: Component<MediaFieldProps> = (props) => {
 			contentLocale: props.state.contentLocale,
 		});
 	});
+	const isDisabled = createMemo(
+		() => props.state.fieldConfig.disabled || brickStore.get.locked,
+	);
 
 	// -------------------------------
 	// Effects
@@ -100,7 +103,7 @@ export const MediaField: Component<MediaFieldProps> = (props) => {
 				}),
 			}}
 			altLocaleError={props.state.altLocaleError}
-			disabled={props.state.fieldConfig.disabled}
+			disabled={isDisabled()}
 			extensions={props.state.fieldConfig.validation?.extensions}
 			type={props.state.fieldConfig.validation?.type}
 			errors={props.state.fieldError}
