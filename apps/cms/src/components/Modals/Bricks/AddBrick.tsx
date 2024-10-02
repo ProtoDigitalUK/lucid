@@ -137,7 +137,7 @@ const AddBrick: Component<AddBrickProps> = (props) => {
 				</div>
 				{/* Preview */}
 				<div class="w-[60%] p-15 h-full pl-0">
-					<div class="bg-container-2 h-full rounded-md flex items-center justify-center relative">
+					<div class="border border-border h-full rounded-md flex items-center justify-center relative">
 						<div class="w-[80%]">
 							<BrickPreview
 								data={{

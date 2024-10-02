@@ -106,7 +106,7 @@ export const DocumentsList: Component<{
 			}}
 			callback={{
 				createEntry: () => {
-					navigate(`/admin/collections/${collectionKey()}/create`);
+					navigate(`/admin/collections/${collectionKey()}/draft/create`);
 				},
 			}}
 		>
@@ -167,7 +167,7 @@ export const DocumentsList: Component<{
 									{
 										label: T()("edit"),
 										type: "link",
-										href: `/admin/collections/${props.state.collection?.key}/${doc().id}`,
+										href: `/admin/collections/${props.state.collection?.key}/draft/${doc().id}`,
 										permission: userStore.get.hasPermission(["update_content"])
 											.all,
 									},

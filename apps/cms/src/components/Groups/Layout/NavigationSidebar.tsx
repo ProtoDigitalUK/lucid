@@ -52,9 +52,9 @@ export const NavigationSidebar: Component = () => {
 		if (singleCollections().length > 0) {
 			const collection = singleCollections()[0];
 			if (collection.documentId) {
-				return `/admin/collections/${collection.key}/${collection.documentId}`;
+				return `/admin/collections/${collection.key}/draft/${collection.documentId}`;
 			}
-			return `/admin/collections/${collection.key}/create`;
+			return `/admin/collections/${collection.key}/draft/create`;
 		}
 		return "/admin/collections";
 	});

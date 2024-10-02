@@ -8,8 +8,6 @@ import {
 	Switch,
 	Match,
 	createEffect,
-	onCleanup,
-	onMount,
 	on,
 } from "solid-js";
 import classNames from "classnames";
@@ -20,10 +18,6 @@ import brickStore from "@/store/brickStore";
 import brickHelpers from "@/utils/brick-helpers";
 import { getBodyError } from "@/utils/error-helpers";
 import contentLocaleStore from "@/store/contentLocaleStore";
-import { FaSolidChevronLeft, FaSolidTrash } from "solid-icons/fa";
-import Layout from "@/components/Groups/Layout";
-import Button from "@/components/Partials/Button";
-import ContentLocaleSelect from "@/components/Partials/ContentLocaleSelect";
 import DetailsList from "@/components/Partials/DetailsList";
 import DateText from "@/components/Partials/DateText";
 import DeleteDocument from "@/components/Modals/Documents/DeleteDocument";
@@ -39,7 +33,7 @@ import BrickImagePreview from "@/components/Modals/Bricks/ImagePreview";
 import Pill from "@/components/Partials/Pill";
 
 interface CollectionsDocumentsEditRouteProps {
-	mode: "create" | "edit";
+	mode: "create" | "edit" | "locked";
 	version: "draft" | "published";
 }
 
@@ -54,9 +48,7 @@ const CollectionsDocumentsEditRoute: Component<
 		brickMutateLock: true,
 	});
 	const queryClient = useQueryClient();
-	const [getHeaderEle, setHeaderEle] = createSignal<HTMLElement>();
 	const [getDeleteOpen, setDeleteOpen] = createSignal(false);
-	const [getHasScrolled, setHasScrolled] = createSignal(false);
 	const [getPanelOpen, setPanelOpen] = createSignal(false);
 
 	// ----------------------------------
@@ -101,7 +93,7 @@ const CollectionsDocumentsEditRoute: Component<
 	const createDocument = api.collections.document.useCreateSingle({
 		onSuccess: (data) => {
 			brickStore.set("fieldsErrors", []);
-			navigate(`/admin/collections/${collectionKey()}/${data.data.id}`);
+			navigate(`/admin/collections/${collectionKey()}/draft/${data.data.id}`);
 			queryClient.invalidateQueries({
 				queryKey: ["collections.getAll"],
 			});
@@ -183,11 +175,6 @@ const CollectionsDocumentsEditRoute: Component<
 		}
 		brickStore.set("documentMutated", false);
 	};
-	const windowScroll = (e: Event) => {
-		if (window.scrollY >= (getHeaderEle()?.offsetHeight || 0))
-			setHasScrolled(true);
-		else setHasScrolled(false);
-	};
 	const setDocumentState = () => {
 		brickStore.get.reset();
 		brickStore.set(
@@ -215,12 +202,6 @@ const CollectionsDocumentsEditRoute: Component<
 			},
 		),
 	);
-	onMount(() => {
-		document.addEventListener("scroll", windowScroll, false);
-	});
-	onCleanup(() => {
-		document.removeEventListener("scroll", windowScroll, false);
-	});
 
 	// ----------------------------------
 	// Render
@@ -234,132 +215,24 @@ const CollectionsDocumentsEditRoute: Component<
 				</div>
 			</Match>
 			<Match when={isSuccess()}>
-				<header
-					style={{
-						"view-transition-name": "document-builder-header",
+				<Document.StickyHeader
+					state={{
+						mode: props.mode,
+						version: props.version,
+						collectionKey: collectionKey,
+						documentId: documentId,
+						collection: collection.data?.data,
+						brickTranslationErrors: brickTranslationErrors,
+						canSaveDocument: canSaveDocument,
+						panelOpen: getPanelOpen,
 					}}
-					ref={setHeaderEle}
-					class={classNames(
-						"before:absolute before:inset-0 overflow-hidden border-x border-b border-border rounded-b-xl before:z-0 px-15 md:px-30 fixed top-0 left-[310px] right-15 z-40 duration-200 transition-all",
-						{
-							"py-15 md:py-15 before:bg-opacity-95 before:bg-container-1":
-								getHasScrolled(),
-							"py-15 md:py-30 before:bg-container-3": !getHasScrolled(),
-						},
-					)}
-				>
-					<div
-						class={classNames(
-							"overflow-hidden transform-gpu duration-200 transition-all ",
-							{
-								"opacity-100": !getHasScrolled(),
-								"opacity-0 -translate-y-full max-h-0": getHasScrolled(),
-							},
-						)}
-					>
-						<Layout.Breadcrumbs
-							breadcrumbs={[
-								{
-									link: `/admin/collections/${collectionKey()}`,
-									label: collection.data?.data.title || "",
-									include: collection.data?.data.mode === "multiple",
-								},
-								{
-									link: `/admin/collections/${collectionKey()}/${
-										props.mode === "create" ? "create" : documentId()
-									}`,
-									label:
-										props.mode === "create"
-											? `${T()("create")} ${collection.data?.data.singular || T()("document")}`
-											: `${T()("edit")} ${collection.data?.data.singular || T()("document")} (#${doc.data?.data.id})`,
-								},
-							]}
-							options={{
-								noBorder: true,
-								noPadding: true,
-							}}
-						/>
-					</div>
-					<div
-						class={classNames(
-							"flex items-end gap-15 lg:gap-30 flex-wrap-reverse lg:flex-nowrap transition-all duration-200",
-							{
-								"mt-15": !getHasScrolled(),
-							},
-						)}
-					>
-						<div class="w-full border-b border-border flex items-center gap-15 z-10">
-							<span class="text-lg font-display pr-1 py-2 font-semibold after:absolute after:-bottom-px after:left-0 after:right-0 after:h-px after:bg-primary-base relative cursor-pointer">
-								{T()("content")}
-							</span>
-							<span
-								class="text-lg font-display px-1 py-2 font-semibold opacity-50 cursor-not-allowed"
-								title="Coming soon"
-							>
-								{T()("preview")}
-							</span>
-							<span
-								class="text-lg font-display px-1 py-2 font-semibold opacity-50 cursor-not-allowed"
-								title="Coming soon"
-							>
-								{T()("revisions")}
-							</span>
-						</div>
-						<div class="w-full md:w-auto flex items-center gap-2.5">
-							<Show when={collection.data?.data.translations}>
-								<div class="w-full md:w-auto md:min-w-[220px]">
-									<ContentLocaleSelect hasError={brickTranslationErrors()} />
-								</div>
-							</Show>
-							<Button
-								type="button"
-								theme="primary"
-								size="x-small"
-								onClick={upsertDocumentAction}
-								disabled={canSaveDocument()}
-							>
-								{T()("save", {
-									singular: collection.data?.data.singular || "",
-								})}
-							</Button>
-							<Show
-								when={
-									props.mode === "edit" &&
-									collection.data?.data.mode === "multiple"
-								}
-							>
-								<Button
-									theme="input-style"
-									size="x-icon"
-									type="button"
-									onClick={() => setDeleteOpen(true)}
-								>
-									<span class="sr-only">{T()("delete")}</span>
-									<FaSolidTrash />
-								</Button>
-							</Show>
-							<Show when={props.mode === "edit"}>
-								<Button
-									theme="input-style"
-									size="x-icon"
-									type="button"
-									onClick={() => setPanelOpen(!getPanelOpen())}
-								>
-									<span class="sr-only">{T()("toggle_panel")}</span>
-									<FaSolidChevronLeft
-										class={classNames(
-											"transform-gpu transition-transform duration-200",
-											{
-												"rotate-180": getPanelOpen(),
-											},
-										)}
-									/>
-								</Button>
-							</Show>
-						</div>
-					</div>
-				</header>
-				<div class="w-full mt-[191px] lg:mt-[141px] flex flex-grow overflow-hidden bg-container-3 rounded-t-xl border-x border-t border-border z-10 relative">
+					actions={{
+						upsertDocumentAction: upsertDocumentAction,
+						setPanelOpen: setPanelOpen,
+						setDeleteOpen: setDeleteOpen,
+					}}
+				/>
+				<div class="w-full mt-[162px] md:mt-[192px] flex flex-grow overflow-hidden bg-container-3 rounded-t-xl border-x border-t border-border z-10 relative">
 					{/* Fields & Bricks */}
 					<div class="w-full flex flex-col">
 						<Document.CollectionPseudoBrick

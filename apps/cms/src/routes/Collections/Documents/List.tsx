@@ -91,7 +91,7 @@ const CollectionsDocumentsListRoute: Component = () => {
 						actions={{
 							contentLocale: collection.data?.data.translations ?? false,
 							createLink: {
-								link: `/admin/collections/${collectionKey()}/create`,
+								link: `/admin/collections/${collectionKey()}/draft/create`,
 								permission: userStore.get.hasPermission(["create_content"]).all,
 								label: T()("create_dynamic", {
 									name: collection.data?.data.singular || "",

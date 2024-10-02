@@ -1,4 +1,4 @@
-import { type Component, Switch, Match, Show, type JSXElement } from "solid-js";
+import { type Component, Switch, Match, Show } from "solid-js";
 import classNames from "classnames";
 import {
 	FaSolidPhotoFilm,

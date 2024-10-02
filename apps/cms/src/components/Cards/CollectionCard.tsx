@@ -24,8 +24,8 @@ const CollectionCard: Component<CollectionCardProps> = (props) => {
 	const collectionLink = createMemo(() => {
 		if (props.collection.mode === "single") {
 			if (props.collection.documentId)
-				return `/admin/collections/${props.collection.key}/${props.collection.documentId}`;
-			return `/admin/collections/${props.collection.key}/create`;
+				return `/admin/collections/${props.collection.key}/draft/${props.collection.documentId}`;
+			return `/admin/collections/${props.collection.key}/draft/create`;
 		}
 		return `/admin/collections/${props.collection.key}`;
 	});
