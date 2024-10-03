@@ -54,6 +54,15 @@ export default class CollectionDocumentsRepo {
 				"lucid_collection_documents.created_at",
 				"lucid_collection_documents.updated_at",
 				"lucid_collection_documents.updated_by",
+				(eb) =>
+					eb
+						.selectFrom("lucid_collection_document_versions")
+						.select("id")
+						.where("document_id", "=", eb.ref("lucid_collection_documents.id"))
+						.where("version_type", "=", "published")
+						.orderBy("created_at", "desc")
+						.limit(1)
+						.as("published_version_id"),
 			])
 			.$if(props.status !== undefined, (eb) =>
 				eb

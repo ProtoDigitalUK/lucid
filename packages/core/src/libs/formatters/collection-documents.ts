@@ -36,6 +36,7 @@ interface DocumentPropT {
 	ub_user_last_name?: string | null;
 	ub_user_username?: string | null;
 	// Version
+	published_version_id?: number | null;
 	version_id?: number | null;
 	version_type?: DocumentVersionType | null;
 	previous_version_type?: DocumentVersionType | null;
@@ -115,6 +116,7 @@ export default class CollectionDocumentsFormatter {
 			collectionKey: props.document.collection_key,
 			status: props.document.version_type ?? null,
 			versionId: props.document.version_id ?? null,
+			publishedVersionId: props.document.published_version_id ?? null,
 			previousStatus: props.document.previous_version_type ?? null,
 			versionCreatedAt: Formatter.formatDate(props.document.version_created_at),
 			versionCreatedBy: props.document.version_created_by ?? null,
@@ -198,6 +200,10 @@ export default class CollectionDocumentsFormatter {
 				type: "number",
 			},
 			versionId: {
+				type: "number",
+				nullable: true,
+			},
+			publishedVersionId: {
 				type: "number",
 				nullable: true,
 			},

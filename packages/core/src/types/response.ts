@@ -245,6 +245,7 @@ export interface CollectionDocumentResponse {
 	previousStatus: DocumentVersionType | null;
 	versionCreatedAt: string | null;
 	versionCreatedBy: number | null;
+	publishedVersionId: number | null;
 
 	createdBy: {
 		id: number;
