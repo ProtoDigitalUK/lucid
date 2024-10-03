@@ -6,6 +6,7 @@ import {
 	onMount,
 	onCleanup,
 	type Accessor,
+	createMemo,
 } from "solid-js";
 import { A } from "@solidjs/router";
 import classNames from "classnames";
@@ -25,6 +26,7 @@ export const StickyHeader: Component<{
 		brickTranslationErrors: Accessor<boolean>;
 		canSaveDocument: Accessor<boolean>;
 		panelOpen: Accessor<boolean>;
+		isPublished: Accessor<boolean>;
 	};
 	actions: {
 		upsertDocumentAction: () => void;
@@ -44,6 +46,14 @@ export const StickyHeader: Component<{
 			setHasScrolled(true);
 		else setHasScrolled(false);
 	};
+
+	// ---------------------------------
+	// Memos
+	const showUpsertButton = createMemo(() => {
+		if (props.state.mode === "create") return true;
+		if (props.state.version === "draft") return true;
+		return false;
+	});
 
 	// ---------------------------------
 	// Effects
@@ -119,20 +129,49 @@ export const StickyHeader: Component<{
 				)}
 			>
 				<A
-					href={`/admin/collections/${props.state.collectionKey()}/draft/${props.state.documentId()}`}
-					class="text-lg font-display pr-1 py-2 font-semibold after:absolute after:-bottom-px after:left-0 after:right-0 after:h-px relative cursor-pointer"
-					activeClass="after:bg-primary-base"
+					href={
+						props.state.mode !== "create"
+							? `/admin/collections/${props.state.collectionKey()}/draft/${props.state.documentId()}`
+							: "#"
+					}
+					class={classNames(
+						"text-lg font-display pr-1 py-2 font-semibold after:absolute after:-bottom-px after:left-0 after:right-0 after:h-px relative",
+						{
+							"opacity-50 cursor-not-allowed focus:ring-0 hover:text-inherit":
+								props.state.mode === "create",
+							"cursor-pointer": props.state.mode !== "create",
+						},
+					)}
+					activeClass={classNames({
+						"after:bg-primary-base": props.state.mode !== "create",
+					})}
 				>
 					{T()("draft")}
 				</A>
 				<A
-					href={`/admin/collections/${props.state.collectionKey()}/published/${props.state.documentId()}`}
-					class="text-lg font-display pr-1 py-2 font-semibold after:absolute after:-bottom-px after:left-0 after:right-0 after:h-px relative cursor-pointer"
-					activeClass="after:bg-primary-base"
+					href={
+						props.state.isPublished()
+							? `/admin/collections/${props.state.collectionKey()}/published/${props.state.documentId()}`
+							: "#"
+					}
+					class={classNames(
+						"text-lg font-display pr-1 py-2 font-semibold after:absolute after:-bottom-px after:left-0 after:right-0 after:h-px relative",
+						{
+							"opacity-50 cursor-not-allowed focus:ring-0 hover:text-inherit":
+								!props.state.isPublished(),
+							"cursor-pointer": props.state.isPublished(),
+						},
+					)}
+					activeClass={classNames({
+						"after:bg-primary-base": props.state.isPublished(),
+					})}
+					aria-disabled={!props.state.isPublished()}
+					title={
+						!props.state.isPublished() ? T()("document_not_published") : ""
+					}
 				>
 					{T()("published")}
 				</A>
-
 				<span
 					class="text-lg font-display px-1 py-2 font-semibold opacity-50 cursor-not-allowed"
 					title="Coming soon"
@@ -162,9 +201,7 @@ export const StickyHeader: Component<{
 						/>
 					</div>
 				</Show>
-				<Show
-					when={props.state.mode === "edit" && props.state.version === "draft"}
-				>
+				<Show when={showUpsertButton()}>
 					<Button
 						type="button"
 						theme="primary"

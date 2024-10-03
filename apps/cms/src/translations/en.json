@@ -21,6 +21,7 @@
 	"confirm_delete": "Confirm Delete",
 	"standard": "Standard",
 	"bricks": "Bricks",
+	"document_not_published": "This document is not published",
 	"assign_bricks_description": "Select the bricks you wish this environment to have access to.",
 	"collections": "Collections",
 	"assign_collections_description": "Assign the collection you wish the environment to have access to.",

@@ -152,6 +152,12 @@ const CollectionsDocumentsEditRoute: Component<
 	const canSaveDocument = createMemo(() => {
 		return !brickStore.get.documentMutated && !isSaving();
 	});
+	const isPublished = createMemo(() => {
+		return (
+			doc.data?.data.publishedVersionId !== null &&
+			doc.data?.data.publishedVersionId !== undefined
+		);
+	});
 
 	// ---------------------------------
 	// Functions
@@ -227,6 +233,7 @@ const CollectionsDocumentsEditRoute: Component<
 						brickTranslationErrors: brickTranslationErrors,
 						canSaveDocument: canSaveDocument,
 						panelOpen: getPanelOpen,
+						isPublished: isPublished,
 					}}
 					actions={{
 						upsertDocumentAction: upsertDocumentAction,
@@ -247,114 +254,116 @@ const CollectionsDocumentsEditRoute: Component<
 							]}
 						/>
 					</Show>
-					{/* Fields & Bricks */}
-					<div class="w-full flex flex-col">
-						<Document.CollectionPseudoBrick
-							fields={collection.data?.data.fields || []}
-						/>
-						<Document.FixedBricks
-							brickConfig={collection.data?.data.fixedBricks || []}
-						/>
-						<Document.BuilderBricks
-							brickConfig={collection.data?.data.builderBricks || []}
-						/>
+					<div class="w-full flex flex-grow">
+						{/* Fields & Bricks */}
+						<div class="w-full flex flex-col">
+							<Document.CollectionPseudoBrick
+								fields={collection.data?.data.fields || []}
+							/>
+							<Document.FixedBricks
+								brickConfig={collection.data?.data.fixedBricks || []}
+							/>
+							<Document.BuilderBricks
+								brickConfig={collection.data?.data.builderBricks || []}
+							/>
+						</div>
+						{/* Sidebar */}
+						<Show when={props.mode === "edit"}>
+							<aside
+								class={classNames(
+									"w-full lg:max-w-[300px] lg:overflow-y-auto bg-container-5 border-b lg:border-b-0 lg:border-l border-border animate-animate-slide-from-right-in",
+									{
+										hidden: getPanelOpen() === false,
+									},
+								)}
+							>
+								<div class="p-15 md:p-30">
+									<h3 class="mb-15">{T()("metadata")}</h3>
+									<DetailsList
+										type="text"
+										items={[
+											{
+												label: T()("collection"),
+												value: collection.data?.data.title,
+											},
+											{
+												label: T()("document_id"),
+												value: doc.data?.data.id,
+											},
+											{
+												label: T()("fixed_bricks"),
+												value: collection.data?.data.fixedBricks?.length,
+											},
+											{
+												label: T()("available_builder_bricks"),
+												value: collection.data?.data.builderBricks?.length,
+											},
+											{
+												label: T()("total_bricks"),
+												value: brickStore.get.bricks.length,
+											},
+											{
+												label: T()("field_errors"),
+												value: (
+													<Pill
+														theme={
+															brickStore.get.fieldsErrors?.length > 0
+																? "red"
+																: "grey"
+														}
+													>
+														{`${brickStore.get.fieldsErrors?.length || 0}`}
+													</Pill>
+												),
+											},
+											{
+												label: T()("created_at"),
+												value: <DateText date={doc.data?.data.createdAt} />,
+												show: props.mode === "edit",
+											},
+											{
+												label: T()("created_by"),
+												value: (
+													<UserDisplay
+														user={{
+															username: doc.data?.data.createdBy?.username,
+															firstName: doc.data?.data.createdBy?.firstName,
+															lastName: doc.data?.data.createdBy?.lastName,
+															thumbnail: undefined,
+														}}
+														mode="long"
+													/>
+												),
+												stacked: true,
+												show: props.mode === "edit",
+											},
+											{
+												label: T()("last_updated_at"),
+												value: <DateText date={doc.data?.data.updatedAt} />,
+												show: props.mode === "edit",
+											},
+											{
+												label: T()("last_updated_by"),
+												value: (
+													<UserDisplay
+														user={{
+															username: doc.data?.data.updatedBy?.username,
+															firstName: doc.data?.data.updatedBy?.firstName,
+															lastName: doc.data?.data.updatedBy?.lastName,
+															thumbnail: undefined,
+														}}
+														mode="long"
+													/>
+												),
+												stacked: true,
+												show: props.mode === "edit",
+											},
+										]}
+									/>
+								</div>
+							</aside>
+						</Show>
 					</div>
-					{/* Sidebar */}
-					<Show when={props.mode === "edit"}>
-						<aside
-							class={classNames(
-								"w-full lg:max-w-[300px] lg:overflow-y-auto bg-container-5 border-b lg:border-b-0 lg:border-l border-border animate-animate-slide-from-right-in",
-								{
-									hidden: getPanelOpen() === false,
-								},
-							)}
-						>
-							<div class="p-15 md:p-30">
-								<h3 class="mb-15">{T()("metadata")}</h3>
-								<DetailsList
-									type="text"
-									items={[
-										{
-											label: T()("collection"),
-											value: collection.data?.data.title,
-										},
-										{
-											label: T()("document_id"),
-											value: doc.data?.data.id,
-										},
-										{
-											label: T()("fixed_bricks"),
-											value: collection.data?.data.fixedBricks?.length,
-										},
-										{
-											label: T()("available_builder_bricks"),
-											value: collection.data?.data.builderBricks?.length,
-										},
-										{
-											label: T()("total_bricks"),
-											value: brickStore.get.bricks.length,
-										},
-										{
-											label: T()("field_errors"),
-											value: (
-												<Pill
-													theme={
-														brickStore.get.fieldsErrors?.length > 0
-															? "red"
-															: "grey"
-													}
-												>
-													{`${brickStore.get.fieldsErrors?.length || 0}`}
-												</Pill>
-											),
-										},
-										{
-											label: T()("created_at"),
-											value: <DateText date={doc.data?.data.createdAt} />,
-											show: props.mode === "edit",
-										},
-										{
-											label: T()("created_by"),
-											value: (
-												<UserDisplay
-													user={{
-														username: doc.data?.data.createdBy?.username,
-														firstName: doc.data?.data.createdBy?.firstName,
-														lastName: doc.data?.data.createdBy?.lastName,
-														thumbnail: undefined,
-													}}
-													mode="long"
-												/>
-											),
-											stacked: true,
-											show: props.mode === "edit",
-										},
-										{
-											label: T()("last_updated_at"),
-											value: <DateText date={doc.data?.data.updatedAt} />,
-											show: props.mode === "edit",
-										},
-										{
-											label: T()("last_updated_by"),
-											value: (
-												<UserDisplay
-													user={{
-														username: doc.data?.data.updatedBy?.username,
-														firstName: doc.data?.data.updatedBy?.firstName,
-														lastName: doc.data?.data.updatedBy?.lastName,
-														thumbnail: undefined,
-													}}
-													mode="long"
-												/>
-											),
-											stacked: true,
-											show: props.mode === "edit",
-										},
-									]}
-								/>
-							</div>
-						</aside>
-					</Show>
 				</div>
 				{/* Modals */}
 				<NavigationGuard
