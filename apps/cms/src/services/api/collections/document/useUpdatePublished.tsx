@@ -17,13 +17,13 @@ interface Params {
 	};
 }
 
-export const createDraftReq = (params: Params) => {
+export const updatePublishedReq = (params: Params) => {
 	return request<
 		ResponseBody<{
 			id: number;
 		}>
 	>({
-		url: `/api/v1/collections/documents/${params.collectionKey}/${params.documentId}/draft`,
+		url: `/api/v1/collections/documents/${params.collectionKey}/${params.documentId}/publish`,
 		csrf: true,
 		config: {
 			method: "POST",
@@ -32,7 +32,7 @@ export const createDraftReq = (params: Params) => {
 	});
 };
 
-interface UseUpdateDraftProps {
+interface UseUpdatePublishedProps {
 	onSuccess?: (
 		_data: ResponseBody<{
 			id: number;
@@ -42,7 +42,7 @@ interface UseUpdateDraftProps {
 	getCollectionName: () => string;
 }
 
-const useCreateDraft = (props: UseUpdateDraftProps) => {
+const useUpdatePublished = (props: UseUpdatePublishedProps) => {
 	// -----------------------------
 	// Mutation
 	return serviceHelpers.useMutationWrapper<
@@ -51,24 +51,21 @@ const useCreateDraft = (props: UseUpdateDraftProps) => {
 			id: number;
 		}>
 	>({
-		mutationFn: createDraftReq,
+		mutationFn: updatePublishedReq,
 		getSuccessToast: () => {
 			return {
-				title: T()("update_toast_title", {
+				title: T()("publish_toast_title", {
 					name: props.getCollectionName(),
 				}),
-				message: T()("update_toast_message", {
+				message: T()("publish_toast_message", {
 					name: props.getCollectionName().toLowerCase(),
 				}),
 			};
 		},
-		invalidates: [
-			"collections.document.getMultiple",
-			"collections.document.getSingle",
-		],
+		invalidates: ["collections.document.getSingle"],
 		onSuccess: props?.onSuccess,
 		onError: props?.onError,
 	});
 };
 
-export default useCreateDraft;
+export default useUpdatePublished;

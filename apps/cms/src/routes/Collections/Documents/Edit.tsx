@@ -112,12 +112,32 @@ const CollectionsDocumentsEditRoute: Component<
 	const updateDraft = api.collections.document.useUpdateDraft({
 		onSuccess: () => {
 			brickStore.set("fieldsErrors", []);
+			brickStore.set("documentMutated", false);
 		},
 		onError: (errors) => {
 			brickStore.set(
 				"fieldsErrors",
 				getBodyError<FieldErrors[]>("fields", errors) || [],
 			);
+			brickStore.set("documentMutated", false);
+		},
+		getCollectionName: () =>
+			collection.data?.data.singular || T()("collection"),
+	});
+	const updatePublished = api.collections.document.useUpdatePublished({
+		onSuccess: () => {
+			brickStore.set("fieldsErrors", []);
+			brickStore.set("documentMutated", false);
+			navigate(
+				`/admin/collections/${collectionKey()}/published/${documentId()}`,
+			);
+		},
+		onError: (errors) => {
+			brickStore.set(
+				"fieldsErrors",
+				getBodyError<FieldErrors[]>("fields", errors) || [],
+			);
+			brickStore.set("documentMutated", false);
 		},
 		getCollectionName: () =>
 			collection.data?.data.singular || T()("collection"),
@@ -152,6 +172,10 @@ const CollectionsDocumentsEditRoute: Component<
 	const canSaveDocument = createMemo(() => {
 		return !brickStore.get.documentMutated && !isSaving();
 	});
+	const canPublishDocument = createMemo(() => {
+		return !brickStore.get.documentMutated && !isSaving() && !mutateErrors();
+	});
+
 	const isPublished = createMemo(() => {
 		return (
 			doc.data?.data.publishedVersionId !== null &&
@@ -180,7 +204,16 @@ const CollectionsDocumentsEditRoute: Component<
 				},
 			});
 		}
-		brickStore.set("documentMutated", false);
+	};
+	const publishDocumentAction = async () => {
+		updatePublished.action.mutate({
+			collectionKey: collectionKey(),
+			documentId: documentId() as number,
+			body: {
+				bricks: brickHelpers.getUpsertBricks(),
+				fields: brickHelpers.getCollectionPseudoBrickFields(),
+			},
+		});
 	};
 	const setDocumentState = () => {
 		brickStore.get.reset();
@@ -232,6 +265,7 @@ const CollectionsDocumentsEditRoute: Component<
 						collection: collection.data?.data,
 						brickTranslationErrors: brickTranslationErrors,
 						canSaveDocument: canSaveDocument,
+						canPublishDocument: canPublishDocument,
 						panelOpen: getPanelOpen,
 						isPublished: isPublished,
 					}}
@@ -239,6 +273,7 @@ const CollectionsDocumentsEditRoute: Component<
 						upsertDocumentAction: upsertDocumentAction,
 						setPanelOpen: setPanelOpen,
 						setDeleteOpen: setDeleteOpen,
+						publishDocumentAction: publishDocumentAction,
 					}}
 				/>
 				<div class="w-full mt-[162px] md:mt-[192px] flex flex-col flex-grow overflow-hidden bg-container-3 rounded-t-xl border-x border-t border-border z-10 relative">

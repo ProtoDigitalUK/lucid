@@ -4,6 +4,7 @@ import useDeleteMultiple from "./useDeleteMultiple";
 import useUpdateDraft from "./useUpdateDraft";
 import useGetSingle from "./useGetSingle";
 import useCreateSingle from "./useCreateSingle";
+import useUpdatePublished from "./useUpdatePublished";
 
 const exportObject = {
 	useGetMultiple,
@@ -12,6 +13,7 @@ const exportObject = {
 	useUpdateDraft,
 	useCreateSingle,
 	useGetSingle,
+	useUpdatePublished,
 };
 
 export default exportObject;

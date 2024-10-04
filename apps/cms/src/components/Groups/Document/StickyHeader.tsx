@@ -25,6 +25,7 @@ export const StickyHeader: Component<{
 		collection?: CollectionResponse;
 		brickTranslationErrors: Accessor<boolean>;
 		canSaveDocument: Accessor<boolean>;
+		canPublishDocument: Accessor<boolean>;
 		panelOpen: Accessor<boolean>;
 		isPublished: Accessor<boolean>;
 	};
@@ -32,6 +33,7 @@ export const StickyHeader: Component<{
 		upsertDocumentAction: () => void;
 		setPanelOpen: (_open: boolean) => void;
 		setDeleteOpen: (_open: boolean) => void;
+		publishDocumentAction: () => void;
 	};
 }> = (props) => {
 	// ---------------------------------
@@ -53,6 +55,12 @@ export const StickyHeader: Component<{
 		if (props.state.mode === "create") return true;
 		if (props.state.version === "draft") return true;
 		return false;
+	});
+	const showPublishButton = createMemo(() => {
+		if (props.state.mode === "create" || props.state.mode === "locked")
+			return false;
+		if (props.state.version === "published") return false;
+		return true;
 	});
 
 	// ---------------------------------
@@ -209,9 +217,18 @@ export const StickyHeader: Component<{
 						onClick={props.actions.upsertDocumentAction}
 						disabled={props.state.canSaveDocument()}
 					>
-						{T()("save", {
-							singular: props.state.collection?.singular || "",
-						})}
+						{T()("save")}
+					</Button>
+				</Show>
+				<Show when={showPublishButton()}>
+					<Button
+						type="button"
+						theme="primary"
+						size="x-small"
+						onClick={props.actions.publishDocumentAction}
+						disabled={!props.state.canPublishDocument()}
+					>
+						{T()("publish")}
 					</Button>
 				</Show>
 				<Show
