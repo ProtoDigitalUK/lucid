@@ -159,6 +159,9 @@ export interface CollectionResponse {
 	description: string | null;
 	documentId?: number | null;
 	translations: boolean;
+	useDrafts: boolean;
+	useRevisions: boolean;
+	locked: boolean;
 	fixedBricks: Array<CollectionBrickConfig>;
 	builderBricks: Array<CollectionBrickConfig>;
 	fields: CFConfig<FieldTypes>[];

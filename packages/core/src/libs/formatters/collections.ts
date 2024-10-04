@@ -47,7 +47,9 @@ export default class CollectionsFormatter {
 				? this.getDocumentId(key, props.documents)
 				: undefined,
 			translations: collectionData.config.translations ?? false,
-
+			useDrafts: props.collection.config.useDrafts ?? false,
+			useRevisions: props.collection.config.useRevisions ?? false,
+			locked: props.collection.config.locked ?? false,
 			fixedBricks: props.include?.bricks
 				? props.collection.fixedBricks ?? []
 				: [],
@@ -174,6 +176,18 @@ export default class CollectionsFormatter {
 			},
 			documentId: { type: "number", example: 1, nullable: true },
 			translations: { type: "boolean", example: false },
+			useDrafts: {
+				type: "boolean",
+				nullable: true,
+			},
+			useRevisions: {
+				type: "boolean",
+				nullable: true,
+			},
+			locked: {
+				type: "boolean",
+				nullable: true,
+			},
 			fixedBricks: {
 				type: "array",
 				items: this.swaggerBricksConfig,
