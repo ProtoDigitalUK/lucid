@@ -216,4 +216,17 @@ export default class CollectionDocumentVersionsRepo {
 
 		return query.executeTakeFirst();
 	};
+	// ----------------------------------------
+	// delete
+	deleteSingle = async (props: {
+		where: QueryBuilderWhere<"lucid_collection_document_versions">;
+	}) => {
+		let query = this.db
+			.deleteFrom("lucid_collection_document_versions")
+			.returning(["id"]);
+
+		query = queryBuilder.delete(query, props.where);
+
+		return query.executeTakeFirst();
+	};
 }

@@ -24,29 +24,45 @@ const createSingle: ServiceFn<
 		"collection-document-versions",
 		context.db,
 	);
-
+	const useRevisions = data.collection.config.useRevisions ?? false;
 	const versionType = data.publish ? "published" : "draft";
 
-	// Update the current version of the targeted type to a revision
-	await VersionsRepo.updateSingle({
-		where: [
-			{
-				key: "document_id",
-				operator: "=",
-				value: data.documentId,
+	if (useRevisions) {
+		await VersionsRepo.updateSingle({
+			where: [
+				{
+					key: "document_id",
+					operator: "=",
+					value: data.documentId,
+				},
+				{
+					key: "version_type",
+					operator: "=",
+					value: versionType,
+				},
+			],
+			data: {
+				version_type: "revision",
+				previous_version_type: versionType,
+				created_by: data.userId,
 			},
-			{
-				key: "version_type",
-				operator: "=",
-				value: versionType,
-			},
-		],
-		data: {
-			version_type: "revision",
-			previous_version_type: versionType,
-			created_by: data.userId,
-		},
-	});
+		});
+	} else {
+		await VersionsRepo.deleteSingle({
+			where: [
+				{
+					key: "document_id",
+					operator: "=",
+					value: data.documentId,
+				},
+				{
+					key: "version_type",
+					operator: "=",
+					value: versionType,
+				},
+			],
+		});
+	}
 
 	// Create new version (draft or published based on the publish value)
 	const newVersion = await VersionsRepo.createSingle({

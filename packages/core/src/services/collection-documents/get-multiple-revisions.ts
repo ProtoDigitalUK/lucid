@@ -1,3 +1,4 @@
+import T from "../../translations/index.js";
 import Repository from "../../libs/repositories/index.js";
 import Formatter from "../../libs/formatters/index.js";
 import type z from "zod";
@@ -27,6 +28,18 @@ const getMultipleRevisions: ServiceFn<
 		},
 	);
 	if (collectionRes.error) return collectionRes;
+
+	if (collectionRes.data.config.useRevisions === false) {
+		return {
+			error: {
+				type: "basic",
+				name: T("revisions_not_enabled_error_name"),
+				message: T("revisions_not_enabled_message"),
+				status: 400,
+			},
+			data: undefined,
+		};
+	}
 
 	const VersionsRepo = Repository.get(
 		"collection-document-versions",

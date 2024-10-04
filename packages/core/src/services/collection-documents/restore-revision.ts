@@ -25,6 +25,18 @@ const restoreRevision: ServiceFn<
 	);
 	if (collectionRes.error) return collectionRes;
 
+	if (collectionRes.data.config.useRevisions === false) {
+		return {
+			error: {
+				type: "basic",
+				name: T("revisions_not_enabled_error_name"),
+				message: T("revisions_not_enabled_message"),
+				status: 400,
+			},
+			data: undefined,
+		};
+	}
+
 	const VersionsRepo = Repository.get(
 		"collection-document-versions",
 		context.db,

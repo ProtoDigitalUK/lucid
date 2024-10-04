@@ -38,6 +38,8 @@
 	"validation_query_error_message": "Please check the query parameters and try again.",
 	"draft_version_not_moved_to_revision_message": "The draft version was not moved to a revision.",
 	"revision_version_not_restored_message": "The revision version was not restored.",
+	"revisions_not_enabled_error_name": "Revisions Not Enabled",
+	"revisions_not_enabled_message": "Revisions are not enabled for this collection.",
 	"validation_params_error_message": "Please check the request parameters and try again.",
 	"access_token_error_name": "There was an error obtaining an access token.",
 	"access_token_error_message": "There was an error obtaining an access token. Please try logging in again.",
