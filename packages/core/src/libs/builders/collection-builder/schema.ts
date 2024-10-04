@@ -8,6 +8,8 @@ const CollectionConfigSchema = z.object({
 	description: z.string().optional(),
 	translations: z.boolean().default(false).optional(),
 	locked: z.boolean().default(false).optional(),
+	useDraft: z.boolean().default(false).optional(),
+	useRevisions: z.boolean().default(false).optional(),
 	hooks: z
 		.array(
 			z.object({

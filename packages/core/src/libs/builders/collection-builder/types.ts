@@ -30,6 +30,8 @@ export type CollectionData = {
 	singular: CollectionConfigSchemaType["singular"];
 	description: string | null;
 	locked: boolean;
+	useDraft: boolean;
+	useRevisions: boolean;
 	config: {
 		translations: boolean;
 		fields: {

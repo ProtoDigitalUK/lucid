@@ -175,6 +175,8 @@ class CollectionBuilder extends FieldBuilder {
 			singular: this.config.singular,
 			description: this.config.description ?? null,
 			locked: this.config.locked ?? false,
+			useDraft: this.config.useDraft ?? false,
+			useRevisions: this.config.useRevisions ?? false,
 			config: {
 				translations: this.config?.translations ?? false,
 				fields: {

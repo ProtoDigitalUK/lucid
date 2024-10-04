@@ -95,6 +95,8 @@ test("collection config is correct along with field includes and filters", async
 		singular: "Page",
 		description: "Pages are used to create static content on your website.",
 		locked: false,
+		useDraft: false,
+		useRevisions: false,
 		config: {
 			translations: true,
 			fields: {
