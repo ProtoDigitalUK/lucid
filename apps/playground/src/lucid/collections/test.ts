@@ -8,6 +8,8 @@ const TestCollection = new CollectionBuilder("test", {
 	description:
 		"A test collection for the revisions and draft/published functionality.",
 	translations: true,
+	useDrafts: true,
+	useRevisions: true,
 	hooks: [],
 	bricks: {},
 }).addText(

@@ -6,13 +6,19 @@ import { swaggerFieldObj } from "../../schemas/collection-fields.js";
 import formatAPIResponse from "../../utils/build-response.js";
 import serviceWrapper from "../../utils/services/service-wrapper.js";
 import { LucidAPIError } from "../../utils/errors/index.js";
+import permissions from "../../middleware/permissions.js";
 import type { RouteController } from "../../types/types.js";
 
-const updateDraftController: RouteController<
-	typeof collectionDocumentsSchema.updateDraft.params,
-	typeof collectionDocumentsSchema.updateDraft.body,
-	typeof collectionDocumentsSchema.updateDraft.query
+const updateSingleController: RouteController<
+	typeof collectionDocumentsSchema.updateSingle.params,
+	typeof collectionDocumentsSchema.updateSingle.body,
+	typeof collectionDocumentsSchema.updateSingle.query
 > = async (request, reply) => {
+	// Manually run permissions middleware based on the publish flag
+	await permissions(
+		request.body.publish ? ["publish_content"] : ["update_content"],
+	)(request);
+
 	const documentId = await serviceWrapper(
 		request.server.services.collection.document.upsertSingle,
 		{
@@ -31,7 +37,7 @@ const updateDraftController: RouteController<
 		},
 		{
 			collectionKey: request.params.collectionKey,
-			publish: 0,
+			publish: request.body.publish ? 1 : 0,
 			userId: request.auth.id,
 			documentId: Number.parseInt(request.params.id),
 			bricks: request.body.bricks,
@@ -50,15 +56,18 @@ const updateDraftController: RouteController<
 };
 
 export default {
-	controller: updateDraftController,
-	zodSchema: collectionDocumentsSchema.updateDraft,
+	controller: updateSingleController,
+	zodSchema: collectionDocumentsSchema.updateSingle,
 	swaggerSchema: {
-		description: "Update a single collection documents draft version.",
+		description: "Update a single collection document version.",
 		tags: ["collection-documents"],
-		summary: "Update a single collection documents draft version.",
+		summary: "Update a single collection document version.",
 		body: {
 			type: "object",
 			properties: {
+				publish: {
+					type: "boolean",
+				},
 				bricks: {
 					type: "array",
 					items: swaggerBodyBricksObj,

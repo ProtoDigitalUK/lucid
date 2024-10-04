@@ -3,46 +3,30 @@ import r from "../../../utils/route.js";
 import collectionDocuments from "../../../controllers/collection-documents/index.js";
 
 const collectionDocumentsRoutes = async (fastify: FastifyInstance) => {
-	// Create draft document
+	// Create published document
 	r(fastify, {
 		method: "post",
 		url: "/:collectionKey/draft",
-		permissions: ["create_content"],
 		middleware: {
 			authenticate: true,
 			validateCSRF: true,
 		},
-		swaggerSchema: collectionDocuments.createDraft.swaggerSchema,
-		zodSchema: collectionDocuments.createDraft.zodSchema,
-		controller: collectionDocuments.createDraft.controller,
+		swaggerSchema: collectionDocuments.createSingle.swaggerSchema,
+		zodSchema: collectionDocuments.createSingle.zodSchema,
+		controller: collectionDocuments.createSingle.controller,
 	});
 
-	// Update draft document
+	// Update document
 	r(fastify, {
 		method: "post",
-		url: "/:collectionKey/:id/draft",
-		permissions: ["update_content"],
+		url: "/:collectionKey/:id",
 		middleware: {
 			authenticate: true,
 			validateCSRF: true,
 		},
-		swaggerSchema: collectionDocuments.updateDraft.swaggerSchema,
-		zodSchema: collectionDocuments.updateDraft.zodSchema,
-		controller: collectionDocuments.updateDraft.controller,
-	});
-
-	// Publish document
-	r(fastify, {
-		method: "post",
-		url: "/:collectionKey/:id/publish",
-		permissions: ["publish_content"],
-		middleware: {
-			authenticate: true,
-			validateCSRF: true,
-		},
-		swaggerSchema: collectionDocuments.updatePublish.swaggerSchema,
-		zodSchema: collectionDocuments.updatePublish.zodSchema,
-		controller: collectionDocuments.updatePublish.controller,
+		swaggerSchema: collectionDocuments.updateSingle.swaggerSchema,
+		zodSchema: collectionDocuments.updateSingle.zodSchema,
+		controller: collectionDocuments.updateSingle.controller,
 	});
 
 	// Restore revision

@@ -6,13 +6,19 @@ import { swaggerFieldObj } from "../../schemas/collection-fields.js";
 import formatAPIResponse from "../../utils/build-response.js";
 import serviceWrapper from "../../utils/services/service-wrapper.js";
 import { LucidAPIError } from "../../utils/errors/index.js";
+import permissions from "../../middleware/permissions.js";
 import type { RouteController } from "../../types/types.js";
 
-const createDraftController: RouteController<
-	typeof collectionDocumentsSchema.createDraft.params,
-	typeof collectionDocumentsSchema.createDraft.body,
-	typeof collectionDocumentsSchema.createDraft.query
+const createSingleController: RouteController<
+	typeof collectionDocumentsSchema.createSingle.params,
+	typeof collectionDocumentsSchema.createSingle.body,
+	typeof collectionDocumentsSchema.createSingle.query
 > = async (request, reply) => {
+	// Manually run permissions middleware based on the publish flag
+	await permissions(
+		request.body.publish ? ["publish_content"] : ["create_content"],
+	)(request);
+
 	const documentId = await serviceWrapper(
 		request.server.services.collection.document.upsertSingle,
 		{
@@ -31,7 +37,7 @@ const createDraftController: RouteController<
 		},
 		{
 			collectionKey: request.params.collectionKey,
-			publish: 0,
+			publish: request.body.publish ? 1 : 0,
 			userId: request.auth.id,
 			bricks: request.body.bricks,
 			fields: request.body.fields,
@@ -49,15 +55,18 @@ const createDraftController: RouteController<
 };
 
 export default {
-	controller: createDraftController,
-	zodSchema: collectionDocumentsSchema.createDraft,
+	controller: createSingleController,
+	zodSchema: collectionDocumentsSchema.createSingle,
 	swaggerSchema: {
-		description: "Create a single collection document draft.",
+		description: "Create a single collection document.",
 		tags: ["collection-documents"],
-		summary: "Create a single collection document draft.",
+		summary: "Create a single collection document.",
 		body: {
 			type: "object",
 			properties: {
+				publish: {
+					type: "boolean",
+				},
 				bricks: {
 					type: "array",
 					items: swaggerBodyBricksObj,

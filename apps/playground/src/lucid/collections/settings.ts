@@ -7,6 +7,7 @@ const SettingsCollection = new CollectionBuilder("settings", {
 	title: "Settings",
 	singular: "Setting",
 	description: "Set shared settings for your website.",
+	useRevisions: true,
 	bricks: {
 		fixed: [SEOBrick],
 	},

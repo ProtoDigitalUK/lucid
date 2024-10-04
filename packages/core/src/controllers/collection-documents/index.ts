@@ -5,9 +5,8 @@ import getMultipleRevisions from "./get-multiple-revisions.js";
 import deleteMultiple from "./delete-multiple.js";
 import deleteSingle from "./delete-single.js";
 import restoreRevision from "./restore-revision.js";
-import createDraft from "./create-draft.js";
-import updateDraft from "./update-draft.js";
-import updatePublish from "./update-publish.js";
+import createSingle from "./create-single.js";
+import updateSingle from "./update-single.js";
 
 export default {
 	client,
@@ -17,7 +16,6 @@ export default {
 	deleteMultiple,
 	deleteSingle,
 	restoreRevision,
-	createDraft,
-	updateDraft,
-	updatePublish,
+	createSingle,
+	updateSingle,
 };

@@ -4,8 +4,9 @@ import { FieldSchema } from "./collection-fields.js";
 import defaultQuery, { filterSchemas } from "./default-query.js";
 
 export default {
-	updateDraft: {
+	updateSingle: {
 		body: z.object({
+			publish: z.boolean(),
 			bricks: z.array(BrickSchema).optional(),
 			fields: z.array(FieldSchema).optional(),
 		}),
@@ -15,19 +16,9 @@ export default {
 			id: z.string(),
 		}),
 	},
-	updatePublish: {
+	createSingle: {
 		body: z.object({
-			bricks: z.array(BrickSchema).optional(),
-			fields: z.array(FieldSchema).optional(),
-		}),
-		query: undefined,
-		params: z.object({
-			collectionKey: z.string(),
-			id: z.string(),
-		}),
-	},
-	createDraft: {
-		body: z.object({
+			publish: z.boolean(),
 			bricks: z.array(BrickSchema).optional(),
 			fields: z.array(FieldSchema).optional(),
 		}),
