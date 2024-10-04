@@ -9,14 +9,11 @@ import type {
 	CFConfig,
 	FieldResponse,
 	FieldErrors,
-	// DocumentMeta,
-	CollectionDocumentResponse,
 } from "@lucidcms/core/types";
 import brickStore from "@/store/brickStore";
 import brickHelpers from "@/utils/brick-helpers";
 import helpers from "@/utils/helpers";
 import Form from "@/components/Groups/Form";
-import documentSelectStore from "@/store/forms/documentSelectStore";
 
 interface DocumentFieldProps {
 	state: {

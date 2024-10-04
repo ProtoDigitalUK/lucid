@@ -1,6 +1,7 @@
 import { Show, createMemo, type Component } from "solid-js";
 import type { CollectionResponse } from "@lucidcms/core/types";
 import { A } from "@solidjs/router";
+import { getDocumentRoute } from "@/utils/route-helpers";
 import { FaSolidBox, FaSolidBoxesStacked } from "solid-icons/fa";
 
 interface CollectionCardProps {
@@ -24,8 +25,15 @@ const CollectionCard: Component<CollectionCardProps> = (props) => {
 	const collectionLink = createMemo(() => {
 		if (props.collection.mode === "single") {
 			if (props.collection.documentId)
-				return `/admin/collections/${props.collection.key}/draft/${props.collection.documentId}`;
-			return `/admin/collections/${props.collection.key}/draft/create`;
+				return getDocumentRoute("edit", {
+					collectionKey: props.collection.key,
+					useDrafts: props.collection.useDrafts,
+					documentId: props.collection.documentId,
+				});
+			return getDocumentRoute("create", {
+				collectionKey: props.collection.key,
+				useDrafts: props.collection.useDrafts,
+			});
 		}
 		return `/admin/collections/${props.collection.key}`;
 	});

@@ -1,6 +1,6 @@
 import T from "@/translations";
 import { type Component, type Accessor, Index, createMemo } from "solid-js";
-import { FaSolidCalendar } from "solid-icons/fa";
+import { FaSolidCalendar, FaSolidSatelliteDish } from "solid-icons/fa";
 import { useParams, useNavigate } from "@solidjs/router";
 import type {
 	CollectionResponse,
@@ -8,6 +8,7 @@ import type {
 	FieldTypes,
 } from "@lucidcms/core/types";
 import userStore from "@/store/userStore";
+import { getDocumentRoute } from "@/utils/route-helpers";
 import type useSearchParamsLocation from "@/hooks/useSearchParamsLocation";
 import useRowTarget from "@/hooks/useRowTarget";
 import api from "@/services/api";
@@ -24,6 +25,7 @@ export const DocumentsList: Component<{
 		collection?: CollectionResponse;
 		isLoading: boolean;
 		fieldIncludes: Accessor<CFConfig<FieldTypes>[]>;
+		collectionIsSuccess: Accessor<boolean>;
 		searchParams: ReturnType<typeof useSearchParamsLocation>;
 	};
 }> = (props) => {
@@ -46,6 +48,14 @@ export const DocumentsList: Component<{
 	const getTableHeadColumns = createMemo(() =>
 		tableHeadColumns(props.state.fieldIncludes()),
 	);
+	const versionType = createMemo(() => {
+		return props.state.collection?.useDrafts ? "draft" : "published";
+	});
+	const documentQueryEnabled = createMemo(
+		() =>
+			props.state.searchParams.getSettled() === true &&
+			props.state.collectionIsSuccess() === true,
+	);
 
 	// ----------------------------------
 	// Queries
@@ -54,10 +64,10 @@ export const DocumentsList: Component<{
 			queryString: props.state.searchParams.getQueryString,
 			location: {
 				collectionKey: collectionKey,
-				versionType: "draft",
+				versionType: versionType,
 			},
 		},
-		enabled: () => props.state.searchParams.getSettled(),
+		enabled: () => documentQueryEnabled(),
 	});
 
 	// ----------------------------------
@@ -106,7 +116,12 @@ export const DocumentsList: Component<{
 			}}
 			callback={{
 				createEntry: () => {
-					navigate(`/admin/collections/${collectionKey()}/draft/create`);
+					navigate(
+						getDocumentRoute("create", {
+							collectionKey: collectionKey(),
+							useDrafts: props.state.collection?.useDrafts,
+						}),
+					);
 				},
 			}}
 		>
@@ -116,6 +131,11 @@ export const DocumentsList: Component<{
 				searchParams={props.state.searchParams}
 				head={[
 					...getTableHeadColumns(),
+					{
+						label: T()("status"),
+						key: "status",
+						icon: <FaSolidSatelliteDish />,
+					},
 					{
 						label: T()("updated_at"),
 						key: "updated_at",
@@ -167,7 +187,11 @@ export const DocumentsList: Component<{
 									{
 										label: T()("edit"),
 										type: "link",
-										href: `/admin/collections/${props.state.collection?.key}/draft/${doc().id}`,
+										href: getDocumentRoute("edit", {
+											collectionKey: props.state.collection?.key as string,
+											useDrafts: props.state.collection?.useDrafts,
+											documentId: doc().id,
+										}),
 										permission: userStore.get.hasPermission(["update_content"])
 											.all,
 									},

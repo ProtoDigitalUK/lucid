@@ -14,11 +14,12 @@ import { FaSolidChevronLeft, FaSolidTrash } from "solid-icons/fa";
 import Layout from "@/components/Groups/Layout";
 import Button from "@/components/Partials/Button";
 import ContentLocaleSelect from "@/components/Partials/ContentLocaleSelect";
+import { getDocumentRoute } from "@/utils/route-helpers";
 import type { CollectionResponse } from "@lucidcms/core/types";
 
 export const StickyHeader: Component<{
 	state: {
-		mode: "create" | "edit" | "locked";
+		mode: "create" | "edit";
 		version: "draft" | "published";
 		collectionKey: Accessor<string>;
 		documentId: Accessor<number | undefined>;
@@ -28,6 +29,7 @@ export const StickyHeader: Component<{
 		canPublishDocument: Accessor<boolean>;
 		panelOpen: Accessor<boolean>;
 		isPublished: Accessor<boolean>;
+		isBuilderLocked: Accessor<boolean>;
 	};
 	actions: {
 		upsertDocumentAction: () => void;
@@ -52,12 +54,19 @@ export const StickyHeader: Component<{
 	// ---------------------------------
 	// Memos
 	const showUpsertButton = createMemo(() => {
+		if (props.state.isBuilderLocked()) return false;
+
 		if (props.state.mode === "create") return true;
 		if (props.state.version === "draft") return true;
+		if (
+			props.state.version === "published" &&
+			props.state.collection?.useDrafts === false
+		)
+			return true;
 		return false;
 	});
 	const showPublishButton = createMemo(() => {
-		if (props.state.mode === "create" || props.state.mode === "locked")
+		if (props.state.mode === "create" || props.state.isBuilderLocked())
 			return false;
 		if (props.state.version === "published") return false;
 		return true;
@@ -108,11 +117,17 @@ export const StickyHeader: Component<{
 							include: props.state.collection?.mode === "multiple",
 						},
 						{
-							link: `/admin/collections/${props.state.collectionKey()}/draft/${
+							link:
 								props.state.mode === "create"
-									? "create"
-									: props.state.documentId()
-							}`,
+									? getDocumentRoute("create", {
+											collectionKey: props.state.collectionKey(),
+											useDrafts: props.state.collection?.useDrafts,
+										})
+									: getDocumentRoute("edit", {
+											collectionKey: props.state.collectionKey(),
+											useDrafts: props.state.collection?.useDrafts,
+											documentId: props.state.documentId(),
+										}),
 							label:
 								props.state.mode === "create"
 									? `${T()("create")} ${props.state.collection?.singular || T()("document")}`
@@ -136,26 +151,32 @@ export const StickyHeader: Component<{
 					},
 				)}
 			>
-				<A
-					href={
-						props.state.mode !== "create"
-							? `/admin/collections/${props.state.collectionKey()}/draft/${props.state.documentId()}`
-							: "#"
-					}
-					class={classNames(
-						"text-lg font-display pr-1 py-2 font-semibold after:absolute after:-bottom-px after:left-0 after:right-0 after:h-px relative",
-						{
-							"opacity-50 cursor-not-allowed focus:ring-0 hover:text-inherit":
-								props.state.mode === "create",
-							"cursor-pointer": props.state.mode !== "create",
-						},
-					)}
-					activeClass={classNames({
-						"after:bg-primary-base": props.state.mode !== "create",
-					})}
-				>
-					{T()("draft")}
-				</A>
+				<Show when={props.state.collection?.useDrafts}>
+					<A
+						href={
+							props.state.mode !== "create"
+								? getDocumentRoute("edit", {
+										collectionKey: props.state.collectionKey(),
+										useDrafts: props.state.collection?.useDrafts,
+										documentId: props.state.documentId(),
+									})
+								: "#"
+						}
+						class={classNames(
+							"text-lg font-display pr-1 py-2 font-semibold after:absolute after:-bottom-px after:left-0 after:right-0 after:h-px relative",
+							{
+								"opacity-50 cursor-not-allowed focus:ring-0 hover:text-inherit":
+									props.state.mode === "create",
+								"cursor-pointer": props.state.mode !== "create",
+							},
+						)}
+						activeClass={classNames({
+							"after:bg-primary-base": props.state.mode !== "create",
+						})}
+					>
+						{T()("draft")}
+					</A>
+				</Show>
 				<A
 					href={
 						props.state.isPublished()
@@ -180,12 +201,14 @@ export const StickyHeader: Component<{
 				>
 					{T()("published")}
 				</A>
-				<span
-					class="text-lg font-display px-1 py-2 font-semibold opacity-50 cursor-not-allowed"
-					title="Coming soon"
-				>
-					{T()("revisions")}
-				</span>
+				<Show when={props.state.collection?.useRevisions}>
+					<span
+						class="text-lg font-display px-1 py-2 font-semibold opacity-50 cursor-not-allowed"
+						title="Coming soon"
+					>
+						{T()("revisions")}
+					</span>
+				</Show>
 				<span
 					class="text-lg font-display px-1 py-2 font-semibold opacity-50 cursor-not-allowed"
 					title="Coming soon"

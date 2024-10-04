@@ -11,6 +11,7 @@ import type {
 interface Params {
 	collectionKey: string;
 	body: {
+		publish: boolean;
 		bricks: Array<BrickData>;
 		fields: Array<FieldResponse>;
 	};
@@ -22,7 +23,7 @@ export const createSingleReq = (params: Params) => {
 			id: number;
 		}>
 	>({
-		url: `/api/v1/collections/documents/${params.collectionKey}/draft`,
+		url: `/api/v1/collections/documents/${params.collectionKey}`,
 		csrf: true,
 		config: {
 			method: "POST",

@@ -1,7 +1,6 @@
 import T from "@/translations";
 import { useParams, useNavigate } from "@solidjs/router";
 import { type Component, createMemo, createEffect } from "solid-js";
-import type { CollectionResponse } from "@lucidcms/core/types";
 import api from "@/services/api";
 import userStore from "@/store/userStore";
 import helpers from "@/utils/helpers";
@@ -9,6 +8,7 @@ import useSearchParamsLocation, {
 	type FilterSchema,
 } from "@/hooks/useSearchParamsLocation";
 import Query from "@/components/Groups/Query";
+import { getDocumentRoute } from "@/utils/route-helpers";
 import {
 	collectionFieldFilters,
 	collectionFieldIncludes,
@@ -49,6 +49,7 @@ const CollectionsDocumentsListRoute: Component = () => {
 	const getCollectionFieldFilters = createMemo(() =>
 		collectionFieldFilters(collection.data?.data),
 	);
+	const collectionIsSuccess = createMemo(() => collection.isSuccess);
 
 	// ----------------------------------
 	// Effects
@@ -91,7 +92,10 @@ const CollectionsDocumentsListRoute: Component = () => {
 						actions={{
 							contentLocale: collection.data?.data.translations ?? false,
 							createLink: {
-								link: `/admin/collections/${collectionKey()}/draft/create`,
+								link: getDocumentRoute("create", {
+									collectionKey: collectionKey(),
+									useDrafts: collection.data?.data.useDrafts,
+								}),
 								permission: userStore.get.hasPermission(["create_content"]).all,
 								label: T()("create_dynamic", {
 									name: collection.data?.data.singular || "",
@@ -159,6 +163,7 @@ const CollectionsDocumentsListRoute: Component = () => {
 					fieldIncludes: getCollectionFieldIncludes,
 					searchParams: searchParams,
 					isLoading: collection.isLoading,
+					collectionIsSuccess: collectionIsSuccess,
 				}}
 			/>
 		</Layout.Wrapper>

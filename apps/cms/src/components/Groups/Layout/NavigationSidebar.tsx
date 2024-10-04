@@ -8,6 +8,7 @@ import LogoIcon from "@/assets/svgs/logo-icon.svg";
 import userStore from "@/store/userStore";
 import Navigation from "@/components/Groups/Navigation";
 import UserDisplay from "@/components/Partials/UserDisplay";
+import { getDocumentRoute } from "@/utils/route-helpers";
 import SubMenus from "@/components/Groups/Navigation/SubMenus";
 
 export const NavigationSidebar: Component = () => {
@@ -52,9 +53,16 @@ export const NavigationSidebar: Component = () => {
 		if (singleCollections().length > 0) {
 			const collection = singleCollections()[0];
 			if (collection.documentId) {
-				return `/admin/collections/${collection.key}/draft/${collection.documentId}`;
+				return getDocumentRoute("edit", {
+					collectionKey: collection.key,
+					useDrafts: collection.useDrafts,
+					documentId: collection.documentId,
+				});
 			}
-			return `/admin/collections/${collection.key}/draft/create`;
+			return getDocumentRoute("create", {
+				collectionKey: collection.key,
+				useDrafts: collection.useDrafts,
+			});
 		}
 		return "/admin/collections";
 	});

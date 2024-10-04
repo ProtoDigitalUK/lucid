@@ -40,6 +40,12 @@ const AppRouter: Component = () => {
 					)}
 				/>
 				<Route
+					path="/collections/:collectionKey/published/create"
+					component={() => (
+						<CollectionsDocumentsEditRoute mode="create" version="published" />
+					)}
+				/>
+				<Route
 					path="/collections/:collectionKey/draft/:documentId"
 					component={() => (
 						<CollectionsDocumentsEditRoute mode="edit" version="draft" />
@@ -48,7 +54,7 @@ const AppRouter: Component = () => {
 				<Route
 					path="/collections/:collectionKey/published/:documentId"
 					component={() => (
-						<CollectionsDocumentsEditRoute mode="locked" version="published" />
+						<CollectionsDocumentsEditRoute mode="edit" version="published" />
 					)}
 				/>
 				{/* Media */}

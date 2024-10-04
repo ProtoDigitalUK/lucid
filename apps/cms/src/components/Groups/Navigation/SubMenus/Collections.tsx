@@ -2,6 +2,7 @@ import T from "@/translations";
 import { type Component, createMemo, Show, Switch, Match, For } from "solid-js";
 import { useLocation } from "@solidjs/router";
 import Navigation from "@/components/Groups/Navigation";
+import { getDocumentRoute } from "@/utils/route-helpers";
 import type { CollectionResponse } from "@lucidcms/core/types";
 
 export const CollectionSubMenu: Component<{
@@ -69,8 +70,15 @@ export const CollectionSubMenu: Component<{
 											title={collection.title}
 											href={
 												collection.documentId
-													? `/admin/collections/${collection.key}/draft/${collection.documentId}`
-													: `/admin/collections/${collection.key}/draft/create`
+													? getDocumentRoute("edit", {
+															collectionKey: collection.key,
+															useDrafts: collection.useDrafts,
+															documentId: collection.documentId,
+														})
+													: getDocumentRoute("create", {
+															collectionKey: collection.key,
+															useDrafts: collection.useDrafts,
+														})
 											}
 											activeIfIncludes={`/admin/collections/${collection.key}`}
 											icon="page"

@@ -12,18 +12,19 @@ interface Params {
 	collectionKey: string;
 	documentId: number;
 	body: {
+		publish: boolean;
 		bricks?: Array<BrickData>;
 		fields?: Array<FieldResponse>;
 	};
 }
 
-export const updatePublishedReq = (params: Params) => {
+export const updateSingleReq = (params: Params) => {
 	return request<
 		ResponseBody<{
 			id: number;
 		}>
 	>({
-		url: `/api/v1/collections/documents/${params.collectionKey}/${params.documentId}/publish`,
+		url: `/api/v1/collections/documents/${params.collectionKey}/${params.documentId}`,
 		csrf: true,
 		config: {
 			method: "POST",
@@ -32,7 +33,7 @@ export const updatePublishedReq = (params: Params) => {
 	});
 };
 
-interface UseUpdatePublishedProps {
+interface UseUpdateSingleProps {
 	onSuccess?: (
 		_data: ResponseBody<{
 			id: number;
@@ -42,7 +43,7 @@ interface UseUpdatePublishedProps {
 	getCollectionName: () => string;
 }
 
-const useUpdatePublished = (props: UseUpdatePublishedProps) => {
+const useUpdateSingle = (props: UseUpdateSingleProps) => {
 	// -----------------------------
 	// Mutation
 	return serviceHelpers.useMutationWrapper<
@@ -51,21 +52,24 @@ const useUpdatePublished = (props: UseUpdatePublishedProps) => {
 			id: number;
 		}>
 	>({
-		mutationFn: updatePublishedReq,
+		mutationFn: updateSingleReq,
 		getSuccessToast: () => {
 			return {
-				title: T()("publish_toast_title", {
+				title: T()("update_toast_title", {
 					name: props.getCollectionName(),
 				}),
-				message: T()("publish_toast_message", {
+				message: T()("update_toast_message", {
 					name: props.getCollectionName().toLowerCase(),
 				}),
 			};
 		},
-		invalidates: ["collections.document.getSingle"],
+		invalidates: [
+			"collections.document.getMultiple",
+			"collections.document.getSingle",
+		],
 		onSuccess: props?.onSuccess,
 		onError: props?.onError,
 	});
 };
 
-export default useUpdatePublished;
+export default useUpdateSingle;

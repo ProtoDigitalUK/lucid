@@ -1,6 +1,6 @@
 import T from "@/translations";
 import { type Component, createMemo, createEffect, Index } from "solid-js";
-import { FaSolidCalendar } from "solid-icons/fa";
+import { FaSolidCalendar, FaSolidSatelliteDish } from "solid-icons/fa";
 import type { CollectionResponse } from "@lucidcms/core/types";
 import useSearchParamsState from "@/hooks/useSearchParamsState";
 import type { FilterSchema } from "@/hooks/useSearchParamsLocation";
@@ -73,7 +73,7 @@ const DocumentSelectContent: Component = () => {
 			queryString: searchParams.getQueryString,
 			location: {
 				collectionKey: collectionKey,
-				versionType: "draft",
+				versionType: collection.data?.data.useDrafts ? "draft" : "published",
 			},
 		},
 		enabled: () => searchParams.getSettled() && collection.isSuccess,
@@ -210,6 +210,11 @@ const DocumentSelectContent: Component = () => {
 						searchParams={searchParams}
 						head={[
 							...getTableHeadColumns(),
+							{
+								label: T()("status"),
+								key: "status",
+								icon: <FaSolidSatelliteDish />,
+							},
 							{
 								label: T()("updated_at"),
 								key: "updated_at",

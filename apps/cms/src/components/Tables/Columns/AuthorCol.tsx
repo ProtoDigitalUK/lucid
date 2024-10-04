@@ -20,6 +20,7 @@ const AuthorCol: Component<AuthorColProps> = (props) => {
 			}}
 		>
 			<Switch>
+				<Match when={!props.user || !props.user.username}>-</Match>
 				<Match when={props.user}>
 					<UserDisplay
 						user={{
@@ -31,7 +32,6 @@ const AuthorCol: Component<AuthorColProps> = (props) => {
 						mode="short"
 					/>
 				</Match>
-				<Match when={!props.user}>-</Match>
 			</Switch>
 		</Table.Td>
 	);

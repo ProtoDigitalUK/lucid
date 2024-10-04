@@ -16,7 +16,9 @@ interface QueryParams {
 	>;
 	location: {
 		collectionKey: Accessor<string | undefined> | string;
-		versionType: Exclude<DocumentVersionType, "revision">;
+		versionType:
+			| Accessor<Exclude<DocumentVersionType, "revision">>
+			| Exclude<DocumentVersionType, "revision">;
 	};
 	perPage?: Accessor<number> | number;
 }

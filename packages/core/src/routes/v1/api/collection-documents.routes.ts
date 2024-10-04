@@ -6,7 +6,7 @@ const collectionDocumentsRoutes = async (fastify: FastifyInstance) => {
 	// Create published document
 	r(fastify, {
 		method: "post",
-		url: "/:collectionKey/draft",
+		url: "/:collectionKey",
 		middleware: {
 			authenticate: true,
 			validateCSRF: true,

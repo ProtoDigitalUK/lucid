@@ -21,6 +21,7 @@ import contentLocaleStore from "@/store/contentLocaleStore";
 import DetailsList from "@/components/Partials/DetailsList";
 import DateText from "@/components/Partials/DateText";
 import DeleteDocument from "@/components/Modals/Documents/DeleteDocument";
+import { getDocumentRoute } from "@/utils/route-helpers";
 import NavigationGuard, {
 	navGuardHook,
 } from "@/components/Modals/NavigationGuard";
@@ -34,7 +35,7 @@ import Pill from "@/components/Partials/Pill";
 import Alert from "@/components/Blocks/Alert";
 
 interface CollectionsDocumentsEditRouteProps {
-	mode: "create" | "edit" | "locked";
+	mode: "create" | "edit";
 	version: "draft" | "published";
 }
 
@@ -94,7 +95,13 @@ const CollectionsDocumentsEditRoute: Component<
 	const createDocument = api.collections.document.useCreateSingle({
 		onSuccess: (data) => {
 			brickStore.set("fieldsErrors", []);
-			navigate(`/admin/collections/${collectionKey()}/draft/${data.data.id}`);
+			navigate(
+				getDocumentRoute("edit", {
+					collectionKey: collectionKey(),
+					useDrafts: collection.data?.data.useDrafts,
+					documentId: data.data.id,
+				}),
+			);
 			queryClient.invalidateQueries({
 				queryKey: ["collections.getAll"],
 			});
@@ -109,28 +116,10 @@ const CollectionsDocumentsEditRoute: Component<
 		getCollectionName: () =>
 			collection.data?.data.singular || T()("collection"),
 	});
-	const updateDraft = api.collections.document.useUpdateDraft({
+	const updateSingle = api.collections.document.useUpdateSingle({
 		onSuccess: () => {
 			brickStore.set("fieldsErrors", []);
 			brickStore.set("documentMutated", false);
-		},
-		onError: (errors) => {
-			brickStore.set(
-				"fieldsErrors",
-				getBodyError<FieldErrors[]>("fields", errors) || [],
-			);
-			brickStore.set("documentMutated", false);
-		},
-		getCollectionName: () =>
-			collection.data?.data.singular || T()("collection"),
-	});
-	const updatePublished = api.collections.document.useUpdatePublished({
-		onSuccess: () => {
-			brickStore.set("fieldsErrors", []);
-			brickStore.set("documentMutated", false);
-			navigate(
-				`/admin/collections/${collectionKey()}/published/${documentId()}`,
-			);
 		},
 		onError: (errors) => {
 			brickStore.set(
@@ -156,13 +145,13 @@ const CollectionsDocumentsEditRoute: Component<
 	});
 	const isSaving = createMemo(() => {
 		return (
-			updateDraft.action.isPending ||
+			updateSingle.action.isPending ||
 			createDocument.action.isPending ||
 			doc.isRefetching
 		);
 	});
 	const mutateErrors = createMemo(() => {
-		return updateDraft.errors() || createDocument.errors();
+		return updateSingle.errors() || createDocument.errors();
 	});
 	const brickTranslationErrors = createMemo(() => {
 		const errors = getBodyError<FieldErrors[]>("fields", mutateErrors());
@@ -174,6 +163,22 @@ const CollectionsDocumentsEditRoute: Component<
 	});
 	const canPublishDocument = createMemo(() => {
 		return !brickStore.get.documentMutated && !isSaving() && !mutateErrors();
+	});
+	const isBuilderLocked = createMemo(() => {
+		// lock builder if collection is locked
+		if (collection.data?.data.locked === true) {
+			return true;
+		}
+
+		// lock published version, if in edit mode and the collection supports drafts
+		if (props.version === "published") {
+			if (props.mode === "edit") {
+				return collection.data?.data.useDrafts ?? false;
+			}
+		}
+
+		// builder not locked
+		return false;
 	});
 
 	const isPublished = createMemo(() => {
@@ -190,15 +195,17 @@ const CollectionsDocumentsEditRoute: Component<
 			createDocument.action.mutate({
 				collectionKey: collectionKey(),
 				body: {
+					publish: props.version === "published",
 					bricks: brickHelpers.getUpsertBricks(),
 					fields: brickHelpers.getCollectionPseudoBrickFields(),
 				},
 			});
 		} else {
-			updateDraft.action.mutate({
+			updateSingle.action.mutate({
 				collectionKey: collectionKey(),
 				documentId: documentId() as number,
 				body: {
+					publish: props.version === "published",
 					bricks: brickHelpers.getUpsertBricks(),
 					fields: brickHelpers.getCollectionPseudoBrickFields(),
 				},
@@ -206,10 +213,11 @@ const CollectionsDocumentsEditRoute: Component<
 		}
 	};
 	const publishDocumentAction = async () => {
-		updatePublished.action.mutate({
+		updateSingle.action.mutate({
 			collectionKey: collectionKey(),
 			documentId: documentId() as number,
 			body: {
+				publish: true,
 				bricks: brickHelpers.getUpsertBricks(),
 				fields: brickHelpers.getCollectionPseudoBrickFields(),
 			},
@@ -222,7 +230,7 @@ const CollectionsDocumentsEditRoute: Component<
 			collection.data?.data.translations || false,
 		);
 		brickStore.get.setBricks(doc.data?.data, collection.data?.data);
-		brickStore.set("locked", props.mode === "locked");
+		brickStore.set("locked", isBuilderLocked());
 	};
 
 	// ---------------------------------
@@ -268,6 +276,7 @@ const CollectionsDocumentsEditRoute: Component<
 						canPublishDocument: canPublishDocument,
 						panelOpen: getPanelOpen,
 						isPublished: isPublished,
+						isBuilderLocked: isBuilderLocked,
 					}}
 					actions={{
 						upsertDocumentAction: upsertDocumentAction,
@@ -277,14 +286,14 @@ const CollectionsDocumentsEditRoute: Component<
 					}}
 				/>
 				<div class="w-full mt-[162px] md:mt-[192px] flex flex-col flex-grow overflow-hidden bg-container-3 rounded-t-xl border-x border-t border-border z-10 relative">
-					<Show when={props.mode === "locked"}>
+					<Show when={isBuilderLocked()}>
 						<Alert
 							style="layout"
 							alerts={[
 								{
 									type: "warning",
 									message: T()("locked_document_message"),
-									show: props.mode === "locked",
+									show: isBuilderLocked(),
 								},
 							]}
 						/>
