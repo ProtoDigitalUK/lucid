@@ -1,5 +1,5 @@
 import T from "@/translations";
-import { type Component, Show } from "solid-js";
+import { type Component, Show, type JSX } from "solid-js";
 import { FaSolidXmark } from "solid-icons/fa";
 import classNames from "classnames";
 import type useSearchParamsLocation from "@/hooks/useSearchParamsLocation";
@@ -11,6 +11,7 @@ interface QueryRowProps {
 	filters?: FilterProps["filters"];
 	sorts?: SortProps["sorts"];
 	perPage?: Array<number>;
+	custom?: JSX.Element;
 	searchParams: ReturnType<typeof useSearchParamsLocation>;
 }
 
@@ -25,6 +26,7 @@ export const QueryRow: Component<QueryRowProps> = (props) => {
 						disabled={props.filters?.length === 0}
 					/>
 				</Show>
+				<Show when={props.custom !== undefined}>{props.custom}</Show>
 				<Show when={props.sorts !== undefined}>
 					<Query.Sort
 						sorts={props.sorts as SortProps["sorts"]}

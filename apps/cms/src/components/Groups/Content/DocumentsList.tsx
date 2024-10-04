@@ -6,6 +6,7 @@ import type {
 	CollectionResponse,
 	CFConfig,
 	FieldTypes,
+	DocumentVersionType,
 } from "@lucidcms/core/types";
 import userStore from "@/store/userStore";
 import { getDocumentRoute } from "@/utils/route-helpers";
@@ -27,6 +28,7 @@ export const DocumentsList: Component<{
 		fieldIncludes: Accessor<CFConfig<FieldTypes>[]>;
 		collectionIsSuccess: Accessor<boolean>;
 		searchParams: ReturnType<typeof useSearchParamsLocation>;
+		status: Accessor<Exclude<DocumentVersionType, "revision">>;
 	};
 }> = (props) => {
 	// ----------------------------------
@@ -48,9 +50,6 @@ export const DocumentsList: Component<{
 	const getTableHeadColumns = createMemo(() =>
 		tableHeadColumns(props.state.fieldIncludes()),
 	);
-	const versionType = createMemo(() => {
-		return props.state.collection?.useDrafts ? "draft" : "published";
-	});
 	const documentQueryEnabled = createMemo(
 		() =>
 			props.state.searchParams.getSettled() === true &&
@@ -64,7 +63,7 @@ export const DocumentsList: Component<{
 			queryString: props.state.searchParams.getQueryString,
 			location: {
 				collectionKey: collectionKey,
-				versionType: versionType,
+				versionType: props.state.status,
 			},
 		},
 		enabled: () => documentQueryEnabled(),

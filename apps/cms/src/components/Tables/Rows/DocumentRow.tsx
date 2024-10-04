@@ -35,6 +35,7 @@ const DocumentRow: Component<DocumentRowProps> = (props) => {
 	// ----------------------------------
 	// Memos
 	const isPublished = createMemo(() => {
+		if (props.document.status === "published") return true;
 		if (props.collection.useDrafts) {
 			return props.document.publishedVersionId !== null;
 		}

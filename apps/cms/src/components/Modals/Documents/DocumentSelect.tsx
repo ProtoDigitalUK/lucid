@@ -1,7 +1,17 @@
 import T from "@/translations";
-import { type Component, createMemo, createEffect, Index } from "solid-js";
+import {
+	type Component,
+	createMemo,
+	createEffect,
+	Index,
+	createSignal,
+	Show,
+} from "solid-js";
 import { FaSolidCalendar, FaSolidSatelliteDish } from "solid-icons/fa";
-import type { CollectionResponse } from "@lucidcms/core/types";
+import type {
+	CollectionResponse,
+	DocumentVersionType,
+} from "@lucidcms/core/types";
 import useSearchParamsState from "@/hooks/useSearchParamsState";
 import type { FilterSchema } from "@/hooks/useSearchParamsLocation";
 import documentSelectStore from "@/store/forms/documentSelectStore";
@@ -13,6 +23,7 @@ import Modal from "@/components/Groups/Modal";
 import Table from "@/components/Groups/Table";
 import DocumentRow from "@/components/Tables/Rows/DocumentRow";
 import Layout from "@/components/Groups/Layout";
+import Form from "@/components/Groups/Form";
 import {
 	tableHeadColumns,
 	collectionFieldFilters,
@@ -50,6 +61,8 @@ const DocumentSelectContent: Component = () => {
 			perPage: 20,
 		},
 	});
+	const [getStatus, setStatus] =
+		createSignal<Exclude<DocumentVersionType, "revision">>("draft");
 
 	// ----------------------------------
 	// Memos
@@ -73,7 +86,7 @@ const DocumentSelectContent: Component = () => {
 			queryString: searchParams.getQueryString,
 			location: {
 				collectionKey: collectionKey,
-				versionType: collection.data?.data.useDrafts ? "draft" : "published",
+				versionType: getStatus,
 			},
 		},
 		enabled: () => searchParams.getSettled() && collection.isSuccess,
@@ -100,6 +113,7 @@ const DocumentSelectContent: Component = () => {
 	// Effects
 	createEffect(() => {
 		if (collection.isSuccess) {
+			setStatus(collection.data.data.useDrafts ? "draft" : "published");
 			const filterConfig: FilterSchema = {};
 			for (const field of getCollectionFieldFilters()) {
 				switch (field.type) {
@@ -125,7 +139,7 @@ const DocumentSelectContent: Component = () => {
 				<h2>{T()("select_document_title")}</h2>
 				<p class="mt-1">{T()("select_document_description")}</p>
 				<div class="w-full mt-15 flex justify-between">
-					<div class="flex gap-5">
+					<div class="flex gap-2.5">
 						<Query.Filter
 							filters={getCollectionFieldFilters().map((field) => {
 								switch (field.type) {
@@ -172,6 +186,23 @@ const DocumentSelectContent: Component = () => {
 							})}
 							searchParams={searchParams}
 						/>
+						<Show when={collection.data?.data.useDrafts}>
+							<Form.Switch
+								id="status"
+								value={getStatus() === "published"}
+								onChange={(value) => {
+									setStatus(value ? "published" : "draft");
+								}}
+								name={"status"}
+								copy={{
+									true: T()("published"),
+									false: T()("draft"),
+								}}
+								options={{
+									queryRow: true,
+								}}
+							/>
+						</Show>
 					</div>
 					<div>
 						<Query.PerPage options={[10, 20, 40]} searchParams={searchParams} />

@@ -1,6 +1,12 @@
 import T from "@/translations";
 import { useParams, useNavigate } from "@solidjs/router";
-import { type Component, createMemo, createEffect } from "solid-js";
+import {
+	type Component,
+	createMemo,
+	createEffect,
+	createSignal,
+	Show,
+} from "solid-js";
 import api from "@/services/api";
 import userStore from "@/store/userStore";
 import helpers from "@/utils/helpers";
@@ -17,6 +23,8 @@ import Layout from "@/components/Groups/Layout";
 import Headers from "@/components/Groups/Headers";
 import Content from "@/components/Groups/Content";
 import Alert from "@/components/Blocks/Alert";
+import Form from "@/components/Groups/Form";
+import type { DocumentVersionType } from "@lucidcms/core/types";
 
 const CollectionsDocumentsListRoute: Component = () => {
 	// ----------------------------------
@@ -26,6 +34,8 @@ const CollectionsDocumentsListRoute: Component = () => {
 	const searchParams = useSearchParamsLocation(undefined, {
 		manualSettled: true,
 	});
+	const [getStatus, setStatus] =
+		createSignal<Exclude<DocumentVersionType, "revision">>("draft");
 
 	// ----------------------------------
 	// Memos
@@ -56,6 +66,7 @@ const CollectionsDocumentsListRoute: Component = () => {
 	// Effects
 	createEffect(() => {
 		if (collection.isSuccess) {
+			setStatus(collection.data.data.useDrafts ? "draft" : "published");
 			if (collection.data.data.mode === "single") {
 				navigate("/admin/collections");
 			}
@@ -166,6 +177,25 @@ const CollectionsDocumentsListRoute: Component = () => {
 											}
 										}
 									})}
+									custom={
+										<Show when={collection.data?.data.useDrafts}>
+											<Form.Switch
+												id="status"
+												value={getStatus() === "published"}
+												onChange={(value) => {
+													setStatus(value ? "published" : "draft");
+												}}
+												name={"status"}
+												copy={{
+													true: T()("published"),
+													false: T()("draft"),
+												}}
+												options={{
+													queryRow: true,
+												}}
+											/>
+										</Show>
+									}
 									perPage={[]}
 								/>
 							),
@@ -181,6 +211,7 @@ const CollectionsDocumentsListRoute: Component = () => {
 					searchParams: searchParams,
 					isLoading: collection.isLoading,
 					collectionIsSuccess: collectionIsSuccess,
+					status: getStatus,
 				}}
 			/>
 		</Layout.Wrapper>
