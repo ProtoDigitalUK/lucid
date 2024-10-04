@@ -16,6 +16,7 @@ import {
 import Layout from "@/components/Groups/Layout";
 import Headers from "@/components/Groups/Headers";
 import Content from "@/components/Groups/Content";
+import Alert from "@/components/Blocks/Alert";
 
 const CollectionsDocumentsListRoute: Component = () => {
 	// ----------------------------------
@@ -83,6 +84,18 @@ const CollectionsDocumentsListRoute: Component = () => {
 	return (
 		<Layout.Wrapper
 			slots={{
+				topBar: (
+					<Alert
+						style="layout"
+						alerts={[
+							{
+								type: "warning",
+								message: T()("locked_collection_message"),
+								show: collection.data?.data.locked === true,
+							},
+						]}
+					/>
+				),
 				header: (
 					<Headers.Standard
 						copy={{
@@ -96,7 +109,11 @@ const CollectionsDocumentsListRoute: Component = () => {
 									collectionKey: collectionKey(),
 									useDrafts: collection.data?.data.useDrafts,
 								}),
-								permission: userStore.get.hasPermission(["create_content"]).all,
+								permission: userStore.get.hasPermission([
+									"create_content",
+									"publish_content",
+								]).some,
+								show: collection.data?.data.locked !== true,
 								label: T()("create_dynamic", {
 									name: collection.data?.data.singular || "",
 								}),

@@ -27,6 +27,7 @@ export const Standard: Component<{
 			link: string;
 			label: string;
 			permission?: boolean;
+			show?: boolean;
 		};
 		link?: {
 			href: string;
@@ -44,7 +45,7 @@ export const Standard: Component<{
 	// ----------------------------------------
 	// Render
 	return (
-		<div class="bg-container-2 border-b border-border rounded-t-xl">
+		<div class="bg-container-2 border-b border-border">
 			<div
 				class={classNames(
 					"flex justify-between flex-col-reverse md:flex-row items-start gap-x-10 gap-y-15 px-15 md:px-30 pt-15 md:pt-30 pb-15",
@@ -98,7 +99,8 @@ export const Standard: Component<{
 						<Show
 							when={
 								props.actions?.createLink !== undefined &&
-								props.actions.createLink.permission !== false
+								props.actions.createLink.permission !== false &&
+								props.actions.createLink.show !== false
 							}
 						>
 							<Link

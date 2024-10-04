@@ -84,6 +84,7 @@
 	"send_password_reset": "Send Password Reset Link",
 	"token_provided_invalid": "The token you provided is invalid.",
 	"token_provided_invalid_description": "The token you provided is invalid or expired. Please ensure you have copied the link correctly, or request a new password reset link.",
+	"locked_collection_message": "This collection is locked. This means documents can only be viewed, not edited or created.",
 	"first_name": "First Name",
 	"last_name": "Last Name",
 	"created_at": "Created At",
