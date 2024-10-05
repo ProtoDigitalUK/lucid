@@ -7,6 +7,7 @@ import deleteSingle from "./delete-single.js";
 import restoreRevision from "./restore-revision.js";
 import createSingle from "./create-single.js";
 import updateSingle from "./update-single.js";
+import promoteVersion from "./promote-version.js";
 
 export default {
 	client,
@@ -18,4 +19,5 @@ export default {
 	restoreRevision,
 	createSingle,
 	updateSingle,
+	promoteVersion,
 };

@@ -43,6 +43,19 @@ const collectionDocumentsRoutes = async (fastify: FastifyInstance) => {
 		controller: collectionDocuments.restoreRevision.controller,
 	});
 
+	// Promote version
+	r(fastify, {
+		method: "post",
+		url: "/:collectionKey/:id/:versionId/promote-version",
+		middleware: {
+			authenticate: true,
+			validateCSRF: true,
+		},
+		swaggerSchema: collectionDocuments.promoteVersion.swaggerSchema,
+		zodSchema: collectionDocuments.promoteVersion.zodSchema,
+		controller: collectionDocuments.promoteVersion.controller,
+	});
+
 	// Get single document
 	r(fastify, {
 		method: "get",
