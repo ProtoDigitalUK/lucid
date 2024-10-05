@@ -201,12 +201,10 @@ export const DocumentsList: Component<{
 												// use drafts are enabled, but there is no draft version for this document
 												if (
 													props.state.collection?.useDrafts &&
-													typeof doc().versions?.draft !== "number"
+													typeof doc().version?.draft?.id !== "number"
 												) {
 													// show promote to draft dialog
-													setPublishedVersionId(
-														doc().versions?.published as number,
-													);
+													setPublishedVersionId(doc().versionId as number);
 													setDocumentId(doc().id);
 													rowTarget.setTargetId(doc().id);
 													rowTarget.setTrigger("promote", true);

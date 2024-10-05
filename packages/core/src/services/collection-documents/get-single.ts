@@ -34,7 +34,6 @@ const getSingle: ServiceFn<
 			key: data.collectionKey,
 		}),
 	]);
-	console.log(document);
 
 	if (document === undefined) {
 		return {

@@ -70,6 +70,7 @@ export const LinkSelect: Component<LinkSelectProps> = (props) => {
 							theme="secondary"
 							size="x-small"
 							onClick={openLinkModal}
+							disabled={props.disabled}
 						>
 							{T()("select_link")}
 						</Button>

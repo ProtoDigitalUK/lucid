@@ -111,7 +111,7 @@ export const GroupBody: Component<GroupBodyProps> = (props) => {
 				<div class="flex items-center">
 					<button
 						type="button"
-						class="text-icon-base mr-2 hover:text-primary-hover transition-colors duration-200 cursor-pointer focus:outline-none focus:ring-1 ring-primary-base"
+						class="text-icon-base mr-2 hover:text-primary-hover transition-colors duration-200 cursor-pointer focus:outline-none focus:ring-1 ring-primary-base disabled:hover:!text-icon-base disabled:opacity-50 disabled:cursor-not-allowed"
 						onDragStart={(e) =>
 							props.state.dragDrop.onDragStart(e, {
 								index: groupId(),
@@ -126,8 +126,9 @@ export const GroupBody: Component<GroupBodyProps> = (props) => {
 							})
 						}
 						onDragOver={(e) => props.state.dragDrop.onDragOver(e)}
-						draggable={true}
 						aria-label={T()("change_order")}
+						draggable={isDisabled() === false}
+						disabled={isDisabled()}
 					>
 						<FaSolidGripLines class="w-4" />
 					</button>

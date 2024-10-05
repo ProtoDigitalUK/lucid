@@ -31,6 +31,9 @@ export const BuilderBricks: Component<BuilderBricksProps> = (props) => {
 			.filter((brick) => brick.type === "builder")
 			.sort((a, b) => a.order - b.order),
 	);
+	const isDisabled = createMemo(() => {
+		return brickStore.get.locked;
+	});
 
 	// ----------------------------------
 	// Render
@@ -49,6 +52,7 @@ export const BuilderBricks: Component<BuilderBricksProps> = (props) => {
 						onClick={() => {
 							setSelectBrickOpen(true);
 						}}
+						disabled={isDisabled()}
 					>
 						{T()("add_brick")}
 					</Button>
@@ -113,6 +117,9 @@ const BuilderBrickRow: Component<BuilderBrickRowProps> = (props) => {
 			(brick) => brick.id === props.brick.id,
 		);
 	});
+	const isDisabled = createMemo(() => {
+		return brickStore.get.locked;
+	});
 
 	// -------------------------------
 	// Functions
@@ -171,7 +178,7 @@ const BuilderBrickRow: Component<BuilderBrickRowProps> = (props) => {
 				<div class="flex items-center">
 					<button
 						type="button"
-						class="text-icon-base mr-2 hover:text-primary-hover transition-colors duration-200 cursor-pointer focus:outline-none focus:ring-1 ring-primary-base"
+						class="text-icon-base mr-2 hover:text-primary-hover transition-colors duration-200 cursor-pointer focus:outline-none focus:ring-1 ring-primary-base disabled:hover:!text-icon-base disabled:opacity-50 disabled:cursor-not-allowed"
 						onDragStart={(e) =>
 							props.dragDrop.onDragStart(e, {
 								index: brickIndex(),
@@ -186,8 +193,9 @@ const BuilderBrickRow: Component<BuilderBrickRowProps> = (props) => {
 							})
 						}
 						onDragOver={(e) => props.dragDrop.onDragOver(e)}
-						draggable={true}
+						draggable={isDisabled() === false}
 						aria-label={T()("change_order")}
+						disabled={isDisabled()}
 					>
 						<FaSolidGripLines class="w-4" />
 					</button>
@@ -204,6 +212,7 @@ const BuilderBrickRow: Component<BuilderBrickRowProps> = (props) => {
 						callback={() => {
 							brickStore.get.removeBrick(brickIndex());
 						}}
+						disabled={isDisabled()}
 					/>
 					<button
 						type="button"

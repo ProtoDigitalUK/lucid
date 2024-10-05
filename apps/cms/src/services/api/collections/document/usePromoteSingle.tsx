@@ -48,7 +48,10 @@ const usePromoteSingle = (props: UsePromoteSingleProps) => {
 				versionType: props.getVersionType(),
 			}),
 		}),
-		invalidates: ["collections.document.getMultiple"],
+		invalidates: [
+			"collections.document.getMultiple",
+			"collections.document.getSingle",
+		],
 		onSuccess: props.onSuccess,
 		onError: props.onError,
 	});

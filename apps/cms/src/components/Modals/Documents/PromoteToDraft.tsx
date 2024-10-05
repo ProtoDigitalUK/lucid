@@ -52,6 +52,7 @@ const PromoteToDraft: Component<{
 							: props.publishedVersionId;
 					if (!id) return console.error("No id provided");
 					if (!versionId) return console.error("No versionId provided");
+
 					promoteToDraft.action.mutate({
 						id: id,
 						collectionKey: props.collection.key,

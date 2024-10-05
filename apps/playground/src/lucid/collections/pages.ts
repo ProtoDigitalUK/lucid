@@ -10,7 +10,7 @@ const PageCollection = new CollectionBuilder("page", {
 	singular: "Page",
 	description: "Manage the pages and content on your website.",
 	translations: true,
-	// useDrafts: true,
+	useDrafts: true,
 	hooks: [
 		{
 			event: "beforeUpsert",

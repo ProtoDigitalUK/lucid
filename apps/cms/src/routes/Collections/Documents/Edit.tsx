@@ -178,6 +178,14 @@ const CollectionsDocumentsEditRoute: Component<
 		return !brickStore.get.documentMutated && !isSaving();
 	});
 	const canPublishDocument = createMemo(() => {
+		// If published promotedFrom is equal to the current draft versionId, then its already published
+		if (
+			doc.data?.data.version.published?.promotedFrom ===
+			doc.data?.data.versionId
+		)
+			return false;
+
+		// Fallback, if the document has been mutated and not saved
 		return !brickStore.get.documentMutated && !isSaving() && !mutateErrors();
 	});
 	const isBuilderLocked = createMemo(() => {
@@ -198,8 +206,8 @@ const CollectionsDocumentsEditRoute: Component<
 	});
 	const isPublished = createMemo(() => {
 		return (
-			doc.data?.data.versions?.published !== null &&
-			doc.data?.data.versions?.published !== undefined
+			doc.data?.data.version?.published?.id !== null &&
+			doc.data?.data.version?.published?.id !== undefined
 		);
 	});
 
@@ -228,13 +236,13 @@ const CollectionsDocumentsEditRoute: Component<
 		}
 	};
 	const publishDocumentAction = async () => {
-		if (!doc.data?.data.versions?.draft) {
+		if (!doc.data?.data.version?.draft?.id) {
 			console.error("No draft version ID found.");
 		}
 		promoteToPublished.action.mutate({
 			collectionKey: collectionKey(),
 			id: documentId() as number,
-			versionId: doc.data?.data.versions?.draft as number,
+			versionId: doc.data?.data.version?.draft?.id as number,
 			body: {
 				versionType: "published",
 			},
