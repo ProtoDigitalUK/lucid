@@ -15,6 +15,7 @@ const createMultiple: ServiceFn<
 			bricks?: Array<BrickSchema>;
 			fields?: Array<FieldSchemaType>;
 			collection: CollectionBuilder;
+			skipValidation?: boolean;
 		},
 	],
 	undefined
@@ -38,21 +39,23 @@ const createMultiple: ServiceFn<
 
 	// -------------------------------------------------------------------------------
 	// validation
-	const checkBrickOrder =
-		context.services.collection.document.brick.checks.checkDuplicateOrder(
-			bricks,
-		);
-	if (checkBrickOrder.error) return checkBrickOrder;
+	if (data.skipValidation !== true) {
+		const checkBrickOrder =
+			context.services.collection.document.brick.checks.checkDuplicateOrder(
+				bricks,
+			);
+		if (checkBrickOrder.error) return checkBrickOrder;
 
-	const checkValidateBricksFields =
-		await context.services.collection.document.brick.checks.checkValidateBricksFields(
-			context,
-			{
-				collection: data.collection,
-				bricks: bricks,
-			},
-		);
-	if (checkValidateBricksFields.error) return checkValidateBricksFields;
+		const checkValidateBricksFields =
+			await context.services.collection.document.brick.checks.checkValidateBricksFields(
+				context,
+				{
+					collection: data.collection,
+					bricks: bricks,
+				},
+			);
+		if (checkValidateBricksFields.error) return checkValidateBricksFields;
+	}
 
 	// -------------------------------------------------------------------------------
 	// insert bricks

@@ -29,9 +29,8 @@ const promoteVersion: ServiceFn<
 	);
 	const DocumentRepo = Repository.get("collection-documents", context.db);
 
-	// -------------------------------------------------------------------------------
-	// Initial data fetch and error checking
-	const [collectionRes, versionRes, targetDocumentRes] = await Promise.all([
+	// fetch the collection and version
+	const [collectionRes, versionRes] = await Promise.all([
 		context.services.collection.getSingleInstance(context, {
 			key: data.collectionKey,
 		}),
@@ -45,17 +44,8 @@ const promoteVersion: ServiceFn<
 				},
 			],
 		}),
-		context.services.collection.document.getSingle(context, {
-			collectionKey: data.collectionKey,
-			id: data.documentId,
-			versionId: data.fromVersionId,
-			query: {
-				include: ["bricks"],
-			},
-		}),
 	]);
 
-	// Error checking
 	if (collectionRes.error) return collectionRes;
 	if (versionRes === undefined) {
 		return {
@@ -67,9 +57,7 @@ const promoteVersion: ServiceFn<
 			data: undefined,
 		};
 	}
-	if (targetDocumentRes.error) return targetDocumentRes;
-
-	// Additional error checks
+	// error if the target version is a revision
 	if (versionRes.version_type === "revision") {
 		return {
 			error: {
@@ -80,6 +68,7 @@ const promoteVersion: ServiceFn<
 			data: undefined,
 		};
 	}
+	// error if the target version is draft and the collection is not configured to use drafts
 	if (
 		collectionRes.data.config.useDrafts !== true &&
 		data.toVersionType === "draft"
@@ -93,6 +82,7 @@ const promoteVersion: ServiceFn<
 			data: undefined,
 		};
 	}
+	// error if the collection is locked
 	if (collectionRes.data.config.locked === true) {
 		return {
 			error: {
@@ -106,44 +96,61 @@ const promoteVersion: ServiceFn<
 	}
 
 	//-------------------------------------------------------------------------------
-	// Mutate/create revisions and update the document
-	const useRevisions = collectionRes.data.config.useRevisions ?? false;
+	// Fetch the target document and all of its bricks/fields/groups
+	const targetDocumentRes =
+		await context.services.collection.document.getSingle(context, {
+			collectionKey: data.collectionKey,
+			id: data.documentId,
+			versionId: data.fromVersionId,
+			query: {
+				include: ["bricks"],
+			},
+		});
+	if (targetDocumentRes.error) return targetDocumentRes;
 
-	const [, document, version] = await Promise.all([
-		useRevisions
-			? VersionsRepo.updateSingle({
-					where: [
-						{
-							key: "document_id",
-							operator: "=",
-							value: data.documentId,
-						},
-						{
-							key: "version_type",
-							operator: "=",
-							value: data.toVersionType,
-						},
-					],
-					data: {
-						version_type: "revision",
-						previous_version_type: data.toVersionType,
-						created_by: data.userId,
-					},
-				})
-			: VersionsRepo.deleteSingle({
-					where: [
-						{
-							key: "document_id",
-							operator: "=",
-							value: data.documentId,
-						},
-						{
-							key: "version_type",
-							operator: "=",
-							value: data.toVersionType,
-						},
-					],
-				}),
+	//-------------------------------------------------------------------------------
+	// Delete / move the target document version
+	const useRevisions = collectionRes.data.config.useRevisions ?? false;
+	if (useRevisions) {
+		await VersionsRepo.updateSingle({
+			where: [
+				{
+					key: "document_id",
+					operator: "=",
+					value: data.documentId,
+				},
+				{
+					key: "version_type",
+					operator: "=",
+					value: data.toVersionType,
+				},
+			],
+			data: {
+				version_type: "revision",
+				previous_version_type: data.toVersionType,
+				created_by: data.userId,
+			},
+		});
+	} else {
+		await VersionsRepo.deleteSingle({
+			where: [
+				{
+					key: "document_id",
+					operator: "=",
+					value: data.documentId,
+				},
+				{
+					key: "version_type",
+					operator: "=",
+					value: data.toVersionType,
+				},
+			],
+		});
+	}
+
+	// -------------------------------------------------------------------------------
+	// Upsert document
+	const [document, version] = await Promise.all([
 		DocumentRepo.upsertSingle({
 			id: data.documentId,
 			collectionKey: data.collectionKey,
@@ -158,34 +165,41 @@ const promoteVersion: ServiceFn<
 			created_by: data.userId,
 		}),
 	]);
-	if (document === undefined || version === undefined) {
+	if (document === undefined) {
 		return {
 			error: {
 				type: "basic",
 				status: 400,
-				message: T("failed_to_create_document_or_version"),
+			},
+			data: undefined,
+		};
+	}
+	if (version === undefined) {
+		return {
+			error: {
+				type: "basic",
+				status: 400,
 			},
 			data: undefined,
 		};
 	}
 
-	// -------------------------------------------------------------------------------
-	// Format data and create bricks/groups/fields
+	// format data to schema format
 	const bricksCreateData = documentResponseToSchemaFormat(
 		targetDocumentRes.data,
 	);
 
+	// create bricks/groups/fields
 	await context.services.collection.document.brick.createMultiple(context, {
 		versionId: version.id,
 		documentId: data.documentId,
 		bricks: bricksCreateData.bricks,
 		fields: bricksCreateData.fields,
 		collection: collectionRes.data,
-		skipValidation: true,
+		skipValidation: true, // skip validation as we can assume data in db is valid already, also we dont want field validation errors as likley wont be a way to fix them in UI
 	});
 
-	// -------------------------------------------------------------------------------
-	// Execute hook
+	// fire version promote hook
 	const hookResponse = await executeHooks(
 		{
 			service: "collection-documents",
@@ -208,8 +222,6 @@ const promoteVersion: ServiceFn<
 	);
 	if (hookResponse.error) return hookResponse;
 
-	// -------------------------------------------------------------------------------
-	// Success
 	return {
 		error: undefined,
 		data: undefined,

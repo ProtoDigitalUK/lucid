@@ -14,34 +14,35 @@ const fieldResToSchema = (
 		type: FieldSchemaType["type"] | keyof CustomFieldMap;
 	}>,
 ): FieldSchemaType => {
-	if (items.length === 0) {
-		throw new Error("Items array cannot be empty");
+	const relevantItems = items.filter((item) => item.key === key);
+	const item = relevantItems[0];
+
+	if (relevantItems.length === 0 || item === undefined) {
+		throw new Error(`No items found for key: ${key}`);
 	}
 
 	const result: FieldSchemaType = {
 		key: key,
-		type: "text",
+		type: item.type as FieldSchemaType["type"],
 	};
 
 	if (enableTranslations) {
 		result.translations = {};
-		for (const item of items) {
+		for (const item of relevantItems) {
 			if (item.type === "text") {
 				result.translations[item.locale_code] = item.text_value;
 			} else if (item.type === "document") {
 				result.translations[item.locale_code] = item.document_id;
 			}
-			result.type = item.type as FieldSchemaType["type"];
 		}
 	} else {
-		const defaultItem = items.find(
-			(item) => item.locale_code === defaultLocale,
-		);
-		if (defaultItem) {
-			if (defaultItem.type === "text") result.value = defaultItem.text_value;
-			else if (defaultItem.type === "document")
-				result.value = defaultItem.document_id;
-			result.type = defaultItem.type as FieldSchemaType["type"];
+		const defaultItem =
+			relevantItems.find((item) => item.locale_code === defaultLocale) || item;
+
+		if (defaultItem?.type === "text") {
+			result.value = defaultItem.text_value;
+		} else if (defaultItem?.type === "document") {
+			result.value = defaultItem.document_id;
 		}
 	}
 
