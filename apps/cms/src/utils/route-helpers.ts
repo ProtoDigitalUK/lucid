@@ -4,6 +4,7 @@ export const getDocumentRoute = (
 		collectionKey: string;
 		useDrafts: boolean | undefined;
 		documentId?: number;
+		statusOverride?: "published" | "draft";
 	},
 ) => {
 	const useDrafts = data.useDrafts ?? false;
@@ -15,6 +16,15 @@ export const getDocumentRoute = (
 		return `/admin/collections/${data.collectionKey}/published/create`;
 	}
 
+	// use status override if provided
+	if (data.statusOverride) {
+		if (data.statusOverride === "published") {
+			return `/admin/collections/${data.collectionKey}/published/${data.documentId}`;
+		}
+		return `/admin/collections/${data.collectionKey}/draft/${data.documentId}`;
+	}
+
+	// use drafts if enabled
 	if (useDrafts) {
 		return `/admin/collections/${data.collectionKey}/draft/${data.documentId}`;
 	}

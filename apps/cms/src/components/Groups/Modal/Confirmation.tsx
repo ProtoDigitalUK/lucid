@@ -28,7 +28,12 @@ export const Confirmation: Component<{
 	return (
 		<AlertDialog.Root
 			open={props.state.open}
-			onOpenChange={() => props.state.setOpen(!props.state.open)}
+			onOpenChange={() => {
+				const targetState = !props.state.open;
+				props.state.setOpen(targetState);
+				if (!targetState && props.callbacks.onCancel)
+					props.callbacks.onCancel();
+			}}
 		>
 			<AlertDialog.Portal>
 				<AlertDialog.Overlay class="fixed inset-0 z-40 bg-black bg-opacity-80 animate-animate-overlay-hide cursor-pointer duration-200 transition-colors data-[expanded]:animate-animate-overlay-show" />

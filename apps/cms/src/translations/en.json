@@ -288,6 +288,8 @@
 	"copy_api_key_modal_description": "Copy the API key and keep it safe. You will not be able to see it again.",
 	"regenerate_api_key_modal_title": "Regenerate API Key",
 	"regenerate_api_key_modal_description": "Are you sure you want to regenerate the API key for this client integration?",
+	"promote_to_draft_modal_title": "Promote to Draft",
+	"promote_to_draft_modal_description": "We notice drafts are enabled for this collection, but there is only a published version for this document. To continue editing, a draft version will be created from the published version.",
 
 	"update_role_panel_title": "Edit {{name}} Role",
 	"update_role_panel_description": "Update the permissions for the {{name}} role.",
@@ -313,6 +315,8 @@
 
 	"password_reset_toast_title": "Password reset email sent",
 	"password_reset_toast_message": "Please check your email for a password reset link",
+	"promote_version_toast_title": "{{name}} promoted",
+	"promote_version_toast_message": "The {{name}} has been promoted to {{versionType}}",
 	"login_success_toast_title": "Login successful",
 	"login_success_toast_message": "You are now logged in",
 	"logout_success_toast_title": "Logout successful",

@@ -131,6 +131,22 @@ const CollectionsDocumentsEditRoute: Component<
 		getCollectionName: () =>
 			collection.data?.data.singular || T()("collection"),
 	});
+	const promoteToPublished = api.collections.document.usePromoteSingle({
+		onSuccess: () => {
+			brickStore.set("fieldsErrors", []);
+			brickStore.set("documentMutated", false);
+		},
+		onError: (errors) => {
+			brickStore.set(
+				"fieldsErrors",
+				getBodyError<FieldErrors[]>("fields", errors) || [],
+			);
+			brickStore.set("documentMutated", false);
+		},
+		getCollectionName: () =>
+			collection.data?.data.singular || T()("collection"),
+		getVersionType: () => "published",
+	});
 
 	// ----------------------------------
 	// Memos
@@ -180,11 +196,10 @@ const CollectionsDocumentsEditRoute: Component<
 		// builder not locked
 		return false;
 	});
-
 	const isPublished = createMemo(() => {
 		return (
-			doc.data?.data.publishedVersionId !== null &&
-			doc.data?.data.publishedVersionId !== undefined
+			doc.data?.data.versions?.published !== null &&
+			doc.data?.data.versions?.published !== undefined
 		);
 	});
 
@@ -213,13 +228,15 @@ const CollectionsDocumentsEditRoute: Component<
 		}
 	};
 	const publishDocumentAction = async () => {
-		updateSingle.action.mutate({
+		if (!doc.data?.data.versions?.draft) {
+			console.error("No draft version ID found.");
+		}
+		promoteToPublished.action.mutate({
 			collectionKey: collectionKey(),
-			documentId: documentId() as number,
+			id: documentId() as number,
+			versionId: doc.data?.data.versions?.draft as number,
 			body: {
-				publish: true,
-				bricks: brickHelpers.getUpsertBricks(),
-				fields: brickHelpers.getCollectionPseudoBrickFields(),
+				versionType: "published",
 			},
 		});
 	};

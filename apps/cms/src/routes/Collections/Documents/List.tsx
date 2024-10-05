@@ -49,6 +49,7 @@ const CollectionsDocumentsListRoute: Component = () => {
 				collectionKey: collectionKey,
 			},
 		},
+		refetchOnWindowFocus: false,
 		enabled: () => !!collectionKey(),
 	});
 

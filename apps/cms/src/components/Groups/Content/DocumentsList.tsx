@@ -1,5 +1,11 @@
 import T from "@/translations";
-import { type Component, type Accessor, Index, createMemo } from "solid-js";
+import {
+	type Component,
+	type Accessor,
+	Index,
+	createMemo,
+	createSignal,
+} from "solid-js";
 import { FaSolidCalendar, FaSolidSatelliteDish } from "solid-icons/fa";
 import { useParams, useNavigate } from "@solidjs/router";
 import type {
@@ -18,6 +24,7 @@ import Footers from "@/components/Groups/Footers";
 import Layout from "@/components/Groups/Layout";
 import DocumentRow from "@/components/Tables/Rows/DocumentRow";
 import DeleteDocument from "@/components/Modals/Documents/DeleteDocument";
+import PromoteToDraft from "@/components/Modals/Documents/PromoteToDraft";
 import Table from "@/components/Groups/Table";
 import { tableHeadColumns } from "@/utils/document-table-helpers";
 
@@ -38,8 +45,11 @@ export const DocumentsList: Component<{
 	const rowTarget = useRowTarget({
 		triggers: {
 			delete: false,
+			promote: false,
 		},
 	});
+	const [getDocumentId, setDocumentId] = createSignal<number>();
+	const [getPublishedVersionId, setPublishedVersionId] = createSignal<number>();
 
 	// ----------------------------------
 	// Memos
@@ -185,14 +195,37 @@ export const DocumentsList: Component<{
 								actions={[
 									{
 										label: T()("edit"),
-										type: "link",
-										href: getDocumentRoute("edit", {
-											collectionKey: props.state.collection?.key as string,
-											useDrafts: props.state.collection?.useDrafts,
-											documentId: doc().id,
-										}),
-										permission: userStore.get.hasPermission(["update_content"])
-											.all,
+										type: "button",
+										onClick: () => {
+											if (props.state.status() === "published") {
+												// use drafts are enabled, but there is no draft version for this document
+												if (
+													props.state.collection?.useDrafts &&
+													typeof doc().versions?.draft !== "number"
+												) {
+													// show promote to draft dialog
+													setPublishedVersionId(
+														doc().versions?.published as number,
+													);
+													setDocumentId(doc().id);
+													rowTarget.setTargetId(doc().id);
+													rowTarget.setTrigger("promote", true);
+													return;
+												}
+											}
+											navigate(
+												getDocumentRoute("edit", {
+													collectionKey: props.state.collection?.key as string,
+													useDrafts: props.state.collection?.useDrafts,
+													documentId: doc().id,
+													statusOverride: props.state.status(),
+												}),
+											);
+										},
+										permission: userStore.get.hasPermission([
+											"update_content",
+											"publish_content",
+										]).all,
 									},
 									{
 										label: T()("delete"),
@@ -219,6 +252,29 @@ export const DocumentsList: Component<{
 					},
 				}}
 				collection={props.state.collection as CollectionResponse}
+			/>
+			<PromoteToDraft
+				id={rowTarget.getTargetId}
+				publishedVersionId={getPublishedVersionId}
+				collection={props.state.collection as CollectionResponse}
+				state={{
+					open: rowTarget.getTriggers().promote,
+					setOpen: (state: boolean) => {
+						rowTarget.setTrigger("promote", state);
+					},
+				}}
+				callbacks={{
+					onSuccess: () => {
+						navigate(
+							getDocumentRoute("edit", {
+								collectionKey: props.state.collection?.key as string,
+								useDrafts: props.state.collection?.useDrafts,
+								documentId: getDocumentId(),
+								statusOverride: "draft",
+							}),
+						);
+					},
+				}}
 			/>
 		</Layout.DynamicContent>
 	);
