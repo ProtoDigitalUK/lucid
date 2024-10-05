@@ -70,6 +70,16 @@ const promoteVersion: ServiceFn<
 	if (targetDocumentRes.error) return targetDocumentRes;
 
 	// Additional error checks
+	if (versionRes.version_type === data.toVersionType) {
+		return {
+			error: {
+				type: "basic",
+				status: 400,
+				message: T("cannot_promote_to_same_version_message"),
+			},
+			data: undefined,
+		};
+	}
 	if (versionRes.version_type === "revision") {
 		return {
 			error: {
@@ -126,7 +136,7 @@ const promoteVersion: ServiceFn<
 					],
 					data: {
 						version_type: "revision",
-						previous_version_type: data.toVersionType,
+						promoted_from: data.fromVersionId,
 						created_by: data.userId,
 					},
 				})
@@ -155,6 +165,7 @@ const promoteVersion: ServiceFn<
 		VersionsRepo.createSingle({
 			document_id: data.documentId,
 			version_type: data.toVersionType,
+			promoted_from: data.fromVersionId,
 			created_by: data.userId,
 		}),
 	]);

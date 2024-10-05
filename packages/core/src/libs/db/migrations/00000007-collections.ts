@@ -48,7 +48,11 @@ const Migration00000007: MigrationFn = (adapter) => {
 						.notNull(),
 				)
 				.addColumn("version_type", "text", (col) => col.notNull()) // draft, published, revision
-				.addColumn("previous_version_type", "text") // draft, published, revision
+				.addColumn("promoted_from", "integer", (col) =>
+					col
+						.references("lucid_collection_document_versions.id")
+						.onDelete("set null"),
+				)
 				.addColumn("created_at", "timestamp", (col) =>
 					defaultTimestamp(col, adapter),
 				)

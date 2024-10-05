@@ -45,7 +45,7 @@ export default class CollectionDocumentVersionsRepo {
 				// Version
 				"lucid_collection_document_versions.id",
 				"lucid_collection_document_versions.version_type",
-				"lucid_collection_document_versions.previous_version_type",
+				"lucid_collection_document_versions.promoted_from",
 				"lucid_collection_document_versions.created_at",
 				"lucid_collection_document_versions.created_by",
 				// Bricks
@@ -112,7 +112,7 @@ export default class CollectionDocumentVersionsRepo {
 			.groupBy([
 				"lucid_collection_document_versions.id",
 				"lucid_collection_document_versions.version_type",
-				"lucid_collection_document_versions.previous_version_type",
+				"lucid_collection_document_versions.promoted_from",
 				"lucid_collection_document_versions.created_at",
 				"lucid_collection_document_versions.created_by",
 			]);
@@ -181,6 +181,7 @@ export default class CollectionDocumentVersionsRepo {
 	createSingle = async (props: {
 		document_id: number;
 		version_type: DocumentVersionType;
+		promoted_from?: number;
 		created_by: number;
 	}) => {
 		return this.db
@@ -188,6 +189,7 @@ export default class CollectionDocumentVersionsRepo {
 			.values({
 				document_id: props.document_id,
 				version_type: props.version_type,
+				promoted_from: props.promoted_from,
 				created_by: props.created_by,
 			})
 			.returningAll()
@@ -199,7 +201,7 @@ export default class CollectionDocumentVersionsRepo {
 		where: QueryBuilderWhere<"lucid_collection_document_versions">;
 		data: {
 			version_type?: DocumentVersionType;
-			previous_version_type?: DocumentVersionType;
+			promoted_from?: number;
 			created_by?: number;
 		};
 	}) => {
@@ -207,7 +209,7 @@ export default class CollectionDocumentVersionsRepo {
 			.updateTable("lucid_collection_document_versions")
 			.set({
 				version_type: props.data.version_type,
-				previous_version_type: props.data.previous_version_type,
+				promoted_from: props.data.promoted_from,
 				created_by: props.data.created_by,
 			})
 			.returning("id");

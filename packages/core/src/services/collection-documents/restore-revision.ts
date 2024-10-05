@@ -56,7 +56,7 @@ const restoreRevision: ServiceFn<
 		],
 		data: {
 			version_type: "revision",
-			previous_version_type: "draft",
+			promoted_from: data.versionId,
 			created_by: data.userId,
 		},
 	});
@@ -87,7 +87,6 @@ const restoreRevision: ServiceFn<
 		],
 		data: {
 			version_type: "draft",
-			previous_version_type: "revision",
 			created_by: data.userId,
 		},
 	});

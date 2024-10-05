@@ -220,7 +220,7 @@ export interface FieldGroupAltResponse {
 export interface CollectionDocumentVersionResponse {
 	id: number;
 	versionType: DocumentVersionType;
-	previousVersionType: DocumentVersionType | null;
+	promotedFrom: number | null;
 	createdAt: string | null;
 	createdBy: number | null;
 	document: {
@@ -245,15 +245,20 @@ export interface CollectionDocumentResponse {
 	collectionKey: string | null;
 	status: DocumentVersionType | null;
 	versionId: number | null;
-	previousStatus: DocumentVersionType | null;
-	versionCreatedAt: string | null;
-	versionCreatedBy: number | null;
-	versions:
-		| {
-				published: number | null;
-				draft: number | null;
-		  }
-		| undefined;
+	version: {
+		draft: {
+			id: number | null;
+			promotedFrom: number | null;
+			createdAt: string | null;
+			createdBy: number | null;
+		} | null;
+		published: {
+			id: number | null;
+			promotedFrom: number | null;
+			createdAt: string | null;
+			createdBy: number | null;
+		} | null;
+	};
 	createdBy: {
 		id: number;
 		email: string | null;
@@ -278,11 +283,20 @@ export interface ClientDocumentResponse {
 	id: number;
 	collectionKey: string | null;
 	status: DocumentVersionType | null;
-	versionId: number | null;
-	previousStatus: DocumentVersionType | null;
-	versionCreatedAt: string | null;
-	versionCreatedBy: number | null;
-
+	version: {
+		draft: {
+			id: number | null;
+			promotedFrom: number | null;
+			createdAt: string | null;
+			createdBy: number | null;
+		} | null;
+		published: {
+			id: number | null;
+			promotedFrom: number | null;
+			createdAt: string | null;
+			createdBy: number | null;
+		} | null;
+	};
 	createdBy: {
 		id: number;
 		email: string | null;

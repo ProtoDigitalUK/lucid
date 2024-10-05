@@ -38,6 +38,7 @@ export default class CollectionDocumentsRepo {
 			Pick<Select<LucidCollectionDocuments>, K> | undefined
 		>;
 	};
+	// TODO: update this to join current version - done
 	selectSingleById = async (props: {
 		id: number;
 		collectionKey: string;
@@ -54,25 +55,46 @@ export default class CollectionDocumentsRepo {
 				"lucid_collection_documents.created_at",
 				"lucid_collection_documents.updated_at",
 				"lucid_collection_documents.updated_by",
+				// Versions
 				(eb) =>
-					eb
-						.selectFrom("lucid_collection_document_versions")
-						.select("id")
-						.where("document_id", "=", eb.ref("lucid_collection_documents.id"))
-						.where("version_type", "=", "published")
-						.orderBy("created_at", "desc")
-						.limit(1)
-						.as("published_version_id"),
-				(eb) =>
-					eb
-						.selectFrom("lucid_collection_document_versions")
-						.select("id")
-						.where("document_id", "=", eb.ref("lucid_collection_documents.id"))
-						.where("version_type", "=", "draft")
-						.orderBy("created_at", "desc")
-						.limit(1)
-						.as("draft_version_id"),
+					props.config.db
+						.jsonArrayFrom(
+							eb
+								.selectFrom("lucid_collection_document_versions")
+								.select([
+									"lucid_collection_document_versions.id",
+									"lucid_collection_document_versions.version_type",
+									"lucid_collection_document_versions.promoted_from",
+									"lucid_collection_document_versions.created_at",
+									"lucid_collection_document_versions.created_by",
+								])
+								.whereRef(
+									"lucid_collection_document_versions.document_id",
+									"=",
+									"lucid_collection_documents.id",
+								)
+								.where((eb) =>
+									eb.or([
+										eb(
+											"lucid_collection_document_versions.version_type",
+											"=",
+											"draft",
+										),
+										eb(
+											"lucid_collection_document_versions.version_type",
+											"=",
+											"published",
+										),
+									]),
+								),
+						)
+						.as("versions"),
 			])
+			.leftJoin(
+				"lucid_collection_document_versions as published_version",
+				"published_version.document_id",
+				"lucid_collection_documents.id",
+			)
 			.$if(props.status !== undefined, (eb) =>
 				eb
 					.leftJoin(
@@ -83,7 +105,7 @@ export default class CollectionDocumentsRepo {
 					.select([
 						"lucid_collection_document_versions.id as version_id",
 						"lucid_collection_document_versions.version_type as version_type",
-						"lucid_collection_document_versions.previous_version_type as previous_version_type",
+						"lucid_collection_document_versions.promoted_from as version_promoted_from",
 						"lucid_collection_document_versions.created_at as version_created_at",
 						"lucid_collection_document_versions.created_by as version_created_by",
 					])
@@ -103,7 +125,7 @@ export default class CollectionDocumentsRepo {
 					.select([
 						"lucid_collection_document_versions.id as version_id",
 						"lucid_collection_document_versions.version_type as version_type",
-						"lucid_collection_document_versions.previous_version_type as previous_version_type",
+						"lucid_collection_document_versions.promoted_from as version_promoted_from",
 						"lucid_collection_document_versions.created_at as version_created_at",
 						"lucid_collection_document_versions.created_by as version_created_by",
 					])
@@ -146,6 +168,7 @@ export default class CollectionDocumentsRepo {
 			)
 			.executeTakeFirst();
 	};
+	// TODO: update this to join current version
 	selectSingleFiltered = async (props: {
 		documentFilters: QueryParamFilters;
 		documentFieldFilters: DocumentFieldFilters[];
@@ -166,6 +189,40 @@ export default class CollectionDocumentsRepo {
 				"lucid_collection_documents.created_at",
 				"lucid_collection_documents.updated_at",
 				"lucid_collection_documents.updated_by",
+				// Versions
+				(eb) =>
+					props.config.db
+						.jsonArrayFrom(
+							eb
+								.selectFrom("lucid_collection_document_versions")
+								.select([
+									"lucid_collection_document_versions.id",
+									"lucid_collection_document_versions.version_type",
+									"lucid_collection_document_versions.promoted_from",
+									"lucid_collection_document_versions.created_at",
+									"lucid_collection_document_versions.created_by",
+								])
+								.whereRef(
+									"lucid_collection_document_versions.document_id",
+									"=",
+									"lucid_collection_documents.id",
+								)
+								.where((eb) =>
+									eb.or([
+										eb(
+											"lucid_collection_document_versions.version_type",
+											"=",
+											"draft",
+										),
+										eb(
+											"lucid_collection_document_versions.version_type",
+											"=",
+											"published",
+										),
+									]),
+								),
+						)
+						.as("versions"),
 			])
 			.leftJoin(
 				"lucid_users as cb_user",
@@ -196,7 +253,7 @@ export default class CollectionDocumentsRepo {
 				// Versions
 				"lucid_collection_document_versions.id as version_id",
 				"lucid_collection_document_versions.version_type as version_type",
-				"lucid_collection_document_versions.previous_version_type as previous_version_type",
+				"lucid_collection_document_versions.promoted_from as version_promoted_from",
 				"lucid_collection_document_versions.created_at as version_created_at",
 				"lucid_collection_document_versions.created_by as version_created_by",
 			])
@@ -510,6 +567,7 @@ export default class CollectionDocumentsRepo {
 			Array<Pick<Select<LucidCollectionDocuments>, K>>
 		>;
 	};
+	// TODO: update this to join current version
 	selectMultipleFiltered = async (props: {
 		status: DocumentVersionType;
 		/** The status used to determine which version of the document custom field relations to fetch */
@@ -539,28 +597,43 @@ export default class CollectionDocumentsRepo {
 				// Versions
 				"lucid_collection_document_versions.id as version_id",
 				"lucid_collection_document_versions.version_type as version_type",
-				"lucid_collection_document_versions.previous_version_type as previous_version_type",
+				"lucid_collection_document_versions.promoted_from as version_promoted_from",
 				"lucid_collection_document_versions.created_at as version_created_at",
 				"lucid_collection_document_versions.created_by as version_created_by",
 				// Versions
 				(eb) =>
-					eb
-						.selectFrom("lucid_collection_document_versions")
-						.select("id")
-						.where("document_id", "=", eb.ref("lucid_collection_documents.id"))
-						.where("version_type", "=", "published")
-						.orderBy("created_at", "desc")
-						.limit(1)
-						.as("published_version_id"),
-				(eb) =>
-					eb
-						.selectFrom("lucid_collection_document_versions")
-						.select("id")
-						.where("document_id", "=", eb.ref("lucid_collection_documents.id"))
-						.where("version_type", "=", "draft")
-						.orderBy("created_at", "desc")
-						.limit(1)
-						.as("draft_version_id"),
+					props.config.db
+						.jsonArrayFrom(
+							eb
+								.selectFrom("lucid_collection_document_versions")
+								.select([
+									"lucid_collection_document_versions.id",
+									"lucid_collection_document_versions.version_type",
+									"lucid_collection_document_versions.promoted_from",
+									"lucid_collection_document_versions.created_at",
+									"lucid_collection_document_versions.created_by",
+								])
+								.whereRef(
+									"lucid_collection_document_versions.document_id",
+									"=",
+									"lucid_collection_documents.id",
+								)
+								.where((eb) =>
+									eb.or([
+										eb(
+											"lucid_collection_document_versions.version_type",
+											"=",
+											"draft",
+										),
+										eb(
+											"lucid_collection_document_versions.version_type",
+											"=",
+											"published",
+										),
+									]),
+								),
+						)
+						.as("versions"),
 			])
 			.leftJoin(
 				"lucid_users",

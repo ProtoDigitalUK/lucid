@@ -6,7 +6,7 @@ import type { BrickTypes } from "../builders/brick-builder/types.js";
 interface DocumentVersionPropT {
 	id: number;
 	version_type: DocumentVersionType;
-	previous_version_type: DocumentVersionType | null;
+	promoted_from: number | null;
 	created_at: Date | string | null;
 	created_by: number | null;
 	document_id: number | null;
@@ -38,7 +38,7 @@ export default class CollectionDocumentVersions {
 		return {
 			id: props.version.id,
 			versionType: props.version.version_type,
-			previousVersionType: props.version.previous_version_type ?? null,
+			promotedFrom: props.version.promoted_from ?? null,
 			createdAt: Formatter.formatDate(props.version.created_at),
 			createdBy: props.version.created_by ?? null,
 			document: {
@@ -83,8 +83,8 @@ export default class CollectionDocumentVersions {
 				nullable: true,
 				enum: ["published", "draft", "revision"],
 			},
-			previousVersionType: {
-				type: "string",
+			promotedFrom: {
+				type: "number",
 				nullable: true,
 			},
 			createdAt: {

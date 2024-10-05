@@ -35,15 +35,20 @@ interface DocumentPropT {
 	ub_user_first_name?: string | null;
 	ub_user_last_name?: string | null;
 	ub_user_username?: string | null;
-	// Version
-	published_version_id?: number | null;
-	draft_version_id?: number | null;
+	// Target Version
 	version_id?: number | null;
 	version_type?: DocumentVersionType | null;
-	previous_version_type?: DocumentVersionType | null;
+	version_promoted_from?: number | null;
 	version_created_at?: Date | string | null;
 	version_created_by?: number | null;
-
+	// Versions
+	versions?: Array<{
+		id: number | null;
+		version_type: DocumentVersionType | null;
+		promoted_from: number | null;
+		created_at: Date | string | null;
+		created_by: number | null;
+	}>;
 	fields?: FieldProp[];
 	groups?: GroupProp[];
 }
@@ -117,17 +122,9 @@ export default class CollectionDocumentsFormatter {
 			collectionKey: props.document.collection_key,
 			status: props.document.version_type ?? null,
 			versionId: props.document.version_id ?? null,
-			versions:
-				props.document.draft_version_id !== null ||
-				props.document.published_version_id !== null
-					? {
-							published: props.document.published_version_id ?? null,
-							draft: props.document.draft_version_id ?? null,
-						}
-					: undefined,
-			previousStatus: props.document.previous_version_type ?? null,
-			versionCreatedAt: Formatter.formatDate(props.document.version_created_at),
-			versionCreatedBy: props.document.version_created_by ?? null,
+			version: this.formatVersion({
+				document: props.document,
+			}),
 			bricks: props.bricks ?? null,
 			fields: fields,
 			createdBy: props.document.cb_user_id
@@ -151,6 +148,35 @@ export default class CollectionDocumentsFormatter {
 			createdAt: Formatter.formatDate(props.document.created_at),
 			updatedAt: Formatter.formatDate(props.document.updated_at),
 		} satisfies CollectionDocumentResponse;
+	};
+	formatVersion = (props: {
+		document: DocumentPropT;
+	}): CollectionDocumentResponse["version"] => {
+		const draftVersion = props.document.versions?.find(
+			(v) => v.version_type === "draft",
+		);
+		const publishedVersion = props.document.versions?.find(
+			(v) => v.version_type === "published",
+		);
+
+		return {
+			draft: draftVersion?.id
+				? {
+						id: draftVersion.id,
+						promotedFrom: draftVersion.promoted_from,
+						createdAt: Formatter.formatDate(draftVersion.created_at),
+						createdBy: draftVersion.created_by,
+					}
+				: null,
+			published: publishedVersion?.id
+				? {
+						id: publishedVersion.id,
+						promotedFrom: publishedVersion.promoted_from,
+						createdAt: Formatter.formatDate(publishedVersion.created_at),
+						createdBy: publishedVersion.created_by,
+					}
+				: null,
+		};
 	};
 
 	// Client
@@ -211,20 +237,6 @@ export default class CollectionDocumentsFormatter {
 				type: "number",
 				nullable: true,
 			},
-			versions: {
-				type: "object",
-				properties: {
-					published: {
-						type: "number",
-						nullable: true,
-					},
-					draft: {
-						type: "number",
-						nullable: true,
-					},
-				},
-				nullable: true,
-			},
 			collectionKey: {
 				type: "string",
 				nullable: true,
@@ -234,9 +246,54 @@ export default class CollectionDocumentsFormatter {
 				nullable: true,
 				enum: ["published", "draft", "revision"],
 			},
-			previousStatus: {
-				type: "string",
-				nullable: true,
+			version: {
+				type: "object",
+				properties: {
+					draft: {
+						type: "object",
+						properties: {
+							id: {
+								type: "number",
+								nullable: true,
+							},
+							promotedFrom: {
+								type: "number",
+								nullable: true,
+							},
+							createdAt: {
+								type: "string",
+								nullable: true,
+							},
+							createdBy: {
+								type: "number",
+								nullable: true,
+							},
+						},
+						nullable: true,
+					},
+					published: {
+						type: "object",
+						properties: {
+							id: {
+								type: "number",
+								nullable: true,
+							},
+							promotedFrom: {
+								type: "number",
+								nullable: true,
+							},
+							createdAt: {
+								type: "string",
+								nullable: true,
+							},
+							createdBy: {
+								type: "number",
+								nullable: true,
+							},
+						},
+						nullable: true,
+					},
+				},
 			},
 			bricks: {
 				type: "array",
@@ -305,14 +362,6 @@ export default class CollectionDocumentsFormatter {
 						nullable: true,
 					},
 				},
-			},
-			versionCreatedAt: {
-				type: "string",
-				nullable: true,
-			},
-			versionCreatedBy: {
-				type: "number",
-				nullable: true,
 			},
 		},
 	};

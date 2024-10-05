@@ -74,6 +74,7 @@
 	"cannot_find_repository": "Cannot find the repository for the {{name}}.",
 	"cannot_find_formatter": "Cannot find the formatter for the {{name}}.",
 	"config_error_name": "Configuration Error",
+	"cannot_promote_to_same_version_message": "You cannot promote to the same version type.",
 	"email_not_configured_message": "Email functionality is disabled because the email configuration is missing. Please provide the necessary email settings in the 'lucid.config.ts/js' file to enable email features.",
 	"media_strategy_not_configured_message": "Media functionality is disabled because the media strategy configuration is missing.",
 	"db_migration_failed": "Database migration failed.",
