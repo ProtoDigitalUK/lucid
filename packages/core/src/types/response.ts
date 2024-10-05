@@ -248,8 +248,12 @@ export interface CollectionDocumentResponse {
 	previousStatus: DocumentVersionType | null;
 	versionCreatedAt: string | null;
 	versionCreatedBy: number | null;
-	publishedVersionId: number | null;
-
+	versions:
+		| {
+				published: number | null;
+				draft: number | null;
+		  }
+		| undefined;
 	createdBy: {
 		id: number;
 		email: string | null;

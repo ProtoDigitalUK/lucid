@@ -63,6 +63,15 @@ export default class CollectionDocumentsRepo {
 						.orderBy("created_at", "desc")
 						.limit(1)
 						.as("published_version_id"),
+				(eb) =>
+					eb
+						.selectFrom("lucid_collection_document_versions")
+						.select("id")
+						.where("document_id", "=", eb.ref("lucid_collection_documents.id"))
+						.where("version_type", "=", "draft")
+						.orderBy("created_at", "desc")
+						.limit(1)
+						.as("draft_version_id"),
 			])
 			.$if(props.status !== undefined, (eb) =>
 				eb
@@ -533,24 +542,26 @@ export default class CollectionDocumentsRepo {
 				"lucid_collection_document_versions.previous_version_type as previous_version_type",
 				"lucid_collection_document_versions.created_at as version_created_at",
 				"lucid_collection_document_versions.created_by as version_created_by",
+				// Versions
+				(eb) =>
+					eb
+						.selectFrom("lucid_collection_document_versions")
+						.select("id")
+						.where("document_id", "=", eb.ref("lucid_collection_documents.id"))
+						.where("version_type", "=", "published")
+						.orderBy("created_at", "desc")
+						.limit(1)
+						.as("published_version_id"),
+				(eb) =>
+					eb
+						.selectFrom("lucid_collection_document_versions")
+						.select("id")
+						.where("document_id", "=", eb.ref("lucid_collection_documents.id"))
+						.where("version_type", "=", "draft")
+						.orderBy("created_at", "desc")
+						.limit(1)
+						.as("draft_version_id"),
 			])
-			.$if(props.status === "draft", (eb) =>
-				eb.select([
-					(eb) =>
-						eb
-							.selectFrom("lucid_collection_document_versions")
-							.select("id")
-							.where(
-								"document_id",
-								"=",
-								eb.ref("lucid_collection_documents.id"),
-							)
-							.where("version_type", "=", "published")
-							.orderBy("created_at", "desc")
-							.limit(1)
-							.as("published_version_id"),
-				]),
-			)
 			.leftJoin(
 				"lucid_users",
 				"lucid_users.id",

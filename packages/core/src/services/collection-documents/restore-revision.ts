@@ -3,9 +3,7 @@ import Repository from "../../libs/repositories/index.js";
 import executeHooks from "../../utils/hooks/execute-hooks.js";
 import type { ServiceFn } from "../../utils/services/types.js";
 
-// TODO: down the line, this should instead clone the revision and turn it into a draft as opposed to turning the revision into a draft
-//  - This will allow us to retain the revision history more completely
-
+// TODO: update to use the promote version service instead
 const restoreRevision: ServiceFn<
 	[
 		{
