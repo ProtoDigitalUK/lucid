@@ -6,7 +6,6 @@ import getMultiple from "./get-multiple.js";
 import getMultipleRevisions from "./get-multiple-revisions.js";
 import deleteSingle from "./delete-single.js";
 import deleteMultiple from "./delete-multiple.js";
-import restoreRevision from "./restore-revision.js";
 
 export default {
 	checks,
@@ -17,5 +16,4 @@ export default {
 	getMultipleRevisions,
 	deleteSingle,
 	deleteMultiple,
-	restoreRevision,
 };

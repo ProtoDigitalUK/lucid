@@ -11,7 +11,7 @@ const restoreRevisionController: RouteController<
 	typeof collectionDocumentsSchema.restoreRevision.query
 > = async (request, reply) => {
 	const restoreRevisionRes = await serviceWrapper(
-		request.server.services.collection.document.restoreRevision,
+		request.server.services.collection.document.versions.restoreRevision,
 		{
 			transaction: true,
 			defaultError: {

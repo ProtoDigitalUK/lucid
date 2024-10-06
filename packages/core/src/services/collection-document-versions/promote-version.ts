@@ -19,6 +19,7 @@ const promoteVersion: ServiceFn<
 			collectionKey: string;
 			documentId: number;
 			userId: number;
+			skipRevisionCheck?: boolean;
 		},
 	],
 	undefined
@@ -80,7 +81,10 @@ const promoteVersion: ServiceFn<
 			data: undefined,
 		};
 	}
-	if (versionRes.version_type === "revision") {
+	if (
+		versionRes.version_type === "revision" &&
+		data.skipRevisionCheck !== true
+	) {
 		return {
 			error: {
 				type: "basic",
