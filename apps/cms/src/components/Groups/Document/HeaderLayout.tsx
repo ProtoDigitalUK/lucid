@@ -12,7 +12,12 @@ import {
 } from "solid-js";
 import { A } from "@solidjs/router";
 import classNames from "classnames";
-import { FaSolidChevronLeft, FaSolidTrash } from "solid-icons/fa";
+import {
+	FaSolidChevronLeft,
+	FaSolidTrash,
+	FaSolidLanguage,
+} from "solid-icons/fa";
+import contentLocaleStore from "@/store/contentLocaleStore";
 import Layout from "@/components/Groups/Layout";
 import Button from "@/components/Partials/Button";
 import ContentLocaleSelect from "@/components/Partials/ContentLocaleSelect";
@@ -81,6 +86,11 @@ export const HeaderLayout: Component<{
 			return false;
 		if (props.state.version === "published") return false;
 		return true;
+	});
+	const defaultLocale = createMemo(() => {
+		return contentLocaleStore.get.locales.find(
+			(locale) => locale.isDefault === 1,
+		);
 	});
 
 	// ---------------------------------
@@ -247,19 +257,31 @@ export const HeaderLayout: Component<{
 				{/* Actions */}
 				<div
 					class={classNames(
-						"w-full flex items-center gap-2.5 transition-all duration-200 ease-in-out",
+						"w-full flex items-end gap-2.5 transition-all duration-200 ease-in-out",
 						{
 							"mt-15": !getHasScrolled(),
 						},
 					)}
 				>
-					<Show when={props.state.collection?.translations}>
-						<div class="w-full md:min-w-[220px]">
+					<div class="w-full relative">
+						<Show when={props.state.collection?.translations}>
 							<ContentLocaleSelect
 								hasError={props.state.brickTranslationErrors()}
 							/>
-						</div>
-					</Show>
+						</Show>
+						<Show
+							when={
+								props.state.collection?.translations !== true && defaultLocale()
+							}
+						>
+							<div class="flex items-center">
+								<FaSolidLanguage size={20} />
+								<span class="ml-2.5 text-base font-medium text-title">
+									{defaultLocale()?.name} ({defaultLocale()?.code})
+								</span>
+							</div>
+						</Show>
+					</div>
 					<Show when={showUpsertButton()}>
 						<Button
 							type="button"
