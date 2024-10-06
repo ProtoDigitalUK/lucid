@@ -39,10 +39,10 @@ export const HeaderLayout: Component<{
 		isBuilderLocked: Accessor<boolean>;
 	};
 	actions: {
-		upsertDocumentAction: () => void;
+		upsertDocumentAction?: () => void;
 		setPanelOpen: (_open: boolean) => void;
 		setDeleteOpen: (_open: boolean) => void;
-		publishDocumentAction: () => void;
+		publishDocumentAction?: () => void;
 	};
 	children?: JSXElement;
 }> = (props) => {
@@ -70,6 +70,7 @@ export const HeaderLayout: Component<{
 	// ---------------------------------
 	// Memos
 	const showUpsertButton = createMemo(() => {
+		if (!props.actions.upsertDocumentAction) return false;
 		if (props.state.isBuilderLocked()) return false;
 
 		if (props.state.mode === "create") return true;
@@ -82,6 +83,7 @@ export const HeaderLayout: Component<{
 		return false;
 	});
 	const showPublishButton = createMemo(() => {
+		if (!props.actions.publishDocumentAction) return false;
 		if (props.state.mode === "create" || props.state.isBuilderLocked())
 			return false;
 		if (props.state.version === "published") return false;
@@ -240,12 +242,12 @@ export const HeaderLayout: Component<{
 						{T()("published")}
 					</A>
 					<Show when={props.state.collection?.useRevisions}>
-						<span
-							class="text-lg font-display px-1 py-2 font-semibold opacity-50 cursor-not-allowed"
-							title="Coming soon"
+						<A
+							href={`/admin/collections/${props.state.collectionKey()}/revisions/${props.state.documentId()}`}
+							class="text-lg font-display pr-1 py-2 font-semibold after:absolute after:-bottom-px after:left-0 after:right-0 after:h-px relative"
 						>
 							{T()("revisions")}
-						</span>
+						</A>
 					</Show>
 					<span
 						class="text-lg font-display px-1 py-2 font-semibold opacity-50 cursor-not-allowed"

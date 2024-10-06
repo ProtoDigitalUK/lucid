@@ -17,6 +17,7 @@ import AccountRoute from "@/routes/Account";
 import CollectionsListRoute from "@/routes/Collections/List";
 import CollectionsDocumentsListRoute from "./routes/Collections/Documents/List";
 import CollectionsDocumentsEditRoute from "./routes/Collections/Documents/Edit";
+import CollectionsDocumentsRevisionsRoute from "./routes/Collections/Documents/Revisions";
 import TestRoute from "./routes/Test";
 
 const AppRouter: Component = () => {
@@ -56,6 +57,10 @@ const AppRouter: Component = () => {
 					component={() => (
 						<CollectionsDocumentsEditRoute mode="edit" version="published" />
 					)}
+				/>
+				<Route
+					path="/collections/:collectionKey/revisions/:documentId"
+					component={() => <CollectionsDocumentsRevisionsRoute />}
 				/>
 				{/* Media */}
 				<Route path="/media" component={MediaListRoute} />
