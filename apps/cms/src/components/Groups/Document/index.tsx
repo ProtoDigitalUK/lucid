@@ -1,13 +1,13 @@
 import { FixedBricks } from "./FixedBricks";
 import { BuilderBricks } from "./BuilderBricks";
 import { CollectionPseudoBrick } from "./CollectionPseudoBrick";
-import { StickyHeader } from "./StickyHeader";
+import { HeaderLayout } from "./HeaderLayout";
 
 const Document = {
 	FixedBricks,
 	BuilderBricks,
 	CollectionPseudoBrick: CollectionPseudoBrick,
-	StickyHeader,
+	HeaderLayout,
 };
 
 export default Document;

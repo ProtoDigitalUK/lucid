@@ -289,7 +289,7 @@ const CollectionsDocumentsEditRoute: Component<
 				</div>
 			</Match>
 			<Match when={isSuccess()}>
-				<Document.StickyHeader
+				<Document.HeaderLayout
 					state={{
 						mode: props.mode,
 						version: props.version,
@@ -309,8 +309,7 @@ const CollectionsDocumentsEditRoute: Component<
 						setDeleteOpen: setDeleteOpen,
 						publishDocumentAction: publishDocumentAction,
 					}}
-				/>
-				<div class="w-full mt-[162px] md:mt-[192px] flex flex-col flex-grow overflow-hidden bg-container-3 rounded-t-xl border-x border-t border-border z-10 relative">
+				>
 					<Show when={isBuilderLocked()}>
 						<Alert
 							style="layout"
@@ -433,7 +432,7 @@ const CollectionsDocumentsEditRoute: Component<
 							</aside>
 						</Show>
 					</div>
-				</div>
+				</Document.HeaderLayout>
 				{/* Modals */}
 				<NavigationGuard
 					state={{
