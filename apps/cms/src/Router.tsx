@@ -59,7 +59,7 @@ const AppRouter: Component = () => {
 					)}
 				/>
 				<Route
-					path="/collections/:collectionKey/revisions/:documentId"
+					path="/collections/:collectionKey/revisions/:documentId/:versionId"
 					component={() => <CollectionsDocumentsRevisionsRoute />}
 				/>
 				{/* Media */}
