@@ -26,22 +26,22 @@ import type { CollectionResponse } from "@lucidcms/core/types";
 
 export const HeaderLayout: Component<{
 	state: {
-		mode: "create" | "edit";
-		version: "draft" | "published";
+		mode: "create" | "edit" | "revisions";
+		version?: "draft" | "published";
 		collectionKey: Accessor<string>;
 		documentId: Accessor<number | undefined>;
 		collection?: CollectionResponse;
-		brickTranslationErrors: Accessor<boolean>;
-		canSaveDocument: Accessor<boolean>;
-		canPublishDocument: Accessor<boolean>;
-		panelOpen: Accessor<boolean>;
-		isPublished: Accessor<boolean>;
-		isBuilderLocked: Accessor<boolean>;
+		brickTranslationErrors?: Accessor<boolean>;
+		canSaveDocument?: Accessor<boolean>;
+		canPublishDocument?: Accessor<boolean>;
+		panelOpen?: Accessor<boolean>;
+		isPublished?: Accessor<boolean>;
+		isBuilderLocked?: Accessor<boolean>;
 	};
-	actions: {
+	actions?: {
 		upsertDocumentAction?: () => void;
-		setPanelOpen: (_open: boolean) => void;
-		setDeleteOpen: (_open: boolean) => void;
+		setPanelOpen?: (_open: boolean) => void;
+		setDeleteOpen?: (_open: boolean) => void;
 		publishDocumentAction?: () => void;
 	};
 	children?: JSXElement;
@@ -70,8 +70,8 @@ export const HeaderLayout: Component<{
 	// ---------------------------------
 	// Memos
 	const showUpsertButton = createMemo(() => {
-		if (!props.actions.upsertDocumentAction) return false;
-		if (props.state.isBuilderLocked()) return false;
+		if (!props.actions?.upsertDocumentAction) return false;
+		if (props.state.isBuilderLocked?.()) return false;
 
 		if (props.state.mode === "create") return true;
 		if (props.state.version === "draft") return true;
@@ -83,8 +83,8 @@ export const HeaderLayout: Component<{
 		return false;
 	});
 	const showPublishButton = createMemo(() => {
-		if (!props.actions.publishDocumentAction) return false;
-		if (props.state.mode === "create" || props.state.isBuilderLocked())
+		if (!props.actions?.publishDocumentAction) return false;
+		if (props.state.mode === "create" || props.state.isBuilderLocked?.())
 			return false;
 		if (props.state.version === "published") return false;
 		return true;
@@ -219,7 +219,7 @@ export const HeaderLayout: Component<{
 					</Show>
 					<A
 						href={
-							props.state.isPublished()
+							props.state.isPublished?.()
 								? `/admin/collections/${props.state.collectionKey()}/published/${props.state.documentId()}`
 								: "#"
 						}
@@ -227,24 +227,29 @@ export const HeaderLayout: Component<{
 							"text-lg font-display pr-1 py-2 font-semibold after:absolute after:-bottom-px after:left-0 after:right-0 after:h-px relative",
 							{
 								"opacity-50 cursor-not-allowed focus:ring-0 hover:text-inherit":
-									!props.state.isPublished(),
-								"cursor-pointer": props.state.isPublished(),
+									!props.state.isPublished?.(),
+								"cursor-pointer": props.state.isPublished?.(),
 							},
 						)}
 						activeClass={classNames({
-							"after:bg-primary-base": props.state.isPublished(),
+							"after:bg-primary-base": props.state.isPublished?.(),
 						})}
-						aria-disabled={!props.state.isPublished()}
+						aria-disabled={!props.state.isPublished?.()}
 						title={
-							!props.state.isPublished() ? T()("document_not_published") : ""
+							!props.state.isPublished?.() ? T()("document_not_published") : ""
 						}
 					>
 						{T()("published")}
 					</A>
 					<Show when={props.state.collection?.useRevisions}>
 						<A
-							href={`/admin/collections/${props.state.collectionKey()}/revisions/${props.state.documentId()}`}
-							class="text-lg font-display pr-1 py-2 font-semibold after:absolute after:-bottom-px after:left-0 after:right-0 after:h-px relative"
+							href={`/admin/collections/${props.state.collectionKey()}/revisions/${props.state.documentId()}/latest`}
+							class={classNames(
+								"text-lg font-display pr-1 py-2 font-semibold after:absolute after:-bottom-px after:left-0 after:right-0 after:h-px relative",
+								{
+									"after:bg-primary-base": props.state.mode === "revisions",
+								},
+							)}
 						>
 							{T()("revisions")}
 						</A>
@@ -268,7 +273,7 @@ export const HeaderLayout: Component<{
 					<div class="w-full relative">
 						<Show when={props.state.collection?.translations}>
 							<ContentLocaleSelect
-								hasError={props.state.brickTranslationErrors()}
+								hasError={props.state.brickTranslationErrors?.()}
 							/>
 						</Show>
 						<Show
@@ -289,8 +294,8 @@ export const HeaderLayout: Component<{
 							type="button"
 							theme="primary"
 							size="x-small"
-							onClick={props.actions.upsertDocumentAction}
-							disabled={props.state.canSaveDocument()}
+							onClick={props.actions?.upsertDocumentAction}
+							disabled={props.state.canSaveDocument?.()}
 						>
 							{T()("save")}
 						</Button>
@@ -300,8 +305,8 @@ export const HeaderLayout: Component<{
 							type="button"
 							theme="primary"
 							size="x-small"
-							onClick={props.actions.publishDocumentAction}
-							disabled={!props.state.canPublishDocument()}
+							onClick={props.actions?.publishDocumentAction}
+							disabled={!props.state.canPublishDocument?.()}
 						>
 							{T()("publish")}
 						</Button>
@@ -316,7 +321,7 @@ export const HeaderLayout: Component<{
 							theme="input-style"
 							size="x-icon"
 							type="button"
-							onClick={() => props.actions.setDeleteOpen(true)}
+							onClick={() => props.actions?.setDeleteOpen?.(true)}
 						>
 							<span class="sr-only">{T()("delete")}</span>
 							<FaSolidTrash />
@@ -328,7 +333,7 @@ export const HeaderLayout: Component<{
 							size="x-icon"
 							type="button"
 							onClick={() =>
-								props.actions.setPanelOpen(!props.state.panelOpen())
+								props.actions?.setPanelOpen?.(!props.state.panelOpen?.())
 							}
 						>
 							<span class="sr-only">{T()("toggle_panel")}</span>
@@ -336,7 +341,7 @@ export const HeaderLayout: Component<{
 								class={classNames(
 									"transform-gpu transition-transform duration-200",
 									{
-										"rotate-180": props.state.panelOpen(),
+										"rotate-180": props.state.panelOpen?.(),
 									},
 								)}
 							/>

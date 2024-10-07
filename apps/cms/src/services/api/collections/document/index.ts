@@ -6,6 +6,7 @@ import useGetSingle from "./useGetSingle";
 import useCreateSingle from "./useCreateSingle";
 import usePromoteSingle from "./usePromoteSingle";
 import useGetSingleVersion from "./useGetSingleVersion";
+import useGetMultipleRevisions from "./useGetMultipleRevisions";
 
 const exportObject = {
 	useGetMultiple,
@@ -16,6 +17,7 @@ const exportObject = {
 	useGetSingle,
 	usePromoteSingle,
 	useGetSingleVersion,
+	useGetMultipleRevisions,
 };
 
 export default exportObject;

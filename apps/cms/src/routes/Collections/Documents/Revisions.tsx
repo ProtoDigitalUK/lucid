@@ -1,13 +1,22 @@
 import T from "@/translations";
-import { type Component, createEffect, createMemo } from "solid-js";
-import { useParams } from "@solidjs/router";
+import {
+	type Component,
+	createEffect,
+	createMemo,
+	For,
+	Switch,
+	Match,
+} from "solid-js";
+import { useNavigate, useParams } from "@solidjs/router";
 import contentLocaleStore from "@/store/contentLocaleStore";
 import api from "@/services/api";
+import Document from "@/components/Groups/Document";
 
 const CollectionsDocumentsRevisionsRoute: Component = (props) => {
 	// ----------------------------------
 	// Hooks & State
 	const params = useParams();
+	const navigate = useNavigate();
 
 	// ----------------------------------
 	// Memos
@@ -21,6 +30,9 @@ const CollectionsDocumentsRevisionsRoute: Component = (props) => {
 		return undefined;
 	});
 	const contentLocale = createMemo(() => contentLocaleStore.get.contentLocale);
+	const canFetchRevisions = createMemo(() => {
+		return contentLocale() !== undefined && documentId() !== undefined;
+	});
 	const canFetchDocument = createMemo(() => {
 		return (
 			contentLocale() !== undefined &&
@@ -54,13 +66,35 @@ const CollectionsDocumentsRevisionsRoute: Component = (props) => {
 		enabled: () => canFetchDocument(),
 		refetchOnWindowFocus: false,
 	});
-	const revisionVersions = [];
+	const revisionVersions = api.collections.document.useGetMultipleRevisions({
+		queryParams: {
+			queryString: () => "sort=createdAt",
+			location: {
+				collectionKey: collectionKey,
+				documentId: documentId,
+			},
+		},
+		enabled: () => canFetchRevisions(),
+		refetchOnWindowFocus: false,
+	});
 
 	// ----------------------------------
 	// Mutations
 
 	// ----------------------------------
 	// Memos
+	const isLoading = createMemo(() => {
+		return revisionVersions.isLoading || collection.isLoading || doc.isLoading;
+	});
+	const isSuccess = createMemo(() => {
+		return collection.isSuccess && doc.isSuccess && revisionVersions.isSuccess;
+	});
+	const isPublished = createMemo(() => {
+		return (
+			doc.data?.data.version?.published?.id !== null &&
+			doc.data?.data.version?.published?.id !== undefined
+		);
+	});
 
 	// ---------------------------------
 	// Functions
@@ -69,13 +103,45 @@ const CollectionsDocumentsRevisionsRoute: Component = (props) => {
 	// Effects
 	createEffect(() => {
 		if (versionIdParam() === "latest") {
-			console.log("redirect to latest version after fetching");
+			const latestVersion = revisionVersions.data?.data[0];
+			if (latestVersion) {
+				navigate(
+					`/admin/collections/${collectionKey()}/revisions/${documentId()}/${latestVersion.id}`,
+				);
+			}
 		}
 	});
 
 	// ----------------------------------
 	// Render
-	return "revisions";
+	return (
+		<Switch>
+			<Match when={isLoading()}>
+				<div class="fixed top-15 left-[325px] bottom-15 right-15 flex flex-col">
+					<span class="h-32 w-full skeleton block mb-15" />
+					<span class="h-64 w-full skeleton block mb-15" />
+					<span class="h-full w-full skeleton block" />
+				</div>
+			</Match>
+			<Match when={isSuccess()}>
+				<Document.HeaderLayout
+					state={{
+						mode: "revisions",
+						collectionKey: collectionKey,
+						documentId: documentId,
+						isPublished: isPublished,
+						collection: collection.data?.data,
+					}}
+				>
+					<div>
+						<For each={revisionVersions.data?.data}>
+							{(revisionVersion) => <div>{revisionVersion.id}</div>}
+						</For>
+					</div>
+				</Document.HeaderLayout>
+			</Match>
+		</Switch>
+	);
 };
 
 export default CollectionsDocumentsRevisionsRoute;
