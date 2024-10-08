@@ -6,11 +6,16 @@ import {
 	For,
 	Switch,
 	Match,
+	on,
 } from "solid-js";
 import { useNavigate, useParams } from "@solidjs/router";
 import contentLocaleStore from "@/store/contentLocaleStore";
 import api from "@/services/api";
+import brickStore from "@/store/brickStore";
 import Document from "@/components/Groups/Document";
+import Alert from "@/components/Blocks/Alert";
+import DateText from "@/components/Partials/DateText";
+import Pill from "@/components/Partials/Pill";
 
 const CollectionsDocumentsRevisionsRoute: Component = (props) => {
 	// ----------------------------------
@@ -98,6 +103,15 @@ const CollectionsDocumentsRevisionsRoute: Component = (props) => {
 
 	// ---------------------------------
 	// Functions
+	const setDocumentState = () => {
+		brickStore.get.reset();
+		brickStore.set(
+			"collectionTranslations",
+			collection.data?.data.translations || false,
+		);
+		brickStore.get.setBricks(doc.data?.data, collection.data?.data);
+		brickStore.set("locked", true);
+	};
 
 	// ---------------------------------
 	// Effects
@@ -111,6 +125,23 @@ const CollectionsDocumentsRevisionsRoute: Component = (props) => {
 			}
 		}
 	});
+
+	createEffect(
+		on(
+			() => doc.data,
+			() => {
+				setDocumentState();
+			},
+		),
+	);
+	createEffect(
+		on(
+			() => collection.isSuccess,
+			() => {
+				setDocumentState();
+			},
+		),
+	);
 
 	// ----------------------------------
 	// Render
@@ -133,10 +164,64 @@ const CollectionsDocumentsRevisionsRoute: Component = (props) => {
 						collection: collection.data?.data,
 					}}
 				>
-					<div>
-						<For each={revisionVersions.data?.data}>
-							{(revisionVersion) => <div>{revisionVersion.id}</div>}
-						</For>
+					<Alert
+						style="layout"
+						alerts={[
+							{
+								type: "warning",
+								message: T()("locked_document_message"),
+								show: true,
+							},
+						]}
+					/>
+					<div class="w-full flex flex-grow">
+						{/* Fields & Bricks */}
+						<div class="w-full flex flex-col">
+							<Document.CollectionPseudoBrick
+								fields={collection.data?.data.fields || []}
+							/>
+							<Document.FixedBricks
+								brickConfig={collection.data?.data.fixedBricks || []}
+							/>
+							<Document.BuilderBricks
+								brickConfig={collection.data?.data.builderBricks || []}
+							/>
+						</div>
+						{/* Sidebar */}
+						<aside
+							class={
+								"w-full lg:max-w-[300px] p-15 md:p-30 lg:overflow-y-auto bg-container-5 border-b lg:border-b-0 lg:border-l border-border"
+							}
+						>
+							<h2 class="mb-15">{T()("revision_history")}</h2>
+							<For each={revisionVersions.data?.data}>
+								{(revisionVersion) => (
+									<button
+										type="button"
+										class="bg-container-2 border-border border rounded-md mb-2.5 last:mb-0 flex flex-col p-15 focus:ring-1 focus:ring-primary-base duration-200 transition-colors hover:border-primary-base"
+										onClick={() => {
+											navigate(
+												`/admin/collections/${collectionKey()}/revisions/${documentId()}/${revisionVersion.id}`,
+											);
+										}}
+									>
+										<h3 class="mb-1">
+											{T()("revision")} #{revisionVersion.id}
+										</h3>
+										<DateText date={revisionVersion.createdAt} />
+										<div class="mt-15 flex gap-2.5">
+											<Pill theme="secondary">Fields 0</Pill>
+											<Pill theme="secondary">
+												Bricks {revisionVersion.bricks?.builder?.length ?? 0}
+											</Pill>
+											<Pill theme="secondary">
+												Fixed {revisionVersion.bricks?.fixed?.length ?? 0}
+											</Pill>
+										</div>
+									</button>
+								)}
+							</For>
+						</aside>
 					</div>
 				</Document.HeaderLayout>
 			</Match>
