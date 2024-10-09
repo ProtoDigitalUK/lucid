@@ -7,15 +7,18 @@ import {
 	Switch,
 	Match,
 	on,
+	Show,
 } from "solid-js";
 import { useNavigate, useParams } from "@solidjs/router";
 import contentLocaleStore from "@/store/contentLocaleStore";
+import { getDocumentRoute } from "@/utils/route-helpers";
 import api from "@/services/api";
 import brickStore from "@/store/brickStore";
 import Document from "@/components/Groups/Document";
 import Alert from "@/components/Blocks/Alert";
 import DateText from "@/components/Partials/DateText";
 import Pill from "@/components/Partials/Pill";
+import Link from "@/components/Partials/Link";
 
 const CollectionsDocumentsRevisionsRoute: Component = (props) => {
 	// ----------------------------------
@@ -92,6 +95,9 @@ const CollectionsDocumentsRevisionsRoute: Component = (props) => {
 		return revisionVersions.isLoading || collection.isLoading || doc.isLoading;
 	});
 	const isSuccess = createMemo(() => {
+		if (versionIdParam() === "latest") {
+			return collection.isSuccess && revisionVersions.isSuccess;
+		}
 		return collection.isSuccess && doc.isSuccess && revisionVersions.isSuccess;
 	});
 	const isPublished = createMemo(() => {
@@ -164,6 +170,25 @@ const CollectionsDocumentsRevisionsRoute: Component = (props) => {
 						collection: collection.data?.data,
 					}}
 				>
+					<Show when={!doc.data}>
+						<div class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-60 flex-col z-20">
+							<div class="w-full max-w-xl px-15 py-15 text-center flex flex-col items-center">
+								<h2 class="mb-2.5">{T()("no_revisions_found")}</h2>
+								<p class="mb-30">{T()("no_revisions_found_message")}</p>
+								<Link
+									href={getDocumentRoute("edit", {
+										collectionKey: collectionKey(),
+										useDrafts: collection.data?.data.useDrafts,
+										documentId: documentId(),
+									})}
+									theme="primary"
+									size="medium"
+								>
+									{T()("back_to_document")}
+								</Link>
+							</div>
+						</div>
+					</Show>
 					<Alert
 						style="layout"
 						alerts={[
@@ -221,6 +246,9 @@ const CollectionsDocumentsRevisionsRoute: Component = (props) => {
 									</button>
 								)}
 							</For>
+							<Show when={revisionVersions.data?.data.length === 0}>
+								{T()("no_revisions_found")}
+							</Show>
 						</aside>
 					</div>
 				</Document.HeaderLayout>

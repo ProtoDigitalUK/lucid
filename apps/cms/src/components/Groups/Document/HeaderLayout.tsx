@@ -94,6 +94,17 @@ export const HeaderLayout: Component<{
 			(locale) => locale.isDefault === 1,
 		);
 	});
+	const showRevisions = createMemo(() => {
+		if (props.state.mode === "create") return false;
+		return props.state.collection?.useRevisions ?? false;
+	});
+	const isPublished = createMemo(() => {
+		if (props.state.collection?.useDrafts) {
+			return props.state.isPublished?.();
+		}
+		if (props.state.mode === "revisions") return true;
+		return props.state.isPublished?.();
+	});
 
 	// ---------------------------------
 	// Effects
@@ -219,7 +230,7 @@ export const HeaderLayout: Component<{
 					</Show>
 					<A
 						href={
-							props.state.isPublished?.()
+							isPublished()
 								? `/admin/collections/${props.state.collectionKey()}/published/${props.state.documentId()}`
 								: "#"
 						}
@@ -227,21 +238,19 @@ export const HeaderLayout: Component<{
 							"text-lg font-display pr-1 py-2 font-semibold after:absolute after:-bottom-px after:left-0 after:right-0 after:h-px relative",
 							{
 								"opacity-50 cursor-not-allowed focus:ring-0 hover:text-inherit":
-									!props.state.isPublished?.(),
-								"cursor-pointer": props.state.isPublished?.(),
+									!isPublished(),
+								"cursor-pointer": isPublished(),
 							},
 						)}
 						activeClass={classNames({
-							"after:bg-primary-base": props.state.isPublished?.(),
+							"after:bg-primary-base": isPublished(),
 						})}
-						aria-disabled={!props.state.isPublished?.()}
-						title={
-							!props.state.isPublished?.() ? T()("document_not_published") : ""
-						}
+						aria-disabled={!isPublished()}
+						title={!isPublished() ? T()("document_not_published") : ""}
 					>
 						{T()("published")}
 					</A>
-					<Show when={props.state.collection?.useRevisions}>
+					<Show when={showRevisions()}>
 						<A
 							href={`/admin/collections/${props.state.collectionKey()}/revisions/${props.state.documentId()}/latest`}
 							class={classNames(
@@ -254,12 +263,12 @@ export const HeaderLayout: Component<{
 							{T()("revisions")}
 						</A>
 					</Show>
-					<span
+					{/* <span
 						class="text-lg font-display px-1 py-2 font-semibold opacity-50 cursor-not-allowed"
 						title="Coming soon"
 					>
 						{T()("preview")}
-					</span>
+					</span> */}
 				</div>
 				{/* Actions */}
 				<div
