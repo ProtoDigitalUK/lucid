@@ -19,6 +19,7 @@ import Alert from "@/components/Blocks/Alert";
 import DateText from "@/components/Partials/DateText";
 import Pill from "@/components/Partials/Pill";
 import Link from "@/components/Partials/Link";
+import classNames from "classnames";
 
 const CollectionsDocumentsRevisionsRoute: Component = (props) => {
 	// ----------------------------------
@@ -223,7 +224,13 @@ const CollectionsDocumentsRevisionsRoute: Component = (props) => {
 								{(revisionVersion) => (
 									<button
 										type="button"
-										class="bg-container-2 border-border border rounded-md mb-2.5 last:mb-0 flex flex-col p-15 focus:ring-1 focus:ring-primary-base duration-200 transition-colors hover:border-primary-base"
+										class={classNames(
+											"bg-container-2 border-border border rounded-md mb-2.5 last:mb-0 flex flex-col p-15 focus:ring-1 focus:ring-primary-base duration-200 transition-colors hover:border-primary-base",
+											{
+												"border-primary-base":
+													revisionVersion.id === versionId(),
+											},
+										)}
 										onClick={() => {
 											navigate(
 												`/admin/collections/${collectionKey()}/revisions/${documentId()}/${revisionVersion.id}`,
