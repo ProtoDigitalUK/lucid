@@ -77,7 +77,7 @@ const CollectionsDocumentsRevisionsRoute: Component = (props) => {
 	});
 	const revisionVersions = api.collections.document.useGetMultipleRevisions({
 		queryParams: {
-			queryString: () => "sort=createdAt",
+			queryString: () => "sort=-createdAt",
 			location: {
 				collectionKey: collectionKey,
 				documentId: documentId,

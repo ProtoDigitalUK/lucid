@@ -10,7 +10,7 @@ const TestCollection = new CollectionBuilder("test", {
 	translations: true,
 	useDrafts: true,
 	useRevisions: true,
-	locked: true,
+	// locked: true,
 	hooks: [],
 	bricks: {},
 }).addText(
