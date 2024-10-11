@@ -9,7 +9,7 @@ import {
 	Show,
 } from "solid-js";
 import { useNavigate, useParams } from "@solidjs/router";
-import useSearchParamsLocation from "@/hooks/useSearchParamsLocation";
+import useSearchParamsState from "@/hooks/useSearchParamsState";
 import contentLocaleStore from "@/store/contentLocaleStore";
 import { getDocumentRoute } from "@/utils/route-helpers";
 import api from "@/services/api";
@@ -23,7 +23,7 @@ const CollectionsDocumentsRevisionsRoute: Component = (props) => {
 	// Hooks & State
 	const params = useParams();
 	const navigate = useNavigate();
-	const revisionsSearchParams = useSearchParamsLocation(
+	const revisionsSearchParams = useSearchParamsState(
 		{
 			sorts: {
 				createdAt: "desc",
@@ -50,6 +50,12 @@ const CollectionsDocumentsRevisionsRoute: Component = (props) => {
 	});
 	const contentLocale = createMemo(() => contentLocaleStore.get.contentLocale);
 	const canFetchRevisions = createMemo(() => {
+		console.log(
+			contentLocale() !== undefined &&
+				documentId() !== undefined &&
+				revisionsSearchParams.getSettled(),
+		);
+		console.log("querystring", revisionsSearchParams.getQueryString());
 		return (
 			contentLocale() !== undefined &&
 			documentId() !== undefined &&

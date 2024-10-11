@@ -3,7 +3,7 @@ import { type Accessor, type Component, For, Show } from "solid-js";
 import { useNavigate } from "@solidjs/router";
 import classNames from "classnames";
 import type { CollectionDocumentVersionResponse } from "@lucidcms/core/types";
-import type useSearchParamsLocation from "@/hooks/useSearchParamsLocation";
+import type useSearchParamsState from "@/hooks/useSearchParamsState";
 import DateText from "@/components/Partials/DateText";
 import Pill from "@/components/Partials/Pill";
 
@@ -12,7 +12,7 @@ export const RevisionsSidebar: Component<{
 	versionId: Accessor<number | undefined>;
 	collectionKey: Accessor<string | undefined>;
 	documentId: Accessor<number | undefined>;
-	searchParams: ReturnType<typeof useSearchParamsLocation>;
+	searchParams: ReturnType<typeof useSearchParamsState>;
 }> = (props) => {
 	// ----------------------------------
 	// State
