@@ -3,29 +3,39 @@ import {
 	type Component,
 	createEffect,
 	createMemo,
-	For,
 	Switch,
 	Match,
 	on,
 	Show,
 } from "solid-js";
 import { useNavigate, useParams } from "@solidjs/router";
+import useSearchParamsLocation from "@/hooks/useSearchParamsLocation";
 import contentLocaleStore from "@/store/contentLocaleStore";
 import { getDocumentRoute } from "@/utils/route-helpers";
 import api from "@/services/api";
 import brickStore from "@/store/brickStore";
 import Document from "@/components/Groups/Document";
 import Alert from "@/components/Blocks/Alert";
-import DateText from "@/components/Partials/DateText";
-import Pill from "@/components/Partials/Pill";
 import Link from "@/components/Partials/Link";
-import classNames from "classnames";
 
 const CollectionsDocumentsRevisionsRoute: Component = (props) => {
 	// ----------------------------------
 	// Hooks & State
 	const params = useParams();
 	const navigate = useNavigate();
+	const revisionsSearchParams = useSearchParamsLocation(
+		{
+			sorts: {
+				createdAt: "desc",
+			},
+			pagination: {
+				perPage: 6,
+			},
+		},
+		{
+			singleSort: true,
+		},
+	);
 
 	// ----------------------------------
 	// Memos
@@ -40,7 +50,11 @@ const CollectionsDocumentsRevisionsRoute: Component = (props) => {
 	});
 	const contentLocale = createMemo(() => contentLocaleStore.get.contentLocale);
 	const canFetchRevisions = createMemo(() => {
-		return contentLocale() !== undefined && documentId() !== undefined;
+		return (
+			contentLocale() !== undefined &&
+			documentId() !== undefined &&
+			revisionsSearchParams.getSettled()
+		);
 	});
 	const canFetchDocument = createMemo(() => {
 		return (
@@ -77,7 +91,7 @@ const CollectionsDocumentsRevisionsRoute: Component = (props) => {
 	});
 	const revisionVersions = api.collections.document.useGetMultipleRevisions({
 		queryParams: {
-			queryString: () => "sort=-createdAt",
+			queryString: revisionsSearchParams.getQueryString,
 			location: {
 				collectionKey: collectionKey,
 				documentId: documentId,
@@ -214,49 +228,13 @@ const CollectionsDocumentsRevisionsRoute: Component = (props) => {
 							/>
 						</div>
 						{/* Sidebar */}
-						<aside
-							class={
-								"w-full lg:max-w-[300px] p-15 md:p-30 lg:overflow-y-auto bg-container-5 border-b lg:border-b-0 lg:border-l border-border"
-							}
-						>
-							<h2 class="mb-15">{T()("revision_history")}</h2>
-							<For each={revisionVersions.data?.data}>
-								{(revisionVersion) => (
-									<button
-										type="button"
-										class={classNames(
-											"bg-container-2 border-border border rounded-md mb-2.5 last:mb-0 flex flex-col p-15 focus:ring-1 focus:ring-primary-base duration-200 transition-colors hover:border-primary-base",
-											{
-												"border-primary-base":
-													revisionVersion.id === versionId(),
-											},
-										)}
-										onClick={() => {
-											navigate(
-												`/admin/collections/${collectionKey()}/revisions/${documentId()}/${revisionVersion.id}`,
-											);
-										}}
-									>
-										<h3 class="mb-1">
-											{T()("revision")} #{revisionVersion.id}
-										</h3>
-										<DateText date={revisionVersion.createdAt} />
-										<div class="mt-15 flex gap-2.5">
-											<Pill theme="secondary">Fields 0</Pill>
-											<Pill theme="secondary">
-												Bricks {revisionVersion.bricks?.builder?.length ?? 0}
-											</Pill>
-											<Pill theme="secondary">
-												Fixed {revisionVersion.bricks?.fixed?.length ?? 0}
-											</Pill>
-										</div>
-									</button>
-								)}
-							</For>
-							<Show when={revisionVersions.data?.data.length === 0}>
-								{T()("no_revisions_found")}
-							</Show>
-						</aside>
+						<Document.RevisionsSidebar
+							revisions={revisionVersions.data?.data || []}
+							versionId={versionId}
+							collectionKey={collectionKey}
+							documentId={documentId}
+							searchParams={revisionsSearchParams}
+						/>
 					</div>
 				</Document.HeaderLayout>
 			</Match>

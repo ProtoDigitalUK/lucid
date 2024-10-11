@@ -356,6 +356,7 @@ export const HeaderLayout: Component<{
 							/>
 						</Button>
 					</Show>
+					{/* TODO: add a restore current revision button */}
 				</div>
 			</header>
 			<div
