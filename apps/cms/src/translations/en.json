@@ -20,6 +20,7 @@
 	"enabled": "Enabled",
 	"confirm_delete": "Confirm Delete",
 	"standard": "Standard",
+	"restore_revision": "Restore Revision",
 	"bricks": "Bricks",
 	"document_not_published": "This document is not published",
 	"assign_bricks_description": "Select the bricks you wish this environment to have access to.",
@@ -320,6 +321,8 @@
 	"update_client_integration_panel_title": "Update Client Integration",
 	"update_client_integration_panel_description": "Update your client integration details",
 
+	"restore_revision_toast_title": "{{name}} restored",
+	"restore_revision_toast_message": "The {{name}} has been restored",
 	"password_reset_toast_title": "Password reset email sent",
 	"password_reset_toast_message": "Please check your email for a password reset link",
 	"promote_version_toast_title": "{{name}} promoted",

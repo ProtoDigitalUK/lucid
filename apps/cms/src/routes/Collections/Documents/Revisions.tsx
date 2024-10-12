@@ -17,6 +17,7 @@ import brickStore from "@/store/brickStore";
 import Document from "@/components/Groups/Document";
 import Alert from "@/components/Blocks/Alert";
 import Link from "@/components/Partials/Link";
+import { g } from "vitest/dist/suite-BRl_IYuM.js";
 
 const CollectionsDocumentsRevisionsRoute: Component = (props) => {
 	// ----------------------------------
@@ -103,6 +104,26 @@ const CollectionsDocumentsRevisionsRoute: Component = (props) => {
 
 	// ----------------------------------
 	// Mutations
+	const restoreRevision = api.collections.document.useRestoreRevision({
+		onSuccess: () => {
+			brickStore.set("fieldsErrors", []);
+			brickStore.set("documentMutated", false);
+
+			navigate(
+				getDocumentRoute("edit", {
+					collectionKey: collectionKey(),
+					useDrafts: collection.data?.data.useDrafts,
+					documentId: documentId(),
+				}),
+			);
+		},
+		onError: () => {
+			brickStore.set("fieldsErrors", []);
+			brickStore.set("documentMutated", false);
+		},
+		getCollectionName: () =>
+			collection.data?.data.singular || T()("collection"),
+	});
 
 	// ----------------------------------
 	// Memos
@@ -144,6 +165,17 @@ const CollectionsDocumentsRevisionsRoute: Component = (props) => {
 		);
 		brickStore.get.setBricks(doc.data?.data, collection.data?.data);
 		brickStore.set("locked", true);
+	};
+	const restoreRevisionAction = () => {
+		const vId = versionId();
+		if (vId === undefined) {
+			console.error("No version ID found.");
+		}
+		restoreRevision.action.mutate({
+			collectionKey: collectionKey(),
+			id: documentId() as number,
+			versionId: vId as number,
+		});
 	};
 
 	// ---------------------------------
@@ -195,6 +227,10 @@ const CollectionsDocumentsRevisionsRoute: Component = (props) => {
 						documentId: documentId,
 						isPublished: isPublished,
 						collection: collection.data?.data,
+						selectedRevision: versionId,
+					}}
+					actions={{
+						restoreRevisionAction: restoreRevisionAction,
 					}}
 				>
 					<Show when={!doc.data}>

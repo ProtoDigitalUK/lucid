@@ -37,12 +37,14 @@ export const HeaderLayout: Component<{
 		panelOpen?: Accessor<boolean>;
 		isPublished?: Accessor<boolean>;
 		isBuilderLocked?: Accessor<boolean>;
+		selectedRevision?: Accessor<number | undefined>;
 	};
 	actions?: {
 		upsertDocumentAction?: () => void;
 		setPanelOpen?: (_open: boolean) => void;
 		setDeleteOpen?: (_open: boolean) => void;
 		publishDocumentAction?: () => void;
+		restoreRevisionAction?: () => void;
 	};
 	children?: JSXElement;
 }> = (props) => {
@@ -104,6 +106,12 @@ export const HeaderLayout: Component<{
 		}
 		if (props.state.mode === "revisions") return true;
 		return props.state.isPublished?.();
+	});
+	const showRestoreRevisionButton = createMemo(() => {
+		if (props.state.mode !== "revisions") return false;
+		if (props.state.selectedRevision?.() === undefined) return false;
+		if (!props.actions?.restoreRevisionAction) return false;
+		return true;
 	});
 
 	// ---------------------------------
@@ -320,6 +328,17 @@ export const HeaderLayout: Component<{
 							{T()("publish")}
 						</Button>
 					</Show>
+					<Show when={showRestoreRevisionButton()}>
+						<Button
+							type="button"
+							theme="primary"
+							size="x-small"
+							onClick={props.actions?.restoreRevisionAction}
+							disabled={props.state.selectedRevision?.() === undefined}
+						>
+							{T()("restore_revision")}
+						</Button>
+					</Show>
 					<Show
 						when={
 							props.state.mode === "edit" &&
@@ -356,7 +375,6 @@ export const HeaderLayout: Component<{
 							/>
 						</Button>
 					</Show>
-					{/* TODO: add a restore current revision button */}
 				</div>
 			</header>
 			<div
