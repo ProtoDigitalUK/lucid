@@ -104,7 +104,7 @@ const SelectMediaContent: Component = () => {
 				<h2>{T()("select_media_title")}</h2>
 				<p class="mt-1">{T()("select_media_description")}</p>
 				<div class="w-full mt-15 flex justify-between">
-					<div class="flex gap-5">
+					<div class="flex gap-2.5">
 						<Query.Filter
 							filters={[
 								{

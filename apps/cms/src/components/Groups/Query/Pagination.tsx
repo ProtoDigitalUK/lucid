@@ -84,11 +84,11 @@ export const Pagination: Component<{
 						</KobPagination.Ellipsis>
 					)}
 				>
-					<KobPagination.Previous class="h-10 w-10 flex items-center justify-center fill-title hover:bg-primary-base hover:fill-primary-contrast duration-200 transition-colors disabled:opacity-50">
+					<KobPagination.Previous class="h-10 w-10 flex items-center justify-center text-title hover:bg-primary-base hover:text-primary-contrast duration-200 transition-colors disabled:opacity-50">
 						<FaSolidChevronLeft />
 					</KobPagination.Previous>
 					<KobPagination.Items />
-					<KobPagination.Next class="h-10 w-10 flex items-center justify-center fill-title hover:bg-primary-base hover:fill-primary-contrast duration-200 transition-colors disabled:opacity-50">
+					<KobPagination.Next class="h-10 w-10 flex items-center justify-center text-title hover:bg-primary-base hover:text-primary-contrast duration-200 transition-colors disabled:opacity-50">
 						<FaSolidChevronRight />
 					</KobPagination.Next>
 				</KobPagination.Root>

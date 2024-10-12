@@ -50,12 +50,6 @@ const CollectionsDocumentsRevisionsRoute: Component = (props) => {
 	});
 	const contentLocale = createMemo(() => contentLocaleStore.get.contentLocale);
 	const canFetchRevisions = createMemo(() => {
-		console.log(
-			contentLocale() !== undefined &&
-				documentId() !== undefined &&
-				revisionsSearchParams.getSettled(),
-		);
-		console.log("querystring", revisionsSearchParams.getQueryString());
 		return (
 			contentLocale() !== undefined &&
 			documentId() !== undefined &&
@@ -112,14 +106,26 @@ const CollectionsDocumentsRevisionsRoute: Component = (props) => {
 
 	// ----------------------------------
 	// Memos
-	const isLoading = createMemo(() => {
-		return revisionVersions.isLoading || collection.isLoading || doc.isLoading;
+	const documentIsLoading = createMemo(() => {
+		if (versionIdParam() === "latest") {
+			return collection.isLoading || revisionVersions.isLoading;
+		}
+		return collection.isLoading || doc.isLoading;
 	});
-	const isSuccess = createMemo(() => {
+	const documentIsSuccess = createMemo(() => {
 		if (versionIdParam() === "latest") {
 			return collection.isSuccess && revisionVersions.isSuccess;
 		}
-		return collection.isSuccess && doc.isSuccess && revisionVersions.isSuccess;
+		return collection.isSuccess && doc.isSuccess;
+	});
+	const revisionsIsLoading = createMemo(() => {
+		return revisionVersions.isLoading;
+	});
+	const revisionsIsSuccess = createMemo(() => {
+		return revisionVersions.isSuccess;
+	});
+	const anyIsError = createMemo(() => {
+		return revisionVersions.isError || collection.isError || doc.isError;
 	});
 	const isPublished = createMemo(() => {
 		return (
@@ -174,14 +180,14 @@ const CollectionsDocumentsRevisionsRoute: Component = (props) => {
 	// Render
 	return (
 		<Switch>
-			<Match when={isLoading()}>
+			<Match when={documentIsLoading()}>
 				<div class="fixed top-15 left-[325px] bottom-15 right-15 flex flex-col">
 					<span class="h-32 w-full skeleton block mb-15" />
 					<span class="h-64 w-full skeleton block mb-15" />
 					<span class="h-full w-full skeleton block" />
 				</div>
 			</Match>
-			<Match when={isSuccess()}>
+			<Match when={documentIsSuccess()}>
 				<Document.HeaderLayout
 					state={{
 						mode: "revisions",
@@ -235,11 +241,18 @@ const CollectionsDocumentsRevisionsRoute: Component = (props) => {
 						</div>
 						{/* Sidebar */}
 						<Document.RevisionsSidebar
-							revisions={revisionVersions.data?.data || []}
-							versionId={versionId}
-							collectionKey={collectionKey}
-							documentId={documentId}
-							searchParams={revisionsSearchParams}
+							state={{
+								revisions: revisionVersions.data?.data || [],
+								meta: revisionVersions.data?.meta,
+								versionId: versionId,
+								collectionKey: collectionKey,
+								documentId: documentId,
+								searchParams: revisionsSearchParams,
+								isLoading: revisionsIsLoading,
+								isError: anyIsError,
+								isSuccess: revisionsIsSuccess,
+								hideNoEntries: versionIdParam() === "latest",
+							}}
 						/>
 					</div>
 				</Document.HeaderLayout>

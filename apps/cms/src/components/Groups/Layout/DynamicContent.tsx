@@ -47,7 +47,7 @@ export const DynamicContent: Component<{
 	return (
 		<>
 			<div
-				class={classNames("h-full flex-1 flex flex-col", {
+				class={classNames("flex flex-col flex-1 h-full", {
 					"p-15 md:p-30": props.options?.padding === "30",
 					"p-15": props.options?.padding === "15",
 				})}
