@@ -58,21 +58,19 @@ export default class CollectionDocumentVersionsRepo {
 								"lucid_collection_document_bricks.brick_type",
 								"lucid_collection_document_bricks.brick_key",
 								// Fields
-								// props.config.db
-								// 	.jsonArrayFrom(
-								// 		eb
-								// 			.selectFrom("lucid_collection_document_fields")
-								// 			.select([
-								// 				"lucid_collection_document_fields.fields_id as id",
-								// 				"lucid_collection_document_fields.key",
-								// 			])
-								// 			.whereRef(
-								// 				"lucid_collection_document_fields.collection_brick_id",
-								// 				"=",
-								// 				"lucid_collection_document_bricks.id",
-								// 			),
-								// 	)
-								// 	.as("fields"),
+								eb
+									.selectFrom("lucid_collection_document_fields")
+									.select(
+										sql`count(distinct lucid_collection_document_fields.fields_id)`.as(
+											"field_count",
+										),
+									)
+									.whereRef(
+										"lucid_collection_document_fields.collection_brick_id",
+										"=",
+										"lucid_collection_document_bricks.id",
+									)
+									.as("field_count"),
 							])
 							.whereRef(
 								"lucid_collection_document_bricks.collection_document_version_id",

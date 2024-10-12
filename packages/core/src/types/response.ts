@@ -236,6 +236,7 @@ export interface CollectionDocumentVersionResponse {
 		Array<{
 			id: number;
 			brickKey: string | null;
+			fields: number;
 		}>
 	>;
 }

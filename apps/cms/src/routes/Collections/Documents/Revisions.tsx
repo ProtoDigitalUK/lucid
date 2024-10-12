@@ -17,7 +17,6 @@ import brickStore from "@/store/brickStore";
 import Document from "@/components/Groups/Document";
 import Alert from "@/components/Blocks/Alert";
 import Link from "@/components/Partials/Link";
-import { g } from "vitest/dist/suite-BRl_IYuM.js";
 
 const CollectionsDocumentsRevisionsRoute: Component = (props) => {
 	// ----------------------------------

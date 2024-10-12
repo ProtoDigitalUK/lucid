@@ -98,7 +98,10 @@ export const RevisionsSidebar: Component<{
 								</h3>
 								<DateText date={revision.createdAt} />
 								<div class="mt-15 flex gap-2.5">
-									<Pill theme="secondary">Fields 0</Pill>
+									<Pill theme="secondary">
+										Fields{" "}
+										{revision.bricks["collection-fields"][0]?.fields ?? 0}
+									</Pill>
 									<Pill theme="secondary">
 										Bricks {revision.bricks?.builder?.length ?? 0}
 									</Pill>

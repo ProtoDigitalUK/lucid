@@ -19,6 +19,7 @@ interface DocumentVersionPropT {
 		id: number;
 		brick_key: string | null;
 		brick_type: BrickTypes;
+		field_count: unknown;
 	}>;
 }
 
@@ -60,10 +61,13 @@ export default class CollectionDocumentVersions {
 						acc[brick.brick_type as keyof typeof acc] as Array<{
 							id: number;
 							brickKey: string | null;
+							fields: number;
 						}>
 					).push({
 						id: brick.id,
 						brickKey: brick.brick_key,
+						fields:
+							typeof brick.field_count === "number" ? brick.field_count : 0,
 					});
 					return acc;
 				},
@@ -109,6 +113,9 @@ export default class CollectionDocumentVersions {
 							brickKey: {
 								type: "string",
 								nullable: true,
+							},
+							fields: {
+								type: "number",
 							},
 						},
 					},
